@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:textSize="64sp"
+        android:fontFamily="sans-serif"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginBottom="96dp"
+        android:text="@string/app_name"/>
+    
+    <EditText
+        android:id="@+id/username_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textVisiblePassword|textNoSuggestions"
+        android:ems="16"
+        android:hint="@string/username_prompt"
+        android:layout_margin="16dp"/>
+    
+    <EditText
+        android:id="@+id/password_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="16"
+        android:hint="@string/password_prompt"
+        android:layout_margin="16dp"/>
+    
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/log_in_button_text"
+        android:textAllCaps="false"
+        android:textSize="24sp"
+        android:layout_margin="16dp"/>
+    
+    <Button
+        android:id="@+id/not_now_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/not_now_button_text"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:layout_margin="16dp"/>
+
+</LinearLayout>
