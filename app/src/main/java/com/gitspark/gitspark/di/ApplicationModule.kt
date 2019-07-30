@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.di
 
+import com.gitspark.gitspark.BuildConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -19,7 +20,7 @@ class ApplicationModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://api.github.com")
+            .baseUrl(BuildConfig.GITHUB_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
     }
