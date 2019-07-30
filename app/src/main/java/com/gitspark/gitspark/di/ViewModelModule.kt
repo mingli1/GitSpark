@@ -2,8 +2,8 @@ package com.gitspark.gitspark.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.gitspark.gitspark.ui.viewmodel.MainViewModel
-import com.gitspark.gitspark.ui.viewmodel.ViewModelFactory
+import com.gitspark.gitspark.ui.base.ViewModelFactory
+import com.gitspark.gitspark.ui.login.LoginViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -12,8 +12,8 @@ import dagger.multibindings.IntoMap
 internal abstract class ViewModelModule {
 
     @Binds @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    internal abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
+    @ViewModelKey(LoginViewModel::class)
+    internal abstract fun bindLoginViewModel(loginViewModel: LoginViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
