@@ -22,3 +22,5 @@ fun EditText.onTextChanged(cb: (String) -> Unit) {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
     })
 }
+
+fun EditText.getString(): String = text?.toString() ?: ""

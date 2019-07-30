@@ -1,23 +1,17 @@
 package com.gitspark.gitspark.ui.base
 
 import androidx.lifecycle.ViewModel
-import javax.inject.Inject
 
-interface SupportViewModel {
-    fun checkInitialized()
-    fun initialize()
-}
-
-open class BaseViewModel @Inject constructor() : ViewModel(), SupportViewModel {
+abstract class BaseViewModel : ViewModel() {
 
     private var initialized = false
 
-    override fun checkInitialized() {
+    fun checkInitialized() {
         if (!initialized) {
             initialize()
             initialized = true
         }
     }
 
-    override fun initialize() {}
+    open fun initialize() {}
 }
