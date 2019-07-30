@@ -2,6 +2,7 @@ package com.gitspark.gitspark.ui.login
 
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import okhttp3.Credentials
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor() : BaseViewModel() {
@@ -16,7 +17,7 @@ class LoginViewModel @Inject constructor() : BaseViewModel() {
     }
 
     fun attemptLogin() {
-
+        val authToken = Credentials.basic(currentUsername, currentPassword)
     }
 
     fun onTextChanged(username: String, password: String) {
