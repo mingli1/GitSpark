@@ -1,7 +1,7 @@
 package com.gitspark.gitspark.helper
 
 import com.gitspark.gitspark.BuildConfig
-import com.gitspark.gitspark.api.interceptor.GithubInterceptor
+import com.gitspark.gitspark.api.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -33,6 +33,6 @@ class RetrofitHelper @Inject constructor() {
 
     private fun getOkHttpClient() =
             OkHttpClient.Builder()
-                .addInterceptor(GithubInterceptor(token))
+                .addInterceptor(AuthInterceptor(token))
                 .build()
 }

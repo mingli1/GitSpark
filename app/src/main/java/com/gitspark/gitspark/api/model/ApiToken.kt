@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.api.model
 
+import com.gitspark.gitspark.model.Token
 import com.squareup.moshi.Json
 
 data class ApiToken(
@@ -11,4 +12,7 @@ data class ApiToken(
     @Json(name = "hashed_token") val hashedToken: String,
     @Json(name = "updated_at") val updatedDate: String,
     @Json(name = "created_at") val createdDate: String
-)
+) {
+
+    fun toModel() = Token(token, scopes)
+}

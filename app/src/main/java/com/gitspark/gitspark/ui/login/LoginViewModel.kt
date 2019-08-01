@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.login
 
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.LoginRepository
 import com.gitspark.gitspark.repository.LoginResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
@@ -40,8 +41,12 @@ class LoginViewModel @Inject constructor(
 
     private fun handleLoginResult(result: LoginResult) {
         when (result) {
-            is LoginResult.Success -> alert(result.token.token)
+            is LoginResult.Success -> onLoginAuthSuccess(result.token)
             is LoginResult.Failure -> alert(result.error)
         }
+    }
+
+    private fun onLoginAuthSuccess(token: Token) {
+
     }
 }

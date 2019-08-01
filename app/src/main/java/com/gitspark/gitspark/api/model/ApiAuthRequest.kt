@@ -1,9 +1,9 @@
-package com.gitspark.gitspark.models
+package com.gitspark.gitspark.api.model
 
 import com.gitspark.gitspark.BuildConfig.*
 import com.squareup.moshi.Json
 
-val DEFAULT_AUTH = Authorization(
+val DEFAULT_AUTH = ApiAuthRequest(
     scopes = listOf("user", "repo", "gist", "notifications"),
     note = APPLICATION_ID,
     noteUrl = CALLBACK_URL,
@@ -11,7 +11,7 @@ val DEFAULT_AUTH = Authorization(
     clientSecret = GITHUB_CLIENT_SECRET
 )
 
-data class Authorization(
+data class ApiAuthRequest(
     @Json(name = "scopes") val scopes: List<String>,
     @Json(name = "note") val note: String,
     @Json(name = "note_url") val noteUrl: String,
