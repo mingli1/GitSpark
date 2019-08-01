@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.base
 
 import androidx.lifecycle.ViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -10,6 +11,8 @@ abstract class BaseViewModel : ViewModel() {
 
     private var initialized = false
     private val subscriptions = CompositeDisposable()
+
+    val alertAction = SingleLiveEvent<String>()
 
     fun checkInitialized() {
         if (!initialized) {
@@ -32,5 +35,9 @@ abstract class BaseViewModel : ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNext)
         )
+    }
+
+    protected fun alert(message: String) {
+        alertAction.value = message
     }
 }
