@@ -23,6 +23,7 @@ class LoginViewModel @Inject constructor(
 
     fun attemptLogin() {
         val authToken = Credentials.basic(currentUsername, currentPassword)
+        Log.d("LoginViewModel", "username: $currentUsername password: $currentPassword authToken: $authToken")
         subscribe(loginRepository.login(authToken)) { result ->
             when (result) {
                 is LoginResult.Success -> Log.d("LoginViewModel", result.token.token)
