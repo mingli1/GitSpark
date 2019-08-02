@@ -10,8 +10,9 @@ class AuthInterceptor(private val token: String?) : Interceptor {
         var request = chain.request()
 
         token?.let {
+            val authToken = if (it.startsWith("Basic")) it else "token $it"
             request = request.newBuilder()
-                .addHeader("ApiAuthRequest", it)
+                .addHeader("Authorization", authToken)
                 .build()
         }
 
