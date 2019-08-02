@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.login
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.PREFERENCES_TOKEN
@@ -26,7 +27,7 @@ class LoginViewModel @Inject constructor(
 
     fun attemptLogin() {
         val authToken = Credentials.basic(currentUsername, currentPassword)
-        subscribe(loginRepository.login(authToken)) { handleLoginResult(it) }
+        subscribe(loginRepository.postAuth(authToken)) { handleLoginResult(it) }
     }
 
     fun onTextChanged(username: String, password: String) {
@@ -39,17 +40,34 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onNotNowClicked() {
-
+        Log.d("LoginRepository", preferencesHelper.getString(PREFERENCES_TOKEN))
     }
 
     private fun handleLoginResult(result: LoginResult) {
         when (result) {
             is LoginResult.Success -> onLoginAuthSuccess(result.token)
-            is LoginResult.Failure -> alert(result.error)
+            is LoginResult.Failure -> {
+                alert(result.error)
+
+                /*
+                subscribe(loginRepository.getAuthList()) { tokens ->
+                    tokens.forEach { Log.d("LoginRepository", "token id: ${it.tokenId} token value: ${it.value}") }
+                }
+                */
+
+                subscribe(loginRepository.deleteAuth(314303450),
+                    {
+                        Log.d("LoginRepository", "delete success response: $it")
+                    },
+                    {
+                        Log.d("LoginRepository", "onError delete response: $it")
+                    })
+            }
         }
     }
 
     private fun onLoginAuthSuccess(token: Token) {
+        Log.d("LoginRepository", "cached token value: ${token.value}")
         preferencesHelper.saveString(PREFERENCES_TOKEN, token.value)
     }
 }
