@@ -13,6 +13,5 @@ data class ApiToken(
     @Json(name = "updated_at") val updatedDate: String,
     @Json(name = "created_at") val createdDate: String
 ) {
-
-    fun toModel() = Token(token, scopes)
+    fun toModel() = Token(tokenId, token, scopes)
 }

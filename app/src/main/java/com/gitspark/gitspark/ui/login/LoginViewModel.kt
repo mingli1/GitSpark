@@ -1,6 +1,8 @@
 package com.gitspark.gitspark.ui.login
 
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.helper.PreferencesHelper
+import com.gitspark.gitspark.model.PREFERENCES_TOKEN
 import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.LoginRepository
 import com.gitspark.gitspark.repository.LoginResult
@@ -9,7 +11,8 @@ import okhttp3.Credentials
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    private val preferencesHelper: PreferencesHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<LoginViewState>()
@@ -47,6 +50,6 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onLoginAuthSuccess(token: Token) {
-
+        preferencesHelper.saveString(PREFERENCES_TOKEN, token.value)
     }
 }
