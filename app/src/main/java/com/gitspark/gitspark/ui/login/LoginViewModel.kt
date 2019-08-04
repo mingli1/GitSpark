@@ -27,7 +27,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun attemptLogin() {
-        basicToken = Credentials.basic(currentUsername, currentPassword)
+        basicToken = Credentials.basic(currentUsername.trim(), currentPassword)
         subscribe(loginRepository.putAuthorizations(basicToken)) { handleLoginResult(it) }
     }
 
