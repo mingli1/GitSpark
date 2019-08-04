@@ -17,4 +17,6 @@ class PreferencesHelper @Inject constructor(
         if (sharedPreferences.contains(key)) return sharedPreferences.getString(key, null)
         return null
     }
+
+    fun contains(key: String) = sharedPreferences.contains(key)
 }

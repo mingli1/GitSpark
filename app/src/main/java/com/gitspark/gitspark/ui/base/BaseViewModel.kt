@@ -37,19 +37,6 @@ abstract class BaseViewModel : ViewModel() {
         )
     }
 
-    protected fun <T> subscribe(
-        observable: Observable<T>,
-        onNext: (T) -> Unit,
-        onError: (Throwable) -> Unit
-    ) {
-        subscriptions.add(
-            observable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError)
-        )
-    }
-
     protected fun alert(message: String) {
         alertAction.value = message
     }

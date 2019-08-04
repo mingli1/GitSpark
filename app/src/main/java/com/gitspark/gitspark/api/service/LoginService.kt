@@ -8,14 +8,10 @@ import retrofit2.http.*
 
 interface LoginService {
 
-    @POST("authorizations")
+    @PUT("authorizations/clients/{clientId}")
     @Headers("Accept: application/json")
-    fun postAuthorizations(@Body auth: ApiAuthRequest): Observable<ApiToken>
-
-    @GET("authorizations")
-    @Headers("Accept: application/json")
-    fun getAuthorizations(): Observable<List<ApiToken>>
-
-    @DELETE("authorizations/{authId}")
-    fun deleteAuthorization(@Path("authId") authId: Int): Observable<ResponseBody>
+    fun putAuthorizations(
+        @Path("clientId") clientId: String,
+        @Body request: ApiAuthRequest
+    ): Observable<ApiToken>
 }
