@@ -7,6 +7,7 @@ import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.api.model.ApiAuthRequest
 import com.gitspark.gitspark.api.model.DEFAULT_AUTH
 import com.gitspark.gitspark.model.Token
+import io.reactivex.Completable
 import io.reactivex.Observable
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -19,13 +20,37 @@ class LoginRepository @Inject constructor(
     private val retrofitHelper: RetrofitHelper
 ) {
 
-    fun putAuth(basicToken: String, request: ApiAuthRequest = DEFAULT_AUTH): Observable<LoginResult> {
-        return retrofitHelper.getRetrofit(token = basicToken)
-            .create(LoginService::class.java)
+    fun putAuthorizations(basicToken: String, request: ApiAuthRequest = DEFAULT_AUTH): Observable<LoginResult> {
+        return getLoginService(basicToken)
             .putAuthorizations(BuildConfig.GITHUB_CLIENT_ID, request)
             .map { getSuccess(it.toModel()) }
-            .doOnError { Log.d(TAG, "${(it as HttpException).response()?.errorBody()?.string()}") }
-            .onErrorReturn { getFailure((it as HttpException).response()?.errorBody()?.string()) }
+            .doOnError { logHttpException(it) }
+            .onErrorReturn { getFailure(getHttpExceptionString(it)) }
+    }
+
+    fun getAuthorizations(basicToken: String): Observable<List<Token>> {
+        return getLoginService(basicToken)
+            .getAuthorizations()
+            .map { it.map { token -> token.toModel() } }
+            .doOnError { Log.d(TAG, "${it.message}") }
+            .onErrorReturn { emptyList() }
+    }
+
+    fun deleteAuthorization(basicToken: String, authId: Int): Completable {
+        return getLoginService(basicToken)
+            .deleteAuthorization(authId)
+    }
+
+    private fun getLoginService(token: String? = null): LoginService {
+        return retrofitHelper.getRetrofit(token = token).create(LoginService::class.java)
+    }
+
+    private fun logHttpException(throwable: Throwable) {
+        Log.d(TAG, getHttpExceptionString(throwable))
+    }
+
+    private fun getHttpExceptionString(throwable: Throwable): String? {
+        return (throwable as HttpException).response()?.errorBody()?.string()
     }
 
     private fun getSuccess(token: Token): LoginResult = LoginResult.Success(token)

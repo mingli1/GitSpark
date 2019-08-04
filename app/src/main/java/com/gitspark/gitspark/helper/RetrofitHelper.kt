@@ -17,12 +17,13 @@ class RetrofitHelper @Inject constructor() {
 
     fun getRetrofit(baseUrl: String = BuildConfig.GITHUB_URL, token: String? = null): Retrofit {
         this.token = token
-        if (!retrofitCache.containsKey(baseUrl)) addRetrofit(baseUrl)
-        return checkNotNull(retrofitCache[baseUrl]) { "Failed to retrieve Retrofit from cache." }
+        val key = "$baseUrl${token ?: ""}"
+        if (!retrofitCache.containsKey(key)) addRetrofit(key, baseUrl)
+        return checkNotNull(retrofitCache[key]) { "Failed to retrieve Retrofit from cache." }
     }
 
-    private fun addRetrofit(baseUrl: String) {
-        retrofitCache[baseUrl] =
+    private fun addRetrofit(key: String, baseUrl: String) {
+        retrofitCache[key] =
             Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

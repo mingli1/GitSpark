@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.login
 
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.PREFERENCES_TOKEN
 import com.gitspark.gitspark.model.Token
@@ -19,14 +20,15 @@ class LoginViewModel @Inject constructor(
 
     private var currentUsername = ""
     private var currentPassword = ""
+    private var basicToken = ""
 
     override fun initialize() {
         viewState.value = LoginViewState(loginButtonEnabled = false)
     }
 
     fun attemptLogin() {
-        val authToken = Credentials.basic(currentUsername, currentPassword)
-        subscribe(loginRepository.putAuth(authToken)) { handleLoginResult(it) }
+        basicToken = Credentials.basic(currentUsername, currentPassword)
+        subscribe(loginRepository.putAuthorizations(basicToken)) { handleLoginResult(it) }
     }
 
     fun onTextChanged(username: String, password: String) {
@@ -51,7 +53,7 @@ class LoginViewModel @Inject constructor(
 
     private fun onLoginAuthSuccess(token: Token) {
         when {
-            token.value.isEmpty() -> onNewAccessTokenCreated(token)
+            token.value.isNotEmpty() -> onNewAccessTokenCreated(token)
             else -> onExistingAccessToken(token)
         }
     }
@@ -65,14 +67,29 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onExistingAccessToken(token: Token) {
-        with (token) {
-            if (preferencesHelper.contains(hashedValue)) {
-                alert("Logging in with existing token: ${preferencesHelper.getString(hashedValue)}")
-            }
-            // this case only occurs when the user authenticates then uninstalls and re-installs
-            // the app with the authentication still existing but not cached
-            else {
+        if (preferencesHelper.contains(token.hashedValue)) {
+            alert("Logging in with existing token: ${preferencesHelper.getString(token.hashedValue)}")
+        }
+        // this case only occurs when the user authenticates then uninstalls and re-installs
+        // the app with the authentication still existing but not cached
+        else {
+            deleteExistingToken()
+        }
+    }
 
+    private fun deleteExistingToken() {
+        subscribe(loginRepository.getAuthorizations(basicToken)) { tokenList ->
+            if (tokenList.isNotEmpty()) {
+                val authId = tokenList.find { token ->
+                    token.note == BuildConfig.APPLICATION_ID
+                }?.tokenId
+
+                authId?.let {
+                    subscribe(loginRepository.deleteAuthorization(basicToken, it),
+                        { attemptLogin() },
+                        { throwable -> alert("Error deleting token: ${throwable.message}") }
+                    )
+                } ?: throw IllegalStateException("Access token not cached and does not exist.")
             }
         }
     }
