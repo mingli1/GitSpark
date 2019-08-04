@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -27,14 +28,21 @@
         android:hint="@string/username_prompt"
         android:layout_margin="16dp"/>
     
-    <EditText
-        android:id="@+id/password_field"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="16"
-        android:hint="@string/password_prompt"
-        android:layout_margin="16dp"/>
+        app:passwordToggleEnabled="true">
+    
+        <EditText
+            android:id="@+id/password_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="16"
+            android:hint="@string/password_prompt"
+            android:layout_margin="16dp"/>
+        
+    </com.google.android.material.textfield.TextInputLayout>
     
     <Button
         android:id="@+id/login_button"
