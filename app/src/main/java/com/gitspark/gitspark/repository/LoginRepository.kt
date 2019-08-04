@@ -5,10 +5,12 @@ import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.api.service.LoginService
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.api.model.ApiAuthRequest
+import com.gitspark.gitspark.api.model.ApiBadCredentials
 import com.gitspark.gitspark.api.model.DEFAULT_AUTH
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.PREFERENCES_TOKEN
 import com.gitspark.gitspark.model.Token
+import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Observable
 import retrofit2.HttpException
@@ -20,15 +22,21 @@ private const val TAG = "LoginRepository"
 @Singleton
 class LoginRepository @Inject constructor(
     private val retrofitHelper: RetrofitHelper,
-    private val preferencesHelper: PreferencesHelper
+    private val preferencesHelper: PreferencesHelper,
+    private val moshi: Moshi
 ) {
 
     fun putAuthorizations(basicToken: String, request: ApiAuthRequest = DEFAULT_AUTH): Observable<LoginResult> {
         return getLoginService(basicToken)
             .putAuthorizations(BuildConfig.GITHUB_CLIENT_ID, request)
             .map { getSuccess(it.toModel()) }
-            .doOnError { logHttpException(it) }
-            .onErrorReturn { getFailure(getHttpExceptionString(it)) }
+            .onErrorReturn {
+                getHttpExceptionString(it)?.let { errorResponse ->
+                    val error = moshi.adapter<ApiBadCredentials>(ApiBadCredentials::class.java)
+                        .fromJson(errorResponse)?.message
+                    getFailure("Failed to authenticate: $error")
+                } ?: getFailure("Failed to authenticate.")
+            }
     }
 
     fun getAuthorizations(basicToken: String): Observable<List<Token>> {
@@ -53,10 +61,6 @@ class LoginRepository @Inject constructor(
 
     private fun getLoginService(token: String? = null): LoginService {
         return retrofitHelper.getRetrofit(token = token).create(LoginService::class.java)
-    }
-
-    private fun logHttpException(throwable: Throwable) {
-        Log.d(TAG, getHttpExceptionString(throwable))
     }
 
     private fun getHttpExceptionString(throwable: Throwable): String? {
