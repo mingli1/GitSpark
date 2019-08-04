@@ -2,8 +2,6 @@ package com.gitspark.gitspark.ui.login
 
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.BuildConfig
-import com.gitspark.gitspark.helper.PreferencesHelper
-import com.gitspark.gitspark.model.PREFERENCES_TOKEN
 import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.LoginRepository
 import com.gitspark.gitspark.repository.LoginResult
@@ -12,8 +10,7 @@ import okhttp3.Credentials
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
-    private val loginRepository: LoginRepository,
-    private val preferencesHelper: PreferencesHelper
+    private val loginRepository: LoginRepository
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<LoginViewState>()
@@ -59,16 +56,13 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onNewAccessTokenCreated(token: Token) {
-        with (token) {
-            preferencesHelper.saveString(PREFERENCES_TOKEN, value)
-            preferencesHelper.saveString(hashedValue, value)
-            alert("Logging in with new token: $value")
-        }
+        loginRepository.cacheAccessToken(token)
+        alert("Logging in with new token")
     }
 
     private fun onExistingAccessToken(token: Token) {
-        if (preferencesHelper.contains(token.hashedValue)) {
-            alert("Logging in with existing token: ${preferencesHelper.getString(token.hashedValue)}")
+        if (loginRepository.isTokenCached(token)) {
+            alert("Logging in with existing token")
         }
         // this case only occurs when the user authenticates then uninstalls and re-installs
         // the app with the authentication still existing but not cached
