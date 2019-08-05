@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.login
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.model.Token
@@ -17,9 +18,9 @@ class LoginViewModel @Inject constructor(
     val viewState = MutableLiveData<LoginViewState>()
     val navigateToMainActivityAction = SingleLiveAction()
 
-    private var currentUsername = ""
-    private var currentPassword = ""
-    private var basicToken = ""
+    @VisibleForTesting var currentUsername = ""
+    @VisibleForTesting var currentPassword = ""
+    @VisibleForTesting var basicToken = ""
 
     override fun initialize() {
         viewState.value = LoginViewState()
