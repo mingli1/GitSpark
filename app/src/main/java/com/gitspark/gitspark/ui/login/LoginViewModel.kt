@@ -45,20 +45,22 @@ class LoginViewModel @Inject constructor(
 
     }
 
-    private fun onSuccessfulLogin() {
+    @VisibleForTesting
+    fun onSuccessfulLogin() {
         setLoading(false)
         navigateToMainActivityAction.call()
     }
 
-    private fun setLoading(loading: Boolean) {
-        viewState.value = viewState.value?.copy(loading = loading)
-    }
-
-    private fun handleLoginResult(result: LoginResult) {
+    @VisibleForTesting
+    fun handleLoginResult(result: LoginResult) {
         when (result) {
             is LoginResult.Success -> onLoginAuthSuccess(result.token)
             is LoginResult.Failure -> { onLoginAuthFailure(result.error) }
         }
+    }
+
+    private fun setLoading(loading: Boolean) {
+        viewState.value = viewState.value?.copy(loading = loading)
     }
 
     private fun onLoginAuthSuccess(token: Token) {

@@ -6,6 +6,6 @@ class SingleLiveAction : SingleLiveEvent<Unit>() {
 
     @MainThread
     fun call() {
-        super.setValue(null)
+        super.setValue(Unit)
     }
 }
