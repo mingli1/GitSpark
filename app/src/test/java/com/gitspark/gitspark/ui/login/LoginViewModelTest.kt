@@ -111,6 +111,13 @@ class LoginViewModelTest {
         assertThat(viewModel.navigateToMainActivityAction.value).isNotNull
     }
 
+    @Test
+    fun shouldLoginWithoutCredentialsIfAccessTokenExists() {
+        every { loginRepository.hasExistingAccessToken() } returns true
+        viewModel.initialize()
+        assertThat(viewModel.navigateToMainActivityAction.value).isNotNull
+    }
+
     private fun getToken(value: String) =
         Token(tokenId = 0, value = value, scopes = emptyList(), note = "", hashedValue = "")
 

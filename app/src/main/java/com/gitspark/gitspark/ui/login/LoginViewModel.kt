@@ -24,6 +24,9 @@ class LoginViewModel @Inject constructor(
 
     override fun initialize() {
         viewState.value = LoginViewState()
+        if (loginRepository.hasExistingAccessToken()) {
+            onSuccessfulLogin()
+        }
     }
 
     fun attemptLogin() {

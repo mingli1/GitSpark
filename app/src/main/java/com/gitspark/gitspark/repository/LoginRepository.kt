@@ -57,6 +57,8 @@ class LoginRepository @Inject constructor(
         preferencesHelper.saveString(token.hashedValue, token.value)
     }
 
+    fun hasExistingAccessToken() = preferencesHelper.contains(PREFERENCES_TOKEN)
+
     fun isTokenCached(token: Token) = preferencesHelper.contains(token.hashedValue)
 
     private fun getLoginService(token: String? = null): LoginService {
