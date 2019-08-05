@@ -20,12 +20,13 @@ class LoginViewModel @Inject constructor(
     private var basicToken = ""
 
     override fun initialize() {
-        viewState.value = LoginViewState(loginButtonEnabled = false)
+        viewState.value = LoginViewState()
     }
 
     fun attemptLogin() {
         basicToken = Credentials.basic(currentUsername.trim(), currentPassword)
         subscribe(loginRepository.putAuthorizations(basicToken)) { handleLoginResult(it) }
+        setLoading(true)
     }
 
     fun onTextChanged(username: String, password: String) {
@@ -41,10 +42,14 @@ class LoginViewModel @Inject constructor(
 
     }
 
+    private fun setLoading(loading: Boolean) {
+        viewState.value = viewState.value?.copy(loading = loading)
+    }
+
     private fun handleLoginResult(result: LoginResult) {
         when (result) {
             is LoginResult.Success -> onLoginAuthSuccess(result.token)
-            is LoginResult.Failure -> { result.error?.let { alert(it) } }
+            is LoginResult.Failure -> { onLoginAuthFailure(result.error) }
         }
     }
 
@@ -55,13 +60,20 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun onLoginAuthFailure(error: String?) {
+        setLoading(false)
+        error?.let { alert(it) }
+    }
+
     private fun onNewAccessTokenCreated(token: Token) {
         loginRepository.cacheAccessToken(token)
+        setLoading(false)
         alert("Logging in with new token")
     }
 
     private fun onExistingAccessToken(token: Token) {
         if (loginRepository.isTokenCached(token)) {
+            setLoading(false)
             alert("Logging in with existing token")
         }
         // this case only occurs when the user authenticates then uninstalls and re-installs

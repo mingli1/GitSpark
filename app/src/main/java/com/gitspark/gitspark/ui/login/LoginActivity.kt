@@ -3,10 +3,12 @@ package com.gitspark.gitspark.ui.login
 import android.os.Bundle
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.getString
+import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.onTextChanged
 import com.gitspark.gitspark.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 class LoginActivity : BaseActivity<LoginViewModel>(LoginViewModel::class.java) {
 
@@ -21,7 +23,10 @@ class LoginActivity : BaseActivity<LoginViewModel>(LoginViewModel::class.java) {
     }
 
     private fun updateView(viewState: LoginViewState) {
-        login_button.isEnabled = viewState.loginButtonEnabled
+        with (viewState) {
+            login_button.isEnabled = loginButtonEnabled
+            loading_indicator.isVisible = loading
+        }
     }
 
     private fun setUpListeners() {
