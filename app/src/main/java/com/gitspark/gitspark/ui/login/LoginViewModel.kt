@@ -6,6 +6,7 @@ import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.LoginRepository
 import com.gitspark.gitspark.repository.LoginResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import okhttp3.Credentials
 import javax.inject.Inject
 
@@ -14,6 +15,7 @@ class LoginViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<LoginViewState>()
+    val navigateToMainActivityAction = SingleLiveAction()
 
     private var currentUsername = ""
     private var currentPassword = ""
@@ -42,6 +44,11 @@ class LoginViewModel @Inject constructor(
 
     }
 
+    private fun onSuccessfulLogin() {
+        setLoading(false)
+        navigateToMainActivityAction.call()
+    }
+
     private fun setLoading(loading: Boolean) {
         viewState.value = viewState.value?.copy(loading = loading)
     }
@@ -67,14 +74,12 @@ class LoginViewModel @Inject constructor(
 
     private fun onNewAccessTokenCreated(token: Token) {
         loginRepository.cacheAccessToken(token)
-        setLoading(false)
-        alert("Logging in with new token")
+        onSuccessfulLogin()
     }
 
     private fun onExistingAccessToken(token: Token) {
         if (loginRepository.isTokenCached(token)) {
-            setLoading(false)
-            alert("Logging in with existing token")
+            onSuccessfulLogin()
         }
         // this case only occurs when the user authenticates then uninstalls and re-installs
         // the app with the authentication still existing but not cached
@@ -93,7 +98,10 @@ class LoginViewModel @Inject constructor(
                 authId?.let {
                     subscribe(loginRepository.deleteAuthorization(basicToken, it),
                         { attemptLogin() },
-                        { throwable -> alert("Error deleting token: ${throwable.message}") }
+                        { throwable ->
+                            alert("Error deleting token: ${throwable.message}")
+                            setLoading(false)
+                        }
                     )
                 } ?: throw IllegalStateException("Access token not cached and does not exist.")
             }
