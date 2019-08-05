@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.api.model
 
+import com.gitspark.gitspark.model.AuthUser
 import com.squareup.moshi.Json
 
 data class ApiAuthUser(
@@ -40,4 +41,30 @@ data class ApiAuthUser(
     @field:Json(name = "collaborators") val collaborators: Int,
     @field:Json(name = "two_factor_authentication") val twoFactorAuth: Boolean,
     @field:Json(name = "plan") val plan: ApiGitHubPlan
-)
+) {
+    fun toModel() = AuthUser(
+        username = username,
+        userId = userId,
+        avatarUrl = avatarUrl,
+        htmlUrl = htmlUrl,
+        type = type,
+        siteAdmin = siteAdmin,
+        name = name,
+        company = company,
+        location = location,
+        email = email,
+        bio = bio,
+        numPublicRepos = numPublicRepos,
+        numPublicGists = numPublicGists,
+        followers = followers,
+        following = following,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        numPrivateGists = numPrivateGists,
+        totalPrivateRepos = totalPrivateRepos,
+        ownedPrivateRepos = ownedPrivateRepos,
+        diskUsage = diskUsage,
+        collaborators = collaborators,
+        plan = plan.toModel()
+    )
+}
