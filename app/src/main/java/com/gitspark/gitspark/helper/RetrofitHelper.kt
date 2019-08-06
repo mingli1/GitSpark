@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.helper
 
+import androidx.annotation.VisibleForTesting
 import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.api.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
@@ -12,8 +13,8 @@ import javax.inject.Singleton
 @Singleton
 class RetrofitHelper @Inject constructor() {
 
-    private val retrofitCache = mutableMapOf<String, Retrofit>()
-    private var token: String? = null
+    @VisibleForTesting val retrofitCache = mutableMapOf<String, Retrofit>()
+    @VisibleForTesting var token: String? = null
 
     fun getRetrofit(baseUrl: String = BuildConfig.GITHUB_URL, token: String? = null): Retrofit {
         this.token = token
