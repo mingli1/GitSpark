@@ -20,12 +20,12 @@ class UserRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain user data.") }
     }
 
-    private fun getSuccess(user: AuthUser): UserResult = UserResult.UserSuccess(user)
+    private fun getSuccess(user: AuthUser): UserResult = UserResult.Success(user)
 
-    private fun getFailure(error: String): UserResult = UserResult.UserFailure(error)
+    private fun getFailure(error: String): UserResult = UserResult.Failure(error)
 }
 
 sealed class UserResult {
-    data class UserSuccess(val user: AuthUser) : UserResult()
-    data class UserFailure(val error: String) : UserResult()
+    data class Success(val user: AuthUser) : UserResult()
+    data class Failure(val error: String) : UserResult()
 }
