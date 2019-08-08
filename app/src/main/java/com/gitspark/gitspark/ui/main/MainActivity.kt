@@ -13,10 +13,17 @@ class MainActivity : BaseActivity<MainViewModel>(MainViewModel::class.java) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         adjustBottomNavigationText()
+        addBottomNavigationListeners()
     }
 
     override fun observeViewModel() {
 
+    }
+
+    private fun addBottomNavigationListeners() {
+        bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
+            true
+        }
     }
 
     // see https://github.com/material-components/material-components-android/issues/139
