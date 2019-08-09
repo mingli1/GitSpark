@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/issues"
+    app:startDestination="@id/issues_fragment">
+    
+    <fragment
+        android:id="@+id/issues_fragment"
+        android:name="com.gitspark.gitspark.ui.main.fragment.IssuesFragment"
+        android:label="IssuesFragment"/>
+
+</navigation>

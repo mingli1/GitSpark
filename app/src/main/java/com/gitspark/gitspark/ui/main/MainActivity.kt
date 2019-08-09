@@ -3,38 +3,58 @@ package com.gitspark.gitspark.ui.main
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.setupWithNavController
 import com.gitspark.gitspark.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainViewModel>(MainViewModel::class.java) {
 
-    private lateinit var navController: NavController
+    private var navController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         adjustBottomNavigationText()
 
-        navController = Navigation.findNavController(this, R.id.fragment_nav)
-        bottom_navigation.setupWithNavController(navController)
+        if (savedInstanceState == null) {
+            setUpNavController()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController, null)
+        return navController?.value?.navigateUp() ?: false
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        setUpNavController()
     }
 
     override fun observeViewModel() {
 
     }
 
+    private fun setUpNavController() {
+        navController = bottom_navigation_view.setupWithNavController(
+            navGraphIds = listOf(
+                R.navigation.feed_navigation,
+                R.navigation.profile_navigation,
+                R.navigation.search_navigation,
+                R.navigation.pr_navigation,
+                R.navigation.issues_navigation
+            ),
+            fragmentManager = supportFragmentManager,
+            containerId = R.id.nav_host_container,
+            intent = intent
+        )
+    }
+
     // see https://github.com/material-components/material-components-android/issues/139
     private fun adjustBottomNavigationText() {
-        val menuView = bottom_navigation.getChildAt(0) as? ViewGroup
+        val menuView = bottom_navigation_view.getChildAt(0) as? ViewGroup
         menuView?.let { menu ->
             for (i in 0 until menu.childCount) {
                 val item = menu.getChildAt(i)
