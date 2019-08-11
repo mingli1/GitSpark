@@ -17,6 +17,7 @@ android {
         buildConfigField "String", "GITHUB_URL", "\"https://api.github.com/\""
         buildConfigField "String", "CALLBACK_URL", "\"https://github.com/mingli1/GitSpark/Callback/\""
         buildConfigField "String", "PREFERENCES", "\"PREFERENCES\""
+        buildConfigField "String", "DATABASE_NAME", "\"GitSpark.db\""
     }
     buildTypes {
         release {

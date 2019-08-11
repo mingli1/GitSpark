@@ -4,7 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import androidx.room.Room
 import com.gitspark.gitspark.BuildConfig
+import com.gitspark.gitspark.room.Database
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -25,4 +27,9 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideMoshi(): Moshi = Moshi.Builder().build()
+
+    @Provides
+    @Singleton
+    fun provideDatabase(context: Context) =
+        Room.databaseBuilder(context, Database::class.java, BuildConfig.DATABASE_NAME).build()
 }

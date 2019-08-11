@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 open class User(
-    @PrimaryKey var login: String = "",
-    var userId: Int = 0,
+    var login: String = "",
+    @PrimaryKey var userId: Int = 0,
     var avatarUrl: String = "",
     var htmlUrl: String = "",
     var type: String = "",

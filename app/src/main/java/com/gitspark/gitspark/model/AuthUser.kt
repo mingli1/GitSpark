@@ -3,7 +3,7 @@ package com.gitspark.gitspark.model
 import androidx.room.Embedded
 import androidx.room.Entity
 
-@Entity
+@Entity(tableName = "user")
 data class AuthUser(
     var numPrivateGists: Int = 0,
     var totalPrivateRepos: Int = 0,
