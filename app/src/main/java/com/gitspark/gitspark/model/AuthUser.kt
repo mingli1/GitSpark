@@ -1,27 +1,14 @@
 package com.gitspark.gitspark.model
 
+import androidx.room.Embedded
+import androidx.room.Entity
+
+@Entity
 data class AuthUser(
-    val username: String = "",
-    val userId: Int = 0,
-    val avatarUrl: String = "",
-    val htmlUrl: String = "",
-    val type: String = "",
-    val siteAdmin: Boolean = false,
-    val name: String = "",
-    val company: String = "",
-    val location: String = "",
-    val email: String = "",
-    val bio: String = "",
-    val numPublicRepos: Int = 0,
-    val numPublicGists: Int = 0,
-    val followers: Int = 0,
-    val following: Int = 0,
-    val createdAt: String = "",
-    val updatedAt: String = "",
-    val numPrivateGists: Int = 0,
-    val totalPrivateRepos: Int = 0,
-    val ownedPrivateRepos: Int = 0,
-    val diskUsage: Int = 0,
-    val collaborators: Int = 0,
-    val plan: GitHubPlan = GitHubPlan()
-)
+    var numPrivateGists: Int = 0,
+    var totalPrivateRepos: Int = 0,
+    var ownedPrivateRepos: Int = 0,
+    var diskUsage: Int = 0,
+    var collaborators: Int = 0,
+    @Embedded var plan: GitHubPlan = GitHubPlan()
+) : User()

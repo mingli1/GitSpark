@@ -42,29 +42,29 @@ data class ApiAuthUser(
     @field:Json(name = "two_factor_authentication") val twoFactorAuth: Boolean,
     @field:Json(name = "plan") val plan: ApiGitHubPlan
 ) {
-    fun toModel() = AuthUser(
-        username = username,
-        userId = userId,
-        avatarUrl = avatarUrl,
-        htmlUrl = htmlUrl,
-        type = type,
-        siteAdmin = siteAdmin,
-        name = name,
-        company = company,
-        location = location,
-        email = email,
-        bio = bio,
-        numPublicRepos = numPublicRepos,
-        numPublicGists = numPublicGists,
-        followers = followers,
-        following = following,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        numPrivateGists = numPrivateGists,
-        totalPrivateRepos = totalPrivateRepos,
-        ownedPrivateRepos = ownedPrivateRepos,
-        diskUsage = diskUsage,
-        collaborators = collaborators,
-        plan = plan.toModel()
-    )
+    fun toModel() = AuthUser().also {
+        it.login = username
+        it.userId = userId
+        it.avatarUrl = avatarUrl
+        it.htmlUrl = htmlUrl
+        it.type = type
+        it.siteAdmin = siteAdmin
+        it.name = name
+        it.company = company
+        it.location = location
+        it.email = email
+        it.bio = bio
+        it.numPublicRepos = numPublicRepos
+        it.numPublicGists = numPublicGists
+        it.followers = followers
+        it.following = following
+        it.createdAt = createdAt
+        it.updatedAt = updatedAt
+        it.numPrivateGists = numPrivateGists
+        it.totalPrivateRepos = totalPrivateRepos
+        it.ownedPrivateRepos = ownedPrivateRepos
+        it.diskUsage = diskUsage
+        it.collaborators = collaborators
+        it.plan = plan.toModel()
+    }
 }

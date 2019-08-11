@@ -12,7 +12,7 @@ class UserRepository @Inject constructor(
     private val retrofitHelper: RetrofitHelper
 ) {
 
-    fun getUser(token: String): Observable<UserResult> {
+    fun getAuthUser(token: String): Observable<UserResult> {
         return retrofitHelper.getRetrofit(token = token)
             .create(UserService::class.java)
             .getAuthenticatedUser()

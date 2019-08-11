@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Test
 
 private const val TOKEN = "Basic abc123"
-private val authUser = AuthUser(username = "abc")
+private val authUser = AuthUser()
 
 class UserRepositoryTest {
 
@@ -32,17 +32,17 @@ class UserRepositoryTest {
 
     @Test
     fun shouldGetUserSuccess() {
-        every { userRepository.getUser(any()) } returns
+        every { userRepository.getAuthUser(any()) } returns
                 Observable.just(UserResult.Success(authUser))
-        val observer = userRepository.getUser(TOKEN).test()
+        val observer = userRepository.getAuthUser(TOKEN).test()
         observer.assertValue(UserResult.Success(authUser))
     }
 
     @Test
     fun shouldGetUserFailure() {
-        every { userRepository.getUser(any()) } returns
+        every { userRepository.getAuthUser(any()) } returns
                 Observable.just(UserResult.Failure("failure"))
-        val observer = userRepository.getUser(TOKEN).test()
+        val observer = userRepository.getAuthUser(TOKEN).test()
         observer.assertValue(UserResult.Failure("failure"))
     }
 }
