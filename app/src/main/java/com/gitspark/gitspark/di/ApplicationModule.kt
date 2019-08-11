@@ -32,4 +32,8 @@ class ApplicationModule {
     @Singleton
     fun provideDatabase(context: Context) =
         Room.databaseBuilder(context, Database::class.java, BuildConfig.DATABASE_NAME).build()
+
+    @Provides
+    @Singleton
+    fun provideAuthUserDao(database: Database) = database.authUserDao()
 }

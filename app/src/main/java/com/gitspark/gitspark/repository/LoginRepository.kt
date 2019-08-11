@@ -7,8 +7,6 @@ import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.api.model.ApiAuthRequest
 import com.gitspark.gitspark.api.model.ApiBadCredentials
 import com.gitspark.gitspark.api.model.DEFAULT_AUTH
-import com.gitspark.gitspark.helper.PreferencesHelper
-import com.gitspark.gitspark.model.PREFERENCES_TOKEN
 import com.gitspark.gitspark.model.Token
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
@@ -22,7 +20,6 @@ private const val TAG = "LoginRepository"
 @Singleton
 class LoginRepository @Inject constructor(
     private val retrofitHelper: RetrofitHelper,
-    private val preferencesHelper: PreferencesHelper,
     private val moshi: Moshi
 ) {
 
@@ -51,15 +48,6 @@ class LoginRepository @Inject constructor(
         return getLoginService(basicToken)
             .deleteAuthorization(authId)
     }
-
-    fun cacheAccessToken(token: Token) {
-        preferencesHelper.saveString(PREFERENCES_TOKEN, token.value)
-        preferencesHelper.saveString(token.hashedValue, token.value)
-    }
-
-    fun hasExistingAccessToken() = preferencesHelper.contains(PREFERENCES_TOKEN)
-
-    fun isTokenCached(token: Token) = preferencesHelper.contains(token.hashedValue)
 
     private fun getLoginService(token: String? = null): LoginService {
         return retrofitHelper.getRetrofit(token = token).create(LoginService::class.java)

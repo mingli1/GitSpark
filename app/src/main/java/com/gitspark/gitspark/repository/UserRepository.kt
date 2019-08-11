@@ -1,15 +1,18 @@
 package com.gitspark.gitspark.repository
 
+import android.util.Log
 import com.gitspark.gitspark.api.service.UserService
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.AuthUser
+import com.gitspark.gitspark.room.dao.AuthUserDao
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(
-    private val retrofitHelper: RetrofitHelper
+    private val retrofitHelper: RetrofitHelper,
+    private val authUserDao: AuthUserDao
 ) {
 
     fun getAuthUser(token: String): Observable<UserResult> {
@@ -17,8 +20,13 @@ class UserRepository @Inject constructor(
             .create(UserService::class.java)
             .getAuthenticatedUser()
             .map { getSuccess(it.toModel()) }
+            .doOnError { Log.d("Testing", "$it") }
             .onErrorReturn { getFailure("Failed to obtain user data.") }
     }
+
+    fun cacheUserData(user: AuthUser) = authUserDao.insertAuthUser(user)
+
+    fun getCurrentUserData() = authUserDao.getAuthUser()
 
     private fun getSuccess(user: AuthUser): UserResult = UserResult.Success(user)
 

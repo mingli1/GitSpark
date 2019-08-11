@@ -1,18 +1,24 @@
 package com.gitspark.gitspark.ui.login
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.BuildConfig
+import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.LoginRepository
 import com.gitspark.gitspark.repository.LoginResult
+import com.gitspark.gitspark.repository.UserRepository
+import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import okhttp3.Credentials
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    private val userRepository: UserRepository,
+    private val prefsHelper: PreferencesHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<LoginViewState>()
@@ -24,7 +30,8 @@ class LoginViewModel @Inject constructor(
 
     override fun initialize() {
         viewState.value = LoginViewState()
-        if (loginRepository.hasExistingAccessToken()) {
+        if (prefsHelper.hasExistingAccessToken()) {
+            setLoading(true)
             onSuccessfulLogin()
         }
     }
@@ -50,15 +57,19 @@ class LoginViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onSuccessfulLogin() {
-        setLoading(false)
-        navigateToMainActivityAction.call()
+        subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
+            when (it) {
+                is UserResult.Success -> Log.d("Testing", "${it.user}")
+                is UserResult.Failure -> Log.d("Testing", "failure")
+            }
+        }
     }
 
     @VisibleForTesting
     fun handleLoginResult(result: LoginResult) {
         when (result) {
             is LoginResult.Success -> onLoginAuthSuccess(result.token)
-            is LoginResult.Failure -> { onLoginAuthFailure(result.error) }
+            is LoginResult.Failure -> onLoginAuthFailure(result.error)
         }
     }
 
@@ -79,12 +90,12 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onNewAccessTokenCreated(token: Token) {
-        loginRepository.cacheAccessToken(token)
+        prefsHelper.cacheAccessToken(token)
         onSuccessfulLogin()
     }
 
     private fun onExistingAccessToken(token: Token) {
-        if (loginRepository.isTokenCached(token)) {
+        if (prefsHelper.isTokenCached(token)) {
             onSuccessfulLogin()
         }
         // this case only occurs when the user authenticates then uninstalls and re-installs

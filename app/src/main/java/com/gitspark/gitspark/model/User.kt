@@ -8,7 +8,6 @@ open class User(
     var login: String = "",
     @PrimaryKey var userId: Int = 0,
     var avatarUrl: String = "",
-    var htmlUrl: String = "",
     var type: String = "",
     var siteAdmin: Boolean = false,
     var name: String = "",

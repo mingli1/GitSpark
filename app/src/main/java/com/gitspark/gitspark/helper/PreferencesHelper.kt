@@ -1,6 +1,8 @@
 package com.gitspark.gitspark.helper
 
 import android.content.SharedPreferences
+import com.gitspark.gitspark.model.PREFERENCES_TOKEN
+import com.gitspark.gitspark.model.Token
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,4 +21,17 @@ class PreferencesHelper @Inject constructor(
     }
 
     fun contains(key: String) = sharedPreferences.contains(key)
+
+    fun cacheAccessToken(token: Token) {
+        saveString(PREFERENCES_TOKEN, token.value)
+        saveString(token.hashedValue, token.value)
+    }
+
+    fun hasExistingAccessToken() = contains(PREFERENCES_TOKEN)
+
+    fun isTokenCached(token: Token) = contains(token.hashedValue)
+
+    fun getCachedToken() = checkNotNull(getString(PREFERENCES_TOKEN)) {
+        "No token cached. Check that access token exists before calling this method."
+    }
 }
