@@ -1,15 +1,12 @@
 package com.gitspark.gitspark.repository
 
-import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
-import com.gitspark.gitspark.model.PREFERENCES_TOKEN
 import com.gitspark.gitspark.model.Token
 import com.squareup.moshi.Moshi
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.verify
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.plugins.RxAndroidPlugins
@@ -36,7 +33,6 @@ class LoginRepositoryTest {
     private lateinit var realLoginRepository: LoginRepository
     @MockK private lateinit var loginRepository: LoginRepository
     @RelaxedMockK private lateinit var retrofitHelper: RetrofitHelper
-    @RelaxedMockK private lateinit var preferencesHelper: PreferencesHelper
     @RelaxedMockK private lateinit var moshi: Moshi
 
     @Before
@@ -45,7 +41,7 @@ class LoginRepositoryTest {
         RxJavaPlugins.setInitIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        realLoginRepository = LoginRepository(retrofitHelper, preferencesHelper, moshi)
+        realLoginRepository = LoginRepository(retrofitHelper, moshi)
     }
 
     @Test
@@ -94,12 +90,5 @@ class LoginRepositoryTest {
                 Completable.never()
         val observer = loginRepository.deleteAuthorization(BASIC_TOKEN, AUTH_ID).test()
         observer.assertNotComplete()
-    }
-
-    @Test
-    fun shouldCacheAccessToken() {
-        realLoginRepository.cacheAccessToken(tokenSuccess)
-        verify { preferencesHelper.saveString(PREFERENCES_TOKEN, tokenSuccess.value) }
-        verify { preferencesHelper.saveString(tokenSuccess.hashedValue, tokenSuccess.value) }
     }
 }

@@ -1,6 +1,8 @@
 package com.gitspark.gitspark.helper
 
 import android.content.SharedPreferences
+import com.gitspark.gitspark.model.PREFERENCES_TOKEN
+import com.gitspark.gitspark.model.Token
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -12,6 +14,8 @@ import org.junit.Test
 
 private const val KEY = "key"
 private const val VALUE = "value"
+
+private val TOKEN = Token(value = "value", hashedValue = "hashedValue")
 
 class PreferencesHelperTest {
 
@@ -54,5 +58,24 @@ class PreferencesHelperTest {
         every { sharedPreferences.contains(KEY) } returns true
         val contains = preferencesHelper.contains(KEY)
         assertThat(contains).isTrue()
+    }
+
+    @Test
+    fun shouldCacheAccessToken() {
+        preferencesHelper.cacheAccessToken(TOKEN)
+        verify { editor.putString(PREFERENCES_TOKEN, "value") }
+        verify { editor.putString("hashedValue", "value") }
+    }
+
+    @Test
+    fun shouldCheckForExistingAccessToken() {
+        every { sharedPreferences.contains(PREFERENCES_TOKEN) } returns true
+        assertThat(preferencesHelper.hasExistingAccessToken()).isTrue()
+    }
+
+    @Test
+    fun shouldCheckIfSpecificTokenCached() {
+        every { sharedPreferences.contains("hashedValue") } returns true
+        assertThat(preferencesHelper.isTokenCached(TOKEN)).isTrue()
     }
 }
