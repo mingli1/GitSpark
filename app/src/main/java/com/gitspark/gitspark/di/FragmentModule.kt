@@ -1,6 +1,6 @@
 package com.gitspark.gitspark.di
 
-import com.gitspark.gitspark.ui.main.fragment.*
+import com.gitspark.gitspark.ui.main.tab.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

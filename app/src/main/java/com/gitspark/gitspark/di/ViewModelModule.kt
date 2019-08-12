@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.gitspark.gitspark.ui.base.ViewModelFactory
 import com.gitspark.gitspark.ui.login.LoginViewModel
-import com.gitspark.gitspark.ui.main.fragment.*
+import com.gitspark.gitspark.ui.main.tab.*
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

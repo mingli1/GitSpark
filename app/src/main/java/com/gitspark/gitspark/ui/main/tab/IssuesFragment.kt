@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.main.fragment
+package com.gitspark.gitspark.ui.main.tab
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.ui.base.BaseFragment
 
-class PullRequestsFragment : BaseFragment<PullRequestsViewModel>(PullRequestsViewModel::class.java) {
+class IssuesFragment : BaseFragment<IssuesViewModel>(IssuesViewModel::class.java) {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_pull_requests, container, false)
+        return inflater.inflate(R.layout.fragment_issues, container, false)
     }
 
     override fun observeViewModel() {

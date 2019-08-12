@@ -7,7 +7,7 @@
     
     <fragment
         android:id="@+id/profile_fragment"
-        android:name="com.gitspark.gitspark.ui.main.fragment.ProfileFragment"
+        android:name="com.gitspark.gitspark.ui.main.tab.ProfileFragment"
         android:label="ProfileFragment"/>
 
 </navigation>

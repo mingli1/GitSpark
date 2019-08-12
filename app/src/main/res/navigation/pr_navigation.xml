@@ -7,7 +7,7 @@
     
     <fragment
         android:id="@+id/pull_requests_fragment"
-        android:name="com.gitspark.gitspark.ui.main.fragment.PullRequestsFragment"
+        android:name="com.gitspark.gitspark.ui.main.tab.PullRequestsFragment"
         android:label="PullRequestsFragment"/>
 
 </navigation>
