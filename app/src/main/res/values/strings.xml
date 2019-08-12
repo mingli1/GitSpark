@@ -9,4 +9,8 @@
     <string name="nav_search">Search</string>
     <string name="nav_pr">Pull Requests</string>
     <string name="nav_issues">Issues</string>
+    <string name="overview_title">Overview</string>
+    <string name="repos_title">Repos</string>
+    <string name="projects_title">Projects</string>
+    <string name="stars_title">Stars</string>
 </resources>
