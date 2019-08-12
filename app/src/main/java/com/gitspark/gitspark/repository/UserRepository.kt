@@ -1,9 +1,11 @@
 package com.gitspark.gitspark.repository
 
+import androidx.lifecycle.LiveData
 import com.gitspark.gitspark.api.service.UserService
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.room.dao.AuthUserDao
+import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,9 +24,11 @@ class UserRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain user data.") }
     }
 
-    fun cacheUserData(user: AuthUser) = authUserDao.insertAuthUser(user)
+    fun cacheUserData(user: AuthUser): Completable {
+        return Completable.fromAction { authUserDao.insertAuthUser(user) }
+    }
 
-    fun getCurrentUserData() = authUserDao.getAuthUser()
+    fun getCurrentUserData(): LiveData<AuthUser> = authUserDao.getAuthUser()
 
     private fun getSuccess(user: AuthUser): UserResult = UserResult.Success(user)
 

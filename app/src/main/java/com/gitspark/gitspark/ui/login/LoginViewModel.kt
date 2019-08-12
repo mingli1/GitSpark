@@ -74,8 +74,10 @@ class LoginViewModel @Inject constructor(
         setLoading(false)
         when (result) {
             is UserResult.Success -> {
-                userRepository.cacheUserData(result.user)
-                navigateToMainActivityAction.call()
+                subscribe(userRepository.cacheUserData(result.user),
+                    { navigateToMainActivityAction.call() },
+                    { alert("Could not cache auth user data.") }
+                )
             }
             is UserResult.Failure -> alert(result.error)
         }

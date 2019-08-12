@@ -80,13 +80,12 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun shouldNavigateToMainActivityAndCacheOnSuccessfulUserData() {
+    fun shouldCacheOnSuccessfulUserData() {
         val result = createUserSuccess(AuthUser())
 
         viewModel.handleUserResult(result)
 
         verify { userRepository.cacheUserData(result.user) }
-        assertThat(viewModel.navigateToMainActivityAction.value).isNotNull
         assertThat(viewState().loading).isFalse()
     }
 
