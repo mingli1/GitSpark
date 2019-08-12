@@ -1,6 +1,5 @@
 package com.gitspark.gitspark.repository
 
-import android.util.Log
 import com.gitspark.gitspark.api.service.UserService
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.AuthUser
@@ -20,7 +19,6 @@ class UserRepository @Inject constructor(
             .create(UserService::class.java)
             .getAuthenticatedUser()
             .map { getSuccess(it.toModel()) }
-            .doOnError { Log.d("Testing", "$it") }
             .onErrorReturn { getFailure("Failed to obtain user data.") }
     }
 

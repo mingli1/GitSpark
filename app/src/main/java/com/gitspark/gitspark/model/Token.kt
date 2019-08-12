@@ -7,5 +7,5 @@ data class Token(
     val value: String = "",
     val hashedValue: String = "",
     val scopes: List<String> = emptyList(),
-    val note: String? = null
+    val note: String = ""
 )

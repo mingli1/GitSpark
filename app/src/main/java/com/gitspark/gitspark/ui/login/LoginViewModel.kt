@@ -1,6 +1,5 @@
 package com.gitspark.gitspark.ui.login
 
-import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.BuildConfig
@@ -59,8 +58,8 @@ class LoginViewModel @Inject constructor(
     fun onSuccessfulLogin() {
         subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
             when (it) {
-                is UserResult.Success -> Log.d("Testing", "${it.user}")
-                is UserResult.Failure -> Log.d("Testing", "failure")
+                is UserResult.Success -> {}
+                is UserResult.Failure -> {}
             }
         }
     }
