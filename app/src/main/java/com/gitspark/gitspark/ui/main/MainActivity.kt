@@ -3,14 +3,14 @@ package com.gitspark.gitspark.ui.main
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.setupWithNavController
-import com.gitspark.gitspark.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity<MainViewModel>(MainViewModel::class.java) {
+class MainActivity : AppCompatActivity() {
 
     private var navController: LiveData<NavController>? = null
 
@@ -31,10 +31,6 @@ class MainActivity : BaseActivity<MainViewModel>(MainViewModel::class.java) {
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         setUpNavController()
-    }
-
-    override fun observeViewModel() {
-
     }
 
     private fun setUpNavController() {

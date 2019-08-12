@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.gitspark.gitspark.ui.base.ViewModelFactory
 import com.gitspark.gitspark.ui.login.LoginViewModel
-import com.gitspark.gitspark.ui.main.MainViewModel
 import com.gitspark.gitspark.ui.main.fragment.*
 import dagger.Binds
 import dagger.Module
@@ -16,10 +15,6 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(LoginViewModel::class)
     internal abstract fun bindLoginViewModel(loginViewModel: LoginViewModel): ViewModel
-
-    @Binds @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    internal abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
 
     @Binds @IntoMap
     @ViewModelKey(FeedViewModel::class)
