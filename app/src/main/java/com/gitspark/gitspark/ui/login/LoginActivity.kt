@@ -48,5 +48,6 @@ class LoginActivity : BaseActivity<LoginViewModel>(LoginViewModel::class.java) {
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 }

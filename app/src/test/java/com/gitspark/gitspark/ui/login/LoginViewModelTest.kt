@@ -2,10 +2,12 @@ package com.gitspark.gitspark.ui.login
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.gitspark.gitspark.helper.PreferencesHelper
+import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.LoginRepository
 import com.gitspark.gitspark.repository.LoginResult
 import com.gitspark.gitspark.repository.UserRepository
+import com.gitspark.gitspark.repository.UserResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
@@ -77,14 +79,23 @@ class LoginViewModelTest {
         assertThat(viewState().loading).isTrue()
     }
 
-    /*
     @Test
-    fun shouldNavigateToMainActivityOnSuccessfulLogin() {
-        viewModel.onSuccessfulLogin()
+    fun shouldNavigateToMainActivityAndCacheOnSuccessfulUserData() {
+        val result = createUserSuccess(AuthUser())
+
+        viewModel.handleUserResult(result)
+
+        verify { userRepository.cacheUserData(result.user) }
         assertThat(viewModel.navigateToMainActivityAction.value).isNotNull
         assertThat(viewState().loading).isFalse()
     }
-    */
+
+    @Test
+    fun shouldAlertOnUserDataFailure() {
+        val result = createUserFailure("error")
+        viewModel.handleUserResult(result)
+        assertThat(viewModel.alertAction.value).isEqualTo("error")
+    }
 
     @Test
     fun shouldAlertOnLoginFailure() {
@@ -106,25 +117,23 @@ class LoginViewModelTest {
         verify { prefsHelper.cacheAccessToken(token) }
     }
 
-    /*
     @Test
-    fun shouldSuccessfullyLoginWhenTokenCached() {
+    fun shouldGetAuthUserDataWhenLoggedIn() {
         val token = getToken("")
         val success = createLoginSuccess(token)
         every { prefsHelper.isTokenCached(any()) } returns true
 
         viewModel.handleLoginResult(success)
 
-        assertThat(viewModel.navigateToMainActivityAction.value).isNotNull
+        verify { userRepository.getAuthUser(any()) }
     }
 
     @Test
     fun shouldLoginWithoutCredentialsIfAccessTokenExists() {
         every { prefsHelper.hasExistingAccessToken() } returns true
         viewModel.initialize()
-        assertThat(viewModel.navigateToMainActivityAction.value).isNotNull
+        verify { userRepository.getAuthUser(any()) }
     }
-    */
 
     private fun getToken(value: String) =
         Token(tokenId = 0, value = value, scopes = emptyList(), note = "", hashedValue = "")
@@ -134,6 +143,12 @@ class LoginViewModelTest {
 
     private fun createLoginFailure(error: String) =
         LoginResult.Failure(error)
+
+    private fun createUserSuccess(user: AuthUser) =
+        UserResult.Success(user)
+
+    private fun createUserFailure(error: String) =
+        UserResult.Failure(error)
 
     private fun viewState() = viewModel.viewState.value!!
 }

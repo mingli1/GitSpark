@@ -57,10 +57,7 @@ class LoginViewModel @Inject constructor(
     @VisibleForTesting
     fun onSuccessfulLogin() {
         subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
-            when (it) {
-                is UserResult.Success -> {}
-                is UserResult.Failure -> {}
-            }
+            handleUserResult(it)
         }
     }
 
@@ -72,8 +69,16 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun setLoading(loading: Boolean) {
-        viewState.value = viewState.value?.copy(loading = loading)
+    @VisibleForTesting
+    fun handleUserResult(result: UserResult) {
+        setLoading(false)
+        when (result) {
+            is UserResult.Success -> {
+                userRepository.cacheUserData(result.user)
+                navigateToMainActivityAction.call()
+            }
+            is UserResult.Failure -> alert(result.error)
+        }
     }
 
     private fun onLoginAuthSuccess(token: Token) {
@@ -122,5 +127,9 @@ class LoginViewModel @Inject constructor(
                 } ?: throw IllegalStateException("Access token not cached and does not exist.")
             }
         }
+    }
+
+    private fun setLoading(loading: Boolean) {
+        viewState.value = viewState.value?.copy(loading = loading)
     }
 }
