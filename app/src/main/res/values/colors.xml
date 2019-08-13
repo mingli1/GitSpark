@@ -5,4 +5,10 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorProgressBackground">#64FFFFFF</color>
     <color name="colorBottomNav">#DDDDDD</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhiteBackground">#E5E5E5</color>
+    <color name="colorLightGray">#B5B5B5</color>
+    <color name="colorDarkGray">#878787</color>
+    <color name="colorDarkerGray">#545454</color>
 </resources>

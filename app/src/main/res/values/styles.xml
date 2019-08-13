@@ -10,5 +10,27 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    
+    <style name="HeaderBold">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+    
+    <style name="HeaderSubtext">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    
+    <style name="Body">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+    
+    <style name="BodyLight" parent="Body">
+        <item name="android:textColor">@color/colorDarkerGray</item>
+    </style>
 
 </resources>
