@@ -18,4 +18,7 @@ class TimeHelper @Inject constructor() {
 
     fun instantPlusMinutes(instant: Instant, minutes: Long): Instant =
             instant.plusSeconds(TimeUnit.MINUTES.toSeconds(minutes))
+
+    fun isExpiredMinutes(instant: Instant, minutes: Long): Boolean =
+            instantPlusMinutes(instant, minutes).isAfter(now())
 }

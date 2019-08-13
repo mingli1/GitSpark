@@ -82,10 +82,12 @@
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/bio_field"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Boston, MA"/>
+        tools:text="Boston, MA"
+        tools:visibility="visible"/>
     
     <TextView
         android:id="@+id/email_field"
@@ -97,10 +99,13 @@
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:visibility="gone"
+        android:autoLink="email"
         app:layout_constraintTop_toBottomOf="@id/location_field"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="mingli434@gmail.com"/>
+        tools:text="mingli434@gmail.com"
+        tools:visibility="visible"/>
     
     <TextView
         android:id="@+id/company_field"
@@ -112,10 +117,12 @@
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/email_field"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Zipcar"/>
+        tools:text="Zipcar"
+        tools:visibility="visible"/>
     
     <View
         android:id="@+id/divider"

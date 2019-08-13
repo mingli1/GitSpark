@@ -8,8 +8,11 @@ import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.room.dao.AuthUserDao
 import io.reactivex.Completable
 import io.reactivex.Observable
+import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
+
+private const val USER_CACHE_DURATION_M = 30L
 
 @Singleton
 class UserRepository @Inject constructor(
@@ -32,6 +35,9 @@ class UserRepository @Inject constructor(
             authUserDao.insertAuthUser(user)
         }
     }
+
+    fun isUserCacheExpired(timestamp: Instant) =
+        timeHelper.isExpiredMinutes(timestamp, USER_CACHE_DURATION_M)
 
     fun getCurrentUserData(): LiveData<AuthUser> = authUserDao.getAuthUser()
 
