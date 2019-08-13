@@ -7,7 +7,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.Observable
 import io.reactivex.android.plugins.RxAndroidPlugins
@@ -48,13 +47,6 @@ class UserRepositoryTest {
                 Observable.just(UserResult.Failure("failure"))
         val observer = userRepository.getAuthUser(TOKEN).test()
         observer.assertValue(UserResult.Failure("failure"))
-    }
-
-    @Test
-    fun shouldCacheUserData() {
-        val user = mockk<AuthUser>()
-        userRepository.cacheUserData(user)
-        verify { authUserDao.insertAuthUser(user) }
     }
 
     @Test
