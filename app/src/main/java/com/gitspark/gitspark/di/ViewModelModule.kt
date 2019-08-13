@@ -21,10 +21,6 @@ internal abstract class ViewModelModule {
     internal abstract fun bindFeedViewModel(feedViewModel: FeedViewModel): ViewModel
 
     @Binds @IntoMap
-    @ViewModelKey(ProfileViewModel::class)
-    internal abstract fun bindProfileViewModel(profileViewModel: ProfileViewModel): ViewModel
-
-    @Binds @IntoMap
     @ViewModelKey(SearchViewModel::class)
     internal abstract fun bindSearchViewModel(searchViewModel: SearchViewModel): ViewModel
 
