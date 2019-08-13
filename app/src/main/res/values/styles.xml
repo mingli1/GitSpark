@@ -32,5 +32,9 @@
     <style name="BodyLight" parent="Body">
         <item name="android:textColor">@color/colorDarkerGray</item>
     </style>
+    
+    <style name="BodyBold" parent="Body">
+        <item name="android:textStyle">bold</item>
+    </style>
 
 </resources>
