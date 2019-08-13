@@ -8,7 +8,7 @@ import javax.inject.Singleton
 @Singleton
 class TimeHelper @Inject constructor() {
 
-    fun now() = Instant.now()
+    fun now(): Instant = Instant.now()
 
     fun nowPlusSeconds(seconds: Long) = instantPlusSeconds(Instant.now(), seconds)
 
