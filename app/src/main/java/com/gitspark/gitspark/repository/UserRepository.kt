@@ -3,6 +3,7 @@ package com.gitspark.gitspark.repository
 import androidx.lifecycle.LiveData
 import com.gitspark.gitspark.api.service.UserService
 import com.gitspark.gitspark.helper.RetrofitHelper
+import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.room.dao.AuthUserDao
 import io.reactivex.Completable
@@ -13,7 +14,8 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(
     private val retrofitHelper: RetrofitHelper,
-    private val authUserDao: AuthUserDao
+    private val authUserDao: AuthUserDao,
+    private val timeHelper: TimeHelper
 ) {
 
     fun getAuthUser(token: String): Observable<UserResult> {
@@ -25,7 +27,10 @@ class UserRepository @Inject constructor(
     }
 
     fun cacheUserData(user: AuthUser): Completable {
-        return Completable.fromAction { authUserDao.insertAuthUser(user) }
+        return Completable.fromAction {
+            user.timestamp = timeHelper.now()
+            authUserDao.insertAuthUser(user)
+        }
     }
 
     fun getCurrentUserData(): LiveData<AuthUser> = authUserDao.getAuthUser()

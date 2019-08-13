@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.repository
 
 import com.gitspark.gitspark.helper.RetrofitHelper
+import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.room.dao.AuthUserDao
 import io.mockk.MockKAnnotations
@@ -23,6 +24,7 @@ class UserRepositoryTest {
     @MockK private lateinit var userRepository: UserRepository
     @RelaxedMockK private lateinit var retrofitHelper: RetrofitHelper
     @RelaxedMockK private lateinit var authUserDao: AuthUserDao
+    @RelaxedMockK private lateinit var timeHelper: TimeHelper
 
     @Before
     fun setup() {
@@ -30,7 +32,7 @@ class UserRepositoryTest {
         RxJavaPlugins.setInitIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        userRepository = UserRepository(retrofitHelper, authUserDao)
+        userRepository = UserRepository(retrofitHelper, authUserDao, timeHelper)
     }
 
     @Test
