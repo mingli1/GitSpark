@@ -53,6 +53,7 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
             }
             name_field.text = nameText
             username_field.text = usernameText
+            bio_field.isVisible = bioText.isNotEmpty()
             bio_field.text = bioText
 
             location_field.isVisible = locationText.isNotEmpty()
