@@ -25,6 +25,7 @@ class OverviewViewModel @Inject constructor(
     fun onCachedUserDataRetrieved(user: AuthUser) {
         val expired = userRepository.isUserCacheExpired(user.timestamp)
         if (expired) {
+            viewState.value = OverviewViewState(loading = true)
             subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
                 when (it) {
                     is UserResult.Success -> {
@@ -56,7 +57,8 @@ class OverviewViewModel @Inject constructor(
                 emailText = email,
                 companyText = company,
                 numFollowers = followers,
-                numFollowing = following
+                numFollowing = following,
+                loading = false
             )
         }
     }

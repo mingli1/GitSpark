@@ -9,5 +9,6 @@ data class OverviewViewState(
     val emailText: String = "",
     val companyText: String = "",
     val numFollowing: Int = 0,
-    val numFollowers: Int = 0
+    val numFollowers: Int = 0,
+    val loading: Boolean = false
 )

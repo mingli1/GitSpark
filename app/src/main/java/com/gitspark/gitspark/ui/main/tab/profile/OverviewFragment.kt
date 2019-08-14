@@ -9,6 +9,7 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.base.BaseFragment
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.profile_header.*
 
 class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::class.java) {
@@ -46,7 +47,7 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
 
     private fun updateView(viewState: OverviewViewState) {
         with (viewState) {
-            if (imageUrl != avatarUrl) {
+            if (imageUrl != avatarUrl && avatarUrl.isNotEmpty()) {
                 avatar_image.loadImage(avatarUrl)
                 imageUrl = avatarUrl
             }
@@ -63,6 +64,8 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
 
             following_field.text = getString(R.string.following_text, numFollowing)
             followers_field.text = getString(R.string.followers_text, numFollowers)
+
+            loading_indicator.isVisible = loading
         }
     }
 }
