@@ -12,6 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val USER_CACHE_DURATION_M = 30L
+private const val CONTRIBUTIONS_URL = "https://github.com/users/%s/contributions"
 
 @Singleton
 class UserRepository @Inject constructor(
@@ -26,6 +27,13 @@ class UserRepository @Inject constructor(
             .getAuthenticatedUser()
             .map { getSuccess(it.toModel()) }
             .onErrorReturn { getFailure("Failed to obtain user data.") }
+    }
+
+    fun getContributionsSvg(username: String): Observable<String> {
+        return retrofitHelper.getRetrofit(lenient = true)
+            .create(UserService::class.java)
+            .getContributionsSvg(String.format(CONTRIBUTIONS_URL, username))
+            .onErrorReturn { "" }
     }
 
     fun cacheUserData(user: AuthUser): Completable {
