@@ -1,24 +1,19 @@
 package com.gitspark.gitspark.helper
 
-import org.threeten.bp.Instant
-import java.util.concurrent.TimeUnit
+import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TimeHelper @Inject constructor() {
 
-    fun now(): Instant = Instant.now()
+    fun now(): OffsetDateTime = OffsetDateTime.now()
 
-    fun nowPlusSeconds(seconds: Long) = instantPlusSeconds(Instant.now(), seconds)
+    fun nowAsString(): String = now().format(ISO_OFFSET_DATE_TIME)
 
-    fun nowPlusMinutes(minutes: Long) = instantPlusMinutes(Instant.now(), minutes)
+    fun parse(date: String) = ISO_OFFSET_DATE_TIME.parse(date, OffsetDateTime::from)
 
-    fun instantPlusSeconds(instant: Instant, seconds: Long): Instant = instant.plusSeconds(seconds)
-
-    fun instantPlusMinutes(instant: Instant, minutes: Long): Instant =
-            instant.plusSeconds(TimeUnit.MINUTES.toSeconds(minutes))
-
-    fun isExpiredMinutes(instant: Instant, minutes: Long): Boolean =
-            instantPlusMinutes(instant, minutes).isAfter(now())
+    fun isExpiredMinutes(date: OffsetDateTime, minutes: Long): Boolean =
+            date.plusMinutes(minutes).isBefore(now())
 }

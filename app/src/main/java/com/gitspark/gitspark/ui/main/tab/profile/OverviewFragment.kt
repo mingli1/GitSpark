@@ -10,13 +10,28 @@ import com.gitspark.gitspark.ui.base.BaseFragment
 
 class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::class.java) {
 
+    private var visible = false
+    private var started = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_overview, container, false)
     }
 
+    override fun onStart() {
+        super.onStart()
+        started = true
+        if (visible) viewModel.onResume()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        started = false
+    }
+
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        viewModel.onResume()
+        visible = isVisibleToUser
+        if (visible && started) viewModel.onResume()
     }
 
     override fun observeViewModel() {

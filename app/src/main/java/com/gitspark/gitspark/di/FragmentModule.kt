@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.di
 
 import com.gitspark.gitspark.ui.main.tab.*
+import com.gitspark.gitspark.ui.main.tab.profile.OverviewFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -11,9 +12,6 @@ internal abstract class FragmentModule {
     internal abstract fun contributesFeedFragment(): FeedFragment
 
     @ContributesAndroidInjector
-    internal abstract fun contributesProfileFragment(): ProfileFragment
-
-    @ContributesAndroidInjector
     internal abstract fun contributesSearchFragment(): SearchFragment
 
     @ContributesAndroidInjector
@@ -21,4 +19,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesIssuesFragment(): IssuesFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesOverviewFragment(): OverviewFragment
 }

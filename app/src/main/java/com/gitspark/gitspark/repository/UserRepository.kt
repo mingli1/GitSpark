@@ -8,7 +8,6 @@ import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.room.dao.AuthUserDao
 import io.reactivex.Completable
 import io.reactivex.Observable
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,13 +30,13 @@ class UserRepository @Inject constructor(
 
     fun cacheUserData(user: AuthUser): Completable {
         return Completable.fromAction {
-            user.timestamp = timeHelper.now()
+            user.timestamp = timeHelper.nowAsString()
             authUserDao.insertAuthUser(user)
         }
     }
 
-    fun isUserCacheExpired(timestamp: Instant) =
-        timeHelper.isExpiredMinutes(timestamp, USER_CACHE_DURATION_M)
+    fun isUserCacheExpired(timestamp: String) =
+        timeHelper.isExpiredMinutes(timeHelper.parse(timestamp), USER_CACHE_DURATION_M)
 
     fun getCurrentUserData(): LiveData<AuthUser> = authUserDao.getAuthUser()
 

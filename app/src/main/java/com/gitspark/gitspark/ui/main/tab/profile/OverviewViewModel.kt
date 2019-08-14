@@ -23,9 +23,7 @@ class OverviewViewModel @Inject constructor(
     }
 
     fun onCachedUserDataRetrieved(user: AuthUser) {
-        val expired = userRepository.isUserCacheExpired(checkNotNull(user.timestamp) {
-            "Illegal state: timestamp does not exist in a cached object."
-        })
+        val expired = userRepository.isUserCacheExpired(user.timestamp)
         if (expired) {
             subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
                 when (it) {
