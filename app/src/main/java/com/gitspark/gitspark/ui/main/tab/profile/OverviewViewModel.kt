@@ -58,7 +58,8 @@ class OverviewViewModel @Inject constructor(
                 companyText = company,
                 numFollowers = followers,
                 numFollowing = following,
-                loading = false
+                loading = false,
+                planName = plan.planName
             )
         }
     }

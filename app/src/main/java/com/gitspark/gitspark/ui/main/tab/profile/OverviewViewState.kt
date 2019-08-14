@@ -10,5 +10,6 @@ data class OverviewViewState(
     val companyText: String = "",
     val numFollowing: Int = 0,
     val numFollowers: Int = 0,
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val planName: String = ""
 )

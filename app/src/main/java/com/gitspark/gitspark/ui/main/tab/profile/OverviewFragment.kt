@@ -53,6 +53,8 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
             }
             name_field.text = nameText
             username_field.text = usernameText
+            plan_name_field.isVisible = planName != "free"
+            plan_name_field.text = planName
             bio_field.isVisible = bioText.isNotEmpty()
             bio_field.text = bioText
 
