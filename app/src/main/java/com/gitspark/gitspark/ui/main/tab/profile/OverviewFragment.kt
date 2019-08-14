@@ -5,13 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.base.BaseFragment
+import kotlinx.android.synthetic.main.profile_header.*
 
 class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::class.java) {
 
     private var visible = false
     private var started = false
+
+    private var imageUrl = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_overview, container, false)
@@ -41,7 +46,23 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
 
     private fun updateView(viewState: OverviewViewState) {
         with (viewState) {
+            if (imageUrl != avatarUrl) {
+                avatar_image.loadImage(avatarUrl)
+                imageUrl = avatarUrl
+            }
+            name_field.text = nameText
+            username_field.text = usernameText
+            bio_field.text = bioText
 
+            location_field.isVisible = locationText.isNotEmpty()
+            location_field.text = locationText
+            email_field.isVisible = emailText.isNotEmpty()
+            email_field.text = emailText
+            company_field.isVisible = companyText.isNotEmpty()
+            company_field.text = companyText
+
+            following_field.text = getString(R.string.following_text, numFollowing)
+            followers_field.text = getString(R.string.followers_text, numFollowers)
         }
     }
 }

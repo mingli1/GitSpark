@@ -6,6 +6,9 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.EditText
+import android.widget.ImageView
+import com.gitspark.gitspark.R
+import com.squareup.picasso.Picasso
 
 inline var View.isVisible: Boolean
     get() = visibility == VISIBLE
@@ -24,3 +27,9 @@ fun EditText.onTextChanged(cb: (String) -> Unit) {
 }
 
 fun EditText.getString(): String = text?.toString() ?: ""
+
+fun ImageView.loadImage(url: String) =
+    Picasso.get()
+        .load(url)
+        .placeholder(R.drawable.image_placeholder)
+        .into(this)
