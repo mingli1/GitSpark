@@ -1,9 +1,11 @@
 package com.gitspark.gitspark.helper
 
 import com.gitspark.gitspark.model.Contribution
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.ArrayList
 
 private const val FILL_ATTR = "fill=\""
 private const val DATA_COUNT_ATTR = "data-count=\""
@@ -13,7 +15,10 @@ private const val HEX_LENGTH = 7
 @Singleton
 class ContributionsHelper @Inject constructor() {
 
-    fun parse(svg: String) {
+    private val sdf = SimpleDateFormat("yyyy-MM-dd")
+    private val calendar = Calendar.getInstance()
+
+    fun parse(svg: String): Map<String, List<Contribution>> {
         val contributions = arrayListOf<Contribution>()
         val scanner = Scanner(svg)
 
@@ -40,6 +45,21 @@ class ContributionsHelper @Inject constructor() {
             }
         }
         scanner.close()
+
+        val contributionsMap = mutableMapOf<String, ArrayList<Contribution>>()
+        contributions.forEach { contribution ->
+            val date = sdf.parse(contribution.date)
+            calendar.time = date
+            val key = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) +
+                    calendar.get(Calendar.YEAR)
+
+            if (!contributionsMap.containsKey(key)) {
+                contributionsMap[key] = arrayListOf()
+            }
+            contributionsMap[key]?.add(contribution)
+        }
+
+        return contributionsMap
     }
 
     fun getTotalContributions(svg: String): Int {
