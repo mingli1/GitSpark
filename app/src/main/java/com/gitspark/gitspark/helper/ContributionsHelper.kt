@@ -42,6 +42,18 @@ class ContributionsHelper @Inject constructor() {
         scanner.close()
     }
 
+    fun getTotalContributions(svg: String): Int {
+        val scanner = Scanner(svg)
+        while (scanner.hasNextLine()) {
+            val line = scanner.nextLine().trim()
+            if (line.contains("contributions") && Character.isDigit(line[0])) {
+                return line.split(" ")[0].toInt()
+            }
+        }
+        scanner.close()
+        return -1
+    }
+
     private fun String.containsOneOf(vararg strs: String): Boolean {
         return strs.any { this.contains(it) }
     }
