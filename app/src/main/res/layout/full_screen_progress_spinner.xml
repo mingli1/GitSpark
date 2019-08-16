@@ -7,10 +7,10 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
-    android:visibility="gone">
+    android:visibility="visible">
     
     <ProgressBar
-        style="?android:attr/progressBarStyleSmall"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
