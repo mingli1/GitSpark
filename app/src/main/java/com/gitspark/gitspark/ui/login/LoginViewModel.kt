@@ -1,14 +1,9 @@
 package com.gitspark.gitspark.ui.login
 
-import android.util.Log
 import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.BuildConfig
-import com.gitspark.gitspark.api.model.SORT_PUSHED
-import com.gitspark.gitspark.api.model.SORT_UPDATED
 import com.gitspark.gitspark.helper.PreferencesHelper
-import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.*
 import com.gitspark.gitspark.ui.base.BaseViewModel
@@ -25,7 +20,6 @@ class LoginViewModel @Inject constructor(
 
     val viewState = MutableLiveData<LoginViewState>()
     val navigateToMainActivityAction = SingleLiveAction()
-    val repoMediator = MediatorLiveData<List<Repo>>()
 
     @VisibleForTesting var currentUsername = ""
     @VisibleForTesting var currentPassword = ""
@@ -35,22 +29,7 @@ class LoginViewModel @Inject constructor(
         viewState.value = LoginViewState()
         if (prefsHelper.hasExistingAccessToken()) {
             setLoading(true)
-            // onSuccessfulLogin()
-            subscribe(repoRepository.getAuthRepos(prefsHelper.getCachedToken())) {
-                when (it) {
-                    is RepoResult.Success -> {
-                        subscribe(repoRepository.cacheRepos(it.repos),
-                            {
-                                val data = repoRepository.getRepos("%", false, SORT_PUSHED)
-                                repoMediator.addSource(data) { r -> repoMediator.value = r }
-                            },
-                            { Log.d("Testing", "Failed to cache repos") })
-                    }
-                    is RepoResult.Failure -> {
-                        Log.d("Testing", it.error)
-                    }
-                }
-            }
+            onSuccessfulLogin()
         }
     }
 

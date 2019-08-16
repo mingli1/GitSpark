@@ -50,6 +50,7 @@ class RepoRepository @Inject constructor(
         isPrivate: Boolean = false,
         order: String
     ): LiveData<List<Repo>> {
+        search.trim()
         return when (order) {
             SORT_FULL_NAME ->
                 if (isPrivate) repoDao.getPrivateReposDefaultOrder(search)

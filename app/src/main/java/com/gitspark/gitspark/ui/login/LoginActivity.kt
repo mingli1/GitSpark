@@ -2,7 +2,6 @@ package com.gitspark.gitspark.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.getString
 import com.gitspark.gitspark.extension.isVisible
@@ -24,11 +23,6 @@ class LoginActivity : BaseActivity<LoginViewModel>(LoginViewModel::class.java) {
     override fun observeViewModel() {
         viewModel.viewState.observe(this) { updateView(it) }
         viewModel.navigateToMainActivityAction.observe(this) { navigateToMainActivity() }
-        viewModel.repoMediator.observe(this) {
-            it.forEach { a ->
-                Log.d("Testing", "$a")
-            }
-        }
     }
 
     private fun updateView(viewState: LoginViewState) {
