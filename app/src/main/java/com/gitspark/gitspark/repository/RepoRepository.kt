@@ -2,6 +2,9 @@ package com.gitspark.gitspark.repository
 
 import androidx.lifecycle.LiveData
 import com.gitspark.gitspark.api.model.ApiAuthRepoRequest
+import com.gitspark.gitspark.api.model.SORT_CREATED
+import com.gitspark.gitspark.api.model.SORT_FULL_NAME
+import com.gitspark.gitspark.api.model.SORT_PUSHED
 import com.gitspark.gitspark.api.service.RepoService
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.helper.TimeHelper
@@ -27,7 +30,7 @@ class RepoRepository @Inject constructor(
     ): Observable<RepoResult> {
         return retrofitHelper.getRetrofit(token = token)
             .create(RepoService::class.java)
-            .getAuthRepos(request)
+            .getAuthRepos(request.visibility, request.affiliation, request.sort)
             .map { repos -> getSuccess(repos.map { it.toModel() }) }
             .onErrorReturn { getFailure("Failed to get authenticated user repositories.") }
     }
@@ -48,20 +51,30 @@ class RepoRepository @Inject constructor(
         order: String
     ): LiveData<List<Repo>> {
         return when (order) {
-            "fullName" -> repoDao.getReposDefaultOrder(search, isPrivate)
-            else -> repoDao.getReposOrderByDate(search, isPrivate, order)
+            SORT_FULL_NAME ->
+                if (isPrivate) repoDao.getPrivateReposDefaultOrder(search)
+                else repoDao.getAllReposDefaultOrder(search)
+            SORT_PUSHED ->
+                if (isPrivate) repoDao.getPrivateReposOrderByPushed(search)
+                else repoDao.getAllReposOrderByPushed(search)
+            SORT_CREATED ->
+                if (isPrivate) repoDao.getPrivateReposOrderByCreated(search)
+                else repoDao.getAllReposOrderByCreated(search)
+            else ->
+                if (isPrivate) repoDao.getPrivateReposOrderByUpdated(search)
+                else repoDao.getAllReposOrderByUpdated(search)
         }
     }
 
     fun isRepoCacheExpired(timestamp: String) =
         timeHelper.isExpiredMinutes(timeHelper.parse(timestamp), REPO_CACHE_DURATION_M)
 
-    private fun getSuccess(repos: List<Repo>): RepoResult = RepoResult.RepoSuccess(repos)
+    private fun getSuccess(repos: List<Repo>): RepoResult = RepoResult.Success(repos)
 
-    private fun getFailure(error: String): RepoResult = RepoResult.RepoFailure(error)
+    private fun getFailure(error: String): RepoResult = RepoResult.Failure(error)
 }
 
 sealed class RepoResult {
-    data class RepoSuccess(val repos: List<Repo>) : RepoResult()
-    data class RepoFailure(val error: String) : RepoResult()
+    data class Success(val repos: List<Repo>) : RepoResult()
+    data class Failure(val error: String) : RepoResult()
 }

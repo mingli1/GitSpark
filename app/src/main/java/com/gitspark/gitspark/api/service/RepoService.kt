@@ -1,13 +1,18 @@
 package com.gitspark.gitspark.api.service
 
-import com.gitspark.gitspark.api.model.ApiAuthRepoRequest
 import com.gitspark.gitspark.api.model.ApiRepo
 import io.reactivex.Observable
-import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.Query
 
 interface RepoService {
 
     @GET("user/repos")
-    fun getAuthRepos(@Body request: ApiAuthRepoRequest): Observable<List<ApiRepo>>
+    @Headers("Accept: application/json")
+    fun getAuthRepos(
+        @Query("visibility") visibility: String,
+        @Query("affiliation") affiliation: String,
+        @Query("sort") sort: String
+    ): Observable<List<ApiRepo>>
 }

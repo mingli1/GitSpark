@@ -13,11 +13,29 @@ interface RepoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRepo(repo: Repo)
 
-    @Query("SELECT * FROM repos WHERE name LIKE :search AND isPrivate = :isPrivate ORDER BY fullName ASC")
-    fun getReposDefaultOrder(search: String, isPrivate: Boolean): LiveData<List<Repo>>
+    @Query("SELECT * FROM repos WHERE name LIKE :search ORDER BY fullName ASC")
+    fun getAllReposDefaultOrder(search: String): LiveData<List<Repo>>
 
-    @Query("SELECT * FROM repos WHERE name LIKE :search AND isPrivate = :isPrivate ORDER BY datetime(:orderDate) DESC")
-    fun getReposOrderByDate(search: String, isPrivate: Boolean, orderDate: String): LiveData<List<Repo>>
+    @Query("SELECT * FROM repos WHERE name LIKE :search ORDER BY datetime(repoPushedAt) DESC")
+    fun getAllReposOrderByPushed(search: String): LiveData<List<Repo>>
+
+    @Query("SELECT * FROM repos WHERE name LIKE :search ORDER BY datetime(repoCreatedAt) DESC")
+    fun getAllReposOrderByCreated(search: String): LiveData<List<Repo>>
+
+    @Query("SELECT * FROM repos WHERE name LIKE :search ORDER BY datetime(repoUpdatedAt) DESC")
+    fun getAllReposOrderByUpdated(search: String): LiveData<List<Repo>>
+
+    @Query("SELECT * FROM repos WHERE name LIKE :search AND isPrivate = 1 ORDER BY fullName ASC")
+    fun getPrivateReposDefaultOrder(search: String): LiveData<List<Repo>>
+
+    @Query("SELECT * FROM repos WHERE name LIKE :search AND isPrivate = 1 ORDER BY datetime(repoPushedAt) DESC")
+    fun getPrivateReposOrderByPushed(search: String): LiveData<List<Repo>>
+
+    @Query("SELECT * FROM repos WHERE name LIKE :search AND isPrivate = 1 ORDER BY datetime(repoCreatedAt) DESC")
+    fun getPrivateReposOrderByCreated(search: String): LiveData<List<Repo>>
+
+    @Query("SELECT * FROM repos WHERE name LIKE :search AND isPrivate = 1 ORDER BY datetime(repoUpdatedAt) DESC")
+    fun getPrivateReposOrderByUpdated(search: String): LiveData<List<Repo>>
 
     @Query("DELETE FROM repos")
     fun clear()
