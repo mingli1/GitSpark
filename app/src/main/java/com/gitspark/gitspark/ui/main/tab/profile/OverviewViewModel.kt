@@ -67,9 +67,12 @@ class OverviewViewModel @Inject constructor(
 
     private fun updateViewStateWith(user: AuthUser) {
         with (user) {
-            val createdDate = Instant.parse(createdAt)
-            val dateTime = LocalDateTime.ofInstant(createdDate, ZoneOffset.UTC)
-            val formattedDateTime = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss").format(dateTime)
+            var formattedDateTime = ""
+            if (createdAt.isNotEmpty()) {
+                val createdDate = Instant.parse(createdAt)
+                val dateTime = LocalDateTime.ofInstant(createdDate, ZoneOffset.UTC)
+                formattedDateTime = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss").format(dateTime)
+            }
 
             viewState.value = OverviewViewState(
                 nameText = name,
