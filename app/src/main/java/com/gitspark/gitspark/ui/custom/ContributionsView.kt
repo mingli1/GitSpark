@@ -8,10 +8,10 @@ import com.gitspark.gitspark.model.Contribution
 import java.util.*
 import kotlin.math.ceil
 
-private const val START_POS = 64f
+private const val START_POS = 48f
 private const val SQUARE_SIZE = 75f
 private const val PADDING_SQUARE = 16f
-private const val PADDING_TEXT = 64f
+private const val PADDING_TEXT = 48f
 private const val MONTH_TEXT_SIZE = 40f
 private const val PADDING_BETWEEN_MONTHS = 64f
 
