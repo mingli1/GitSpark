@@ -4,10 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.Token
-import com.gitspark.gitspark.repository.LoginRepository
-import com.gitspark.gitspark.repository.LoginResult
-import com.gitspark.gitspark.repository.UserRepository
-import com.gitspark.gitspark.repository.UserResult
+import com.gitspark.gitspark.repository.*
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
@@ -28,13 +25,14 @@ class LoginViewModelTest {
     @RelaxedMockK private lateinit var loginRepository: LoginRepository
     @RelaxedMockK private lateinit var userRepository: UserRepository
     @RelaxedMockK private lateinit var prefsHelper: PreferencesHelper
+    @RelaxedMockK private lateinit var repoRepository: RepoRepository
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        viewModel = LoginViewModel(loginRepository, userRepository, prefsHelper)
+        viewModel = LoginViewModel(loginRepository, userRepository, prefsHelper, repoRepository)
         viewModel.initialize()
     }
 
@@ -77,23 +75,6 @@ class LoginViewModelTest {
     fun shouldShowLoadingIndicatorOnLoginAttempt() {
         viewModel.attemptLogin()
         assertThat(viewState().loading).isTrue()
-    }
-
-    @Test
-    fun shouldCacheOnSuccessfulUserData() {
-        val result = createUserSuccess(AuthUser())
-
-        viewModel.handleUserResult(result)
-
-        verify { userRepository.cacheUserData(result.user) }
-        assertThat(viewState().loading).isFalse()
-    }
-
-    @Test
-    fun shouldAlertOnUserDataFailure() {
-        val result = createUserFailure("error")
-        viewModel.handleUserResult(result)
-        assertThat(viewModel.alertAction.value).isEqualTo("error")
     }
 
     @Test
@@ -142,12 +123,6 @@ class LoginViewModelTest {
 
     private fun createLoginFailure(error: String) =
         LoginResult.Failure(error)
-
-    private fun createUserSuccess(user: AuthUser) =
-        UserResult.Success(user)
-
-    private fun createUserFailure(error: String) =
-        UserResult.Failure(error)
 
     private fun viewState() = viewModel.viewState.value!!
 }

@@ -8,6 +8,8 @@ import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.*
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
+import io.reactivex.Completable
+import io.reactivex.rxkotlin.Observables
 import okhttp3.Credentials
 import javax.inject.Inject
 
@@ -54,8 +56,35 @@ class LoginViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onSuccessfulLogin() {
-        subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
-            handleUserResult(it)
+        subscribe(
+            Observables.zip(
+                userRepository.getAuthUser(prefsHelper.getCachedToken()),
+                repoRepository.getAuthRepos(prefsHelper.getCachedToken())
+            ) {
+                user, repo -> ResultSet(user, repo)
+            }
+        ) {
+            val userCompletable = when (it.userResult) {
+                is UserResult.Success ->
+                    userRepository.cacheUserData(it.userResult.user)
+                is UserResult.Failure ->
+                    Completable.error(Throwable(message = it.userResult.error))
+            }
+            val repoCompletable = when (it.repoResult) {
+                is RepoResult.Success ->
+                    repoRepository.cacheRepos(it.repoResult.repos)
+                is RepoResult.Failure ->
+                    Completable.error(Throwable(message = it.repoResult.error))
+            }
+
+            subscribe(
+                Completable.mergeArray(
+                    userCompletable,
+                    repoCompletable
+                ),
+                { navigateToMainActivityAction.call() },
+                { error -> alert("Error: ${error.message}") }
+            )
         }
     }
 
@@ -64,20 +93,6 @@ class LoginViewModel @Inject constructor(
         when (result) {
             is LoginResult.Success -> onLoginAuthSuccess(result.token)
             is LoginResult.Failure -> onLoginAuthFailure(result.error)
-        }
-    }
-
-    @VisibleForTesting
-    fun handleUserResult(result: UserResult) {
-        setLoading(false)
-        when (result) {
-            is UserResult.Success -> {
-                subscribe(userRepository.cacheUserData(result.user),
-                    { navigateToMainActivityAction.call() },
-                    { alert("Could not cache auth user data.") }
-                )
-            }
-            is UserResult.Failure -> alert(result.error)
         }
     }
 
@@ -132,4 +147,9 @@ class LoginViewModel @Inject constructor(
     private fun setLoading(loading: Boolean) {
         viewState.value = viewState.value?.copy(loading = loading)
     }
+
+    data class ResultSet(
+        val userResult: UserResult,
+        val repoResult: RepoResult
+    )
 }
