@@ -18,7 +18,9 @@ class ContributionsHelper @Inject constructor() {
     private val sdf = SimpleDateFormat("yyyy-MM-dd")
     private val calendar = Calendar.getInstance()
 
-    fun parse(svg: String): Map<String, List<Contribution>> {
+    fun parse(svg: String): SortedMap<String, List<Contribution>> {
+        if (svg.isEmpty()) return sortedMapOf()
+
         val contributions = arrayListOf<Contribution>()
         val scanner = Scanner(svg)
 
@@ -50,7 +52,7 @@ class ContributionsHelper @Inject constructor() {
         contributions.forEach { contribution ->
             val date = sdf.parse(contribution.date)
             calendar.time = date
-            val key = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) +
+            val key = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) + " " +
                     calendar.get(Calendar.YEAR)
 
             if (!contributionsMap.containsKey(key)) {
@@ -59,7 +61,15 @@ class ContributionsHelper @Inject constructor() {
             contributionsMap[key]?.add(contribution)
         }
 
-        return contributionsMap
+        return contributionsMap.toSortedMap(kotlin.Comparator { o1, o2 ->
+            val key1 = o1.split(" ")
+            val key2 = o2.split(" ")
+
+            if (key1[1] == key2[1])
+                key2[0].monthValue() - key1[0].monthValue()
+            else
+                key2[1].toInt() - key1[1].toInt()
+        })
     }
 
     fun getTotalContributions(svg: String): Int {
@@ -76,5 +86,22 @@ class ContributionsHelper @Inject constructor() {
 
     private fun String.containsOneOf(vararg strs: String): Boolean {
         return strs.any { this.contains(it) }
+    }
+
+    private fun String.monthValue(): Int {
+        return when (this) {
+            "January" -> 0
+            "February" -> 1
+            "March" -> 2
+            "April" -> 3
+            "May" -> 4
+            "June" -> 5
+            "July" -> 6
+            "August" -> 7
+            "September" -> 8
+            "October" -> 9
+            "November" -> 10
+            else -> 11
+        }
     }
 }

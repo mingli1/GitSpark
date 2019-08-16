@@ -8,16 +8,17 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.model.Contribution
 import com.gitspark.gitspark.ui.base.BaseFragment
+import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.profile_header.*
+import java.util.*
 
 class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::class.java) {
 
     private var visible = false
     private var started = false
-
-    private var imageUrl = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_overview, container, false)
@@ -41,16 +42,14 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
     }
 
     override fun observeViewModel() {
-        viewModel.viewState.observe(this) { updateView(it) }
-        viewModel.userDataMediator.observe(this) { viewModel.onCachedUserDataRetrieved(it) }
+        viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.userDataMediator.observe(viewLifecycleOwner) { viewModel.onCachedUserDataRetrieved(it) }
+        viewModel.contributionsAction.observe(viewLifecycleOwner) { updateContributionsView(it) }
     }
 
     private fun updateView(viewState: OverviewViewState) {
         with (viewState) {
-            if (imageUrl != avatarUrl && avatarUrl.isNotEmpty()) {
-                avatar_image.loadImage(avatarUrl)
-                imageUrl = avatarUrl
-            }
+            if (avatarUrl.isNotEmpty()) avatar_image.loadImage(avatarUrl)
             name_field.text = nameText
             username_field.text = usernameText
             plan_name_field.isVisible = planName != "free"
@@ -70,5 +69,9 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
 
             loading_indicator.isVisible = loading
         }
+    }
+
+    private fun updateContributionsView(data: SortedMap<String, List<Contribution>>) {
+        contributions_view.createBitmap(data)
     }
 }

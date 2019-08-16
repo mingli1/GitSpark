@@ -1,10 +1,8 @@
 package com.gitspark.gitspark.ui.login
 
-import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.BuildConfig
-import com.gitspark.gitspark.helper.ContributionsHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.LoginRepository
@@ -19,8 +17,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     private val userRepository: UserRepository,
-    private val prefsHelper: PreferencesHelper,
-    private val contributionsHelper: ContributionsHelper
+    private val prefsHelper: PreferencesHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<LoginViewState>()
@@ -34,10 +31,7 @@ class LoginViewModel @Inject constructor(
         viewState.value = LoginViewState()
         if (prefsHelper.hasExistingAccessToken()) {
             setLoading(true)
-            //onSuccessfulLogin()
-            subscribe(userRepository.getContributionsSvg("mingli1")) {
-                Log.d("Testing", "${contributionsHelper.parse(it)}")
-            }
+            onSuccessfulLogin()
         }
     }
 

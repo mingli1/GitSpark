@@ -2,20 +2,26 @@ package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.helper.ContributionsHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
+import com.gitspark.gitspark.model.Contribution
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import java.util.*
 import javax.inject.Inject
 
 class OverviewViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val prefsHelper: PreferencesHelper
+    private val prefsHelper: PreferencesHelper,
+    private val contributionsHelper: ContributionsHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<OverviewViewState>()
     val userDataMediator = MediatorLiveData<AuthUser>()
+    val contributionsAction = SingleLiveEvent<SortedMap<String, List<Contribution>>>()
 
     fun onResume() {
         val userData = userRepository.getCurrentUserData()
@@ -61,6 +67,10 @@ class OverviewViewModel @Inject constructor(
                 loading = false,
                 planName = plan.planName
             )
+        }
+
+        subscribe(userRepository.getContributionsSvg(user.login)) {
+            contributionsAction.value = contributionsHelper.parse(it)
         }
     }
 }

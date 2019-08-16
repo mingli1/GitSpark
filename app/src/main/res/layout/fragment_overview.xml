@@ -17,6 +17,12 @@
             android:orientation="vertical">
             
             <include layout="@layout/profile_header"/>
+            
+            <com.gitspark.gitspark.ui.custom.ContributionsView
+                android:id="@+id/contributions_view"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         
         </LinearLayout>
     
