@@ -46,7 +46,7 @@ class ContributionsView(context: Context, attrs: AttributeSet) : View(context, a
             var viewHeight = 0f
             contributions.forEach { month ->
                 viewHeight += ceil(month.value.size / 7f) *
-                        (SQUARE_SIZE + PADDING_SQUARE) + PADDING_BETWEEN_MONTHS * 1.5f
+                        (SQUARE_SIZE + PADDING_SQUARE) + PADDING_BETWEEN_MONTHS * 1.1f
             }
 
             bitmap = Bitmap.createBitmap(viewWidth, viewHeight.toInt(), Bitmap.Config.ARGB_8888)
