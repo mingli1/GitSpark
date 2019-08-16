@@ -9,16 +9,12 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.model.Contribution
-import com.gitspark.gitspark.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.profile_header.*
 import java.util.*
 
-class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::class.java) {
-
-    private var visible = false
-    private var started = false
+class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class.java) {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_overview, container, false)
@@ -29,22 +25,7 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
     }
 
-    override fun onStart() {
-        super.onStart()
-        started = true
-        if (visible) viewModel.onResume()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        started = false
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        visible = isVisibleToUser
-        if (visible && started) viewModel.onResume()
-    }
+    override fun viewModelOnResume() = viewModel.onResume()
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
