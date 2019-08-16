@@ -56,4 +56,12 @@ class UserRepositoryTest {
         userRepository.getCurrentUserData()
         verify { authUserDao.getAuthUser() }
     }
+
+    @Test
+    fun shouldGetContributionsSvg() {
+        every { userRepository.getContributionsSvg("username") } returns
+                Observable.just("data")
+        val observer = userRepository.getContributionsSvg("username").test()
+        observer.assertValue("data")
+    }
 }
