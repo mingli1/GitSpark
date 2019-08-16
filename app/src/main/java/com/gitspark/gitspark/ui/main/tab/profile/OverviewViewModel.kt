@@ -36,24 +36,33 @@ class OverviewViewModel @Inject constructor(
         val expired = userRepository.isUserCacheExpired(user.timestamp)
         if (expired) {
             viewState.value = OverviewViewState(loading = true)
-            subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
-                when (it) {
-                    is UserResult.Success -> {
-                        subscribe(userRepository.cacheUserData(it.user),
-                            { updateViewStateWith(it.user) },
-                            {
-                                alert("Failed to cache user data.")
-                                updateViewStateWith(user)
-                            })
-                    }
-                    is UserResult.Failure -> {
-                        alert("Failed to update user data.")
-                        updateViewStateWith(user)
-                    }
+            requestAuthUser(user)
+        }
+        else updateViewStateWith(user)
+    }
+
+    fun onRefresh() {
+        viewState.value = viewState.value?.copy(refreshing = true)
+        requestAuthUser(null)
+    }
+
+    private fun requestAuthUser(existingUser: AuthUser?) {
+        subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
+            when (it) {
+                is UserResult.Success -> {
+                    subscribe(userRepository.cacheUserData(it.user),
+                        { updateViewStateWith(it.user) },
+                        {
+                            alert("Failed to cache user data.")
+                            existingUser?.let { user -> updateViewStateWith(user) }
+                        })
+                }
+                is UserResult.Failure -> {
+                    alert("Failed to update user data.")
+                    existingUser?.let { user -> updateViewStateWith(user) }
                 }
             }
         }
-        else updateViewStateWith(user)
     }
 
     private fun updateViewStateWith(user: AuthUser) {
@@ -73,6 +82,7 @@ class OverviewViewModel @Inject constructor(
                 numFollowers = followers,
                 numFollowing = following,
                 loading = false,
+                refreshing = false,
                 planName = plan.planName,
                 createdDate = formattedDateTime
             )

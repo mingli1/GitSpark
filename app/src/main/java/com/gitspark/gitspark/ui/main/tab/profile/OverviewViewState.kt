@@ -13,5 +13,6 @@ data class OverviewViewState(
     val loading: Boolean = false,
     val planName: String = "",
     val totalContributions: Int = 0,
-    val createdDate: String = ""
+    val createdDate: String = "",
+    val refreshing: Boolean = false
 )

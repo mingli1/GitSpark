@@ -2,59 +2,68 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhiteBackground">
     
-    <ScrollView
+    <com.baoyz.widget.PullRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        
-        <LinearLayout
+        android:layout_height="wrap_content"
+        app:refreshType="smartisan">
+    
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorWhiteBackground"
-            android:orientation="vertical">
-            
-            <include
-                layout="@layout/profile_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"/>
-            
+            android:layout_height="wrap_content">
+        
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/colorWhite">
-    
-                <TextView
-                    android:id="@+id/total_contributions_field"
+                android:orientation="vertical">
+            
+                <include
+                    layout="@layout/profile_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/BodyLarge"
-                    android:layout_margin="16dp"
-                    tools:text="900 contributions in the past year"/>
-    
-                <com.gitspark.gitspark.ui.custom.ContributionsView
-                    android:id="@+id/contributions_view"
-                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"/>
+            
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/colorWhite">
                 
+                    <TextView
+                        android:id="@+id/total_contributions_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/BodyLarge"
+                        android:layout_margin="16dp"
+                        tools:text="900 contributions in the past year"/>
+                
+                    <com.gitspark.gitspark.ui.custom.ContributionsView
+                        android:id="@+id/contributions_view"
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+            
+                </LinearLayout>
+            
+                <TextView
+                    android:id="@+id/created_at_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Footer"
+                    android:layout_margin="16dp"
+                    tools:text="Joined GitHub at 10-23-1999 01:31:20"/>
+        
             </LinearLayout>
-            
-            <TextView
-                android:id="@+id/created_at_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Footer"
-                android:layout_margin="16dp"
-                tools:text="Joined GitHub at 10-23-1999 01:31:20"/>
-            
-        </LinearLayout>
     
-    </ScrollView>
+        </ScrollView>
+        
+    </com.baoyz.widget.PullRefreshLayout>
     
     <include layout="@layout/full_screen_progress_spinner"/>
     

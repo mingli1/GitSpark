@@ -24,6 +24,11 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
         return inflater.inflate(R.layout.fragment_overview, container, false)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
+    }
+
     override fun onStart() {
         super.onStart()
         started = true
@@ -71,6 +76,7 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
             created_at_field.text = getString(R.string.joined_date, createdDate)
 
             loading_indicator.isVisible = loading
+            swipe_refresh.setRefreshing(refreshing)
         }
     }
 
