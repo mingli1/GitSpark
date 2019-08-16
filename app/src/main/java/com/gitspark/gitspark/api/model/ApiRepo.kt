@@ -34,17 +34,17 @@ data class ApiRepo(
 ) {
 
     fun toModel() = Repo(
-        id = id ?: 0,
-        name = name ?: "",
+        repoId = id ?: 0,
+        repoName = name ?: "",
         fullName = fullName ?: "",
         owner = owner?.toModel() ?: User(),
-        private = private ?: false,
-        description = description ?: "",
-        fork = fork ?: false,
-        language = language ?: "",
+        isPrivate = private ?: false,
+        repoDescription = description ?: "",
+        isForked = fork ?: false,
+        repoLanguage = language ?: "",
         numForks = numForks ?: 0,
-        stars = stars ?: 0,
-        watches = watches ?: 0,
+        numStars = stars ?: 0,
+        numWatches = watches ?: 0,
         defaultBranch = defaultBranch ?: "",
         numOpenIssues = numOpenIssues ?: 0,
         topics = topics ?: emptyList(),
@@ -55,11 +55,11 @@ data class ApiRepo(
         hasDownloads = hasDownloads ?: false,
         archived = archived ?: false,
         disabled = disabled ?: false,
-        pushedAt = pushedAt ?: "",
-        createdAt = createdAt ?: "",
-        updatedAt = updatedAt ?: "",
+        repoPushedAt = pushedAt ?: "",
+        repoCreatedAt = createdAt ?: "",
+        repoUpdatedAt = updatedAt ?: "",
         permissions = permissions ?: RepoPermissions(admin = false, push = false, pull = false),
-        license = license ?: RepoLicense(key = "", name = "", spdxId = "", url = "")
+        license = license ?: RepoLicense(licenseKey = "", licenseName = "", spdxId = "", licenseUrl = "")
     )
 }
 
@@ -70,8 +70,8 @@ data class RepoPermissions(
 )
 
 data class RepoLicense(
-    @field:Json(name = "key") val key: String?,
-    @field:Json(name = "name") val name: String?,
+    @field:Json(name = "key") val licenseKey: String?,
+    @field:Json(name = "name") val licenseName: String?,
     @field:Json(name = "spdx_id") val spdxId: String?,
-    @field:Json(name = "url") val url: String?
+    @field:Json(name = "url") val licenseUrl: String?
 )

@@ -36,4 +36,8 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideAuthUserDao(database: Database) = database.authUserDao()
+
+    @Provides
+    @Singleton
+    fun provideRepoDao(database: Database) = database.repoDao()
 }

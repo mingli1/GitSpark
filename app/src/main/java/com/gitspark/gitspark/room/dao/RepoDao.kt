@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.room.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -12,11 +13,11 @@ interface RepoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRepo(repo: Repo)
 
-    @Query("SELECT * FROM repos WHERE name LIKE :search AND private = :isPrivate ORDER BY fullName ASC")
-    fun getReposDefaultOrder(search: String = "", isPrivate: Boolean = false)
+    @Query("SELECT * FROM repos WHERE name LIKE :search AND isPrivate = :isPrivate ORDER BY fullName ASC")
+    fun getReposDefaultOrder(search: String, isPrivate: Boolean): LiveData<List<Repo>>
 
-    @Query("SELECT * FROM repos WHERE name LIKE :search AND private = :isPrivate ORDER BY datetime(:orderDate) DESC")
-    fun getReposOrderByDate(search: String = "", isPrivate: Boolean = false, orderDate: String)
+    @Query("SELECT * FROM repos WHERE name LIKE :search AND isPrivate = :isPrivate ORDER BY datetime(:orderDate) DESC")
+    fun getReposOrderByDate(search: String, isPrivate: Boolean, orderDate: String): LiveData<List<Repo>>
 
     @Query("DELETE FROM repos")
     fun clear()
