@@ -12,5 +12,6 @@ data class OverviewViewState(
     val numFollowers: Int = 0,
     val loading: Boolean = false,
     val planName: String = "",
-    val totalContributions: Int = 0
+    val totalContributions: Int = 0,
+    val createdDate: String = ""
 )

@@ -40,5 +40,10 @@
     <style name="BodyLarge" parent="Body">
         <item name="android:textSize">20sp</item>
     </style>
+    
+    <style name="Footer">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.helper
 
+import android.annotation.SuppressLint
 import com.gitspark.gitspark.model.Contribution
 import java.text.SimpleDateFormat
 import java.util.*
@@ -15,6 +16,7 @@ private const val HEX_LENGTH = 7
 @Singleton
 class ContributionsHelper @Inject constructor() {
 
+    @SuppressLint("SimpleDateFormat")
     private val sdf = SimpleDateFormat("yyyy-MM-dd")
     private val calendar = Calendar.getInstance()
 

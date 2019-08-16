@@ -10,6 +10,10 @@ import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
@@ -54,6 +58,10 @@ class OverviewViewModel @Inject constructor(
 
     private fun updateViewStateWith(user: AuthUser) {
         with (user) {
+            val createdDate = Instant.parse(createdAt)
+            val dateTime = LocalDateTime.ofInstant(createdDate, ZoneOffset.UTC)
+            val formattedDateTime = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss").format(dateTime)
+
             viewState.value = OverviewViewState(
                 nameText = name,
                 usernameText = login,
@@ -65,7 +73,8 @@ class OverviewViewModel @Inject constructor(
                 numFollowers = followers,
                 numFollowing = following,
                 loading = false,
-                planName = plan.planName
+                planName = plan.planName,
+                createdDate = formattedDateTime
             )
         }
 

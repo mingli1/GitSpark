@@ -68,6 +68,7 @@ class OverviewFragment : BaseFragment<OverviewViewModel>(OverviewViewModel::clas
             followers_field.text = getString(R.string.followers_text, numFollowers)
 
             total_contributions_field.text = getString(R.string.total_contribution, totalContributions)
+            created_at_field.text = getString(R.string.joined_date, createdDate)
 
             loading_indicator.isVisible = loading
         }
