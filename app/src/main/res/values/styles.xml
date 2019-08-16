@@ -36,5 +36,9 @@
     <style name="BodyBold" parent="Body">
         <item name="android:textStyle">bold</item>
     </style>
+    
+    <style name="BodyLarge" parent="Body">
+        <item name="android:textSize">20sp</item>
+    </style>
 
 </resources>

@@ -16,7 +16,7 @@
         app:cardElevation="0dp"
         app:cardCornerRadius="4dp"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/colorWhiteBackground"
+        app:strokeColor="@color/colorWhiteDark"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent">
     

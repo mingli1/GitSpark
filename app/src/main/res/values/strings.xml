@@ -16,4 +16,5 @@
     <string name="following_text">Following (%1$d)</string>
     <string name="followers_text">Followers (%1$d)</string>
     <string name="edit_profile_button">Edit Profile</string>
+    <string name="total_contribution">%1$d contributions in the past year</string>
 </resources>

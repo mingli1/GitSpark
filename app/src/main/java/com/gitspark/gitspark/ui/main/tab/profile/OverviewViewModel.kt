@@ -71,6 +71,9 @@ class OverviewViewModel @Inject constructor(
 
         subscribe(userRepository.getContributionsSvg(user.login)) {
             contributionsAction.value = contributionsHelper.parse(it)
+            viewState.value = viewState.value?.copy(
+                totalContributions = contributionsHelper.getTotalContributions(it)
+            )
         }
     }
 }

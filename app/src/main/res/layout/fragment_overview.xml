@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     
@@ -11,19 +12,38 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/colorLightGray"
+            android:background="@color/colorWhiteBackground"
             android:orientation="vertical">
             
-            <include layout="@layout/profile_header"/>
-            
-            <com.gitspark.gitspark.ui.custom.ContributionsView
-                android:id="@+id/contributions_view"
-                android:layout_gravity="center"
+            <include
+                layout="@layout/profile_header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"/>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/colorWhite">
+    
+                <TextView
+                    android:id="@+id/total_contributions_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/BodyLarge"
+                    android:layout_margin="16dp"
+                    tools:text="900 contributions in the past year"/>
+    
+                <com.gitspark.gitspark.ui.custom.ContributionsView
+                    android:id="@+id/contributions_view"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                
+            </LinearLayout>
+            
         </LinearLayout>
     
     </ScrollView>
