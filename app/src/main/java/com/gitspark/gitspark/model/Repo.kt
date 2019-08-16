@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.gitspark.gitspark.api.model.RepoLicense
 import com.gitspark.gitspark.api.model.RepoPermissions
 
-@Entity
+@Entity(tableName = "repos")
 data class Repo(
     @PrimaryKey val id: Int,
     val name: String,
