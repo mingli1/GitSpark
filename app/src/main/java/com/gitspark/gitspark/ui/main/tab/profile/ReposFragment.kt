@@ -48,6 +48,9 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
             loading_indicator.isVisible = loading
             reposAdapter.setData(repos)
             swipe_refresh.setRefreshing(refreshing)
+
+            if (clearSearchFilter) search_field.text.clear()
+            if (clearSortSelection) sort_spinner.setSelection(0)
         }
     }
 

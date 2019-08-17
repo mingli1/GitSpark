@@ -42,7 +42,11 @@ class ReposViewModel @Inject constructor(
     }
 
     fun onRefresh() {
-        viewState.value = viewState.value?.copy(refreshing = true)
+        viewState.value = viewState.value?.copy(
+            refreshing = true,
+            clearSearchFilter = true,
+            clearSortSelection = true
+        )
         requestAuthRepos(null)
     }
 
@@ -61,7 +65,7 @@ class ReposViewModel @Inject constructor(
             when (it) {
                 is RepoResult.Success -> {
                     subscribe(repoRepository.cacheRepos(it.repos),
-                        { updateViewStateWith(it.repos) },
+                        { updateViewStateWith(sortReposByUpdated(it.repos)) },
                         {
                             alert("Failed to cache repo data.")
                             existingRepos?.let { repo -> updateViewStateWith(repo) }
@@ -87,7 +91,9 @@ class ReposViewModel @Inject constructor(
     private fun updateViewStateWithFiltered() {
         viewState.value?.let {
             viewState.value = it.copy(
-                repos = filterRepos(currentRepoData, filterString, sortSelection)
+                repos = filterRepos(currentRepoData, filterString, sortSelection),
+                clearSortSelection = false,
+                clearSearchFilter = false
             )
         }
     }
@@ -108,5 +114,11 @@ class ReposViewModel @Inject constructor(
                 r2.numStars - r1.numStars
             })
         }
+    }
+
+    private fun sortReposByUpdated(repos: List<Repo>): List<Repo> {
+        return repos.sortedWith(Comparator { r1, r2 ->
+            r2.repoPushedAt.compareTo(r1.repoPushedAt)
+        })
     }
 }
