@@ -2,6 +2,7 @@ package com.gitspark.gitspark.di
 
 import com.gitspark.gitspark.ui.main.tab.*
 import com.gitspark.gitspark.ui.main.tab.profile.OverviewFragment
+import com.gitspark.gitspark.ui.main.tab.profile.ReposFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -22,4 +23,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesOverviewFragment(): OverviewFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesReposFragment(): ReposFragment
 }
