@@ -83,7 +83,10 @@ class LoginViewModel @Inject constructor(
                     repoCompletable
                 ),
                 { navigateToMainActivityAction.call() },
-                { error -> alert("Error: ${error.message}") }
+                { error ->
+                    setLoading(false)
+                    alert("Error: ${error.message}")
+                }
             )
         }
     }
