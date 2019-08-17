@@ -2,9 +2,11 @@ package com.gitspark.gitspark.extension
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import com.gitspark.gitspark.R
@@ -33,3 +35,6 @@ fun ImageView.loadImage(url: String) =
         .load(url)
         .placeholder(R.drawable.image_placeholder)
         .into(this)
+
+fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View =
+    LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)

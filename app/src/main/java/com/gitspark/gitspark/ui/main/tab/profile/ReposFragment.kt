@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.gitspark.gitspark.R
 
 class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
@@ -13,9 +12,12 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
         return inflater.inflate(R.layout.fragment_repos, container, false)
     }
 
-    override fun viewModelOnResume() {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
     }
+
+    override fun viewModelOnResume() = viewModel.onResume()
 
     override fun observeViewModel() {
 

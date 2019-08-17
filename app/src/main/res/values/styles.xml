@@ -17,6 +17,10 @@
         <item name="android:textColor">@color/colorBlack</item>
     </style>
     
+    <style name="HeaderBold.Small" parent="HeaderBold">
+        <item name="android:textSize">20sp</item>
+    </style>
+    
     <style name="HeaderSubtext">
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textSize">16sp</item>
@@ -33,6 +37,10 @@
         <item name="android:textColor">@color/colorDarkerGray</item>
     </style>
     
+    <style name="BodyLight.Small" parent="BodyLight">
+        <item name="android:textSize">14sp</item>
+    </style>
+    
     <style name="BodyBold" parent="Body">
         <item name="android:textStyle">bold</item>
     </style>
@@ -44,6 +52,13 @@
     <style name="Footer">
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="TopicsStyle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTopicsText</item>
     </style>
 
 </resources>

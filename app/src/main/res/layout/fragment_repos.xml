@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhiteBackground">
     
-    <TextView
+    <com.baoyz.widget.PullRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Repos"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"
+        app:refreshType="smartisan">
+        
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/repos_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            
+        </ScrollView>
+        
+    </com.baoyz.widget.PullRefreshLayout>
+    
+    <include layout="@layout/full_screen_progress_spinner"/>
 
-</LinearLayout>
+</FrameLayout>

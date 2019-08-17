@@ -12,4 +12,6 @@
     <color name="colorLightGray">#B5B5B5</color>
     <color name="colorDarkGray">#878787</color>
     <color name="colorDarkerGray">#545454</color>
+    <color name="colorTopicsBackground">#BFEEFF</color>
+    <color name="colorTopicsText">#212FFF</color>
 </resources>
