@@ -36,8 +36,10 @@ class ReposAdapter(
     }
 
     fun setData(repos: List<Repo>) {
-        this.repos = repos
-        notifyDataSetChanged()
+        if (this.repos != repos) {
+            this.repos = repos
+            notifyDataSetChanged()
+        }
     }
 
     inner class ViewHolder(private val repoView: View) : RecyclerView.ViewHolder(repoView) {
