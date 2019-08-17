@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.helper.LanguageColorHelper
 import kotlinx.android.synthetic.main.fragment_repos.*
+import javax.inject.Inject
 
 class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
+    @Inject lateinit var colorHelper: LanguageColorHelper
     private lateinit var reposAdapter: ReposAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -23,7 +26,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
         repos_list.setHasFixedSize(true)
         repos_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        reposAdapter = ReposAdapter()
+        reposAdapter = ReposAdapter(colorHelper)
         if (repos_list.adapter == null) repos_list.adapter = reposAdapter
     }
 

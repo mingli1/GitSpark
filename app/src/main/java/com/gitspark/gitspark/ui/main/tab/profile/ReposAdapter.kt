@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.inflate
 import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.model.Repo
 import kotlinx.android.synthetic.main.repo_view.view.*
 import org.threeten.bp.Instant
@@ -19,7 +20,9 @@ import org.threeten.bp.format.DateTimeFormatter
 
 private const val MAX_TOPICS_SHOWN = 3
 
-class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
+class ReposAdapter(
+    private val colorHelper: LanguageColorHelper
+) : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
 
     private var repos = listOf<Repo>()
 
@@ -45,9 +48,9 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
                 full_name_field.text = repo.fullName
                 description_field.text = repo.repoDescription
 
-                if (repo.repoCreatedAt.isNotEmpty()) {
-                    val createdDate = Instant.parse(repo.repoCreatedAt)
-                    val dateTime = LocalDateTime.ofInstant(createdDate, ZoneOffset.UTC)
+                if (repo.repoPushedAt.isNotEmpty()) {
+                    val updatedDate = Instant.parse(repo.repoPushedAt)
+                    val dateTime = LocalDateTime.ofInstant(updatedDate, ZoneOffset.UTC)
                     updated_field.isVisible = true
                     val formatted = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss").format(dateTime)
                     updated_field.text = context.getString(R.string.updated_repo, formatted)
@@ -67,6 +70,13 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
                             text = topic
                         }
                         topics_container.addView(topicView)
+                    }
+                }
+
+                colorHelper.getColor(repo.repoLanguage)?.let {
+                    language_field.compoundDrawablesRelative[0].apply {
+                        mutate()
+                        setTint(it)
                     }
                 }
             }
