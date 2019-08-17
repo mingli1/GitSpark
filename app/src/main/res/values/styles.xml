@@ -46,7 +46,7 @@
     </style>
     
     <style name="BodyLarge" parent="Body">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
     
     <style name="Footer">

@@ -19,4 +19,11 @@
     <string name="total_contribution">%1$d contributions in the past year</string>
     <string name="joined_date">Joined GitHub at %1$s</string>
     <string name="updated_repo">Updated at %1$s</string>
+    <string name="repo_search_hint">Search for a repository…</string>
+    <string-array name="repo_visibility_options">
+        <item>all</item>
+        <item>public</item>
+        <item>private</item>
+        <item>stars</item>
+    </string-array>
 </resources>

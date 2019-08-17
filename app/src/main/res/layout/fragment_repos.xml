@@ -12,11 +12,55 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:refreshType="smartisan">
-            
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/repos_list"
+        
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+    
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+        
+                <EditText
+                    android:id="@+id/search_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="textFilter|textNoSuggestions"
+                    android:ems="14"
+                    android:hint="@string/repo_search_hint"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_edittext"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/sort_spinner"/>
+                
+                <Spinner
+                    android:id="@+id/sort_spinner"
+                    android:layout_width="96dp"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/repo_visibility_options"
+                    android:dropDownWidth="96dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/spinner_background"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+        
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/repos_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/search_field"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+    
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            
+        </androidx.core.widget.NestedScrollView>
         
     </com.baoyz.widget.PullRefreshLayout>
     
