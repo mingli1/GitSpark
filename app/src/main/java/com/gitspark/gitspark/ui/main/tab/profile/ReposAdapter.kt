@@ -59,12 +59,15 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
                 language_field.text = repo.repoLanguage
 
                 topics_container.removeAllViews()
-                listOf("android", "kotlin", "java").forEach { topic ->
-                    val topicView = LayoutInflater.from(context).inflate(R.layout.topics_view, topics_container, false)
-                    ((topicView as CardView).getChildAt(0) as TextView).apply {
-                        text = topic
+                repo.topics.forEachIndexed { index, topic ->
+                    if (index < MAX_TOPICS_SHOWN) {
+                        val topicView = LayoutInflater.from(context)
+                            .inflate(R.layout.topics_view, topics_container, false)
+                        ((topicView as CardView).getChildAt(0) as TextView).apply {
+                            text = topic
+                        }
+                        topics_container.addView(topicView)
                     }
-                    topics_container.addView(topicView)
                 }
             }
         }

@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface RepoService {
 
     @GET("user/repos")
-    @Headers("Accept: application/json")
+    @Headers("Accept: application/json", "Accept: application/vnd.github.mercy-preview+json")
     fun getAuthRepos(
         @Query("visibility") visibility: String,
         @Query("affiliation") affiliation: String,
