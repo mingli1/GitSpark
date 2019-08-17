@@ -10,6 +10,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.afterTextChanged
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.extension.onItemSelected
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -52,6 +53,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
     private fun setupListeners() {
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
-        search_field.afterTextChanged {}
+        search_field.afterTextChanged { viewModel.onAfterTextChanged(search_field.text.toString()) }
+        sort_spinner.onItemSelected { viewModel.onSortItemSelected(sort_spinner.selectedItem.toString()) }
     }
 }

@@ -31,9 +31,8 @@ class ReposAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(parent.inflate(R.layout.repo_view))
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(repos[position])
-    }
 
     fun setData(repos: List<Repo>) {
         if (this.repos != repos) {

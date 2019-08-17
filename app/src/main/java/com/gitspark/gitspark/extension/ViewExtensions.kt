@@ -7,8 +7,10 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import com.gitspark.gitspark.R
 import com.squareup.picasso.Picasso
 
@@ -48,3 +50,12 @@ fun ImageView.loadImage(url: String) =
 
 fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View =
     LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
+
+fun Spinner.onItemSelected(cb: (Int) -> Unit) {
+    onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            cb(position)
+        }
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+    }
+}
