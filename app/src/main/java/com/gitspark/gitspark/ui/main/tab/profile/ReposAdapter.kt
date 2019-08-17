@@ -1,7 +1,11 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
+import android.annotation.SuppressLint
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.inflate
@@ -12,6 +16,8 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
+
+private const val MAX_TOPICS_SHOWN = 3
 
 class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
 
@@ -33,6 +39,7 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val repoView: View) : RecyclerView.ViewHolder(repoView) {
 
+        @SuppressLint("InflateParams")
         fun bind(repo: Repo) {
             with (repoView) {
                 full_name_field.text = repo.fullName
@@ -50,6 +57,15 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
                 stars_field.text = repo.numStars.toString()
                 forks_field.text = repo.numForks.toString()
                 language_field.text = repo.repoLanguage
+
+                topics_container.removeAllViews()
+                listOf("android", "kotlin", "java").forEach { topic ->
+                    val topicView = LayoutInflater.from(context).inflate(R.layout.topics_view, topics_container, false)
+                    ((topicView as CardView).getChildAt(0) as TextView).apply {
+                        text = topic
+                    }
+                    topics_container.addView(topicView)
+                }
             }
         }
     }
