@@ -4,6 +4,13 @@ import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.User
 import com.squareup.moshi.Json
 
+data class ApiStarredRepo(
+    @field:Json(name = "starred_at") val starredAt: String,
+    @field:Json(name = "repo") val repo: ApiRepo
+) {
+    fun toModel() = repo.toModel().also { it.starredAt = starredAt }
+}
+
 data class ApiRepo(
     @field:Json(name = "id") val id: Int?,
     @field:Json(name = "name") val name: String?,

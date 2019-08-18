@@ -35,6 +35,14 @@ class RepoRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to get authenticated user repositories.") }
     }
 
+    fun getAuthStarredRepos(token: String): Observable<RepoResult> {
+        return retrofitHelper.getRetrofit(token = token)
+            .create(RepoService::class.java)
+            .getAuthStarredRepos()
+            .map { starredRepos -> getSuccess(starredRepos.map { it.toModel() }) }
+            .onErrorReturn { getFailure("Failed to get authenticated starred repositories.") }
+    }
+
     fun cacheRepos(repos: List<Repo>): Completable {
         return Completable.fromAction {
             val timestamp = timeHelper.nowAsString()
