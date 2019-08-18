@@ -54,10 +54,14 @@
         <item name="android:textSize">14sp</item>
     </style>
     
-    <style name="TopicsStyle">
+    <style name="LabelStyle">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorDarkerGray</item>
+    </style>
+    
+    <style name="TopicsStyle" parent="LabelStyle">
         <item name="android:textColor">@color/colorTopicsText</item>
     </style>
 

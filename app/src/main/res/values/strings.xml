@@ -26,4 +26,5 @@
         <item>private</item>
         <item>stars</item>
     </string-array>
+    <string name="private_label">private</string>
 </resources>

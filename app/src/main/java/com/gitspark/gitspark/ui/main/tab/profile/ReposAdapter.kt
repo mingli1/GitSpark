@@ -59,6 +59,7 @@ class ReposAdapter(
 
                 stars_field.text = repo.numStars.toString()
                 forks_field.text = repo.numForks.toString()
+                private_label.isVisible = repo.isPrivate
                 language_field.text = repo.repoLanguage
 
                 topics_container.removeAllViews()
