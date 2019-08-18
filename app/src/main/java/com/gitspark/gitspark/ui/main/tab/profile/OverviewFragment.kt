@@ -8,6 +8,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.model.Contribution
 import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -29,7 +30,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
-        viewModel.userDataMediator.observe(viewLifecycleOwner) { viewModel.onCachedUserDataRetrieved(it) }
+        viewModel.userDataMediator.observeOnce(viewLifecycleOwner) { viewModel.onCachedUserDataRetrieved(it) }
         viewModel.contributionsAction.observe(viewLifecycleOwner) { updateContributionsView(it) }
     }
 
