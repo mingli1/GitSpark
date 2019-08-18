@@ -24,6 +24,7 @@
         <item>all</item>
         <item>public</item>
         <item>private</item>
+        <item>forked</item>
         <item>stars</item>
     </string-array>
     <string name="private_label">private</string>

@@ -13,6 +13,7 @@ import javax.inject.Inject
 private const val SORT_ALL = "all"
 private const val SORT_PUBLIC = "public"
 private const val SORT_PRIVATE = "private"
+private const val SORT_FORKED = "forked"
 
 class ReposViewModel @Inject constructor(
     private val repoRepository: RepoRepository,
@@ -137,6 +138,7 @@ class ReposViewModel @Inject constructor(
             SORT_ALL -> filteredRepos
             SORT_PUBLIC -> filteredRepos.filter { !it.isPrivate }
             SORT_PRIVATE -> filteredRepos.filter { it.isPrivate }
+            SORT_FORKED -> filteredRepos.filter { it.isForked }
             else -> filteredRepos.sortedWith(Comparator { r1, r2 ->
                 r2.numStars - r1.numStars
             })
