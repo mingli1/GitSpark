@@ -35,10 +35,9 @@ class ReposAdapter(
         holder.bind(repos[position])
 
     fun setData(repos: List<Repo>) {
-        if (this.repos != repos) {
-            this.repos = repos
-            notifyDataSetChanged()
-        }
+        if (this.repos != repos)
+        this.repos = repos
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(private val repoView: View) : RecyclerView.ViewHolder(repoView) {
@@ -78,6 +77,13 @@ class ReposAdapter(
                     language_field.compoundDrawablesRelative[0].apply {
                         mutate()
                         setTint(it)
+                    }
+                }
+
+                if (repo.starred) {
+                    stars_field.compoundDrawablesRelative[0].apply {
+                        mutate()
+                        setTint(context.getColor(R.color.colorYellow))
                     }
                 }
             }

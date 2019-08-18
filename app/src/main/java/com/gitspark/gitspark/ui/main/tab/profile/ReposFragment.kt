@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
-import com.gitspark.gitspark.extension.afterTextChanged
-import com.gitspark.gitspark.extension.isVisible
-import com.gitspark.gitspark.extension.observe
-import com.gitspark.gitspark.extension.onItemSelected
+import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -40,7 +37,9 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
-        viewModel.repoDataMediator.observe(viewLifecycleOwner) { viewModel.onCachedRepoDataRetrieved(it) }
+        viewModel.repoDataMediator.observeOnce(viewLifecycleOwner) {
+            viewModel.onCachedRepoDataRetrieved(it)
+        }
     }
 
     private fun updateView(viewState: ReposViewState) {

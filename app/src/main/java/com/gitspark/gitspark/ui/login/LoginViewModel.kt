@@ -142,7 +142,7 @@ class LoginViewModel @Inject constructor(
                             setLoading(false)
                         }
                     )
-                } ?: throw IllegalStateException("Access token not cached and does not exist.")
+                } ?: alert("Illegal state: Access token not cached and does not exist.")
             }
         }
     }

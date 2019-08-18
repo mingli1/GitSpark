@@ -38,7 +38,9 @@ class ReposViewModel @Inject constructor(
             viewState.value = ReposViewState(loading = true)
             requestAuthRepos(repos)
         }
-        else updateViewStateWith(repos)
+        else {
+            updateViewStateWith(repos)
+        }
     }
 
     fun onRefresh() {
@@ -86,6 +88,7 @@ class ReposViewModel @Inject constructor(
             loading = false,
             refreshing = false
         )
+        requestStarredRepos()
     }
 
     private fun updateViewStateWithFiltered() {
@@ -95,6 +98,26 @@ class ReposViewModel @Inject constructor(
                 clearSortSelection = false,
                 clearSearchFilter = false
             )
+        }
+    }
+
+    private fun requestStarredRepos() {
+        subscribe(repoRepository.getAuthStarredRepos(prefsHelper.getCachedToken())) { result ->
+            when (result) {
+                is RepoResult.Success -> {
+                    currentRepoData.forEach { userRepo ->
+                        if (result.repos.find { it.repoId == userRepo.repoId } != null) {
+                            userRepo.starred = true
+                        }
+                    }
+                    viewState.value = viewState.value?.copy(
+                        repos = currentRepoData,
+                        clearSortSelection = false,
+                        clearSearchFilter = false
+                    )
+                }
+                is RepoResult.Failure -> alert("Could not obtain repo starred data.")
+            }
         }
     }
 

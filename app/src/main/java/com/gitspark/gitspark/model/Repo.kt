@@ -35,5 +35,6 @@ data class Repo(
     @Embedded var permissions: RepoPermissions,
     @Embedded var license: RepoLicense,
     var timestamp: String = "",
-    var starredAt: String = ""
+    var starredAt: String = "",
+    var starred: Boolean = false
 )
