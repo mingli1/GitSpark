@@ -7,6 +7,7 @@ import com.gitspark.gitspark.ui.login.LoginViewModel
 import com.gitspark.gitspark.ui.main.tab.*
 import com.gitspark.gitspark.ui.main.tab.profile.OverviewViewModel
 import com.gitspark.gitspark.ui.main.tab.profile.ReposViewModel
+import com.gitspark.gitspark.ui.main.tab.profile.StarsViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -41,6 +42,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(ReposViewModel::class)
     internal abstract fun bindReposViewModel(reposViewModel: ReposViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(StarsViewModel::class)
+    internal abstract fun bindStarsViewModel(starsViewModel: StarsViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
