@@ -32,7 +32,10 @@ class ReposViewModel @Inject constructor(
     }
 
     fun onCachedRepoDataRetrieved(repos: List<Repo>) {
-        if (repos.isEmpty()) return // TODO: handle empty case
+        if (repos.isEmpty()) {
+            viewState.value = ReposViewState(repos = repos)
+            return
+        }
         val expired = repoRepository.isRepoCacheExpired(repos[0].timestamp)
         if (expired) {
             viewState.value = ReposViewState(loading = true)

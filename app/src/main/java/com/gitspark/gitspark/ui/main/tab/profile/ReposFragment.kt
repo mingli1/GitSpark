@@ -54,6 +54,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
         with (viewState) {
             loading_indicator.isVisible = loading
             reposAdapter.setData(repos)
+            no_repos_alert.isVisible = repos.isEmpty()
             swipe_refresh.setRefreshing(refreshing)
 
             if (clearSearchFilter) search_field.text.clear()

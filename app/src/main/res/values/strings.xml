@@ -27,4 +27,6 @@
         <item>stars</item>
     </string-array>
     <string name="private_label">private</string>
+    <string name="forked_label">forked</string>
+    <string name="no_repos_text">No repositories were found.</string>
 </resources>
