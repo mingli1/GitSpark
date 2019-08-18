@@ -18,9 +18,6 @@ interface RepoService {
     ): Observable<List<ApiRepo>>
 
     @GET("user/starred")
-    @Headers(
-        "Accept: application/vnd.github.mercy-preview+json",
-        "Accept: application/vnd.github.v3.star+json"
-    )
+    @Headers("Accept: application/vnd.github.v3.star+json")
     fun getAuthStarredRepos(): Observable<List<ApiStarredRepo>>
 }

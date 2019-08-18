@@ -39,7 +39,11 @@ class RepoRepository @Inject constructor(
         return retrofitHelper.getRetrofit(token = token)
             .create(RepoService::class.java)
             .getAuthStarredRepos()
-            .map { starredRepos -> getSuccess(starredRepos.map { it.toModel() }) }
+            .map { starredRepos ->
+                getSuccess(starredRepos.map { repo ->
+                    repo.toModel().also { it.starred = true }
+                })
+            }
             .onErrorReturn { getFailure("Failed to get authenticated starred repositories.") }
     }
 
