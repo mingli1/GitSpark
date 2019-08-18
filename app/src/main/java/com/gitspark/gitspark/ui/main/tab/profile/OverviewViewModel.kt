@@ -84,7 +84,7 @@ class OverviewViewModel @Inject constructor(
                 companyText = company,
                 numFollowers = followers,
                 numFollowing = following,
-                loading = false,
+                loading = true,
                 refreshing = false,
                 planName = plan.planName,
                 createdDate = formattedDateTime
@@ -94,7 +94,8 @@ class OverviewViewModel @Inject constructor(
         subscribe(userRepository.getContributionsSvg(user.login)) {
             contributionsAction.value = contributionsHelper.parse(it)
             viewState.value = viewState.value?.copy(
-                totalContributions = contributionsHelper.getTotalContributions(it)
+                totalContributions = contributionsHelper.getTotalContributions(it),
+                loading = false
             )
         }
     }

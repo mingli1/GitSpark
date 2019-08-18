@@ -85,7 +85,7 @@ class ReposViewModel @Inject constructor(
         currentRepoData = repos
         viewState.value = ReposViewState(
             repos = repos,
-            loading = false,
+            loading = true,
             refreshing = false
         )
         requestStarredRepos()
@@ -113,7 +113,8 @@ class ReposViewModel @Inject constructor(
                     viewState.value = viewState.value?.copy(
                         repos = currentRepoData,
                         clearSortSelection = false,
-                        clearSearchFilter = false
+                        clearSearchFilter = false,
+                        loading = false
                     )
                 }
                 is RepoResult.Failure -> alert("Could not obtain repo starred data.")
