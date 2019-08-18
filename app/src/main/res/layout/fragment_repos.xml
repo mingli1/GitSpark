@@ -41,7 +41,6 @@
                     android:id="@+id/sort_spinner"
                     android:layout_width="96dp"
                     android:layout_height="wrap_content"
-                    android:entries="@array/repo_visibility_options"
                     android:dropDownWidth="96dp"
                     android:layout_marginTop="18dp"
                     android:layout_marginEnd="8dp"
