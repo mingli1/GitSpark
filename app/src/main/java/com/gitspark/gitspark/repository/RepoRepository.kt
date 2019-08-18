@@ -41,7 +41,7 @@ class RepoRepository @Inject constructor(
             .getAuthStarredRepos()
             .map { starredRepos ->
                 getSuccess(starredRepos.map { repo ->
-                    repo.toModel().also { it.starred = true }
+                    repo.toModel().apply { starred = true }
                 })
             }
             .onErrorReturn { getFailure("Failed to get authenticated starred repositories.") }
