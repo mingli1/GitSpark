@@ -24,7 +24,7 @@ class ProfileFragment : Fragment() {
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             addFragment(OverviewFragment(), getString(R.string.overview_title))
             addFragment(ReposFragment(), getString(R.string.repos_title))
-            addFragment(ProjectsFragment(), getString(R.string.projects_title))
+            addFragment(FollowsFragment(), getString(R.string.follows_title))
             addFragment(StarsFragment(), getString(R.string.stars_title))
         }
         viewpager.adapter = adapter

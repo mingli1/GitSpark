@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.gitspark.gitspark.R
 
-class ProjectsFragment : Fragment() {
+class FollowsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_projects, container, false)
+        return inflater.inflate(R.layout.fragment_follows, container, false)
     }
 }

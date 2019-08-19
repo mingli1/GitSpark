@@ -11,7 +11,7 @@
     <string name="nav_issues">Issues</string>
     <string name="overview_title">Overview</string>
     <string name="repos_title">Repos</string>
-    <string name="projects_title">Projects</string>
+    <string name="follows_title">Follows</string>
     <string name="stars_title">Stars</string>
     <string name="following_text">Following (%1$d)</string>
     <string name="followers_text">Followers (%1$d)</string>
