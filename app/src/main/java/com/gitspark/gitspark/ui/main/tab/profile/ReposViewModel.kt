@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.api.model.SORT_PUSHED
@@ -10,10 +11,10 @@ import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
-private const val SORT_ALL = "all"
-private const val SORT_PUBLIC = "public"
-private const val SORT_PRIVATE = "private"
-private const val SORT_FORKED = "forked"
+internal const val SORT_ALL = "all"
+internal const val SORT_PUBLIC = "public"
+internal const val SORT_PRIVATE = "private"
+internal const val SORT_FORKED = "forked"
 
 class ReposViewModel @Inject constructor(
     private val repoRepository: RepoRepository,
@@ -23,7 +24,7 @@ class ReposViewModel @Inject constructor(
     val viewState = MutableLiveData<ReposViewState>()
     val repoDataMediator = MediatorLiveData<List<Repo>>()
 
-    private var currentRepoData = emptyList<Repo>()
+    @VisibleForTesting var currentRepoData = emptyList<Repo>()
     private var filterString = ""
     private var sortSelection = SORT_ALL
 
@@ -78,7 +79,7 @@ class ReposViewModel @Inject constructor(
                         })
                 }
                 is RepoResult.Failure -> {
-                    alert("Failed to update repo data.")
+                    alert(it.error)
                     existingRepos?.let { repo -> updateViewStateWith(repo) }
                 }
             }

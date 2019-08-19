@@ -18,20 +18,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-private val REPO1 = Repo(
-    repoName = "Apple",
-    numStars = 30,
-    repoPushedAt = "2019-08-19T14:46:25+0000",
-    starredAt = "2012-08-14T14:46:25+0000"
-)
-
-private val REPO2 = Repo(
-    repoName = "Orange",
-    numStars = 14,
-    repoPushedAt = "2014-08-19T14:46:25+0000",
-    starredAt = "2016-08-14T14:46:25+0000"
-)
-
 class StarsViewModelTest {
 
     @Rule @JvmField val liveDataRule = InstantTaskExecutorRule()
