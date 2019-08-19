@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.Repo
@@ -8,8 +9,8 @@ import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
-private const val SORT_RECENT = "recent"
-private const val SORT_STARS = "stars"
+internal const val SORT_RECENT = "recent"
+internal const val SORT_STARS = "stars"
 
 class StarsViewModel @Inject constructor(
     private val repoRepository: RepoRepository,
@@ -18,7 +19,7 @@ class StarsViewModel @Inject constructor(
 
     val viewState = MutableLiveData<StarsViewState>()
 
-    private var currentRepoData = emptyList<Repo>()
+    @VisibleForTesting var currentRepoData = emptyList<Repo>()
     private var filterString = ""
     private var sortSelection = SORT_RECENT
 
