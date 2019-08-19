@@ -1,6 +1,8 @@
 package com.gitspark.gitspark.helper
 
 import android.annotation.SuppressLint
+import com.gitspark.gitspark.extension.containsOneOf
+import com.gitspark.gitspark.extension.monthValue
 import com.gitspark.gitspark.model.Contribution
 import java.text.SimpleDateFormat
 import java.util.*
@@ -84,26 +86,5 @@ class ContributionsHelper @Inject constructor() {
         }
         scanner.close()
         return -1
-    }
-
-    private fun String.containsOneOf(vararg strs: String): Boolean {
-        return strs.any { this.contains(it) }
-    }
-
-    private fun String.monthValue(): Int {
-        return when (this) {
-            "January" -> 0
-            "February" -> 1
-            "March" -> 2
-            "April" -> 3
-            "May" -> 4
-            "June" -> 5
-            "July" -> 6
-            "August" -> 7
-            "September" -> 8
-            "October" -> 9
-            "November" -> 10
-            else -> 11
-        }
     }
 }

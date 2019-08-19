@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.inflate
 import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.withSuffix
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.model.Repo
 import kotlinx.android.synthetic.main.repo_view.view.*
@@ -57,8 +58,8 @@ class ReposAdapter(
                 }
                 else updated_field.isVisible = false
 
-                stars_field.text = repo.numStars.toString()
-                forks_field.text = repo.numForks.toString()
+                stars_field.text = withSuffix(repo.numStars)
+                forks_field.text = withSuffix(repo.numForks)
                 private_label.isVisible = repo.isPrivate
                 forked_label.isVisible = repo.isForked
                 language_field.text = repo.repoLanguage
