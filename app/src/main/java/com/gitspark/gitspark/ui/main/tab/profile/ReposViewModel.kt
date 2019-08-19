@@ -121,7 +121,14 @@ class ReposViewModel @Inject constructor(
                         loading = false
                     )
                 }
-                is RepoResult.Failure -> alert("Could not obtain repo starred data.")
+                is RepoResult.Failure -> {
+                    alert(result.error)
+                    viewState.value = viewState.value?.copy(
+                        clearSortSelection = false,
+                        clearSearchFilter = false,
+                        loading = false
+                    )
+                }
             }
         }
     }

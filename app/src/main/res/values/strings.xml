@@ -30,4 +30,9 @@
     <string name="private_label">private</string>
     <string name="forked_label">forked</string>
     <string name="no_repos_text">No repositories were found.</string>
+    <string-array name="starred_repo_filter_options">
+        <item>recent</item>
+        <item>stars</item>
+        <item>updated</item>
+    </string-array>
 </resources>
