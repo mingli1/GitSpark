@@ -56,6 +56,8 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
             swipe_refresh.setRefreshing(refreshing)
             reposAdapter.setData(repos)
             no_repos_alert.isVisible = repos.isEmpty()
+            num_repos_shown.isVisible = repos.size > 1
+            num_repos_shown.text = getString(R.string.num_repos_shown_text, repos.size)
 
             if (clearSearchFilter) search_field.text.clear()
             if (clearSortSelection) sort_spinner.setSelection(0)

@@ -56,6 +56,8 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
             reposAdapter.setData(repos)
             no_repos_alert.isVisible = repos.isEmpty()
             swipe_refresh.setRefreshing(refreshing)
+            num_repos_shown.isVisible = repos.size > 1
+            num_repos_shown.text = getString(R.string.num_repos_shown_text, repos.size)
 
             if (clearSearchFilter) search_field.text.clear()
             if (clearSortSelection) sort_spinner.setSelection(0)
