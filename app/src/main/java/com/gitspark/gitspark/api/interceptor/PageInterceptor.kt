@@ -33,7 +33,7 @@ class PageInterceptor : Interceptor {
                         val bodyStr = body.string()
                         return response.newBuilder().body(ResponseBody.create(
                             body.contentType(),
-                            "{$attrs${bodyStr.substring(1, bodyStr.length)}"
+                            "{$attrs\"response\":${bodyStr.substring(1, bodyStr.length)}"
                         )).build()
                     }
                 }
