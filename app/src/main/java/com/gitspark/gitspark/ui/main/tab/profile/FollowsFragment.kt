@@ -7,9 +7,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.gitspark.gitspark.R
 
-class FollowsFragment : Fragment() {
+class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.java) {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_follows, container, false)
+    }
+
+    override fun viewModelOnResume() {
+
+    }
+
+    override fun observeViewModel() {
+
     }
 }
