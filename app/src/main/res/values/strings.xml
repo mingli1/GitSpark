@@ -36,4 +36,5 @@
         <item>updated</item>
     </string-array>
     <string name="num_repos_shown_text">Showing %1$d repositories.</string>
+    <string name="follows_search_hint">Find a user…</string>
 </resources>
