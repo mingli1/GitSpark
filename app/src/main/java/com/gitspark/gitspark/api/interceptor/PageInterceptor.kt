@@ -1,0 +1,45 @@
+package com.gitspark.gitspark.api.interceptor
+
+import android.net.Uri
+import okhttp3.Interceptor
+import okhttp3.Interceptor.Chain
+import okhttp3.Response
+import okhttp3.ResponseBody
+
+private const val DELIM_LINKS = ","
+private const val DELIM_LINK_PARAM = ";"
+private const val PAGE_QUERY = "page"
+
+class PageInterceptor : Interceptor {
+
+    override fun intercept(chain: Chain): Response {
+        val response = chain.proceed(chain.request())
+
+        if (response.isSuccessful) {
+            response.header("link")?.let {
+                var attrs = ""
+                it.split(DELIM_LINKS).forEach { link ->
+                    val segments = link.split(DELIM_LINK_PARAM)
+                    val url = segments[0].trim()
+                    val page = Uri.parse(url.replace("[<>]", "")).getQueryParameter(PAGE_QUERY)
+                    val relStr = segments[1].trim()
+                    val rel = relStr.substring(5, relStr.length - 1)
+                    page?.let { p ->
+                        attrs += String.format("\"%s\":%s,", rel, p)
+                    }
+                }
+                if (attrs.isNotEmpty()) {
+                    response.body()?.let { body ->
+                        val bodyStr = body.string()
+                        return response.newBuilder().body(ResponseBody.create(
+                            body.contentType(),
+                            "{$attrs${bodyStr.substring(1, bodyStr.length)}"
+                        )).build()
+                    }
+                }
+            }
+        }
+
+        return response
+    }
+}

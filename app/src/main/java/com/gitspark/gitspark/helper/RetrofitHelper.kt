@@ -3,6 +3,7 @@ package com.gitspark.gitspark.helper
 import androidx.annotation.VisibleForTesting
 import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.api.interceptor.AuthInterceptor
+import com.gitspark.gitspark.api.interceptor.PageInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Converter
@@ -55,6 +56,7 @@ class RetrofitHelper @Inject constructor() {
     private fun getOkHttpClient() =
             OkHttpClient.Builder()
                 .addInterceptor(AuthInterceptor(token))
+                .addInterceptor(PageInterceptor())
                 .build()
 
     class StringConverterFactory : Converter.Factory() {
