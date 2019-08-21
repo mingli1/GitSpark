@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import com.gitspark.gitspark.ui.main.tab.profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 

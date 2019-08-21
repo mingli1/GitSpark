@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.main.tab.profile
+package com.gitspark.gitspark.ui.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

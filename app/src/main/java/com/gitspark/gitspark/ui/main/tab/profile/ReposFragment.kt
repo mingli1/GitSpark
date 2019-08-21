@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.ui.adapter.ReposAdapter
 import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject

@@ -2,6 +2,8 @@ package com.gitspark.gitspark.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.gitspark.gitspark.ui.adapter.Pageable
+import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 
 @Entity
 open class User(
@@ -21,4 +23,7 @@ open class User(
     var following: Int = 0,
     var createdAt: String = "",
     var updatedAt: String = ""
-)
+) : Pageable {
+
+    override fun getViewType() = VIEW_TYPE_VIEW
+}

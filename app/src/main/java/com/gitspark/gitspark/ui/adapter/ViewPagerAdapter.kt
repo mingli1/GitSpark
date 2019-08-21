@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.main.tab.profile
+package com.gitspark.gitspark.ui.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

@@ -13,6 +13,7 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.onItemSelected
 import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.ui.adapter.ReposAdapter
 import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject

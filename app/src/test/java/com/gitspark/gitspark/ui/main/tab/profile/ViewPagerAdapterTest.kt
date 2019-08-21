@@ -2,6 +2,7 @@ package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
