@@ -6,6 +6,8 @@ import com.gitspark.gitspark.api.model.ApiUser
 import io.reactivex.Observable
 import retrofit2.http.*
 
+private const val PER_PAGE = 25
+
 interface UserService {
 
     @GET("user")
@@ -19,6 +21,7 @@ interface UserService {
     @Headers("Accept: application/json")
     fun getUserFollowers(
         @Path("username") username: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = PER_PAGE
     ): Observable<ApiPage<List<ApiUser>>>
 }
