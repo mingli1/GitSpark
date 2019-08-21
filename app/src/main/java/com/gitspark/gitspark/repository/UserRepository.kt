@@ -44,6 +44,7 @@ class UserRepository @Inject constructor(
                     value = it.response.map { user -> user.toModel() }
                 })
             }
+            .doOnError { println("$it") }
             .onErrorReturn { getFailure("Failed to obtain user followers.") }
     }
 

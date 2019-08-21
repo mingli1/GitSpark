@@ -11,7 +11,7 @@ import com.gitspark.gitspark.model.Loading
 import com.gitspark.gitspark.model.User
 import kotlinx.android.synthetic.main.user_view.view.*
 
-class UserAdapter : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UsersAdapter : RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
     private val items = arrayListOf<Pageable>()
 
