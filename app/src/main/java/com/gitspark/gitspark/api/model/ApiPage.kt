@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.api.model
 
+import com.gitspark.gitspark.model.Page
 import com.squareup.moshi.Json
 
 data class ApiPage<T>(
@@ -8,4 +9,12 @@ data class ApiPage<T>(
     @field:Json(name = "first") val first: Int?,
     @field:Json(name = "prev") val prev: Int?,
     @field:Json(name = "response") val response: T
-)
+) {
+
+    fun <S> toModel() = Page<S>(
+        next = next ?: 0,
+        last = last ?: 0,
+        first = first ?: 0,
+        prev = prev ?: 0
+    )
+}

@@ -5,6 +5,8 @@ import com.gitspark.gitspark.api.service.UserService
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.AuthUser
+import com.gitspark.gitspark.model.Page
+import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.room.dao.AuthUserDao
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -27,6 +29,18 @@ class UserRepository @Inject constructor(
             .getAuthenticatedUser()
             .map { getSuccess(it.toModel()) }
             .onErrorReturn { getFailure("Failed to obtain user data.") }
+    }
+
+    fun getUserFollowers(token: String, username: String, page: Int): Observable<Page<List<User>>> {
+        return retrofitHelper.getRetrofit(token = token)
+            .create(UserService::class.java)
+            .getUserFollowers(username, page)
+            .map {
+                it.toModel<List<User>>().apply {
+                    value = it.response.map { user -> user.toModel() }
+                }
+            }
+            .onErrorReturn { Page(0, 0, 0, 0) }
     }
 
     fun getContributionsSvg(username: String): Observable<String> {

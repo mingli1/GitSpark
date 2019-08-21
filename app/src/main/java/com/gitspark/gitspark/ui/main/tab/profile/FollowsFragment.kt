@@ -13,9 +13,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         return inflater.inflate(R.layout.fragment_follows, container, false)
     }
 
-    override fun viewModelOnResume() {
-
-    }
+    override fun viewModelOnResume() = viewModel.onResume()
 
     override fun observeViewModel() {
 
