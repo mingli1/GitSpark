@@ -11,8 +11,11 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.lang.reflect.Type
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+
+private const val TIMEOUT_TIME_M = 3L
 
 @Singleton
 class RetrofitHelper @Inject constructor() {
@@ -55,6 +58,9 @@ class RetrofitHelper @Inject constructor() {
 
     private fun getOkHttpClient() =
             OkHttpClient.Builder()
+                .connectTimeout(TIMEOUT_TIME_M, TimeUnit.MINUTES)
+                .writeTimeout(TIMEOUT_TIME_M, TimeUnit.MINUTES)
+                .readTimeout(TIMEOUT_TIME_M, TimeUnit.MINUTES)
                 .addInterceptor(AuthInterceptor(token))
                 .addInterceptor(PageInterceptor())
                 .build()

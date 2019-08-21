@@ -18,16 +18,16 @@ class FollowsViewModel @Inject constructor(
     private var page = 0
 
     fun onResume() {
-        if (!resumed) {
+        //if (!resumed) {
             page = 1
             viewState.value = FollowsViewState(loading = true)
             requestFollowers(page)
             resumed = true
-        }
+        //}
     }
 
     private fun requestFollowers(page: Int) {
-        subscribe(userRepository.getUserFollowers(preferencesHelper.getCachedToken(), "mingli1", page)) {
+        subscribe(userRepository.getUserFollowers(preferencesHelper.getCachedToken(), "JakeWharton", page)) {
             when (it) {
                 is UserResult.Success -> {
                     println("$it")
