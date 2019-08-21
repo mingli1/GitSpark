@@ -50,8 +50,8 @@ class OverviewViewModel @Inject constructor(
         subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
             when (it) {
                 is UserResult.Success -> {
-                    subscribe(userRepository.cacheUserData(it.user),
-                        { updateViewStateWith(it.user) },
+                    subscribe(userRepository.cacheUserData(it.value),
+                        { updateViewStateWith(it.value) },
                         {
                             alert("Failed to cache user data.")
                             existingUser?.let { user -> updateViewStateWith(user) }

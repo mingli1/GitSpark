@@ -23,24 +23,28 @@ class UserRepository @Inject constructor(
     private val timeHelper: TimeHelper
 ) {
 
-    fun getAuthUser(token: String): Observable<UserResult> {
+    fun getAuthUser(token: String): Observable<UserResult<AuthUser>> {
         return retrofitHelper.getRetrofit(token = token)
             .create(UserService::class.java)
             .getAuthenticatedUser()
             .map { getSuccess(it.toModel()) }
-            .onErrorReturn { getFailure("Failed to obtain user data.") }
+            .onErrorReturn { getFailure("Failed to obtain auth user data.") }
     }
 
-    fun getUserFollowers(token: String, username: String, page: Int): Observable<Page<List<User>>> {
+    fun getUserFollowers(
+        token: String,
+        username: String,
+        page: Int
+    ): Observable<UserResult<Page<List<User>>>> {
         return retrofitHelper.getRetrofit(token = token)
             .create(UserService::class.java)
             .getUserFollowers(username, page)
-            .map {
+            .map { getSuccess(
                 it.toModel<List<User>>().apply {
                     value = it.response.map { user -> user.toModel() }
-                }
+                })
             }
-            .onErrorReturn { Page(0, 0, 0, 0) }
+            .onErrorReturn { getFailure("Failed to obtain user followers.") }
     }
 
     fun getContributionsSvg(username: String): Observable<String> {
@@ -62,12 +66,12 @@ class UserRepository @Inject constructor(
 
     fun getCurrentUserData(): LiveData<AuthUser> = authUserDao.getAuthUser()
 
-    private fun getSuccess(user: AuthUser): UserResult = UserResult.Success(user)
+    private fun <T> getSuccess(value: T): UserResult<T> = UserResult.Success(value)
 
-    private fun getFailure(error: String): UserResult = UserResult.Failure(error)
+    private fun <T> getFailure(error: String): UserResult<T> = UserResult.Failure(error)
 }
 
-sealed class UserResult {
-    data class Success(val user: AuthUser) : UserResult()
-    data class Failure(val error: String) : UserResult()
+sealed class UserResult<T> {
+    data class Success<T>(val value: T) : UserResult<T>()
+    data class Failure<T>(val error: String) : UserResult<T>()
 }
