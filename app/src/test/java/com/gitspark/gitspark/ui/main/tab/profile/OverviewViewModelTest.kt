@@ -78,14 +78,15 @@ class OverviewViewModelTest {
 
         viewModel.onCachedUserDataRetrieved(getAuthUser())
 
-        assertThat(viewModel.alertAction.value).isEqualTo("Failed to update user data.")
+        assertThat(viewModel.alertAction.value).isEqualTo("failure")
         assertThat(viewState().nameText).isEqualTo(getAuthUser().name)
     }
 
     @Test
     fun shouldUpdatedWithCachedUser() {
         every { userRepository.isUserCacheExpired(any()) } returns false
-        every { userRepository.getContributionsSvg(any()) } returns Observable.just("")
+        every { userRepository.getContributionsSvg(any()) } returns
+                Observable.just(UserResult.Success(""))
 
         viewModel.onCachedUserDataRetrieved(getAuthUser())
 

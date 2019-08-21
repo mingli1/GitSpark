@@ -60,8 +60,8 @@ class UserRepositoryTest {
     @Test
     fun shouldGetContributionsSvg() {
         every { userRepository.getContributionsSvg("username") } returns
-                Observable.just("data")
+                Observable.just(UserResult.Success("data"))
         val observer = userRepository.getContributionsSvg("username").test()
-        observer.assertValue("data")
+        observer.assertValue(UserResult.Success("data"))
     }
 }

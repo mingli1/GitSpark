@@ -58,7 +58,7 @@ class OverviewViewModel @Inject constructor(
                         })
                 }
                 is UserResult.Failure -> {
-                    alert("Failed to update user data.")
+                    alert(it.error)
                     existingUser?.let { user -> updateViewStateWith(user) }
                 }
             }
@@ -92,11 +92,19 @@ class OverviewViewModel @Inject constructor(
         }
 
         subscribe(userRepository.getContributionsSvg(user.login)) {
-            contributionsAction.value = contributionsHelper.parse(it)
-            viewState.value = viewState.value?.copy(
-                totalContributions = contributionsHelper.getTotalContributions(it),
-                loading = false
-            )
+            when (it) {
+                is UserResult.Success -> {
+                    contributionsAction.value = contributionsHelper.parse(it.value)
+                    viewState.value = viewState.value?.copy(
+                        totalContributions = contributionsHelper.getTotalContributions(it.value),
+                        loading = false
+                    )
+                }
+                is UserResult.Failure -> {
+                    alert(it.error)
+                    viewState.value = viewState.value?.copy(loading = false)
+                }
+            }
         }
     }
 }

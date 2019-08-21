@@ -47,11 +47,12 @@ class UserRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain user followers.") }
     }
 
-    fun getContributionsSvg(username: String): Observable<String> {
+    fun getContributionsSvg(username: String): Observable<UserResult<String>> {
         return retrofitHelper.getRetrofit(lenient = true)
             .create(UserService::class.java)
             .getContributionsSvg(String.format(CONTRIBUTIONS_URL, username))
-            .onErrorReturn { "" }
+            .map { getSuccess(it) }
+            .onErrorReturn { getFailure("Failed to obtain contributions data.") }
     }
 
     fun cacheUserData(user: AuthUser): Completable {
