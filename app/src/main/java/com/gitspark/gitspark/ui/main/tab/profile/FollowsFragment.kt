@@ -19,6 +19,8 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     private lateinit var usersAdapter: UsersAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
+    private var onLastPage = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_follows, container, false)
     }
@@ -45,6 +47,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     private fun updateView(viewState: FollowsViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
+            onLastPage = isLastPage
             if (updateAdapter) {
                 when (currPage) {
                     1 -> usersAdapter.addInitialUsers(data, isLastPage)
@@ -56,7 +59,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
 
     private fun setUpListeners() {
         users_list.addOnScrollListener(PaginationListener(layoutManager) {
-            viewModel.onScrolledToEnd()
+            if (!onLastPage) viewModel.onScrolledToEnd()
         })
     }
 }
