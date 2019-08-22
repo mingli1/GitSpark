@@ -95,9 +95,9 @@ class LoginViewModel @Inject constructor(
     }
 
     @VisibleForTesting
-    fun handleLoginResult(result: LoginResult) {
+    fun handleLoginResult(result: LoginResult<Token>) {
         when (result) {
-            is LoginResult.Success -> onLoginAuthSuccess(result.token)
+            is LoginResult.Success -> onLoginAuthSuccess(result.value)
             is LoginResult.Failure -> onLoginAuthFailure(result.error)
         }
     }
@@ -131,22 +131,31 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun deleteExistingToken() {
-        subscribe(loginRepository.getAuthorizations(basicToken)) { tokenList ->
-            if (tokenList.isNotEmpty()) {
-                val authId = tokenList.find { token ->
-                    token.note == BuildConfig.APPLICATION_ID
-                }?.tokenId
+        subscribe(loginRepository.getAuthorizations(basicToken)) {
+            when (it) {
+                is LoginResult.Success -> {
+                    if (it.value.value.isNotEmpty()) {
+                        val authId = it.value.value.find { token ->
+                            token.note == BuildConfig.APPLICATION_ID
+                        }?.tokenId
 
-                authId?.let {
-                    subscribe(loginRepository.deleteAuthorization(basicToken, it),
-                        { attemptLogin() },
-                        { throwable ->
-                            alert("Error deleting token: ${throwable.message}")
-                            setLoading(false)
-                        }
-                    )
-                } ?: alert("Illegal state: Access token not cached and does not exist.")
+                        authId?.let {
+                            subscribe(loginRepository.deleteAuthorization(basicToken, it),
+                                { attemptLogin() },
+                                { throwable ->
+                                    alert("Error deleting token: ${throwable.message}")
+                                    setLoading(false)
+                                }
+                            )
+                        } ?: alert("Illegal state: Access token not cached and does not exist.")
+                    }
+                }
+                is LoginResult.Failure -> {
+                    alert(it.error)
+                    setLoading(false)
+                }
             }
+
         }
     }
 
