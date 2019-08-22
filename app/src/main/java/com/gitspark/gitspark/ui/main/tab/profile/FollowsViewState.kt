@@ -6,5 +6,7 @@ data class FollowsViewState(
     val data: List<User> = emptyList(),
     val loading: Boolean = false,
     val refreshing: Boolean = false,
-    val isLastPage: Boolean = false
+    val isLastPage: Boolean = false,
+    val currPage: Int = 1,
+    val updateAdapter: Boolean = false
 )

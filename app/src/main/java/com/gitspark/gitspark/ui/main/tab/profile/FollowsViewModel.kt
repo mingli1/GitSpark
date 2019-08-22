@@ -18,23 +18,36 @@ class FollowsViewModel @Inject constructor(
     private var page = 0
 
     fun onResume() {
-        //if (!resumed) {
+        if (!resumed) {
             page = 1
-            viewState.value = FollowsViewState(loading = true)
-            requestFollowers(page)
+            viewState.value = FollowsViewState(loading = true, updateAdapter = false)
+            requestFollowers()
             resumed = true
-        //}
+        }
     }
 
-    private fun requestFollowers(page: Int) {
-        subscribe(userRepository.getUserFollowers(preferencesHelper.getCachedToken(), "mingli1", page)) {
+    fun onScrolledToEnd() {
+        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        requestFollowers()
+    }
+
+    private fun requestFollowers() {
+        subscribe(userRepository.getUserFollowers(preferencesHelper.getCachedToken(), "blerner", page)) {
             when (it) {
                 is UserResult.Success -> {
-                    println("${it.value}")
+                    val isLastPage = if (it.value.last == 0) true else page == it.value.last
+                    viewState.value = viewState.value?.copy(
+                        data = it.value.value,
+                        loading = false,
+                        isLastPage = isLastPage,
+                        currPage = page,
+                        updateAdapter = true
+                    )
+                    if (page < it.value.last) page++
                 }
                 is UserResult.Failure -> {
                     alert(it.error)
-                    viewState.value = viewState.value?.copy(loading = false)
+                    viewState.value = viewState.value?.copy(loading = false, updateAdapter = false)
                 }
             }
         }

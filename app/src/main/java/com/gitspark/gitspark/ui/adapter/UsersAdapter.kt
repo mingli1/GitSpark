@@ -26,24 +26,23 @@ class UsersAdapter : RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(items[position])
 
-    fun addUsers(users: List<User>) {
+    fun addInitialUsers(users: List<User>, isOnlyPage: Boolean) {
+        if (users.isEmpty()) return
         items.clear()
-        notifyItemRangeRemoved(0, if (items.lastIndex < 0) 0 else items.lastIndex)
 
         items.addAll(users)
-        items.add(Loading)
-        notifyItemRangeInserted(0, items.size)
+        if (!isOnlyPage) items.add(Loading)
+        notifyDataSetChanged()
     }
 
-    fun addUsersOnLoadingComplete(users: List<User>) {
+    fun addUsersOnLoadingComplete(users: List<User>, isLastPage: Boolean) {
         if (items.lastIndex < 0) return
         if (items.lastOrNull()!!.getViewType() != VIEW_TYPE_LOADING) return
         items.removeAt(items.lastIndex)
-        notifyItemRemoved(items.lastIndex)
 
         items.addAll(users)
-        items.add(Loading)
-        notifyItemRangeChanged(items.lastIndex, users.size + 1)
+        if (!isLastPage) items.add(Loading)
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {

@@ -45,12 +45,18 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     private fun updateView(viewState: FollowsViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
+            if (updateAdapter) {
+                when (currPage) {
+                    1 -> usersAdapter.addInitialUsers(data, isLastPage)
+                    else -> usersAdapter.addUsersOnLoadingComplete(data, isLastPage)
+                }
+            }
         }
     }
 
     private fun setUpListeners() {
         users_list.addOnScrollListener(PaginationListener(layoutManager) {
-
+            viewModel.onScrolledToEnd()
         })
     }
 }
