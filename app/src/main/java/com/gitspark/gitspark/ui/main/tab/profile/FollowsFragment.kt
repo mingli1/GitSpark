@@ -58,7 +58,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     }
 
     private fun setUpListeners() {
-        users_list.addOnScrollListener(PaginationListener(layoutManager) {
+        users_list.addOnScrollListener(PaginationListener(layoutManager, swipe_refresh) {
             if (!onLastPage) viewModel.onScrolledToEnd()
         })
     }
