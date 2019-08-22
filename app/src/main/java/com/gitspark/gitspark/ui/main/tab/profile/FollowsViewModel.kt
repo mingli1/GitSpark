@@ -27,10 +27,10 @@ class FollowsViewModel @Inject constructor(
     }
 
     private fun requestFollowers(page: Int) {
-        subscribe(userRepository.getUserFollowers(preferencesHelper.getCachedToken(), "JakeWharton", page)) {
+        subscribe(userRepository.getUserFollowers(preferencesHelper.getCachedToken(), "mingli1", page)) {
             when (it) {
                 is UserResult.Success -> {
-                    println("$it")
+                    println("${it.value}")
                 }
                 is UserResult.Failure -> {
                     alert(it.error)

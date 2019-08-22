@@ -23,5 +23,5 @@ interface UserService {
         @Path("username") username: String,
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = PER_PAGE
-    ): Observable<ApiPage<List<ApiUser>>>
+    ): Observable<ApiPage<ApiUser>>
 }

@@ -35,12 +35,12 @@ class UserRepository @Inject constructor(
         token: String,
         username: String,
         page: Int
-    ): Observable<UserResult<Page<List<User>>>> {
+    ): Observable<UserResult<Page<User>>> {
         return retrofitHelper.getRetrofit(token = token)
             .create(UserService::class.java)
             .getUserFollowers(username, page)
             .map { getSuccess(
-                it.toModel<List<User>>().apply {
+                it.toModel<User>().apply {
                     value = it.response.map { user -> user.toModel() }
                 })
             }

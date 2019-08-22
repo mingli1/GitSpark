@@ -5,5 +5,5 @@ data class Page<T>(
     val last: Int,
     val first: Int,
     val prev: Int,
-    var value: T? = null
+    var value: List<T> = emptyList()
 )

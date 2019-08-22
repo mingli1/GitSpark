@@ -8,7 +8,7 @@ data class ApiPage<T>(
     @field:Json(name = "last") val last: Int?,
     @field:Json(name = "first") val first: Int?,
     @field:Json(name = "prev") val prev: Int?,
-    @field:Json(name = "response") val response: T
+    @field:Json(name = "response") val response: List<T>
 ) {
 
     fun <S> toModel() = Page<S>(

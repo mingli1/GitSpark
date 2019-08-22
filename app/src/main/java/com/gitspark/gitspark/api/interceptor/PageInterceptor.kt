@@ -16,15 +16,31 @@ class PageInterceptor : Interceptor {
         val response = chain.proceed(chain.request())
 
         if (response.isSuccessful) {
-            response.header("link")?.let {
-                val attrs = getAttrs(it)
-                if (attrs.isNotEmpty()) {
-                    response.body()?.let { body ->
-                        val bodyStr = body.string()
-                        return response.newBuilder().body(ResponseBody.create(
+            if (response.peekBody(1).string() == "[") {
+                var attrs = ""
+                response.header("link")?.let { attrs = getAttrs(it) }
+                response.body()?.let { body ->
+                    return response.newBuilder().body(
+                        ResponseBody.create(
                             body.contentType(),
-                            "{$attrs\"response\":$bodyStr}"
-                        )).build()
+                            "{$attrs\"response\":${body.string()}}"
+                        )
+                    ).build()
+                }
+            }
+            else {
+                response.header("link")?.let {
+                    val attrs = getAttrs(it)
+                    if (attrs.isNotEmpty()) {
+                        response.body()?.let { body ->
+                            val bodyStr = body.string()
+                            return response.newBuilder().body(
+                                ResponseBody.create(
+                                    body.contentType(),
+                                    "{$attrs\"response\":$bodyStr}"
+                                )
+                            ).build()
+                        }
                     }
                 }
             }
