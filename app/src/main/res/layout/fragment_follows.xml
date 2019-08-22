@@ -39,11 +39,20 @@
                 tools:text="Following"/>
     
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/users_list"
+                android:id="@+id/followers_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"/>
+    
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/following_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"/>
 
         </LinearLayout>
         

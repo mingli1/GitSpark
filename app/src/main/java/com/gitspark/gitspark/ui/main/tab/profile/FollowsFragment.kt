@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
@@ -16,8 +17,11 @@ import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.java) {
 
-    private lateinit var usersAdapter: UsersAdapter
-    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var followersAdapter: UsersAdapter
+    private lateinit var followersManager: LinearLayoutManager
+
+    private lateinit var followingAdapter: UsersAdapter
+    private lateinit var followingManager: LinearLayoutManager
 
     private var onLastPage = false
 
@@ -28,12 +32,18 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        usersAdapter = UsersAdapter()
-        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        followersAdapter = UsersAdapter()
+        followersManager = LinearLayoutManager(context, VERTICAL, false)
+        followingAdapter = UsersAdapter()
+        followingManager = LinearLayoutManager(context, VERTICAL, false)
 
-        users_list.setHasFixedSize(true)
-        users_list.layoutManager = layoutManager
-        if (users_list.adapter == null) users_list.adapter = usersAdapter
+        followers_list.setHasFixedSize(true)
+        followers_list.layoutManager = followersManager
+        if (followers_list.adapter == null) followers_list.adapter = followersAdapter
+
+        following_list.setHasFixedSize(true)
+        following_list.layoutManager = followingManager
+        if (following_list.adapter == null) following_list.adapter = followingAdapter
 
         setUpListeners()
     }
@@ -48,18 +58,47 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         with (viewState) {
             loading_indicator.isVisible = loading
             onLastPage = isLastPage
+            follows_switch_button.text = when (followState) {
+                FollowState.Following -> getString(R.string.followers_button_text)
+                FollowState.Followers -> getString(R.string.following_button_text)
+            }
+            followers_list.isVisible = followState == FollowState.Followers
+            following_list.isVisible = followState == FollowState.Following
+
             if (updateAdapter) {
                 when (currPage) {
-                    1 -> usersAdapter.addInitialUsers(data, isLastPage)
-                    else -> usersAdapter.addUsersOnLoadingComplete(data, isLastPage)
+                    1 -> {
+                        getRecyclerView(followState).adapter = null
+                        getRecyclerView(followState).adapter = getAdapter(followState)
+                        getAdapter(followState).addInitialUsers(data, isLastPage)
+                    }
+                    else -> getAdapter(followState).addUsersOnLoadingComplete(data, isLastPage)
                 }
             }
         }
     }
 
     private fun setUpListeners() {
-        users_list.addOnScrollListener(PaginationListener(layoutManager, swipe_refresh) {
+        follows_switch_button.setOnClickListener { viewModel.onFollowsSwitchClicked() }
+        followers_list.addOnScrollListener(PaginationListener(followersManager, swipe_refresh) {
             if (!onLastPage) viewModel.onScrolledToEnd()
         })
+        following_list.addOnScrollListener(PaginationListener(followingManager, swipe_refresh) {
+            if (!onLastPage) viewModel.onScrolledToEnd()
+        })
+    }
+
+    private fun getAdapter(state: FollowState): UsersAdapter {
+        return when (state) {
+            FollowState.Followers -> followersAdapter
+            FollowState.Following -> followingAdapter
+        }
+    }
+
+    private fun getRecyclerView(state: FollowState): RecyclerView {
+        return when (state) {
+            FollowState.Followers -> followers_list
+            FollowState.Following -> following_list
+        }
     }
 }

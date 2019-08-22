@@ -17,6 +17,18 @@ interface UserService {
     @GET
     fun getContributionsSvg(@Url url: String): Observable<String>
 
+    @GET("user/followers")
+    fun getAuthUserFollowers(
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = PER_PAGE
+    ): Observable<ApiPage<ApiUser>>
+
+    @GET("user/following")
+    fun getAuthUserFollowing(
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = PER_PAGE
+    ): Observable<ApiPage<ApiUser>>
+
     @GET("users/{username}/followers")
     @Headers("Accept: application/json")
     fun getUserFollowers(

@@ -8,5 +8,11 @@ data class FollowsViewState(
     val refreshing: Boolean = false,
     val isLastPage: Boolean = false,
     val currPage: Int = 1,
-    val updateAdapter: Boolean = false
+    val updateAdapter: Boolean = false,
+    val followState: FollowState = FollowState.Followers
 )
+
+enum class FollowState {
+    Followers,
+    Following
+}

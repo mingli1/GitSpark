@@ -31,6 +31,30 @@ class UserRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain auth user data.") }
     }
 
+    fun getAuthUserFollowers(token: String, page: Int): Observable<UserResult<Page<User>>> {
+        return retrofitHelper.getRetrofit(token = token)
+            .create(UserService::class.java)
+            .getAuthUserFollowers(page)
+            .map { getSuccess(
+                it.toModel<User>().apply {
+                    value = it.response.map { user -> user.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain auth user followers.") }
+    }
+
+    fun getAuthUserFollowing(token: String, page: Int): Observable<UserResult<Page<User>>> {
+        return retrofitHelper.getRetrofit(token = token)
+            .create(UserService::class.java)
+            .getAuthUserFollowing(page)
+            .map { getSuccess(
+                it.toModel<User>().apply {
+                    value = it.response.map { user -> user.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain auth user following.") }
+    }
+
     fun getUserFollowers(
         token: String,
         username: String,
@@ -44,7 +68,6 @@ class UserRepository @Inject constructor(
                     value = it.response.map { user -> user.toModel() }
                 })
             }
-            .doOnError { println("$it") }
             .onErrorReturn { getFailure("Failed to obtain user followers.") }
     }
 

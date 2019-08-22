@@ -37,4 +37,6 @@
     </string-array>
     <string name="num_repos_shown_text">Showing %1$d repositories.</string>
     <string name="follows_search_hint">Find a user by username…</string>
+    <string name="followers_button_text">Followers</string>
+    <string name="following_button_text">Following</string>
 </resources>
