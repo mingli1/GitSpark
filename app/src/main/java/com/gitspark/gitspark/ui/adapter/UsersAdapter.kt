@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.inflate
-import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.model.Loading
 import com.gitspark.gitspark.model.User
@@ -51,22 +50,7 @@ class UsersAdapter : RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
             if (item is User) {
                 with (view) {
                     avatar_image.loadImage(item.avatarUrl)
-                    if (item.name.isNotEmpty()) {
-                        name_field.text = item.name
-                        username_field.text = item.login
-                    } else {
-                        name_field.text = item.login
-                    }
-                    bio_field.isVisible = item.bio.isNotEmpty()
-                    bio_field.text = item.bio
-                    company_field.isVisible = item.company.isNotEmpty()
-                    company_field.text = item.company
-                    location_field.isVisible = item.location.isNotEmpty()
-                    location_field.text = item.location
-
-                    divider.isVisible = item.bio.isNotEmpty() ||
-                            item.company.isNotEmpty() ||
-                            item.location.isNotEmpty()
+                    name_field.text = item.login
                 }
             }
         }
