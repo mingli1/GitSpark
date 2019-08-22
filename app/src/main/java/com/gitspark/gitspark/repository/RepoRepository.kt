@@ -8,6 +8,7 @@ import com.gitspark.gitspark.api.model.SORT_PUSHED
 import com.gitspark.gitspark.api.service.RepoService
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.room.dao.RepoDao
 import io.reactivex.Completable
@@ -27,21 +28,25 @@ class RepoRepository @Inject constructor(
     fun getAuthRepos(
         token: String,
         request: ApiAuthRepoRequest = ApiAuthRepoRequest()
-    ): Observable<RepoResult> {
+    ): Observable<RepoResult<Page<Repo>>> {
         return retrofitHelper.getRetrofit(token = token)
             .create(RepoService::class.java)
             .getAuthRepos(request.visibility, request.affiliation, request.sort)
-            .map { repos -> getSuccess(repos.map { it.toModel() }) }
+            .map {
+                getSuccess(it.toModel<Repo>().apply {
+                    value = it.response.map { repo -> repo.toModel() }
+                })
+            }
             .onErrorReturn { getFailure("Failed to get authenticated user repositories.") }
     }
 
-    fun getAuthStarredRepos(token: String): Observable<RepoResult> {
+    fun getAuthStarredRepos(token: String): Observable<RepoResult<Page<Repo>>> {
         return retrofitHelper.getRetrofit(token = token)
             .create(RepoService::class.java)
             .getAuthStarredRepos()
-            .map { starredRepos ->
-                getSuccess(starredRepos.map { repo ->
-                    repo.toModel().apply { starred = true }
+            .map {
+                getSuccess(it.toModel<Repo>().apply {
+                    value = it.response.map { repo -> repo.toModel().apply { starred = true } }
                 })
             }
             .onErrorReturn { getFailure("Failed to get authenticated starred repositories.") }
@@ -82,12 +87,12 @@ class RepoRepository @Inject constructor(
     fun isRepoCacheExpired(timestamp: String) =
         timeHelper.isExpiredMinutes(timeHelper.parse(timestamp), REPO_CACHE_DURATION_M)
 
-    private fun getSuccess(repos: List<Repo>): RepoResult = RepoResult.Success(repos)
+    private fun <T> getSuccess(value: T): RepoResult<T> = RepoResult.Success(value)
 
-    private fun getFailure(error: String): RepoResult = RepoResult.Failure(error)
+    private fun <T> getFailure(error: String): RepoResult<T> = RepoResult.Failure(error)
 }
 
-sealed class RepoResult {
-    data class Success(val repos: List<Repo>) : RepoResult()
-    data class Failure(val error: String) : RepoResult()
+sealed class RepoResult<T> {
+    data class Success<T>(val value: T) : RepoResult<T>()
+    data class Failure<T>(val error: String) : RepoResult<T>()
 }

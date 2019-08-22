@@ -71,8 +71,8 @@ class ReposViewModel @Inject constructor(
         subscribe(repoRepository.getAuthRepos(prefsHelper.getCachedToken())) {
             when (it) {
                 is RepoResult.Success -> {
-                    subscribe(repoRepository.cacheRepos(it.repos),
-                        { updateViewStateWith(sortReposByUpdated(it.repos)) },
+                    subscribe(repoRepository.cacheRepos(it.value.value),
+                        { updateViewStateWith(sortReposByUpdated(it.value.value)) },
                         {
                             alert("Failed to cache repo data.")
                             existingRepos?.let { repo -> updateViewStateWith(repo) }
@@ -111,7 +111,7 @@ class ReposViewModel @Inject constructor(
             when (result) {
                 is RepoResult.Success -> {
                     currentRepoData.forEach { userRepo ->
-                        if (result.repos.find { it.repoId == userRepo.repoId } != null) {
+                        if (result.value.value.find { it.repoId == userRepo.repoId } != null) {
                             userRepo.starred = true
                         }
                     }

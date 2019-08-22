@@ -51,7 +51,7 @@ class StarsViewModel @Inject constructor(
         subscribe(repoRepository.getAuthStarredRepos(prefsHelper.getCachedToken())) {
             when (it) {
                 is RepoResult.Success -> {
-                    currentRepoData = sortReposByRecent(it.repos)
+                    currentRepoData = sortReposByRecent(it.value.value)
                     viewState.value = viewState.value?.copy(
                         repos = currentRepoData,
                         loading = false,

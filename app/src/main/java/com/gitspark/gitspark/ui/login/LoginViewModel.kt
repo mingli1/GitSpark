@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
+import com.gitspark.gitspark.model.Page
+import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.*
 import com.gitspark.gitspark.ui.base.BaseViewModel
@@ -73,7 +75,7 @@ class LoginViewModel @Inject constructor(
             }
             val repoCompletable = when (it.repoResult) {
                 is RepoResult.Success ->
-                    repoRepository.cacheRepos(it.repoResult.repos)
+                    repoRepository.cacheRepos(it.repoResult.value.value)
                 is RepoResult.Failure ->
                     Completable.error(Throwable(message = it.repoResult.error))
             }
@@ -154,6 +156,6 @@ class LoginViewModel @Inject constructor(
 
     data class ResultSet(
         val userResult: UserResult<AuthUser>,
-        val repoResult: RepoResult
+        val repoResult: RepoResult<Page<Repo>>
     )
 }

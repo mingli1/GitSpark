@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.api.service
 
+import com.gitspark.gitspark.api.model.ApiPage
 import com.gitspark.gitspark.api.model.ApiRepo
 import com.gitspark.gitspark.api.model.ApiStarredRepo
 import io.reactivex.Observable
@@ -15,9 +16,9 @@ interface RepoService {
         @Query("visibility") visibility: String,
         @Query("affiliation") affiliation: String,
         @Query("sort") sort: String
-    ): Observable<List<ApiRepo>>
+    ): Observable<ApiPage<ApiRepo>>
 
     @GET("user/starred")
     @Headers("Accept: application/vnd.github.v3.star+json")
-    fun getAuthStarredRepos(): Observable<List<ApiStarredRepo>>
+    fun getAuthStarredRepos(): Observable<ApiPage<ApiStarredRepo>>
 }
