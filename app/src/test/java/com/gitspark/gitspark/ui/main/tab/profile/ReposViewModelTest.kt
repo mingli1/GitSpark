@@ -3,6 +3,7 @@ package com.gitspark.gitspark.ui.main.tab.profile
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.gitspark.gitspark.api.model.SORT_PUSHED
 import com.gitspark.gitspark.helper.PreferencesHelper
+import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
@@ -63,7 +64,7 @@ class ReposViewModelTest {
     fun shouldCacheReposAndUpdateViewStateOnGetAuthReposSuccessAndCacheReposSuccess() {
         every { repoRepository.isRepoCacheExpired(any()) } returns true
         every { repoRepository.getAuthRepos(any()) } returns
-                Observable.just(RepoResult.Success(listOf(REPO1, REPO2, REPO3)))
+                Observable.just(RepoResult.Success(Page(value = listOf(REPO1, REPO2, REPO3))))
         every { repoRepository.cacheRepos(any()) } returns
                 Completable.complete()
 
@@ -82,7 +83,7 @@ class ReposViewModelTest {
     fun shouldUpdateViewStateWithExistingDataOnAuthReposSuccessAndCacheReposFailure() {
         every { repoRepository.isRepoCacheExpired(any()) } returns true
         every { repoRepository.getAuthRepos(any()) } returns
-                Observable.just(RepoResult.Success(listOf(REPO1, REPO2, REPO3)))
+                Observable.just(RepoResult.Success(Page(value = listOf(REPO1, REPO2, REPO3))))
         every { repoRepository.cacheRepos(any()) } returns
                 Completable.error(Throwable())
 
@@ -135,11 +136,11 @@ class ReposViewModelTest {
     fun shouldStarRepoDataAndUpdateViewStateOnStarredReposSuccess() {
         every { repoRepository.isRepoCacheExpired(any()) } returns true
         every { repoRepository.getAuthRepos(any()) } returns
-                Observable.just(RepoResult.Success(listOf(REPO1, REPO2, REPO3)))
+                Observable.just(RepoResult.Success(Page(value = listOf(REPO1, REPO2, REPO3))))
         every { repoRepository.cacheRepos(any()) } returns
                 Completable.complete()
         every { repoRepository.getAuthStarredRepos(any()) } returns
-                Observable.just(RepoResult.Success(listOf(REPO1, REPO2)))
+                Observable.just(RepoResult.Success(Page(value = listOf(REPO1, REPO2))))
 
         viewModel.onCachedRepoDataRetrieved(listOf(REPO1, REPO2))
 
@@ -158,7 +159,7 @@ class ReposViewModelTest {
     fun shouldUpdateViewStateOnStarredReposError() {
         every { repoRepository.isRepoCacheExpired(any()) } returns true
         every { repoRepository.getAuthRepos(any()) } returns
-                Observable.just(RepoResult.Success(listOf(REPO1, REPO2, REPO3)))
+                Observable.just(RepoResult.Success(Page(value = listOf(REPO1, REPO2, REPO3))))
         every { repoRepository.cacheRepos(any()) } returns
                 Completable.complete()
         every { repoRepository.getAuthStarredRepos(any()) } returns

@@ -122,7 +122,7 @@ class LoginViewModelTest {
         LoginResult.Success(token)
 
     private fun createLoginFailure(error: String) =
-        LoginResult.Failure(error)
+        LoginResult.Failure<Token>(error)
 
     private fun viewState() = viewModel.viewState.value!!
 }

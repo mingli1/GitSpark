@@ -5,6 +5,7 @@ import com.gitspark.gitspark.api.model.SORT_FULL_NAME
 import com.gitspark.gitspark.api.model.SORT_PUSHED
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.room.dao.RepoDao
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -41,9 +42,9 @@ class RepoRepositoryTest {
     @Test
     fun shouldGetAuthReposSuccess() {
         every { repoRepository.getAuthRepos(any(), any()) } returns
-                Observable.just(RepoResult.Success(emptyList()))
+                Observable.just(RepoResult.Success(Page(value = emptyList())))
         val observer = repoRepository.getAuthRepos(token = TOKEN).test()
-        observer.assertValue(RepoResult.Success(emptyList()))
+        observer.assertValue(RepoResult.Success(Page(value = emptyList())))
     }
 
     @Test
@@ -57,9 +58,9 @@ class RepoRepositoryTest {
     @Test
     fun shouldGetAuthStarredReposSuccess() {
         every { repoRepository.getAuthStarredRepos(any()) } returns
-                Observable.just(RepoResult.Success(emptyList()))
+                Observable.just(RepoResult.Success(Page(value = emptyList())))
         val observer = repoRepository.getAuthStarredRepos(token = TOKEN).test()
-        observer.assertValue(RepoResult.Success(emptyList()))
+        observer.assertValue(RepoResult.Success(Page(value = emptyList())))
     }
 
     @Test

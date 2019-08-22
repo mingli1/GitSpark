@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.repository
 
 import com.gitspark.gitspark.helper.RetrofitHelper
+import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Token
 import com.squareup.moshi.Moshi
 import io.mockk.MockKAnnotations
@@ -27,6 +28,7 @@ private val tokenSuccess = Token(
 )
 
 private val tokenList = listOf(tokenSuccess, tokenSuccess, tokenSuccess)
+private val tokenPage = Page(value = tokenList)
 
 class LoginRepositoryTest {
 
@@ -63,17 +65,17 @@ class LoginRepositoryTest {
     @Test
     fun shouldGetAuthorizationsSuccess() {
         every { loginRepository.getAuthorizations(any()) } returns
-                Observable.just(tokenList)
+                Observable.just(LoginResult.Success(tokenPage))
         val observer = loginRepository.getAuthorizations(BASIC_TOKEN).test()
-        observer.assertValue(tokenList)
+        observer.assertValue(LoginResult.Success(tokenPage))
     }
 
     @Test
     fun shouldGetAuthorizationsFailure() {
         every { loginRepository.getAuthorizations(any()) } returns
-                Observable.just(emptyList())
+                Observable.just(LoginResult.Failure("failure"))
         val observer = loginRepository.getAuthorizations(BASIC_TOKEN).test()
-        observer.assertValue(emptyList())
+        observer.assertValue(LoginResult.Failure("failure"))
     }
 
     @Test

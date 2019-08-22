@@ -2,6 +2,7 @@ package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.gitspark.gitspark.helper.PreferencesHelper
+import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
@@ -59,7 +60,7 @@ class StarsViewModelTest {
     @Test
     fun shouldUpdateViewOnStarredReposSuccess() {
         every { repoRepository.getAuthStarredRepos(any()) } returns
-                Observable.just(RepoResult.Success(listOf(REPO1, REPO2)))
+                Observable.just(RepoResult.Success(Page(value = listOf(REPO1, REPO2))))
 
         viewModel.onResume()
 
