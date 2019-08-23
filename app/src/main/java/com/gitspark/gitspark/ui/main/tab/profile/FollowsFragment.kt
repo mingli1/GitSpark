@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.api.service.USER_PER_PAGE
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.adapter.PaginationListener
@@ -19,11 +20,11 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
 
     private lateinit var followersAdapter: UsersAdapter
     private lateinit var followersManager: LinearLayoutManager
+    private lateinit var followersListener: PaginationListener
 
     private lateinit var followingAdapter: UsersAdapter
     private lateinit var followingManager: LinearLayoutManager
-
-    private var onLastPage = false
+    private lateinit var followingListener: PaginationListener
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_follows, container, false)
@@ -36,6 +37,13 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         followersManager = LinearLayoutManager(context, VERTICAL, false)
         followingAdapter = UsersAdapter()
         followingManager = LinearLayoutManager(context, VERTICAL, false)
+
+        followersListener = PaginationListener(followersManager, USER_PER_PAGE, swipe_refresh) {
+            viewModel.onScrolledToEnd()
+        }
+        followingListener = PaginationListener(followingManager, USER_PER_PAGE, swipe_refresh) {
+            viewModel.onScrolledToEnd()
+        }
 
         followers_list.setHasFixedSize(true)
         followers_list.layoutManager = followersManager
@@ -57,7 +65,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     private fun updateView(viewState: FollowsViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
-            onLastPage = isLastPage
+            getListener(followState).isLastPage = isLastPage
             follows_switch_button.text = when (followState) {
                 FollowState.Following -> getString(R.string.followers_button_text)
                 FollowState.Followers -> getString(R.string.following_button_text)
@@ -80,12 +88,8 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
 
     private fun setUpListeners() {
         follows_switch_button.setOnClickListener { viewModel.onFollowsSwitchClicked() }
-        followers_list.addOnScrollListener(PaginationListener(followersManager, swipe_refresh) {
-            if (!onLastPage) viewModel.onScrolledToEnd()
-        })
-        following_list.addOnScrollListener(PaginationListener(followingManager, swipe_refresh) {
-            if (!onLastPage) viewModel.onScrolledToEnd()
-        })
+        followers_list.addOnScrollListener(followersListener)
+        following_list.addOnScrollListener(followingListener)
     }
 
     private fun getAdapter(state: FollowState): UsersAdapter {
@@ -99,6 +103,13 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         return when (state) {
             FollowState.Followers -> followers_list
             FollowState.Following -> following_list
+        }
+    }
+
+    private fun getListener(state: FollowState): PaginationListener {
+        return when (state) {
+            FollowState.Followers -> followersListener
+            FollowState.Following -> followingListener
         }
     }
 }

@@ -5,16 +5,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.baoyz.widget.PullRefreshLayout
 
 private const val DIRECTION_UP = -1
-private const val VISIBLE_THRESHOLD = 2
 
 class PaginationListener(
     private val layoutManager: LinearLayoutManager,
+    private val pageSize: Int,
     private val refreshLayout: PullRefreshLayout? = null,
     private val onUpdate: () -> Unit
 ) : RecyclerView.OnScrollListener() {
 
     private var loading = true
     private var prevTotalCount = 0
+    var isLastPage = false
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
@@ -32,8 +33,10 @@ class PaginationListener(
                     prevTotalCount = totalItemCount
                 }
             }
-            if (!loading && totalItemCount - visibleItemCount <=
-                firstVisibleItemPosition + VISIBLE_THRESHOLD) {
+            if (!loading && !isLastPage &&
+                visibleItemCount + firstVisibleItemPosition >= totalItemCount &&
+                    firstVisibleItemPosition >= 0 &&
+                    totalItemCount >= pageSize) {
                 onUpdate()
                 loading = true
             }
