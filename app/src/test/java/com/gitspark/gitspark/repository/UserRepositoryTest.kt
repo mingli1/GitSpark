@@ -3,6 +3,8 @@ package com.gitspark.gitspark.repository
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.AuthUser
+import com.gitspark.gitspark.model.Page
+import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.room.dao.AuthUserDao
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -18,6 +20,7 @@ import org.junit.Test
 
 private const val TOKEN = "Basic abc123"
 private val authUser = AuthUser()
+private val user = User()
 
 class UserRepositoryTest {
 
@@ -55,6 +58,38 @@ class UserRepositoryTest {
     fun shouldGetCurrentUserData() {
         userRepository.getCurrentUserData()
         verify { authUserDao.getAuthUser() }
+    }
+
+    @Test
+    fun shouldGetAuthUserFollowersSuccess() {
+        every { userRepository.getAuthUserFollowers(any(), any()) } returns
+                Observable.just(UserResult.Success(Page(value = listOf(user))))
+        val observer = userRepository.getAuthUserFollowers(TOKEN, 1).test()
+        observer.assertValue(UserResult.Success(Page(value = listOf(user))))
+    }
+
+    @Test
+    fun shouldGetAuthUserFollowersFailure() {
+        every { userRepository.getAuthUserFollowers(any(), any()) } returns
+                Observable.just(UserResult.Failure("failure"))
+        val observer = userRepository.getAuthUserFollowers(TOKEN, 1).test()
+        observer.assertValue(UserResult.Failure("failure"))
+    }
+
+    @Test
+    fun shouldGetAuthUserFollowingSuccess() {
+        every { userRepository.getAuthUserFollowing(any(), any()) } returns
+                Observable.just(UserResult.Success(Page(value = listOf(user))))
+        val observer = userRepository.getAuthUserFollowing(TOKEN, 1).test()
+        observer.assertValue(UserResult.Success(Page(value = listOf(user))))
+    }
+
+    @Test
+    fun shouldGetAuthUserFollowingFailure() {
+        every { userRepository.getAuthUserFollowing(any(), any()) } returns
+                Observable.just(UserResult.Failure("failure"))
+        val observer = userRepository.getAuthUserFollowing(TOKEN, 1).test()
+        observer.assertValue(UserResult.Failure("failure"))
     }
 
     @Test
