@@ -56,6 +56,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         with (viewState) {
             loading_indicator.isVisible = loading
             paginationListener.isLastPage = isLastPage
+            swipe_refresh.setRefreshing(refreshing)
 
             num_follows_field.text = when (followState) {
                 FollowState.Followers -> getString(R.string.followers_text, totalFollowers)
@@ -80,6 +81,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     }
 
     private fun setUpListeners() {
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
         follows_switch_button.setOnClickListener { viewModel.onFollowsSwitchClicked() }
         follows_list.addOnScrollListener(paginationListener)
     }

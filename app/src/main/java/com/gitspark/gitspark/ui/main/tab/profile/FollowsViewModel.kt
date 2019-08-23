@@ -32,6 +32,10 @@ class FollowsViewModel @Inject constructor(
         }
     }
 
+    fun onRefresh() {
+        updateViewState(currState, true, true)
+    }
+
     fun onUserDataRetrieved(user: AuthUser) {
         viewState.value = FollowsViewState(
             followState = currState,
@@ -52,13 +56,15 @@ class FollowsViewModel @Inject constructor(
         updateViewState(currState, true)
     }
 
-    private fun updateViewState(state: FollowState, reset: Boolean = false) {
+    private fun updateViewState(state: FollowState, reset: Boolean = false, refresh: Boolean = false) {
         viewState.value = viewState.value?.copy(
             loading = reset,
+            refreshing = refresh,
             updateAdapter = false,
             followState = currState
         ) ?: FollowsViewState(
             loading = reset,
+            refreshing = refresh,
             updateAdapter = false,
             followState = currState
         )
@@ -82,6 +88,7 @@ class FollowsViewModel @Inject constructor(
                     viewState.value = viewState.value?.copy(
                         data = it.value.value,
                         loading = false,
+                        refreshing = false,
                         isLastPage = isLastPage,
                         currPage = followersPage,
                         updateAdapter = true
@@ -104,6 +111,7 @@ class FollowsViewModel @Inject constructor(
                     viewState.value = viewState.value?.copy(
                         data = it.value.value,
                         loading = false,
+                        refreshing = false,
                         isLastPage = isLastPage,
                         currPage = followingPage,
                         updateAdapter = true
