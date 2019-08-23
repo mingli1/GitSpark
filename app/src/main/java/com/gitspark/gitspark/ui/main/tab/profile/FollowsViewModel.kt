@@ -33,7 +33,7 @@ class FollowsViewModel @Inject constructor(
     }
 
     fun onRefresh() {
-        updateViewState(currState, true, true)
+        updateViewState(currState, reset = true, refresh = true)
     }
 
     fun onUserDataRetrieved(user: AuthUser) {
