@@ -75,7 +75,7 @@ class FollowsViewModel @Inject constructor(
     }
 
     private fun requestFollowers() {
-        subscribe(userRepository.getUserFollowers(prefsHelper.getCachedToken(), "blerner", followersPage)) {
+        subscribe(userRepository.getAuthUserFollowers(prefsHelper.getCachedToken(), followersPage)) {
             when (it) {
                 is UserResult.Success -> {
                     val isLastPage = if (it.value.last == 0) true else followersPage == it.value.last

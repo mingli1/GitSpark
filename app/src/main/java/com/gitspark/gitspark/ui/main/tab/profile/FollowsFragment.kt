@@ -69,8 +69,8 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
             getListener(followState).isLastPage = isLastPage
 
             num_follows_field.text = when (followState) {
-                FollowState.Following -> getString(R.string.followers_text, totalFollowers)
-                FollowState.Followers -> getString(R.string.following_text, totalFollowing)
+                FollowState.Followers -> getString(R.string.followers_text, totalFollowers)
+                FollowState.Following -> getString(R.string.following_text, totalFollowing)
             }
             follows_switch_button.text = when (followState) {
                 FollowState.Following -> getString(R.string.followers_button_text)
