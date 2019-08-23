@@ -72,7 +72,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
                     1 -> {
                         follows_list.adapter = null
                         follows_list.adapter = getAdapter(followState)
-                        getAdapter(followState).addInitialUsers(data, isLastPage)
+                        getAdapter(followState).addInitialUsers(data, isLastPage, followState)
                     }
                     else -> getAdapter(followState).addUsersOnLoadingComplete(data, isLastPage)
                 }

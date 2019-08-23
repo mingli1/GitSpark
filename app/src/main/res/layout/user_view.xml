@@ -48,11 +48,10 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
             android:padding="12dp"
-            android:text="Unfollow"
+            android:text="@string/unfollow_button_text"
             android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Unfollow"/>
+            app:layout_constraintTop_toTopOf="parent"/>
     
         <TextView
             android:id="@+id/name_field"
