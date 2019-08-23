@@ -21,7 +21,7 @@ class FollowsViewModel @Inject constructor(
 
     fun onResume() {
         if (!resumed) {
-            updateViewState(currState)
+            updateViewState(currState, true)
             resumed = true
         }
     }
@@ -40,7 +40,7 @@ class FollowsViewModel @Inject constructor(
 
     private fun updateViewState(state: FollowState, reset: Boolean = false) {
         viewState.value = FollowsViewState(
-            loading = true,
+            loading = reset,
             updateAdapter = false,
             followState = currState
         )
