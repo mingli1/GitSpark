@@ -9,7 +9,9 @@ data class FollowsViewState(
     val isLastPage: Boolean = false,
     val currPage: Int = 1,
     val updateAdapter: Boolean = false,
-    val followState: FollowState = FollowState.Followers
+    val followState: FollowState = FollowState.Followers,
+    val totalFollowers: Int = 0,
+    val totalFollowing: Int = 0
 )
 
 enum class FollowState {

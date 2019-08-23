@@ -1,7 +1,9 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
+import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
@@ -13,6 +15,7 @@ class FollowsViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<FollowsViewState>()
+    val userMediator = MediatorLiveData<AuthUser>()
 
     private var resumed = false
     private var followersPage = 1
@@ -20,10 +23,21 @@ class FollowsViewModel @Inject constructor(
     private var currState = FollowState.Followers
 
     fun onResume() {
+        val userData = userRepository.getCurrentUserData()
+        userMediator.addSource(userData) { userMediator.value = it }
+
         if (!resumed) {
             updateViewState(currState, true)
             resumed = true
         }
+    }
+
+    fun onUserDataRetrieved(user: AuthUser) {
+        viewState.value = FollowsViewState(
+            followState = currState,
+            totalFollowers = user.followers,
+            totalFollowing = user.following
+        )
     }
 
     fun onScrolledToEnd() {
@@ -39,7 +53,11 @@ class FollowsViewModel @Inject constructor(
     }
 
     private fun updateViewState(state: FollowState, reset: Boolean = false) {
-        viewState.value = FollowsViewState(
+        viewState.value = viewState.value?.copy(
+            loading = reset,
+            updateAdapter = false,
+            followState = currState
+        ) ?: FollowsViewState(
             loading = reset,
             updateAdapter = false,
             followState = currState

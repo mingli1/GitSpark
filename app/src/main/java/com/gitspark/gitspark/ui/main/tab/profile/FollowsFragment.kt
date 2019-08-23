@@ -60,12 +60,18 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.userMediator.observe(viewLifecycleOwner) { viewModel.onUserDataRetrieved(it) }
     }
 
     private fun updateView(viewState: FollowsViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
             getListener(followState).isLastPage = isLastPage
+
+            num_follows_field.text = when (followState) {
+                FollowState.Following -> getString(R.string.followers_text, totalFollowers)
+                FollowState.Followers -> getString(R.string.following_text, totalFollowing)
+            }
             follows_switch_button.text = when (followState) {
                 FollowState.Following -> getString(R.string.followers_button_text)
                 FollowState.Followers -> getString(R.string.following_button_text)
