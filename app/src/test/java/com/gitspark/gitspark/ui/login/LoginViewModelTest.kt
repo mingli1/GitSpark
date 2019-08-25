@@ -9,13 +9,18 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify
+import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Credentials
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+
+private val authUser = AuthUser()
 
 class LoginViewModelTest {
 
@@ -25,14 +30,14 @@ class LoginViewModelTest {
     @RelaxedMockK private lateinit var loginRepository: LoginRepository
     @RelaxedMockK private lateinit var userRepository: UserRepository
     @RelaxedMockK private lateinit var prefsHelper: PreferencesHelper
-    @RelaxedMockK private lateinit var repoRepository: RepoRepository
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
+        RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        viewModel = LoginViewModel(loginRepository, userRepository, prefsHelper, repoRepository)
+        viewModel = LoginViewModel(loginRepository, userRepository, prefsHelper)
         viewModel.initialize()
     }
 
@@ -113,6 +118,30 @@ class LoginViewModelTest {
         every { prefsHelper.hasExistingAccessToken() } returns true
         viewModel.initialize()
         verify { userRepository.getAuthUser(any()) }
+    }
+
+    @Test
+    fun shouldCacheUserDataAndNavigateToMainOnSuccessfulLogin() {
+        every { userRepository.getAuthUser(any()) } returns
+                Observable.just(UserResult.Success(authUser))
+        every { userRepository.cacheUserData(any()) } returns
+                Completable.complete()
+
+        viewModel.onSuccessfulLogin()
+
+        verify { userRepository.cacheUserData(authUser) }
+        assertThat(viewModel.navigateToMainActivityAction.value).isNotNull
+    }
+
+    @Test
+    fun shouldFailLoginOnUserDataFailure() {
+        every { userRepository.getAuthUser(any()) } returns
+                Observable.just(UserResult.Failure("failure"))
+
+        viewModel.onSuccessfulLogin()
+
+        assertThat(viewState().loading).isFalse()
+        assertThat(viewModel.navigateToMainActivityAction.value).isEqualTo("Error: failure")
     }
 
     private fun getToken(value: String) =

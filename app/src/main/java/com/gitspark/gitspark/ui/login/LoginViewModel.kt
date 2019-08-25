@@ -12,15 +12,13 @@ import com.gitspark.gitspark.repository.*
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import io.reactivex.Completable
-import io.reactivex.rxkotlin.Observables
 import okhttp3.Credentials
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     private val userRepository: UserRepository,
-    private val prefsHelper: PreferencesHelper,
-    private val repoRepository: RepoRepository
+    private val prefsHelper: PreferencesHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<LoginViewState>()
@@ -59,32 +57,14 @@ class LoginViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onSuccessfulLogin() {
-        subscribe(
-            Observables.zip(
-                userRepository.getAuthUser(prefsHelper.getCachedToken()),
-                repoRepository.getAuthRepos(prefsHelper.getCachedToken())
-            ) {
-                user, repo -> ResultSet(user, repo)
-            }
-        ) {
-            val userCompletable = when (it.userResult) {
+        subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
+            val userCompletable = when (it) {
                 is UserResult.Success ->
-                    userRepository.cacheUserData(it.userResult.value)
+                    userRepository.cacheUserData(it.value)
                 is UserResult.Failure ->
-                    Completable.error(Throwable(message = it.userResult.error))
+                    Completable.error(Throwable(message = it.error))
             }
-            val repoCompletable = when (it.repoResult) {
-                is RepoResult.Success ->
-                    repoRepository.cacheRepos(it.repoResult.value.value)
-                is RepoResult.Failure ->
-                    Completable.error(Throwable(message = it.repoResult.error))
-            }
-
-            subscribe(
-                Completable.mergeArray(
-                    userCompletable,
-                    repoCompletable
-                ),
+            subscribe(userCompletable,
                 { navigateToMainActivityAction.call() },
                 { error ->
                     setLoading(false)
