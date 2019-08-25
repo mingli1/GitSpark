@@ -1,43 +1,39 @@
 package com.gitspark.gitspark.model
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.gitspark.gitspark.api.model.RepoLicense
 import com.gitspark.gitspark.api.model.RepoPermissions
 
-@Entity(tableName = "repos")
 data class Repo(
-    @PrimaryKey var repoId: Int = 0,
-    var repoName: String = "",
-    var fullName: String = "",
-    @Embedded var owner: User = User(),
-    var isPrivate: Boolean = false,
-    var repoDescription: String = "",
-    var isForked: Boolean = false,
-    var repoLanguage: String = "",
-    var numForks: Int = 0,
-    var numStars: Int = 0,
-    var numWatches: Int = 0,
-    var defaultBranch: String = "",
-    var numOpenIssues: Int = 0,
-    var topics: List<String> = emptyList(),
-    var hasIssues: Boolean = false,
-    var hasProjects: Boolean = false,
-    var hasWiki: Boolean = false,
-    var hasPages: Boolean = false,
-    var hasDownloads: Boolean = false,
-    var archived: Boolean = false,
-    var disabled: Boolean = false,
-    var repoPushedAt: String = "",
-    var repoCreatedAt: String = "",
-    var repoUpdatedAt: String = "",
-    @Embedded var permissions: RepoPermissions = RepoPermissions(
+    val repoId: Int = 0,
+    val repoName: String = "",
+    val fullName: String = "",
+    val owner: User = User(),
+    val isPrivate: Boolean = false,
+    val repoDescription: String = "",
+    val isForked: Boolean = false,
+    val repoLanguage: String = "",
+    val numForks: Int = 0,
+    val numStars: Int = 0,
+    val numWatches: Int = 0,
+    val defaultBranch: String = "",
+    val numOpenIssues: Int = 0,
+    val topics: List<String> = emptyList(),
+    val hasIssues: Boolean = false,
+    val hasProjects: Boolean = false,
+    val hasWiki: Boolean = false,
+    val hasPages: Boolean = false,
+    val hasDownloads: Boolean = false,
+    val archived: Boolean = false,
+    val disabled: Boolean = false,
+    val repoPushedAt: String = "",
+    val repoCreatedAt: String = "",
+    val repoUpdatedAt: String = "",
+    val permissions: RepoPermissions = RepoPermissions(
         admin = false,
         push = false,
         pull = false
     ),
-    @Embedded var license: RepoLicense = RepoLicense("", "", "", ""),
+    val license: RepoLicense = RepoLicense("", "", "", ""),
     var timestamp: String = "",
     var starredAt: String = "",
     var starred: Boolean = false

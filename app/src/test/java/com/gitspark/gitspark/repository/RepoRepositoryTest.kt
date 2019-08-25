@@ -6,7 +6,6 @@ import com.gitspark.gitspark.api.model.SORT_PUSHED
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Page
-import com.gitspark.gitspark.room.dao.RepoDao
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
