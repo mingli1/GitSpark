@@ -4,9 +4,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.helper.PreferencesHelper
-import com.gitspark.gitspark.model.AuthUser
-import com.gitspark.gitspark.model.Page
-import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.*
 import com.gitspark.gitspark.ui.base.BaseViewModel
@@ -142,9 +139,4 @@ class LoginViewModel @Inject constructor(
     private fun setLoading(loading: Boolean) {
         viewState.value = viewState.value?.copy(loading = loading)
     }
-
-    data class ResultSet(
-        val userResult: UserResult<AuthUser>,
-        val repoResult: RepoResult<Page<Repo>>
-    )
 }
