@@ -19,25 +19,10 @@
     <string name="total_contribution">%1$d contributions in the past year</string>
     <string name="joined_date">Joined GitHub at %1$s</string>
     <string name="updated_repo">Updated at %1$s</string>
-    <string name="repo_search_hint">Search for a repository…</string>
-    <string-array name="repo_visibility_options">
-        <item>all</item>
-        <item>public</item>
-        <item>private</item>
-        <item>forked</item>
-        <item>stars</item>
-    </string-array>
     <string name="private_label">private</string>
     <string name="forked_label">forked</string>
-    <string name="no_repos_text">No repositories were found.</string>
-    <string-array name="starred_repo_filter_options">
-        <item>recent</item>
-        <item>stars</item>
-        <item>updated</item>
-    </string-array>
-    <string name="num_repos_shown_text">Showing %1$d repositories.</string>
-    <string name="follows_search_hint">Find a user by username…</string>
     <string name="followers_button_text">Followers</string>
     <string name="following_button_text">Following</string>
     <string name="unfollow_button_text">Unfollow</string>
+    <string name="num_repos_text">Repositories (%1$d)</string>
 </resources>

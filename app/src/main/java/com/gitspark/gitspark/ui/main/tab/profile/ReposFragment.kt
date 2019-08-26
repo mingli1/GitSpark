@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
@@ -19,7 +18,6 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
     @Inject lateinit var colorHelper: LanguageColorHelper
     private lateinit var reposAdapter: ReposAdapter
-    private lateinit var spinnerAdapter: ArrayAdapter<CharSequence>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_repos, container, false)
@@ -27,12 +25,6 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        spinnerAdapter = ArrayAdapter.createFromResource(context!!,
-            R.array.repo_visibility_options, android.R.layout.simple_spinner_item).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
-        sort_spinner.adapter = spinnerAdapter
 
         repos_list.setHasFixedSize(true)
         repos_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
@@ -53,10 +45,8 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
         with (viewState) {
             loading_indicator.isVisible = loading
             reposAdapter.setData(repos)
-            no_repos_alert.isVisible = repos.isEmpty()
             swipe_refresh.setRefreshing(refreshing)
-            num_repos_shown.isVisible = repos.size > 1
-            num_repos_shown.text = getString(R.string.num_repos_shown_text, repos.size)
+            num_repos_field.text = getString(R.string.num_repos_text, totalRepos)
         }
     }
 
