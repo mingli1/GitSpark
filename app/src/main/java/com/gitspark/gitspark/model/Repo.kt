@@ -2,6 +2,8 @@ package com.gitspark.gitspark.model
 
 import com.gitspark.gitspark.api.model.RepoLicense
 import com.gitspark.gitspark.api.model.RepoPermissions
+import com.gitspark.gitspark.ui.adapter.Pageable
+import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 
 data class Repo(
     val repoId: Int = 0,
@@ -37,4 +39,7 @@ data class Repo(
     var timestamp: String = "",
     var starredAt: String = "",
     var starred: Boolean = false
-)
+) : Pageable {
+
+    override fun getViewType() = VIEW_TYPE_VIEW
+}

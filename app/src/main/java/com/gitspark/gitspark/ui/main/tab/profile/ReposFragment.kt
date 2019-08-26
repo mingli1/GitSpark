@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.ReposAdapter
 import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -18,6 +20,8 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
     @Inject lateinit var colorHelper: LanguageColorHelper
     private lateinit var reposAdapter: ReposAdapter
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var paginationListener: PaginationListener
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_repos, container, false)
@@ -26,8 +30,13 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        paginationListener = PaginationListener(layoutManager, REPO_PER_PAGE, swipe_refresh) {
+            viewModel.onScrolledToEnd()
+        }
+
         repos_list.setHasFixedSize(true)
-        repos_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        repos_list.layoutManager = layoutManager
         reposAdapter = ReposAdapter(colorHelper)
         if (repos_list.adapter == null) repos_list.adapter = reposAdapter
 
@@ -44,9 +53,17 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
     private fun updateView(viewState: ReposViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
-            reposAdapter.setData(repos)
             swipe_refresh.setRefreshing(refreshing)
             num_repos_field.text = getString(R.string.num_repos_text, totalRepos)
+
+            if (updateAdapter) {
+                if (isFirstPage) {
+                    repos_list.adapter = null
+                    repos_list.adapter = reposAdapter
+                    reposAdapter.addInitialItems(repos, isLastPage)
+                }
+                else reposAdapter.addItemsOnLoadingComplete(repos, isLastPage)
+            }
         }
     }
 

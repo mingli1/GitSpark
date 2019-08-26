@@ -42,7 +42,7 @@ class ReposViewModel @Inject constructor(
         )
     }
 
-    fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
+    private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
         viewState.value = viewState.value?.copy(
             loading = reset,
             refreshing = refresh,

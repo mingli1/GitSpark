@@ -9,7 +9,7 @@ import com.gitspark.gitspark.model.Loading
 
 abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHolder>() {
 
-    protected val items = arrayListOf<Pageable>()
+    private val items = arrayListOf<Pageable>()
 
     override fun getItemCount() = items.size
 
