@@ -74,7 +74,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
                         follows_list.adapter = getAdapter(followState)
                         getAdapter(followState).addInitialUsers(data, isLastPage, followState)
                     }
-                    else -> getAdapter(followState).addUsersOnLoadingComplete(data, isLastPage)
+                    else -> getAdapter(followState).addItemsOnLoadingComplete(data, isLastPage)
                 }
             }
         }

@@ -27,7 +27,7 @@ abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHo
 
     abstract fun bind(item: Pageable, view: View)
 
-    open fun addInitialItems(items: List<Pageable>, isOnlyPage: Boolean) {
+    fun addInitialItems(items: List<Pageable>, isOnlyPage: Boolean) {
         if (items.isEmpty()) return
         this.items.clear()
 
@@ -36,7 +36,7 @@ abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHo
         notifyDataSetChanged()
     }
 
-    open fun addItemsOnLoadingComplete(items: List<Pageable>, isLastPage: Boolean) {
+    fun addItemsOnLoadingComplete(items: List<Pageable>, isLastPage: Boolean) {
         if (this.items.lastIndex < 0) return
         if (this.items.lastOrNull()?.getViewType() != VIEW_TYPE_LOADING) return
         this.items.removeAt(this.items.lastIndex)
