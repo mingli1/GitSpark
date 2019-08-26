@@ -6,6 +6,8 @@ data class ReposViewState(
     val repos: List<Repo> = emptyList(),
     val loading: Boolean = false,
     val refreshing: Boolean = false,
-    val clearSearchFilter: Boolean = false,
-    val clearSortSelection: Boolean = false
+    val totalRepos: Int = 0,
+    val updateAdapter: Boolean = false,
+    val isLastPage: Boolean = false,
+    val isFirstPage: Boolean = false
 )

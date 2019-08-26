@@ -8,6 +8,8 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
+const val REPO_PER_PAGE = 50
+
 interface RepoService {
 
     @GET("user/repos")
@@ -15,10 +17,15 @@ interface RepoService {
     fun getAuthRepos(
         @Query("visibility") visibility: String,
         @Query("affiliation") affiliation: String,
-        @Query("sort") sort: String
+        @Query("sort") sort: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = REPO_PER_PAGE
     ): Observable<ApiPage<ApiRepo>>
 
     @GET("user/starred")
     @Headers("Accept: application/vnd.github.v3.star+json")
-    fun getAuthStarredRepos(): Observable<ApiPage<ApiStarredRepo>>
+    fun getAuthStarredRepos(
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = REPO_PER_PAGE
+    ): Observable<ApiPage<ApiStarredRepo>>
 }

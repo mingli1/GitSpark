@@ -16,11 +16,12 @@ class RepoRepository @Inject constructor(
 
     fun getAuthRepos(
         token: String,
-        request: ApiAuthRepoRequest = ApiAuthRepoRequest()
+        request: ApiAuthRepoRequest = ApiAuthRepoRequest(),
+        page: Int
     ): Observable<RepoResult<Page<Repo>>> {
         return retrofitHelper.getRetrofit(token = token)
             .create(RepoService::class.java)
-            .getAuthRepos(request.visibility, request.affiliation, request.sort)
+            .getAuthRepos(request.visibility, request.affiliation, request.sort, page)
             .map {
                 getSuccess(it.toModel<Repo>().apply {
                     value = it.response.map { repo -> repo.toModel() }
@@ -29,10 +30,10 @@ class RepoRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to get authenticated user repositories.") }
     }
 
-    fun getAuthStarredRepos(token: String): Observable<RepoResult<Page<Repo>>> {
+    fun getAuthStarredRepos(token: String, page: Int): Observable<RepoResult<Page<Repo>>> {
         return retrofitHelper.getRetrofit(token = token)
             .create(RepoService::class.java)
-            .getAuthStarredRepos()
+            .getAuthStarredRepos(page)
             .map {
                 getSuccess(it.toModel<Repo>().apply {
                     value = it.response.map { repo -> repo.toModel().apply { starred = true } }

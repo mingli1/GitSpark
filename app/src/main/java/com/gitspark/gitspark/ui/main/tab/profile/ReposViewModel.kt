@@ -1,161 +1,82 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.gitspark.gitspark.api.model.SORT_PUSHED
 import com.gitspark.gitspark.helper.PreferencesHelper
-import com.gitspark.gitspark.model.Repo
+import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
+import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
-internal const val SORT_ALL = "all"
-internal const val SORT_PUBLIC = "public"
-internal const val SORT_PRIVATE = "private"
-internal const val SORT_FORKED = "forked"
-
 class ReposViewModel @Inject constructor(
     private val repoRepository: RepoRepository,
+    private val userRepository: UserRepository,
     private val prefsHelper: PreferencesHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<ReposViewState>()
-    val repoDataMediator = MediatorLiveData<List<Repo>>()
+    val userMediator = MediatorLiveData<AuthUser>()
 
-    @VisibleForTesting var currentRepoData = emptyList<Repo>()
-    private var filterString = ""
-    private var sortSelection = SORT_ALL
+    private var resumed = false
+    private var page = 1
 
     fun onResume() {
-        val repoData = repoRepository.getRepos(order = SORT_PUSHED)
-        repoDataMediator.addSource(repoData) { repoDataMediator.value = it }
-    }
+        val userData = userRepository.getCurrentUserData()
+        userMediator.addSource(userData) { userMediator.value = it }
 
-    fun onCachedRepoDataRetrieved(repos: List<Repo>) {
-        if (repos.isEmpty()) {
-            viewState.value = ReposViewState(repos = repos)
-            return
-        }
-        val expired = repoRepository.isRepoCacheExpired(repos[0].timestamp)
-        if (expired) {
-            viewState.value = ReposViewState(loading = true)
-            requestAuthRepos(repos)
-        }
-        else {
-            updateViewStateWith(repos)
+        if (!resumed) {
+            updateViewState(reset = true)
+            resumed = true
         }
     }
 
-    fun onRefresh() {
-        viewState.value = viewState.value?.copy(
-            refreshing = true,
-            clearSearchFilter = true,
-            clearSortSelection = true
+    fun onRefresh() = updateViewState(reset = true, refresh = true)
+
+    fun onScrolledToEnd() = updateViewState()
+
+    fun onUserDataRetrieved(user: AuthUser) {
+        viewState.value = ReposViewState(
+            totalRepos = user.numPublicRepos + user.totalPrivateRepos
         )
-        requestAuthRepos(null)
     }
 
-    fun onAfterTextChanged(text: String) {
-        filterString = text
-        updateViewStateWithFiltered()
+    fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
+        viewState.value = viewState.value?.copy(
+            loading = reset,
+            refreshing = refresh,
+            updateAdapter = false
+        ) ?: ReposViewState(
+            loading = reset,
+            refreshing = refresh,
+            updateAdapter = false
+        )
+        if (reset) page = 1
+        requestRepos()
     }
 
-    fun onSortItemSelected(selection: String) {
-        sortSelection = selection
-        updateViewStateWithFiltered()
-    }
-
-    private fun requestAuthRepos(existingRepos: List<Repo>?) {
-        subscribe(repoRepository.getAuthRepos(prefsHelper.getCachedToken())) {
+    private fun requestRepos() {
+        subscribe(repoRepository.getAuthRepos(prefsHelper.getCachedToken(), page = page)) {
             when (it) {
                 is RepoResult.Success -> {
-                    subscribe(repoRepository.cacheRepos(it.value.value),
-                        { updateViewStateWith(sortReposByUpdated(it.value.value)) },
-                        {
-                            alert("Failed to cache repo data.")
-                            existingRepos?.let { repo -> updateViewStateWith(repo) }
-                        })
+                    val isFirstPage = page == 1
+                    val isLastPage = if (it.value.last == 0) true else page == it.value.last
+                    viewState.value = viewState.value?.copy(
+                        repos = it.value.value,
+                        loading = false,
+                        refreshing = false,
+                        isFirstPage = isFirstPage,
+                        isLastPage = isLastPage,
+                        updateAdapter = true
+                    )
+                    if (page < it.value.last) page++
                 }
                 is RepoResult.Failure -> {
                     alert(it.error)
-                    existingRepos?.let { repo -> updateViewStateWith(repo) }
+                    viewState.value = viewState.value?.copy(loading = false, updateAdapter = false)
                 }
             }
         }
-    }
-
-    private fun updateViewStateWith(repos: List<Repo>) {
-        currentRepoData = repos
-        viewState.value = ReposViewState(
-            repos = repos,
-            loading = true,
-            refreshing = false
-        )
-        requestStarredRepos()
-    }
-
-    private fun updateViewStateWithFiltered() {
-        viewState.value?.let {
-            viewState.value = it.copy(
-                repos = filterRepos(currentRepoData, filterString, sortSelection),
-                clearSortSelection = false,
-                clearSearchFilter = false
-            )
-        }
-    }
-
-    private fun requestStarredRepos() {
-        subscribe(repoRepository.getAuthStarredRepos(prefsHelper.getCachedToken())) { result ->
-            when (result) {
-                is RepoResult.Success -> {
-                    currentRepoData.forEach { userRepo ->
-                        if (result.value.value.find { it.repoId == userRepo.repoId } != null) {
-                            userRepo.starred = true
-                        }
-                    }
-                    viewState.value = viewState.value?.copy(
-                        repos = currentRepoData,
-                        clearSortSelection = false,
-                        clearSearchFilter = false,
-                        loading = false
-                    )
-                }
-                is RepoResult.Failure -> {
-                    alert(result.error)
-                    viewState.value = viewState.value?.copy(
-                        clearSortSelection = false,
-                        clearSearchFilter = false,
-                        loading = false
-                    )
-                }
-            }
-        }
-    }
-
-    private fun filterRepos(
-        repos: List<Repo>,
-        filter: String = "",
-        sortType: String = SORT_ALL
-    ): List<Repo> {
-        val filteredRepos = repos.filter {
-            it.repoName.startsWith(filter.trim(), ignoreCase = true)
-        }
-        return when (sortType) {
-            SORT_ALL -> filteredRepos
-            SORT_PUBLIC -> filteredRepos.filter { !it.isPrivate }
-            SORT_PRIVATE -> filteredRepos.filter { it.isPrivate }
-            SORT_FORKED -> filteredRepos.filter { it.isForked }
-            else -> filteredRepos.sortedWith(Comparator { r1, r2 ->
-                r2.numStars - r1.numStars
-            })
-        }
-    }
-
-    private fun sortReposByUpdated(repos: List<Repo>): List<Repo> {
-        return repos.sortedWith(Comparator { r1, r2 ->
-            r2.repoPushedAt.compareTo(r1.repoPushedAt)
-        })
     }
 }

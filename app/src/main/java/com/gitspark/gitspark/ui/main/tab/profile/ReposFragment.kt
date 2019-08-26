@@ -46,9 +46,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
-        viewModel.repoDataMediator.observeOnce(viewLifecycleOwner) {
-            viewModel.onCachedRepoDataRetrieved(it)
-        }
+        viewModel.userMediator.observe(viewLifecycleOwner) { viewModel.onUserDataRetrieved(it) }
     }
 
     private fun updateView(viewState: ReposViewState) {
@@ -59,15 +57,10 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
             swipe_refresh.setRefreshing(refreshing)
             num_repos_shown.isVisible = repos.size > 1
             num_repos_shown.text = getString(R.string.num_repos_shown_text, repos.size)
-
-            if (clearSearchFilter) search_field.text.clear()
-            if (clearSortSelection) sort_spinner.setSelection(0)
         }
     }
 
     private fun setupListeners() {
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
-        search_field.afterTextChanged { viewModel.onAfterTextChanged(search_field.text.toString()) }
-        sort_spinner.onItemSelected { viewModel.onSortItemSelected(sort_spinner.selectedItem.toString()) }
     }
 }
