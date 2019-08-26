@@ -16,6 +16,8 @@ import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
+private const val LABEL = "Repositories"
+
 class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
     @Inject lateinit var colorHelper: LanguageColorHelper
@@ -54,7 +56,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
         with (viewState) {
             loading_indicator.isVisible = loading
             swipe_refresh.setRefreshing(refreshing)
-            num_repos_field.text = getString(R.string.num_repos_text, totalRepos)
+            num_repos_field.text = getString(R.string.num_repos_text, LABEL, totalRepos)
 
             if (updateAdapter) {
                 if (isFirstPage) {

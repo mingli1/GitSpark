@@ -24,5 +24,5 @@
     <string name="followers_button_text">Followers</string>
     <string name="following_button_text">Following</string>
     <string name="unfollow_button_text">Unfollow</string>
-    <string name="num_repos_text">Repositories (%1$d)</string>
+    <string name="num_repos_text">%1$s (%2$d)</string>
 </resources>
