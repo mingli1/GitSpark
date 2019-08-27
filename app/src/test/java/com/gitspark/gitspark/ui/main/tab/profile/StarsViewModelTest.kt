@@ -19,6 +19,18 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+private val reposSuccess = RepoResult.Success(Page(
+    next = 2,
+    last = 10,
+    value = listOf(Repo())
+))
+
+private val reposSuccessOnePage = RepoResult.Success(Page(
+    next = -1,
+    last = -1,
+    value = listOf(Repo())
+))
+
 class StarsViewModelTest {
 
     @Rule @JvmField val liveDataRule = InstantTaskExecutorRule()
@@ -37,95 +49,120 @@ class StarsViewModelTest {
     }
 
     @Test
-    fun shouldRequestStarredReposOnResume() {
+    fun shouldUpdateViewStateOnResume() {
         viewModel.onResume()
-        assertThat(viewState().loading).isTrue()
-        verify { repoRepository.getAuthStarredRepos(any()) }
+
+        assertThat(viewState()).isEqualTo(StarsViewState(
+            loading = true,
+            refreshing = false,
+            updateAdapter = false
+        ))
+        verify { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) }
+        verify { repoRepository.getAuthStarredRepos(any(), any()) }
     }
 
     @Test
-    fun shouldRequestStarredReposOnRefresh() {
-        viewModel.viewState.value = StarsViewState()
+    fun shouldUpdateViewStateOnRefresh() {
+        viewModel.onRefresh()
+
+        assertThat(viewState()).isEqualTo(StarsViewState(
+            loading = true,
+            refreshing = true,
+            updateAdapter = false
+        ))
+        verify { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) }
+        verify { repoRepository.getAuthStarredRepos(any(), any()) }
+    }
+
+    @Test
+    fun shouldUpdateViewStateOnScrolledToEnd() {
+        viewModel.onScrolledToEnd()
+
+        assertThat(viewState()).isEqualTo(StarsViewState(
+            loading = false,
+            refreshing = false,
+            updateAdapter = false
+        ))
+        verify(exactly = 0) { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) }
+        verify { repoRepository.getAuthStarredRepos(any(), any()) }
+    }
+
+    @Test
+    fun shouldGetTotalReposOnStarredReposSuccess() {
+        every { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) } returns
+                Observable.just(reposSuccess)
 
         viewModel.onRefresh()
 
         assertThat(viewState()).isEqualTo(StarsViewState(
-            refreshing = true,
-            clearSearchFilter = true,
-            clearSortSelection = true
-        ))
-        verify { repoRepository.getAuthStarredRepos(any()) }
-    }
-
-    @Test
-    fun shouldUpdateViewOnStarredReposSuccess() {
-        every { repoRepository.getAuthStarredRepos(any()) } returns
-                Observable.just(RepoResult.Success(Page(value = listOf(REPO1, REPO2))))
-
-        viewModel.onResume()
-
-        assertThat(viewModel.currentRepoData).isEqualTo(listOf(REPO2, REPO1))
-        assertThat(viewState()).isEqualTo(StarsViewState(
-            repos = listOf(REPO2, REPO1),
+            totalStarred = 10,
             loading = false,
             refreshing = false,
-            clearSearchFilter = false,
-            clearSortSelection = false
+            updateAdapter = false
         ))
     }
 
     @Test
-    fun shouldUpdateViewOnStarredReposFailure() {
-        every { repoRepository.getAuthStarredRepos(any()) } returns
+    fun shouldGetTotalReposOnStarredReposSuccessOnePage() {
+        every { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) } returns
+                Observable.just(reposSuccessOnePage)
+
+        viewModel.onRefresh()
+
+        assertThat(viewState()).isEqualTo(StarsViewState(
+            totalStarred = 1,
+            loading = false,
+            refreshing = false,
+            updateAdapter = false
+        ))
+    }
+
+    @Test
+    fun shouldUpdateViewStateOnTotalReposFailure() {
+        every { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) } returns
                 Observable.just(RepoResult.Failure("failure"))
 
-        viewModel.onResume()
+        viewModel.onRefresh()
 
         assertThat(viewModel.alertAction.value).isEqualTo("failure")
         assertThat(viewState()).isEqualTo(StarsViewState(
             loading = false,
             refreshing = false,
-            clearSearchFilter = false,
-            clearSortSelection = false
+            updateAdapter = false
         ))
     }
 
     @Test
-    fun shouldFilterReposOnAfterTextChanged() {
-        setUpState()
+    fun shouldUpdateViewStateOnStarredReposSuccess() {
+        every { repoRepository.getAuthStarredRepos(any(), any()) } returns
+                Observable.just(reposSuccess)
 
-        viewModel.onAfterTextChanged("ap")
+        viewModel.onRefresh()
 
-        assertThat(viewState().repos).isEqualTo(listOf(REPO1))
-        assertThat(viewState().clearSortSelection).isFalse()
-        assertThat(viewState().clearSearchFilter).isFalse()
+        assertThat(viewState()).isEqualTo(StarsViewState(
+            repos = reposSuccess.value.value,
+            loading = false,
+            refreshing = false,
+            isFirstPage = true,
+            isLastPage = false,
+            updateAdapter = true
+        ))
     }
 
     @Test
-    fun shouldFilterReposOnSortItemSelectedSortRecent() {
-        setUpState()
-        viewModel.onSortItemSelected(SORT_RECENT)
-        assertThat(viewState().repos).isEqualTo(listOf(REPO1, REPO2))
-    }
+    fun shouldUpdateViewStateOnStarredReposFailure() {
+        every { repoRepository.getAuthStarredRepos(any(), any()) } returns
+                Observable.just(RepoResult.Failure("failure"))
 
-    @Test
-    fun shouldFilterReposOnSortItemSelectedSortStars() {
-        setUpState()
-        viewModel.onSortItemSelected(SORT_STARS)
-        assertThat(viewState().repos).isEqualTo(listOf(REPO1, REPO2))
-    }
+        viewModel.onRefresh()
 
-    @Test
-    fun shouldFilterReposOnSortItemSelectedSortUpdated() {
-        setUpState()
-        viewModel.onSortItemSelected("updated")
-        assertThat(viewState().repos).isEqualTo(listOf(REPO1, REPO2))
+        assertThat(viewModel.alertAction.value).isEqualTo("failure")
+        assertThat(viewState()).isEqualTo(StarsViewState(
+            refreshing = true,
+            loading = false,
+            updateAdapter = false
+        ))
     }
 
     private fun viewState() = viewModel.viewState.value!!
-
-    private fun setUpState() {
-        viewModel.viewState.value = StarsViewState()
-        viewModel.currentRepoData = listOf(REPO1, REPO2)
-    }
 }
