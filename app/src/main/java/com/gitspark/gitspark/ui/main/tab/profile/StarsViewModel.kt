@@ -24,6 +24,10 @@ class StarsViewModel @Inject constructor(
         }
     }
 
+    fun onDestroyView() {
+        resumed = false
+    }
+
     fun onRefresh() = updateViewState(reset = true, refresh = true, fetchTotal = true)
 
     fun onScrolledToEnd() = updateViewState()

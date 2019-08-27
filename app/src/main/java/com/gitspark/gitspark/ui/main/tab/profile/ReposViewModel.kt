@@ -32,6 +32,10 @@ class ReposViewModel @Inject constructor(
         }
     }
 
+    fun onDestroyView() {
+        resumed = false
+    }
+
     fun onRefresh() = updateViewState(reset = true, refresh = true)
 
     fun onScrolledToEnd() = updateViewState()

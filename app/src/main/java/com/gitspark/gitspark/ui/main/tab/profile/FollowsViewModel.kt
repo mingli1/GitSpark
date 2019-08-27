@@ -32,6 +32,10 @@ class FollowsViewModel @Inject constructor(
         }
     }
 
+    fun onDestroyView() {
+        resumed = false
+    }
+
     fun onRefresh() {
         updateViewState(currState, reset = true, refresh = true)
     }

@@ -52,6 +52,11 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
         viewModel.userMediator.observe(viewLifecycleOwner) { viewModel.onUserDataRetrieved(it) }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.onDestroyView()
+    }
+
     private fun updateView(viewState: ReposViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading

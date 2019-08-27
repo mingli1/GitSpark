@@ -52,6 +52,11 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         viewModel.userMediator.observe(viewLifecycleOwner) { viewModel.onUserDataRetrieved(it) }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.onDestroyView()
+    }
+
     private fun updateView(viewState: FollowsViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading

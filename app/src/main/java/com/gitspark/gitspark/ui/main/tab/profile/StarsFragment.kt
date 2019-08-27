@@ -52,6 +52,11 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.onDestroyView()
+    }
+
     private fun updateView(viewState: StarsViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
