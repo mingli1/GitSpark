@@ -65,6 +65,13 @@ class ReposAdapter(
                         setTint(it)
                     }
                 }
+
+                if (item.starred) {
+                    stars_field.compoundDrawablesRelative[0].apply {
+                        mutate()
+                        setTint(context.getColor(R.color.colorYellow))
+                    }
+                }
             }
         }
     }
