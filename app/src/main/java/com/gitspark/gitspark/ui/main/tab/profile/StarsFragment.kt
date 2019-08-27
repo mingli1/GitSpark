@@ -60,8 +60,11 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
 
             if (updateAdapter) {
                 if (isFirstPage) {
-
+                    repos_list.adapter = null
+                    repos_list.adapter = reposAdapter
+                    reposAdapter.addInitialItems(repos, isLastPage)
                 }
+                else reposAdapter.addItemsOnLoadingComplete(repos, isLastPage)
             }
         }
     }
