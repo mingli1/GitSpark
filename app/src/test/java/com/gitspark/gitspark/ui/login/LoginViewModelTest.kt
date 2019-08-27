@@ -141,7 +141,6 @@ class LoginViewModelTest {
         viewModel.onSuccessfulLogin()
 
         assertThat(viewState().loading).isFalse()
-        assertThat(viewModel.navigateToMainActivityAction.value).isEqualTo("Error: failure")
     }
 
     private fun getToken(value: String) =
