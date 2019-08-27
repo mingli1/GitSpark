@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
-const val REPO_PER_PAGE = 5
+const val REPO_PER_PAGE = 50
 
 interface RepoService {
 

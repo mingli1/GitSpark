@@ -1,13 +1,18 @@
 package com.gitspark.gitspark.ui.adapter
 
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.withSuffix
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.model.Repo
 import kotlinx.android.synthetic.main.repo_view.view.*
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
 
 private const val MAX_TOPICS_SHOWN = 3
 
@@ -22,21 +27,18 @@ class ReposAdapter(
                 description_field.text = item.repoDescription
 
                 if (item.repoPushedAt.isNotEmpty()) {
-                    val updatedDate = org.threeten.bp.Instant.parse(item.repoPushedAt)
-                    val dateTime = org.threeten.bp.LocalDateTime.ofInstant(
+                    val updatedDate = Instant.parse(item.repoPushedAt)
+                    val dateTime = LocalDateTime.ofInstant(
                         updatedDate,
                         org.threeten.bp.ZoneOffset.UTC
                     )
                     updated_field.isVisible = true
-                    val formatted =
-                        org.threeten.bp.format.DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss")
-                            .format(dateTime)
-                    updated_field.text =
-                        context.getString(R.string.updated_repo, formatted)
+                    val formatted = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss").format(dateTime)
+                    updated_field.text = context.getString(R.string.updated_repo, formatted)
                 } else updated_field.isVisible = false
 
-                stars_field.text = com.gitspark.gitspark.extension.withSuffix(item.numStars)
-                forks_field.text = com.gitspark.gitspark.extension.withSuffix(item.numForks)
+                stars_field.text = withSuffix(item.numStars)
+                forks_field.text = withSuffix(item.numForks)
                 private_label.isVisible = item.isPrivate
                 forked_label.isVisible = item.isForked
                 language_field.text = item.repoLanguage
@@ -44,7 +46,7 @@ class ReposAdapter(
                 topics_container.removeAllViews()
                 item.topics.forEachIndexed { index, topic ->
                     if (index < MAX_TOPICS_SHOWN) {
-                        val topicView = android.view.LayoutInflater.from(context)
+                        val topicView = LayoutInflater.from(context)
                             .inflate(
                                 R.layout.topics_view,
                                 topics_container,

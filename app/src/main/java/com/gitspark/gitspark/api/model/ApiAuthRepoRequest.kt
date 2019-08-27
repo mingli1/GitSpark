@@ -14,7 +14,7 @@ private const val DEFAULT_AFFILIATION = "owner,collaborator,organization_member"
 data class ApiAuthRepoRequest(
     val visibility: String = VISIBILITY_ALL,
     var affiliation: String = DEFAULT_AFFILIATION,
-    val sort: String = SORT_FULL_NAME
+    val sort: String = SORT_PUSHED
 ) {
 
     fun setAffiliation(
