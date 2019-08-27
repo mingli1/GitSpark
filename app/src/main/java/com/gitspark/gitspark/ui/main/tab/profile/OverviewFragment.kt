@@ -10,6 +10,7 @@ import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.model.Contribution
+import com.gitspark.gitspark.ui.main.tab.ProfileFragment
 import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.profile_header.*
@@ -23,7 +24,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
+        setUpListeners()
     }
 
     override fun viewModelOnResume() = viewModel.onResume()
@@ -32,6 +33,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.userDataMediator.observeOnce(viewLifecycleOwner) { viewModel.onCachedUserDataRetrieved(it) }
         viewModel.contributionsAction.observe(viewLifecycleOwner) { updateContributionsView(it) }
+        viewModel.navigateToFollowsAction.observe(viewLifecycleOwner) { navigateToFollowsFragment(it) }
     }
 
     private fun updateView(viewState: OverviewViewState) {
@@ -64,5 +66,15 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
 
     private fun updateContributionsView(data: SortedMap<String, List<Contribution>>) {
         contributions_view.createBitmap(data)
+    }
+
+    private fun setUpListeners() {
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
+        followers_field.setOnClickListener { viewModel.onFollowsFieldClicked(FollowState.Followers) }
+        following_field.setOnClickListener { viewModel.onFollowsFieldClicked(FollowState.Following) }
+    }
+
+    private fun navigateToFollowsFragment(followState: FollowState) {
+        (parentFragment as ProfileFragment).navigateToFollowsFragment(followState)
     }
 }

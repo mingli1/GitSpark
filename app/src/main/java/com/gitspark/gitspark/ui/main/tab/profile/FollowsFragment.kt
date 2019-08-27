@@ -57,6 +57,8 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         viewModel.onDestroyView()
     }
 
+    fun onNavigatedTo(followState: FollowState) = viewModel.setCurrentState(followState)
+
     private fun updateView(viewState: FollowsViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading

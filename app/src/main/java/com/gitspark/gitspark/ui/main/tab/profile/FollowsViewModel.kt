@@ -22,6 +22,10 @@ class FollowsViewModel @Inject constructor(
     private var followingPage = 1
     private var currState = FollowState.Followers
 
+    fun setCurrentState(followState: FollowState) {
+        currState = followState
+    }
+
     fun onResume() {
         val userData = userRepository.getCurrentUserData()
         userMediator.addSource(userData) { userMediator.value = it }

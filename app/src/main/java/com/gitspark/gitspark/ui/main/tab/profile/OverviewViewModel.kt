@@ -26,6 +26,7 @@ class OverviewViewModel @Inject constructor(
     val viewState = MutableLiveData<OverviewViewState>()
     val userDataMediator = MediatorLiveData<AuthUser>()
     val contributionsAction = SingleLiveEvent<SortedMap<String, List<Contribution>>>()
+    val navigateToFollowsAction = SingleLiveEvent<FollowState>()
 
     fun onResume() {
         val userData = userRepository.getCurrentUserData()
@@ -44,6 +45,10 @@ class OverviewViewModel @Inject constructor(
     fun onRefresh() {
         viewState.value = viewState.value?.copy(refreshing = true)
         requestAuthUser(null)
+    }
+
+    fun onFollowsFieldClicked(followState: FollowState) {
+        navigateToFollowsAction.value = followState
     }
 
     private fun requestAuthUser(existingUser: AuthUser?) {
