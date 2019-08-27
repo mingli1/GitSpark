@@ -55,7 +55,6 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     private fun updateView(viewState: FollowsViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
-            paginationListener.isLastPage = isLastPage
             swipe_refresh.setRefreshing(refreshing)
 
             num_follows_field.text = when (followState) {
@@ -76,6 +75,8 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
                     }
                     else -> getAdapter(followState).addItemsOnLoadingComplete(data, isLastPage)
                 }
+                paginationListener.isLastPage = isLastPage
+                paginationListener.loading = false
             }
         }
     }

@@ -65,11 +65,15 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
                     reposAdapter.addInitialItems(repos, isLastPage)
                 }
                 else reposAdapter.addItemsOnLoadingComplete(repos, isLastPage)
+
+                paginationListener.isLastPage = isLastPage
+                paginationListener.loading = false
             }
         }
     }
 
     private fun setupListeners() {
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
+        repos_list.addOnScrollListener(paginationListener)
     }
 }

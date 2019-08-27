@@ -65,6 +65,9 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
                     reposAdapter.addInitialItems(repos, isLastPage)
                 }
                 else reposAdapter.addItemsOnLoadingComplete(repos, isLastPage)
+
+                paginationListener.isLastPage = isLastPage
+                paginationListener.loading = false
             }
         }
     }

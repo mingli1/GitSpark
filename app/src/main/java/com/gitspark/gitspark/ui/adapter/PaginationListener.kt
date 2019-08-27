@@ -13,8 +13,7 @@ class PaginationListener(
     private val onUpdate: () -> Unit
 ) : RecyclerView.OnScrollListener() {
 
-    private var loading = true
-    private var prevTotalCount = 0
+    var loading = false
     var isLastPage = false
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -27,12 +26,6 @@ class PaginationListener(
             val totalItemCount = layoutManager.itemCount
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-            if (loading) {
-                if (totalItemCount > prevTotalCount) {
-                    loading = false
-                    prevTotalCount = totalItemCount
-                }
-            }
             if (!loading && !isLastPage &&
                 visibleItemCount + firstVisibleItemPosition >= totalItemCount &&
                     firstVisibleItemPosition >= 0 &&
