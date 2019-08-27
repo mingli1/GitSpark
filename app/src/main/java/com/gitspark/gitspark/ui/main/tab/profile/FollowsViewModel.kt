@@ -22,8 +22,10 @@ class FollowsViewModel @Inject constructor(
     private var followingPage = 1
     private var currState = FollowState.Followers
 
-    fun setCurrentState(followState: FollowState) {
+    fun navigateToState(followState: FollowState) {
         currState = followState
+        updateViewState(true)
+        resumed = true
     }
 
     fun onResume() {
@@ -31,7 +33,7 @@ class FollowsViewModel @Inject constructor(
         userMediator.addSource(userData) { userMediator.value = it }
 
         if (!resumed) {
-            updateViewState(currState, true)
+            updateViewState(true)
             resumed = true
         }
     }
@@ -41,7 +43,7 @@ class FollowsViewModel @Inject constructor(
     }
 
     fun onRefresh() {
-        updateViewState(currState, reset = true, refresh = true)
+        updateViewState(reset = true, refresh = true)
     }
 
     fun onUserDataRetrieved(user: AuthUser) {
@@ -53,7 +55,7 @@ class FollowsViewModel @Inject constructor(
     }
 
     fun onScrolledToEnd() {
-        updateViewState(currState)
+        updateViewState()
     }
 
     fun onFollowsSwitchClicked() {
@@ -61,10 +63,10 @@ class FollowsViewModel @Inject constructor(
             FollowState.Followers -> FollowState.Following
             FollowState.Following -> FollowState.Followers
         }
-        updateViewState(currState, true)
+        updateViewState(true)
     }
 
-    private fun updateViewState(state: FollowState, reset: Boolean = false, refresh: Boolean = false) {
+    private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
         viewState.value = viewState.value?.copy(
             loading = reset,
             refreshing = refresh,
@@ -76,7 +78,7 @@ class FollowsViewModel @Inject constructor(
             updateAdapter = false,
             followState = currState
         )
-        when (state) {
+        when (currState) {
             FollowState.Followers -> {
                 if (reset) followersPage = 1
                 requestFollowers()

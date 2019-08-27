@@ -57,7 +57,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         viewModel.onDestroyView()
     }
 
-    fun onNavigatedTo(followState: FollowState) = viewModel.setCurrentState(followState)
+    fun onNavigatedTo(followState: FollowState) = viewModel.navigateToState(followState)
 
     private fun updateView(viewState: FollowsViewState) {
         with (viewState) {
