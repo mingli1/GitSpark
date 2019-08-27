@@ -4,25 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
-import com.gitspark.gitspark.extension.afterTextChanged
+import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
-import com.gitspark.gitspark.extension.onItemSelected
 import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.ReposAdapter
 import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
+private const val LABEL = "Starred"
+
 class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
 
     @Inject lateinit var colorHelper: LanguageColorHelper
-    private lateinit var spinnerAdapter: ArrayAdapter<CharSequence>
+    private lateinit var layoutManager: LinearLayoutManager
     private lateinit var reposAdapter: ReposAdapter
+    private lateinit var paginationListener: PaginationListener
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_repos, container, false)
@@ -31,14 +33,13 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        spinnerAdapter = ArrayAdapter.createFromResource(context!!,
-            R.array.starred_repo_filter_options, android.R.layout.simple_spinner_item).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        paginationListener = PaginationListener(layoutManager, REPO_PER_PAGE, swipe_refresh) {
+            viewModel.onScrolledToEnd()
         }
-        sort_spinner.adapter = spinnerAdapter
 
         repos_list.setHasFixedSize(true)
-        repos_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        repos_list.layoutManager = layoutManager
         reposAdapter = ReposAdapter(colorHelper)
         if (repos_list.adapter == null) repos_list.adapter = reposAdapter
 
@@ -55,19 +56,18 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
         with (viewState) {
             loading_indicator.isVisible = loading
             swipe_refresh.setRefreshing(refreshing)
-            reposAdapter.setData(repos)
-            no_repos_alert.isVisible = repos.isEmpty()
-            num_repos_shown.isVisible = repos.size > 1
-            num_repos_shown.text = getString(R.string.num_repos_shown_text, repos.size)
+            num_repos_field.text = getString(R.string.num_repos_text, LABEL, totalStarred)
 
-            if (clearSearchFilter) search_field.text.clear()
-            if (clearSortSelection) sort_spinner.setSelection(0)
+            if (updateAdapter) {
+                if (isFirstPage) {
+
+                }
+            }
         }
     }
 
     private fun setupListeners() {
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
-        search_field.afterTextChanged { viewModel.onAfterTextChanged(search_field.text.toString()) }
-        sort_spinner.onItemSelected { viewModel.onSortItemSelected(sort_spinner.selectedItem.toString()) }
+        repos_list.addOnScrollListener(paginationListener)
     }
 }
