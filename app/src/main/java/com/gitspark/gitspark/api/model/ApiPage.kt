@@ -12,9 +12,9 @@ data class ApiPage<T>(
 ) {
 
     fun <S> toModel() = Page<S>(
-        next = next ?: 0,
-        last = last ?: 0,
-        first = first ?: 0,
-        prev = prev ?: 0
+        next = next ?: -1,
+        last = last ?: -1,
+        first = first ?: -1,
+        prev = prev ?: -1
     )
 }

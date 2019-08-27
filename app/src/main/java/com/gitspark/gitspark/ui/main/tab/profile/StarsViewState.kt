@@ -6,6 +6,8 @@ data class StarsViewState(
     val repos: List<Repo> = emptyList(),
     val loading: Boolean = false,
     val refreshing: Boolean = false,
-    val clearSearchFilter: Boolean = false,
-    val clearSortSelection: Boolean = false
+    val updateAdapter: Boolean = false,
+    val totalStarred: Int = 0,
+    val isFirstPage: Boolean = false,
+    val isLastPage: Boolean = false
 )

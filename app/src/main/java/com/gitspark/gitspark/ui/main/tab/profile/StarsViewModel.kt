@@ -1,16 +1,11 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
-import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
-
-internal const val SORT_RECENT = "recent"
-internal const val SORT_STARS = "stars"
 
 class StarsViewModel @Inject constructor(
     private val repoRepository: RepoRepository,
@@ -19,45 +14,76 @@ class StarsViewModel @Inject constructor(
 
     val viewState = MutableLiveData<StarsViewState>()
 
-    @VisibleForTesting var currentRepoData = emptyList<Repo>()
-    private var filterString = ""
-    private var sortSelection = SORT_RECENT
+    private var resumed = false
+    private var page = 1
 
     fun onResume() {
-        viewState.value = StarsViewState(loading = true)
-        requestStarredRepos()
+        if (!resumed) {
+            updateViewState(reset = true, fetchTotal = true)
+            resumed = true
+        }
     }
 
-    fun onRefresh() {
+    fun onRefresh() = updateViewState(reset = true, refresh = true, fetchTotal = true)
+
+    fun onScrolledToEnd() = updateViewState()
+
+    private fun updateViewState(
+        reset: Boolean = false,
+        refresh: Boolean = false,
+        fetchTotal: Boolean = false
+    ) {
         viewState.value = viewState.value?.copy(
-            refreshing = true,
-            clearSearchFilter = true,
-            clearSortSelection = true
+            loading = reset,
+            refreshing = refresh,
+            updateAdapter = false
+        ) ?: StarsViewState(
+            loading = reset,
+            refreshing = refresh,
+            updateAdapter = false
         )
+        if (reset) page = 1
+        if (fetchTotal) requestTotalRepos()
         requestStarredRepos()
-    }
-
-    fun onAfterTextChanged(text: String) {
-        filterString = text
-        updateViewStateWithFiltered()
-    }
-
-    fun onSortItemSelected(selection: String) {
-        sortSelection = selection
-        updateViewStateWithFiltered()
     }
 
     private fun requestStarredRepos() {
-        subscribe(repoRepository.getAuthStarredRepos(prefsHelper.getCachedToken())) {
+        subscribe(repoRepository.getAuthStarredRepos(prefsHelper.getCachedToken(), page)) {
             when (it) {
                 is RepoResult.Success -> {
-                    currentRepoData = sortReposByRecent(it.value.value)
+                    val isFirstPage = page == 1
+                    val isLastPage = if (it.value.last == -1) true else page == it.value.last
                     viewState.value = viewState.value?.copy(
-                        repos = currentRepoData,
+                        repos = it.value.value,
                         loading = false,
                         refreshing = false,
-                        clearSearchFilter = false,
-                        clearSortSelection = false
+                        isFirstPage = isFirstPage,
+                        isLastPage = isLastPage,
+                        updateAdapter = true
+                    )
+                    if (page < it.value.last) page++
+                }
+                is RepoResult.Failure -> {
+                    alert(it.error)
+                    viewState.value = viewState.value?.copy(loading = false, updateAdapter = false)
+                }
+            }
+        }
+    }
+
+    private fun requestTotalRepos() {
+        subscribe(repoRepository.getAuthStarredRepos(prefsHelper.getCachedToken(), 1, 1)) {
+            when (it) {
+                is RepoResult.Success -> {
+                    val total = when {
+                        it.value.last == -1 -> it.value.value.size
+                        else -> it.value.last
+                    }
+                    viewState.value = viewState.value?.copy(
+                        totalStarred = total,
+                        loading = false,
+                        refreshing = false,
+                        updateAdapter = false
                     )
                 }
                 is RepoResult.Failure -> {
@@ -65,46 +91,10 @@ class StarsViewModel @Inject constructor(
                     viewState.value = viewState.value?.copy(
                         loading = false,
                         refreshing = false,
-                        clearSearchFilter = false,
-                        clearSortSelection = false
+                        updateAdapter = false
                     )
                 }
             }
         }
-    }
-
-    private fun updateViewStateWithFiltered() {
-        viewState.value?.let {
-            viewState.value = it.copy(
-                repos = filterRepos(currentRepoData, filterString, sortSelection),
-                clearSortSelection = false,
-                clearSearchFilter = false
-            )
-        }
-    }
-
-    private fun filterRepos(
-        repos: List<Repo>,
-        filter: String = "",
-        sortType: String = SORT_RECENT
-    ): List<Repo> {
-        val filteredRepos = repos.filter {
-            it.repoName.startsWith(filter.trim(), ignoreCase = true)
-        }
-        return when (sortType) {
-            SORT_RECENT -> filteredRepos
-            SORT_STARS -> filteredRepos.sortedWith(Comparator { r1, r2 ->
-                r2.numStars - r1.numStars
-            })
-            else -> filteredRepos.sortedWith(Comparator { r1, r2 ->
-                r2.repoPushedAt.compareTo(r1.repoPushedAt)
-            })
-        }
-    }
-
-    private fun sortReposByRecent(repos: List<Repo>): List<Repo> {
-        return repos.sortedWith(Comparator { r1, r2 ->
-            r2.starredAt.compareTo(r1.starredAt)
-        })
     }
 }

@@ -84,7 +84,7 @@ class FollowsViewModel @Inject constructor(
         subscribe(userRepository.getAuthUserFollowers(prefsHelper.getCachedToken(), followersPage)) {
             when (it) {
                 is UserResult.Success -> {
-                    val isLastPage = if (it.value.last == 0) true else followersPage == it.value.last
+                    val isLastPage = if (it.value.last == -1) true else followersPage == it.value.last
                     viewState.value = viewState.value?.copy(
                         data = it.value.value,
                         loading = false,
@@ -97,7 +97,11 @@ class FollowsViewModel @Inject constructor(
                 }
                 is UserResult.Failure -> {
                     alert(it.error)
-                    viewState.value = viewState.value?.copy(loading = false, updateAdapter = false)
+                    viewState.value = viewState.value?.copy(
+                        loading = false,
+                        refreshing = false,
+                        updateAdapter = false
+                    )
                 }
             }
         }
@@ -120,7 +124,11 @@ class FollowsViewModel @Inject constructor(
                 }
                 is UserResult.Failure -> {
                     alert(it.error)
-                    viewState.value = viewState.value?.copy(loading = false, updateAdapter = false)
+                    viewState.value = viewState.value?.copy(
+                        refreshing = false,
+                        loading = false,
+                        updateAdapter = false
+                    )
                 }
             }
         }

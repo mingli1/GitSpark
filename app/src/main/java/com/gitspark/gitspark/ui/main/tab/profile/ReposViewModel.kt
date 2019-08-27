@@ -61,7 +61,7 @@ class ReposViewModel @Inject constructor(
             when (it) {
                 is RepoResult.Success -> {
                     val isFirstPage = page == 1
-                    val isLastPage = if (it.value.last == 0) true else page == it.value.last
+                    val isLastPage = if (it.value.last == -1) true else page == it.value.last
                     viewState.value = viewState.value?.copy(
                         repos = it.value.value,
                         loading = false,
@@ -74,7 +74,11 @@ class ReposViewModel @Inject constructor(
                 }
                 is RepoResult.Failure -> {
                     alert(it.error)
-                    viewState.value = viewState.value?.copy(loading = false, updateAdapter = false)
+                    viewState.value = viewState.value?.copy(
+                        loading = false,
+                        refreshing = false,
+                        updateAdapter = false
+                    )
                 }
             }
         }

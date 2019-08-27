@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.repository
 
 import com.gitspark.gitspark.api.model.ApiAuthRepoRequest
+import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.api.service.RepoService
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.Page
@@ -30,10 +31,14 @@ class RepoRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to get authenticated user repositories.") }
     }
 
-    fun getAuthStarredRepos(token: String, page: Int): Observable<RepoResult<Page<Repo>>> {
+    fun getAuthStarredRepos(
+        token: String,
+        page: Int,
+        perPage: Int = REPO_PER_PAGE
+    ): Observable<RepoResult<Page<Repo>>> {
         return retrofitHelper.getRetrofit(token = token)
             .create(RepoService::class.java)
-            .getAuthStarredRepos(page)
+            .getAuthStarredRepos(page, perPage)
             .map {
                 getSuccess(it.toModel<Repo>().apply {
                     value = it.response.map { repo -> repo.toModel().apply { starred = true } }
