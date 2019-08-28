@@ -165,5 +165,16 @@ class FollowsViewModelTest {
         ))
     }
 
+    @Test
+    fun shouldNavigateToState() {
+        viewModel.navigateToState(FollowState.Followers)
+        assertThat(viewState()).isEqualTo(FollowsViewState(
+            loading = true,
+            refreshing = false,
+            updateAdapter = false,
+            followState = FollowState.Followers
+        ))
+    }
+
     private fun viewState() = viewModel.viewState.value!!
 }

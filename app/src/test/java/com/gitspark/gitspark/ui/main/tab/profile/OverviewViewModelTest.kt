@@ -103,6 +103,12 @@ class OverviewViewModelTest {
         assertThat(viewState().createdDate).isEqualTo("01-14-2008 04:33:35")
     }
 
+    @Test
+    fun shouldNavigateToFollowsTabOnClicked() {
+        viewModel.onFollowsFieldClicked(FollowState.Following)
+        assertThat(viewModel.navigateToFollowsAction.value).isEqualTo(FollowState.Following)
+    }
+
     private fun getAuthUser() = AuthUser().apply {
         name = "Steven"
         login = "orz39"
