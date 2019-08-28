@@ -3,25 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/user_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
-    android:focusable="true"
-    android:clickable="true"
-    android:background="?attr/selectableItemBackground"
     app:cardElevation="0dp"
     app:cardCornerRadius="4dp"
     app:strokeWidth="1dp"
     app:strokeColor="@color/colorWhiteDark">
     
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/user_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground">
+        
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/avatar_card_view"
             android:layout_width="wrap_content"
