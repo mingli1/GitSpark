@@ -121,7 +121,7 @@ class FollowsViewModel @Inject constructor(
         subscribe(userRepository.getAuthUserFollowing(prefsHelper.getCachedToken(), followingPage)) {
             when (it) {
                 is UserResult.Success -> {
-                    val isLastPage = if (it.value.last == 0) true else followingPage == it.value.last
+                    val isLastPage = if (it.value.last == -1) true else followingPage == it.value.last
                     viewState.value = viewState.value?.copy(
                         data = it.value.value,
                         loading = false,
