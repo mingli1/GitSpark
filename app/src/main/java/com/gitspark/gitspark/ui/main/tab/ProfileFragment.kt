@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import com.gitspark.gitspark.ui.main.tab.profile.*
@@ -26,17 +27,23 @@ class ProfileFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        overViewFragment = OverviewFragment()
-        reposFragment = ReposFragment()
-        followsFragment = FollowsFragment()
-        starsFragment = StarsFragment()
+        if (arguments == null) {
+            overViewFragment = OverviewFragment()
+            reposFragment = ReposFragment()
+            followsFragment = FollowsFragment()
+            starsFragment = StarsFragment()
 
-        setUpTabLayout()
+            setUpTabLayout()
+        }
     }
 
     fun navigateToFollowsFragment(followState: FollowState) {
         viewpager.setCurrentItem(FOLLOWS_INDEX, true)
         followsFragment.onNavigatedTo(followState)
+    }
+
+    fun navigateToUserProfile(args: Bundle) {
+        findNavController().navigate(R.id.profile_fragment, args)
     }
 
     private fun setUpTabLayout() {

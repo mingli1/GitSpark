@@ -8,6 +8,12 @@
     <fragment
         android:id="@+id/profile_fragment"
         android:name="com.gitspark.gitspark.ui.main.tab.ProfileFragment"
-        android:label="ProfileFragment"/>
+        android:label="ProfileFragment">
+        
+        <action
+            android:id="@+id/action_profile_fragment_to_profile_fragment"
+            app:destination="@id/profile_fragment"/>
+        
+    </fragment>
 
 </navigation>

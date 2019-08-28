@@ -7,6 +7,7 @@ import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
 class FollowsViewModel @Inject constructor(
@@ -16,6 +17,7 @@ class FollowsViewModel @Inject constructor(
 
     val viewState = MutableLiveData<FollowsViewState>()
     val userMediator = MediatorLiveData<AuthUser>()
+    val navigateToProfile = SingleLiveEvent<String>()
 
     private var resumed = false
     private var followersPage = 1
@@ -64,6 +66,10 @@ class FollowsViewModel @Inject constructor(
             FollowState.Following -> FollowState.Followers
         }
         updateViewState(true)
+    }
+
+    fun onUserClicked(username: String) {
+        navigateToProfile.value = username
     }
 
     private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {

@@ -6,9 +6,10 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.main.tab.profile.FollowState
+import com.gitspark.gitspark.ui.main.tab.profile.FollowsViewModel
 import kotlinx.android.synthetic.main.user_view.view.*
 
-class UsersAdapter : PaginationAdapter() {
+class FollowsAdapter(private val viewModel: FollowsViewModel) : PaginationAdapter() {
 
     private var followState = FollowState.Followers
 
@@ -18,6 +19,8 @@ class UsersAdapter : PaginationAdapter() {
                 avatar_image.loadImage(item.avatarUrl)
                 name_field.text = item.login
                 unfollow_button.isVisible = followState == FollowState.Following
+
+                user_card.setOnClickListener { viewModel.onUserClicked(item.login) }
             }
         }
     }

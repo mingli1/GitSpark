@@ -11,17 +11,20 @@ import com.gitspark.gitspark.api.service.USER_PER_PAGE
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.adapter.PaginationListener
-import com.gitspark.gitspark.ui.adapter.UsersAdapter
+import com.gitspark.gitspark.ui.adapter.FollowsAdapter
+import com.gitspark.gitspark.ui.main.tab.ProfileFragment
 import kotlinx.android.synthetic.main.fragment_follows.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+
+const val BUNDLE_USERNAME = "BUNDLE_USERNAME"
 
 class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.java) {
 
     private lateinit var paginationListener: PaginationListener
     private lateinit var layoutManager: LinearLayoutManager
 
-    private lateinit var followersAdapter: UsersAdapter
-    private lateinit var followingAdapter: UsersAdapter
+    private lateinit var followersAdapter: FollowsAdapter
+    private lateinit var followingAdapter: FollowsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_follows, container, false)
@@ -30,8 +33,8 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        followersAdapter = UsersAdapter()
-        followingAdapter = UsersAdapter()
+        followersAdapter = FollowsAdapter(viewModel)
+        followingAdapter = FollowsAdapter(viewModel)
 
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = PaginationListener(layoutManager, USER_PER_PAGE, swipe_refresh) {
@@ -50,6 +53,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.userMediator.observe(viewLifecycleOwner) { viewModel.onUserDataRetrieved(it) }
+        viewModel.navigateToProfile.observe(viewLifecycleOwner) { navigateToProfile(it) }
     }
 
     override fun onDestroyView() {
@@ -94,10 +98,15 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         follows_list.addOnScrollListener(paginationListener)
     }
 
-    private fun getAdapter(state: FollowState): UsersAdapter {
+    private fun getAdapter(state: FollowState): FollowsAdapter {
         return when (state) {
             FollowState.Followers -> followersAdapter
             FollowState.Following -> followingAdapter
         }
+    }
+
+    private fun navigateToProfile(username: String) {
+        val bundle = Bundle().apply { putString(BUNDLE_USERNAME, username) }
+        (parentFragment as ProfileFragment).navigateToUserProfile(bundle)
     }
 }
