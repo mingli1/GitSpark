@@ -176,5 +176,11 @@ class FollowsViewModelTest {
         ))
     }
 
+    @Test
+    fun shouldNavigateToProfileOnUserCardClicked() {
+        viewModel.onUserClicked("mingli1")
+        assertThat(viewModel.navigateToProfile.value).isEqualTo("mingli1")
+    }
+
     private fun viewState() = viewModel.viewState.value!!
 }
