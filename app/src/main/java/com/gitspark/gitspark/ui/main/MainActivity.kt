@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -46,6 +48,15 @@ class MainActivity : AppCompatActivity() {
             containerId = R.id.nav_host_container,
             intent = intent
         )
+        addDestinationListener()
+    }
+
+    private fun addDestinationListener() {
+        navController?.observe(this) {
+            it.addOnDestinationChangedListener { _, dest, args ->
+                bottom_navigation_view.isVisible = dest.id != R.id.profile_fragment || args == null
+            }
+        }
     }
 
     // see https://github.com/material-components/material-components-android/issues/139
