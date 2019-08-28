@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
+import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.tab.profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 
@@ -21,20 +24,34 @@ class ProfileFragment : Fragment() {
     private lateinit var starsFragment: StarsFragment
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+        val toolbar = view.findViewById<Toolbar>(R.id.user_profile_toolbar)
+
+        toolbar.isVisible = arguments != null
+
+        arguments?.let {
+            with (activity as MainActivity) {
+                setSupportActionBar(toolbar)
+                supportActionBar?.run {
+                    setDisplayHomeAsUpEnabled(true)
+                    setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
+                    title = getString(R.string.user_profile_title, it.getString(BUNDLE_USERNAME))
+                }
+            }
+        }
+
+        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (arguments == null) {
-            overViewFragment = OverviewFragment()
-            reposFragment = ReposFragment()
-            followsFragment = FollowsFragment()
-            starsFragment = StarsFragment()
+        overViewFragment = OverviewFragment()
+        reposFragment = ReposFragment()
+        followsFragment = FollowsFragment()
+        starsFragment = StarsFragment()
 
-            setUpTabLayout()
-        }
+        setUpTabLayout()
     }
 
     fun navigateToFollowsFragment(followState: FollowState) {

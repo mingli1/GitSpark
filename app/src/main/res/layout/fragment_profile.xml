@@ -6,9 +6,18 @@
     android:layout_height="match_parent">
     
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/tab_layout_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme">
+    
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/user_profile_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:titleTextColor="@color/colorWhite"/>
         
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
