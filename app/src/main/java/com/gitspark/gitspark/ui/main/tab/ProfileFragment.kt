@@ -8,11 +8,14 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.tab.profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 const val BUNDLE_USERNAME = "BUNDLE_USERNAME"
 private const val FOLLOWS_INDEX = 2
@@ -23,6 +26,8 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
     private lateinit var reposFragment: ReposFragment
     private lateinit var followsFragment: FollowsFragment
     private lateinit var starsFragment: StarsFragment
+
+    var userData: User? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
@@ -47,16 +52,14 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        overViewFragment = OverviewFragment().apply { arguments = this@ProfileFragment.arguments }
-        reposFragment = ReposFragment().apply { arguments = this@ProfileFragment.arguments }
-        followsFragment = FollowsFragment().apply { arguments = this@ProfileFragment.arguments }
-        starsFragment = StarsFragment().apply { arguments = this@ProfileFragment.arguments }
-
-        setUpTabLayout()
+        arguments?.let {
+            viewModel.getUserData(it.getString(BUNDLE_USERNAME) ?: "")
+        } ?: setUpFragments()
     }
 
     override fun observeViewModel() {
-
+        viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.loadViewAction.observe(viewLifecycleOwner) { setUpFragments() }
     }
 
     fun navigateToFollowsFragment(followState: FollowState) {
@@ -68,6 +71,15 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
         findNavController().navigate(R.id.profile_fragment, args)
     }
 
+    private fun setUpFragments() {
+        overViewFragment = OverviewFragment().apply { arguments = this@ProfileFragment.arguments }
+        reposFragment = ReposFragment().apply { arguments = this@ProfileFragment.arguments }
+        followsFragment = FollowsFragment().apply { arguments = this@ProfileFragment.arguments }
+        starsFragment = StarsFragment().apply { arguments = this@ProfileFragment.arguments }
+
+        setUpTabLayout()
+    }
+
     private fun setUpTabLayout() {
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             addFragment(overViewFragment, getString(R.string.overview_title))
@@ -77,5 +89,15 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
         }
         viewpager.adapter = adapter
         tabs.setupWithViewPager(viewpager)
+    }
+
+    private fun updateView(viewState: ProfileViewState) {
+        with (viewState) {
+            loading_indicator.isVisible = loading
+            if (updatedUserData) {
+                userData = data
+                //TODO add callback for refresh here
+            }
+        }
     }
 }
