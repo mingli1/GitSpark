@@ -3,7 +3,6 @@ package com.gitspark.gitspark.ui.main.tab.profile
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.ContributionsHelper
-import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.Contribution
 import com.gitspark.gitspark.model.User
@@ -20,7 +19,6 @@ import javax.inject.Inject
 
 class OverviewViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val prefsHelper: PreferencesHelper,
     private val contributionsHelper: ContributionsHelper
 ) : BaseViewModel() {
 
@@ -62,7 +60,7 @@ class OverviewViewModel @Inject constructor(
     }
 
     private fun requestAuthUser(existingUser: AuthUser?) {
-        subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
+        subscribe(userRepository.getAuthUser()) {
             when (it) {
                 is UserResult.Success -> {
                     subscribe(userRepository.cacheUserData(it.value),
@@ -81,7 +79,7 @@ class OverviewViewModel @Inject constructor(
     }
 
     private fun requestUser(username: String) {
-        subscribe(userRepository.getUser(prefsHelper.getCachedToken(), username)) {
+        subscribe(userRepository.getUser(username)) {
             when (it) {
                 is UserResult.Success -> updateViewStateWith(it.value)
                 is UserResult.Failure -> {

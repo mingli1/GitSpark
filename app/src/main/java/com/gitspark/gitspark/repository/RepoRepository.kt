@@ -3,6 +3,7 @@ package com.gitspark.gitspark.repository
 import com.gitspark.gitspark.api.model.ApiAuthRepoRequest
 import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.api.service.RepoService
+import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
@@ -12,15 +13,15 @@ import javax.inject.Singleton
 
 @Singleton
 class RepoRepository @Inject constructor(
-    private val retrofitHelper: RetrofitHelper
+    private val retrofitHelper: RetrofitHelper,
+    private val prefsHelper: PreferencesHelper
 ) {
 
     fun getAuthRepos(
-        token: String,
         request: ApiAuthRepoRequest = ApiAuthRepoRequest(),
         page: Int
     ): Observable<RepoResult<Page<Repo>>> {
-        return retrofitHelper.getRetrofit(token = token)
+        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(RepoService::class.java)
             .getAuthRepos(request.visibility, request.affiliation, request.sort, page)
             .map {
@@ -32,11 +33,10 @@ class RepoRepository @Inject constructor(
     }
 
     fun getAuthStarredRepos(
-        token: String,
         page: Int,
         perPage: Int = REPO_PER_PAGE
     ): Observable<RepoResult<Page<Repo>>> {
-        return retrofitHelper.getRetrofit(token = token)
+        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(RepoService::class.java)
             .getAuthStarredRepos(page, perPage)
             .map {

@@ -2,7 +2,6 @@ package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
@@ -12,8 +11,7 @@ import javax.inject.Inject
 
 class ReposViewModel @Inject constructor(
     private val repoRepository: RepoRepository,
-    private val userRepository: UserRepository,
-    private val prefsHelper: PreferencesHelper
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<ReposViewState>()
@@ -61,7 +59,7 @@ class ReposViewModel @Inject constructor(
     }
 
     private fun requestRepos() {
-        subscribe(repoRepository.getAuthRepos(prefsHelper.getCachedToken(), page = page)) {
+        subscribe(repoRepository.getAuthRepos(page = page)) {
             when (it) {
                 is RepoResult.Success -> {
                     val isFirstPage = page == 1

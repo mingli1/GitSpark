@@ -2,6 +2,7 @@ package com.gitspark.gitspark.repository
 
 import androidx.lifecycle.LiveData
 import com.gitspark.gitspark.api.service.UserService
+import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.AuthUser
@@ -19,28 +20,30 @@ private const val CONTRIBUTIONS_URL = "https://github.com/users/%s/contributions
 @Singleton
 class UserRepository @Inject constructor(
     private val retrofitHelper: RetrofitHelper,
+    private val prefsHelper: PreferencesHelper,
     private val authUserDao: AuthUserDao,
     private val timeHelper: TimeHelper
 ) {
 
-    fun getAuthUser(token: String): Observable<UserResult<AuthUser>> {
-        return retrofitHelper.getRetrofit(token = token)
+    fun getAuthUser(): Observable<UserResult<AuthUser>> {
+        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(UserService::class.java)
             .getAuthenticatedUser()
             .map { getSuccess(it.toModel()) }
             .onErrorReturn { getFailure("Failed to obtain auth user data.") }
     }
 
-    fun getUser(token: String, username: String): Observable<UserResult<User>> {
-        return retrofitHelper.getRetrofit(token = token)
+    fun getUser(username: String): Observable<UserResult<User>> {
+        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(UserService::class.java)
             .getUser(username)
             .map { getSuccess(it.toModel()) }
+            .doOnError { println("error: $it") }
             .onErrorReturn { getFailure("Failed to obtain user data for $username") }
     }
 
-    fun getAuthUserFollowers(token: String, page: Int): Observable<UserResult<Page<User>>> {
-        return retrofitHelper.getRetrofit(token = token)
+    fun getAuthUserFollowers(page: Int): Observable<UserResult<Page<User>>> {
+        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(UserService::class.java)
             .getAuthUserFollowers(page)
             .map { getSuccess(
@@ -51,8 +54,8 @@ class UserRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain auth user followers.") }
     }
 
-    fun getAuthUserFollowing(token: String, page: Int): Observable<UserResult<Page<User>>> {
-        return retrofitHelper.getRetrofit(token = token)
+    fun getAuthUserFollowing(page: Int): Observable<UserResult<Page<User>>> {
+        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(UserService::class.java)
             .getAuthUserFollowing(page)
             .map { getSuccess(
@@ -64,11 +67,10 @@ class UserRepository @Inject constructor(
     }
 
     fun getUserFollowers(
-        token: String,
         username: String,
         page: Int
     ): Observable<UserResult<Page<User>>> {
-        return retrofitHelper.getRetrofit(token = token)
+        return retrofitHelper.getRetrofit()
             .create(UserService::class.java)
             .getUserFollowers(username, page)
             .map { getSuccess(

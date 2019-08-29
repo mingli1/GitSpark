@@ -54,7 +54,7 @@ class LoginViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onSuccessfulLogin() {
-        subscribe(userRepository.getAuthUser(prefsHelper.getCachedToken())) {
+        subscribe(userRepository.getAuthUser()) {
             val userCompletable = when (it) {
                 is UserResult.Success ->
                     userRepository.cacheUserData(it.value)

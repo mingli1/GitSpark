@@ -1,7 +1,6 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.repository.RepoRepository
@@ -37,7 +36,6 @@ class StarsViewModelTest {
 
     private lateinit var viewModel: StarsViewModel
     @RelaxedMockK private lateinit var repoRepository: RepoRepository
-    @RelaxedMockK private lateinit var prefsHelper: PreferencesHelper
 
     @Before
     fun setup() {
@@ -45,7 +43,7 @@ class StarsViewModelTest {
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        viewModel = StarsViewModel(repoRepository, prefsHelper)
+        viewModel = StarsViewModel(repoRepository)
     }
 
     @Test
@@ -57,7 +55,7 @@ class StarsViewModelTest {
             refreshing = false,
             updateAdapter = false
         ))
-        verify { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) }
+        verify { repoRepository.getAuthStarredRepos(eq(1), eq(1)) }
         verify { repoRepository.getAuthStarredRepos(any(), any()) }
     }
 
@@ -70,7 +68,7 @@ class StarsViewModelTest {
             refreshing = true,
             updateAdapter = false
         ))
-        verify { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) }
+        verify { repoRepository.getAuthStarredRepos(eq(1), eq(1)) }
         verify { repoRepository.getAuthStarredRepos(any(), any()) }
     }
 
@@ -83,13 +81,13 @@ class StarsViewModelTest {
             refreshing = false,
             updateAdapter = false
         ))
-        verify(exactly = 0) { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) }
+        verify(exactly = 0) { repoRepository.getAuthStarredRepos(eq(1), eq(1)) }
         verify { repoRepository.getAuthStarredRepos(any(), any()) }
     }
 
     @Test
     fun shouldGetTotalReposOnStarredReposSuccess() {
-        every { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) } returns
+        every { repoRepository.getAuthStarredRepos(eq(1), eq(1)) } returns
                 Observable.just(reposSuccess)
 
         viewModel.onRefresh()
@@ -104,7 +102,7 @@ class StarsViewModelTest {
 
     @Test
     fun shouldGetTotalReposOnStarredReposSuccessOnePage() {
-        every { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) } returns
+        every { repoRepository.getAuthStarredRepos(eq(1), eq(1)) } returns
                 Observable.just(reposSuccessOnePage)
 
         viewModel.onRefresh()
@@ -119,7 +117,7 @@ class StarsViewModelTest {
 
     @Test
     fun shouldUpdateViewStateOnTotalReposFailure() {
-        every { repoRepository.getAuthStarredRepos(any(), eq(1), eq(1)) } returns
+        every { repoRepository.getAuthStarredRepos(eq(1), eq(1)) } returns
                 Observable.just(RepoResult.Failure("failure"))
 
         viewModel.onRefresh()
@@ -134,7 +132,7 @@ class StarsViewModelTest {
 
     @Test
     fun shouldUpdateViewStateOnStarredReposSuccess() {
-        every { repoRepository.getAuthStarredRepos(any(), any()) } returns
+        every { repoRepository.getAuthStarredRepos(any()) } returns
                 Observable.just(reposSuccess)
 
         viewModel.onRefresh()
@@ -151,7 +149,7 @@ class StarsViewModelTest {
 
     @Test
     fun shouldUpdateViewStateOnStarredReposFailure() {
-        every { repoRepository.getAuthStarredRepos(any(), any()) } returns
+        every { repoRepository.getAuthStarredRepos(any()) } returns
                 Observable.just(RepoResult.Failure("failure"))
 
         viewModel.onRefresh()

@@ -1,7 +1,6 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
@@ -39,7 +38,6 @@ class ReposViewModelTest {
     private lateinit var viewModel: ReposViewModel
     @RelaxedMockK private lateinit var repoRepository: RepoRepository
     @RelaxedMockK private lateinit var userRepository: UserRepository
-    @RelaxedMockK private lateinit var prefsHelper: PreferencesHelper
 
     @Before
     fun setup() {
@@ -47,7 +45,7 @@ class ReposViewModelTest {
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        viewModel = ReposViewModel(repoRepository, userRepository, prefsHelper)
+        viewModel = ReposViewModel(repoRepository, userRepository)
     }
 
     @Test
@@ -64,7 +62,7 @@ class ReposViewModelTest {
             refreshing = false,
             updateAdapter = false
         ))
-        verify { repoRepository.getAuthRepos(any(), any(), any()) }
+        verify { repoRepository.getAuthRepos(any(), any()) }
     }
 
     @Test
@@ -75,7 +73,7 @@ class ReposViewModelTest {
             refreshing = true,
             updateAdapter = false
         ))
-        verify { repoRepository.getAuthRepos(any(), any(), any()) }
+        verify { repoRepository.getAuthRepos(any(), any()) }
     }
 
     @Test
@@ -86,7 +84,7 @@ class ReposViewModelTest {
             refreshing = false,
             updateAdapter = false
         ))
-        verify { repoRepository.getAuthRepos(any(), any(), any()) }
+        verify { repoRepository.getAuthRepos(any(), any()) }
     }
 
     @Test
@@ -97,7 +95,7 @@ class ReposViewModelTest {
 
     @Test
     fun shouldUpdateViewStateOnReposSuccess() {
-        every { repoRepository.getAuthRepos(any(), any(), any()) } returns
+        every { repoRepository.getAuthRepos(any(), any()) } returns
                 Observable.just(reposSuccess)
 
         viewModel.onScrolledToEnd()
@@ -114,7 +112,7 @@ class ReposViewModelTest {
 
     @Test
     fun shouldUpdateViewStateOnReposFailure() {
-        every { repoRepository.getAuthRepos(any(), any(), any()) } returns
+        every { repoRepository.getAuthRepos(any(), any()) } returns
                 Observable.just(RepoResult.Failure("failure"))
 
         viewModel.onScrolledToEnd()

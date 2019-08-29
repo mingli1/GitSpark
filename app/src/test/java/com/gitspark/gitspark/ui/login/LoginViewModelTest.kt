@@ -110,19 +110,19 @@ class LoginViewModelTest {
 
         viewModel.handleLoginResult(success)
 
-        verify { userRepository.getAuthUser(any()) }
+        verify { userRepository.getAuthUser() }
     }
 
     @Test
     fun shouldLoginWithoutCredentialsIfAccessTokenExists() {
         every { prefsHelper.hasExistingAccessToken() } returns true
         viewModel.initialize()
-        verify { userRepository.getAuthUser(any()) }
+        verify { userRepository.getAuthUser() }
     }
 
     @Test
     fun shouldCacheUserDataAndNavigateToMainOnSuccessfulLogin() {
-        every { userRepository.getAuthUser(any()) } returns
+        every { userRepository.getAuthUser() } returns
                 Observable.just(UserResult.Success(authUser))
         every { userRepository.cacheUserData(any()) } returns
                 Completable.complete()
@@ -135,7 +135,7 @@ class LoginViewModelTest {
 
     @Test
     fun shouldFailLoginOnUserDataFailure() {
-        every { userRepository.getAuthUser(any()) } returns
+        every { userRepository.getAuthUser() } returns
                 Observable.just(UserResult.Failure("failure"))
 
         viewModel.onSuccessfulLogin()

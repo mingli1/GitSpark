@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.repository
 
+import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.AuthUser
@@ -26,6 +27,7 @@ class UserRepositoryTest {
 
     @MockK private lateinit var userRepository: UserRepository
     @RelaxedMockK private lateinit var retrofitHelper: RetrofitHelper
+    @RelaxedMockK private lateinit var prefsHelper: PreferencesHelper
     @RelaxedMockK private lateinit var authUserDao: AuthUserDao
     @RelaxedMockK private lateinit var timeHelper: TimeHelper
 
@@ -35,38 +37,38 @@ class UserRepositoryTest {
         RxJavaPlugins.setInitIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        userRepository = UserRepository(retrofitHelper, authUserDao, timeHelper)
+        userRepository = UserRepository(retrofitHelper, prefsHelper, authUserDao, timeHelper)
     }
 
     @Test
     fun shouldGetAuthUserSuccess() {
-        every { userRepository.getAuthUser(any()) } returns
+        every { userRepository.getAuthUser() } returns
                 Observable.just(UserResult.Success(authUser))
-        val observer = userRepository.getAuthUser(TOKEN).test()
+        val observer = userRepository.getAuthUser().test()
         observer.assertValue(UserResult.Success(authUser))
     }
 
     @Test
     fun shouldGetAuthUserFailure() {
-        every { userRepository.getAuthUser(any()) } returns
+        every { userRepository.getAuthUser() } returns
                 Observable.just(UserResult.Failure("failure"))
-        val observer = userRepository.getAuthUser(TOKEN).test()
+        val observer = userRepository.getAuthUser().test()
         observer.assertValue(UserResult.Failure("failure"))
     }
 
     @Test
     fun shouldGetUserSuccess() {
-        every { userRepository.getUser(any(), any()) } returns
+        every { userRepository.getUser(any()) } returns
                 Observable.just(UserResult.Success(user))
-        val observer = userRepository.getUser(TOKEN, "mingli1").test()
+        val observer = userRepository.getUser("mingli1").test()
         observer.assertValue(UserResult.Success(user))
     }
 
     @Test
     fun shouldGetUserFailure() {
-        every { userRepository.getUser(any(), any()) } returns
+        every { userRepository.getUser(any()) } returns
                 Observable.just(UserResult.Failure("failure"))
-        val observer = userRepository.getUser(TOKEN, "mingli1").test()
+        val observer = userRepository.getUser("mingli1").test()
         observer.assertValue(UserResult.Failure("failure"))
     }
 
@@ -78,33 +80,33 @@ class UserRepositoryTest {
 
     @Test
     fun shouldGetAuthUserFollowersSuccess() {
-        every { userRepository.getAuthUserFollowers(any(), any()) } returns
+        every { userRepository.getAuthUserFollowers(any()) } returns
                 Observable.just(UserResult.Success(Page(value = listOf(user))))
-        val observer = userRepository.getAuthUserFollowers(TOKEN, 1).test()
+        val observer = userRepository.getAuthUserFollowers(1).test()
         observer.assertValue(UserResult.Success(Page(value = listOf(user))))
     }
 
     @Test
     fun shouldGetAuthUserFollowersFailure() {
-        every { userRepository.getAuthUserFollowers(any(), any()) } returns
+        every { userRepository.getAuthUserFollowers(any()) } returns
                 Observable.just(UserResult.Failure("failure"))
-        val observer = userRepository.getAuthUserFollowers(TOKEN, 1).test()
+        val observer = userRepository.getAuthUserFollowers(1).test()
         observer.assertValue(UserResult.Failure("failure"))
     }
 
     @Test
     fun shouldGetAuthUserFollowingSuccess() {
-        every { userRepository.getAuthUserFollowing(any(), any()) } returns
+        every { userRepository.getAuthUserFollowing(any()) } returns
                 Observable.just(UserResult.Success(Page(value = listOf(user))))
-        val observer = userRepository.getAuthUserFollowing(TOKEN, 1).test()
+        val observer = userRepository.getAuthUserFollowing(1).test()
         observer.assertValue(UserResult.Success(Page(value = listOf(user))))
     }
 
     @Test
     fun shouldGetAuthUserFollowingFailure() {
-        every { userRepository.getAuthUserFollowing(any(), any()) } returns
+        every { userRepository.getAuthUserFollowing(any()) } returns
                 Observable.just(UserResult.Failure("failure"))
-        val observer = userRepository.getAuthUserFollowing(TOKEN, 1).test()
+        val observer = userRepository.getAuthUserFollowing(1).test()
         observer.assertValue(UserResult.Failure("failure"))
     }
 

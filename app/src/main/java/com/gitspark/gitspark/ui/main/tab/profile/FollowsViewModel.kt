@@ -2,7 +2,6 @@ package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
@@ -11,8 +10,7 @@ import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
 class FollowsViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val prefsHelper: PreferencesHelper
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<FollowsViewState>()
@@ -97,7 +95,7 @@ class FollowsViewModel @Inject constructor(
     }
 
     private fun requestFollowers() {
-        subscribe(userRepository.getAuthUserFollowers(prefsHelper.getCachedToken(), followersPage)) {
+        subscribe(userRepository.getAuthUserFollowers(followersPage)) {
             when (it) {
                 is UserResult.Success -> {
                     val isLastPage = if (it.value.last == -1) true else followersPage == it.value.last
@@ -124,7 +122,7 @@ class FollowsViewModel @Inject constructor(
     }
 
     private fun requestFollowing() {
-        subscribe(userRepository.getAuthUserFollowing(prefsHelper.getCachedToken(), followingPage)) {
+        subscribe(userRepository.getAuthUserFollowing(followingPage)) {
             when (it) {
                 is UserResult.Success -> {
                     val isLastPage = if (it.value.last == -1) true else followingPage == it.value.last

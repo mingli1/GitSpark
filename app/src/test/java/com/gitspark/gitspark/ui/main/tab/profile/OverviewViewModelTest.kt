@@ -2,7 +2,6 @@ package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.gitspark.gitspark.helper.ContributionsHelper
-import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.GitHubPlan
 import com.gitspark.gitspark.model.User
@@ -28,13 +27,12 @@ class OverviewViewModelTest {
 
     private lateinit var viewModel: OverviewViewModel
     @RelaxedMockK private lateinit var userRepository: UserRepository
-    @RelaxedMockK private lateinit var prefsHelper: PreferencesHelper
     @RelaxedMockK private lateinit var contributionsHelper: ContributionsHelper
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        viewModel = OverviewViewModel(userRepository, prefsHelper, contributionsHelper)
+        viewModel = OverviewViewModel(userRepository, contributionsHelper)
 
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
@@ -50,13 +48,13 @@ class OverviewViewModelTest {
     fun shouldGetUserDataOnResume() {
         viewModel.onResume(username = "username")
         assertThat(viewState()).isEqualTo(OverviewViewState(loading = true))
-        verify { userRepository.getUser(any(), "username") }
+        verify { userRepository.getUser("username") }
     }
 
     @Test
     fun shouldUpdateWithNewUserIfExpiredSuccess() {
         every { userRepository.isUserCacheExpired(any()) } returns true
-        every { userRepository.getAuthUser(any()) } returns
+        every { userRepository.getAuthUser() } returns
                 Observable.just(UserResult.Success(getNewAuthUser()))
         every { userRepository.cacheUserData(any()) } returns Completable.complete()
 
@@ -68,7 +66,7 @@ class OverviewViewModelTest {
     @Test
     fun shouldUpdateWithOldUserIfCannotCacheData() {
         every { userRepository.isUserCacheExpired(any()) } returns true
-        every { userRepository.getAuthUser(any()) } returns
+        every { userRepository.getAuthUser() } returns
                 Observable.just(UserResult.Success(getNewAuthUser()))
         every { userRepository.cacheUserData(any()) } returns Completable.error(Throwable())
 
@@ -81,7 +79,7 @@ class OverviewViewModelTest {
     @Test
     fun shouldUpdateWithOldUserIfFailedToGetNewData() {
         every { userRepository.isUserCacheExpired(any()) } returns true
-        every { userRepository.getAuthUser(any()) } returns
+        every { userRepository.getAuthUser() } returns
                 Observable.just(UserResult.Failure("failure"))
 
         viewModel.onCachedUserDataRetrieved(getAuthUser())
@@ -124,19 +122,19 @@ class OverviewViewModelTest {
         viewModel.onRefresh()
 
         assertThat(viewState().refreshing).isTrue()
-        verify { userRepository.getAuthUser(any()) }
+        verify { userRepository.getAuthUser() }
     }
 
     @Test
     fun shouldRequestUserWhenUsernameNotNullOnRefresh() {
         viewModel.onResume(username = "username")
         viewModel.onRefresh()
-        verify { userRepository.getUser(any(), "username") }
+        verify { userRepository.getUser("username") }
     }
 
     @Test
     fun shouldGetUserDataOnSuccess() {
-        every { userRepository.getUser(any(), any()) } returns
+        every { userRepository.getUser(any()) } returns
                 Observable.just(UserResult.Success(getUser()))
 
         viewModel.onResume(username = "username")
@@ -156,7 +154,7 @@ class OverviewViewModelTest {
 
     @Test
     fun shouldGetUserDataFailure() {
-        every { userRepository.getUser(any(), any()) } returns
+        every { userRepository.getUser(any()) } returns
                 Observable.just(UserResult.Failure("failure"))
 
         viewModel.onResume(username = "username")

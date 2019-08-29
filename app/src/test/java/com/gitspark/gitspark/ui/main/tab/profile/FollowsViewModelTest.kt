@@ -1,7 +1,6 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.User
@@ -36,7 +35,6 @@ class FollowsViewModelTest {
 
     private lateinit var viewModel: FollowsViewModel
     @RelaxedMockK private lateinit var userRepository: UserRepository
-    @RelaxedMockK private lateinit var prefsHelper: PreferencesHelper
 
     @Before
     fun setup() {
@@ -44,14 +42,14 @@ class FollowsViewModelTest {
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        viewModel = FollowsViewModel(userRepository, prefsHelper)
+        viewModel = FollowsViewModel(userRepository)
     }
 
     @Test
     fun shouldGetCachedUserDataAndGetFollowersOnResume() {
         viewModel.onResume()
         verify { userRepository.getCurrentUserData() }
-        verify { userRepository.getAuthUserFollowers(any(), any()) }
+        verify { userRepository.getAuthUserFollowers(any()) }
     }
 
     @Test
@@ -64,7 +62,7 @@ class FollowsViewModelTest {
             updateAdapter = false,
             followState = FollowState.Followers
         ))
-        verify { userRepository.getAuthUserFollowers(any(), any()) }
+        verify { userRepository.getAuthUserFollowers(any()) }
     }
 
     @Test
@@ -86,7 +84,7 @@ class FollowsViewModelTest {
             updateAdapter = false,
             followState = FollowState.Followers
         ))
-        verify { userRepository.getAuthUserFollowers(any(), any()) }
+        verify { userRepository.getAuthUserFollowers(any()) }
     }
 
     @Test
@@ -98,12 +96,12 @@ class FollowsViewModelTest {
             updateAdapter = false,
             followState = FollowState.Following
         ))
-        verify { userRepository.getAuthUserFollowing(any(), any()) }
+        verify { userRepository.getAuthUserFollowing(any()) }
     }
 
     @Test
     fun shouldUpdateViewStateWithFollowersSuccess() {
-        every { userRepository.getAuthUserFollowers(any(), any()) } returns
+        every { userRepository.getAuthUserFollowers(any()) } returns
                 Observable.just(followsSuccess)
 
         viewModel.onScrolledToEnd()
@@ -120,7 +118,7 @@ class FollowsViewModelTest {
 
     @Test
     fun shouldUpdateViewStateWithFollowersFailure() {
-        every { userRepository.getAuthUserFollowers(any(), any()) } returns
+        every { userRepository.getAuthUserFollowers(any()) } returns
                 Observable.just(UserResult.Failure("failure"))
 
         viewModel.onScrolledToEnd()
@@ -134,7 +132,7 @@ class FollowsViewModelTest {
 
     @Test
     fun shouldUpdateViewStateWithFollowingSuccess() {
-        every { userRepository.getAuthUserFollowing(any(), any()) } returns
+        every { userRepository.getAuthUserFollowing(any()) } returns
                 Observable.just(followsSuccess)
 
         viewModel.onFollowsSwitchClicked()
@@ -152,7 +150,7 @@ class FollowsViewModelTest {
 
     @Test
     fun shouldUpdateViewStateWithFollowingFailure() {
-        every { userRepository.getAuthUserFollowing(any(), any()) } returns
+        every { userRepository.getAuthUserFollowing(any()) } returns
                 Observable.just(UserResult.Failure("failure"))
 
         viewModel.onFollowsSwitchClicked()

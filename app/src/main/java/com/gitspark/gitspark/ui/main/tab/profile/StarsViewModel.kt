@@ -1,15 +1,13 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.lifecycle.MutableLiveData
-import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
 class StarsViewModel @Inject constructor(
-    private val repoRepository: RepoRepository,
-    private val prefsHelper: PreferencesHelper
+    private val repoRepository: RepoRepository
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<StarsViewState>()
@@ -52,7 +50,7 @@ class StarsViewModel @Inject constructor(
     }
 
     private fun requestStarredRepos() {
-        subscribe(repoRepository.getAuthStarredRepos(prefsHelper.getCachedToken(), page)) {
+        subscribe(repoRepository.getAuthStarredRepos(page)) {
             when (it) {
                 is RepoResult.Success -> {
                     val isFirstPage = page == 1
@@ -76,7 +74,7 @@ class StarsViewModel @Inject constructor(
     }
 
     private fun requestTotalRepos() {
-        subscribe(repoRepository.getAuthStarredRepos(prefsHelper.getCachedToken(), 1, 1)) {
+        subscribe(repoRepository.getAuthStarredRepos(1, 1)) {
             when (it) {
                 is RepoResult.Success -> {
                     val total = when {
