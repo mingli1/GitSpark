@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
@@ -18,9 +19,9 @@ class StarsViewModel @Inject constructor(
 
     private var resumed = false
     private var page = 1
-    private var username: String? = null
+    @VisibleForTesting var username: String? = null
 
-    fun onResume(username: String?) {
+    fun onResume(username: String? = null) {
         this.username = username
         if (!resumed) {
             updateViewState(reset = true, fetchTotal = true)

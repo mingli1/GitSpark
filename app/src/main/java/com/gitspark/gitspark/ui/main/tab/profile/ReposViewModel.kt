@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.*
@@ -19,7 +20,7 @@ class ReposViewModel @Inject constructor(
 
     private var resumed = false
     private var page = 1
-    private var username: String? = null
+    @VisibleForTesting var username: String? = null
 
     fun onResume(username: String? = null) {
         this.username = username

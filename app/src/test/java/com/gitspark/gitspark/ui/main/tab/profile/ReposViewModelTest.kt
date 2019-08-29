@@ -55,6 +55,13 @@ class ReposViewModelTest {
     }
 
     @Test
+    fun shouldNotGetCurrentUserDataWhenNotAuthUserOnResume() {
+        viewModel.onResume(username = "abc")
+        assertThat(viewModel.username).isEqualTo("abc")
+        verify(exactly = 0) { userRepository.getCurrentUserData() }
+    }
+
+    @Test
     fun shouldUpdateViewStateOnResume() {
         viewModel.onResume()
         assertThat(viewState()).isEqualTo(ReposViewState(
@@ -63,6 +70,36 @@ class ReposViewModelTest {
             updateAdapter = false
         ))
         verify { repoRepository.getAuthRepos(any(), any()) }
+    }
+
+    @Test
+    fun shouldRequestReposWhenUsernameExists() {
+        viewModel.onResume(username = "abc")
+
+        verify { repoRepository.getRepos("abc", page = 1, perPage = 1) }
+        verify { repoRepository.getRepos(any(), any(), any()) }
+        verify(exactly = 0) { repoRepository.getAuthRepos(any(), any()) }
+    }
+
+    @Test
+    fun shouldRequestReposOnRefreshWhenUsernameExists() {
+        viewModel.username = "abc"
+
+        viewModel.onRefresh()
+
+        verify { repoRepository.getRepos("abc", page = 1, perPage = 1) }
+        verify { repoRepository.getRepos(any(), any(), any()) }
+        verify(exactly = 0) { repoRepository.getAuthRepos(any(), any()) }
+    }
+
+    @Test
+    fun shouldRequestReposOnScrolledToEndWhenUsernameExists() {
+        viewModel.username = "abc"
+
+        viewModel.onScrolledToEnd()
+
+        verify { repoRepository.getRepos(any(), any(), any()) }
+        verify(exactly = 0) { repoRepository.getAuthRepos(any(), any()) }
     }
 
     @Test

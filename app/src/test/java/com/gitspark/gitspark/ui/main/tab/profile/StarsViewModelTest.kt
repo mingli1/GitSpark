@@ -60,6 +60,32 @@ class StarsViewModelTest {
     }
 
     @Test
+    fun shouldRequestTotalAndStarredRepoDataOnResume() {
+        viewModel.onResume("abc")
+
+        assertThat(viewModel.username).isEqualTo("abc")
+        verify { repoRepository.getStarredRepos("abc", page = 1, perPage = 1) }
+        verify { repoRepository.getStarredRepos(any(), any()) }
+    }
+
+    @Test
+    fun shouldRequestStarredReposOnRefreshWhenUsernameExists() {
+        viewModel.username = "abc"
+
+        viewModel.onRefresh()
+
+        verify { repoRepository.getStarredRepos("abc", page = 1, perPage = 1) }
+        verify { repoRepository.getStarredRepos(any(), any()) }
+    }
+
+    @Test
+    fun shouldRequestStarredReposOnScrolledToEndWhenUsernameExists() {
+        viewModel.username = "abc"
+        viewModel.onScrolledToEnd()
+        verify { repoRepository.getStarredRepos(any(), any()) }
+    }
+
+    @Test
     fun shouldUpdateViewStateOnRefresh() {
         viewModel.onRefresh()
 
