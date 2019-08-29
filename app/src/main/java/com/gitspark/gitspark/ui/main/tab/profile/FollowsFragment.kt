@@ -32,8 +32,9 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        followersAdapter = FollowsAdapter(viewModel)
-        followingAdapter = FollowsAdapter(viewModel)
+        val isAuthUser = arguments == null
+        followersAdapter = FollowsAdapter(viewModel).apply { authUser = isAuthUser }
+        followingAdapter = FollowsAdapter(viewModel).apply { authUser = isAuthUser }
 
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = PaginationListener(layoutManager, USER_PER_PAGE, swipe_refresh) {

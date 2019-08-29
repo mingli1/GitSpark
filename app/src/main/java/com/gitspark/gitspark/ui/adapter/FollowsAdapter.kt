@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.user_view.view.*
 
 class FollowsAdapter(private val viewModel: FollowsViewModel) : PaginationAdapter() {
 
+    var authUser = true
     private var followState = FollowState.Followers
 
     override fun bind(item: Pageable, view: View) {
@@ -18,7 +19,7 @@ class FollowsAdapter(private val viewModel: FollowsViewModel) : PaginationAdapte
             with (view) {
                 avatar_image.loadImage(item.avatarUrl)
                 name_field.text = item.login
-                unfollow_button.isVisible = followState == FollowState.Following
+                unfollow_button.isVisible = followState == FollowState.Following && authUser
 
                 user_card.setOnClickListener { viewModel.onUserClicked(item.login) }
             }
