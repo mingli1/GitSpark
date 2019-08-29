@@ -182,7 +182,7 @@ class StarsViewModelTest {
 
         assertThat(viewModel.alertAction.value).isEqualTo("failure")
         assertThat(viewState()).isEqualTo(StarsViewState(
-            refreshing = true,
+            refreshing = false,
             loading = false,
             updateAdapter = false
         ))
