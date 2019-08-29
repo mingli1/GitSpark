@@ -34,10 +34,11 @@ class RepoRepository @Inject constructor(
     fun getRepos(
         username: String,
         request: ApiAuthRepoRequest = ApiAuthRepoRequest(),
-        page: Int
+        page: Int,
+        perPage: Int = REPO_PER_PAGE
     ): Observable<RepoResult<Page<Repo>>> {
         return getRepoService()
-            .getRepos(username, request.visibility, request.affiliation, request.sort, page)
+            .getRepos(username, request.visibility, request.affiliation, request.sort, page, perPage)
             .map {
                 getSuccess(it.toModel<Repo>().apply {
                     value = it.response.map { repo -> repo.toModel() }

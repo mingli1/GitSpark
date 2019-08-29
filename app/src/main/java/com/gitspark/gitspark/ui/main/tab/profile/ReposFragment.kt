@@ -12,6 +12,7 @@ import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.ReposAdapter
+import com.gitspark.gitspark.ui.main.tab.BUNDLE_USERNAME
 import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
@@ -45,7 +46,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
         setupListeners()
     }
 
-    override fun viewModelOnResume() = viewModel.onResume()
+    override fun viewModelOnResume() = viewModel.onResume(arguments?.getString(BUNDLE_USERNAME))
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }

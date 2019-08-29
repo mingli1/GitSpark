@@ -7,3 +7,7 @@ data class Page<T>(
     val prev: Int = 0,
     var value: List<T> = emptyList()
 )
+
+fun Int.isFirstPage() = this == 1
+
+fun Int.isLastPage(last: Int) = if (last == -1) true else this == last

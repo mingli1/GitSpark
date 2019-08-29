@@ -3,6 +3,9 @@ package com.gitspark.gitspark.ui.main.tab.profile
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.AuthUser
+import com.gitspark.gitspark.model.Repo
+import com.gitspark.gitspark.model.isFirstPage
+import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.repository.UserRepository
@@ -19,14 +22,24 @@ class ReposViewModel @Inject constructor(
 
     private var resumed = false
     private var page = 1
+    private var username: String? = null
 
-    fun onResume() {
-        val userData = userRepository.getCurrentUserData()
-        userMediator.addSource(userData) { userMediator.value = it }
+    fun onResume(username: String? = null) {
+        if (username == null) {
+            val userData = userRepository.getCurrentUserData()
+            userMediator.addSource(userData) { userMediator.value = it }
 
-        if (!resumed) {
-            updateViewState(reset = true)
-            resumed = true
+            if (!resumed) {
+                updateViewState(reset = true)
+                resumed = true
+            }
+        }
+        else {
+            this.username = username
+            if (!resumed) {
+                updateViewState(reset = true, username = username)
+                resumed = true
+            }
         }
     }
 
@@ -34,9 +47,9 @@ class ReposViewModel @Inject constructor(
         resumed = false
     }
 
-    fun onRefresh() = updateViewState(reset = true, refresh = true)
+    fun onRefresh() = updateViewState(reset = true, refresh = true, username = username)
 
-    fun onScrolledToEnd() = updateViewState()
+    fun onScrolledToEnd() = updateViewState(username = username)
 
     fun onUserDataRetrieved(user: AuthUser) {
         viewState.value = ReposViewState(
@@ -44,7 +57,11 @@ class ReposViewModel @Inject constructor(
         )
     }
 
-    private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
+    private fun updateViewState(
+        reset: Boolean = false,
+        refresh: Boolean = false,
+        username: String? = null
+    ) {
         viewState.value = viewState.value?.copy(
             loading = reset,
             refreshing = refresh,
@@ -54,29 +71,47 @@ class ReposViewModel @Inject constructor(
             refreshing = refresh,
             updateAdapter = false
         )
-        if (reset) page = 1
-        requestRepos()
+        if (reset) {
+            page = 1
+            username?.let { requestTotalRepos(it) }
+        }
+        username?.let { requestRepos(it) } ?: requestAuthRepos()
     }
 
-    private fun requestRepos() {
+    private fun requestAuthRepos() {
         subscribe(repoRepository.getAuthRepos(page = page)) {
             when (it) {
                 is RepoResult.Success -> {
-                    val isFirstPage = page == 1
-                    val isLastPage = if (it.value.last == -1) true else page == it.value.last
-                    viewState.value = viewState.value?.copy(
-                        repos = it.value.value,
-                        loading = false,
-                        refreshing = false,
-                        isFirstPage = isFirstPage,
-                        isLastPage = isLastPage,
-                        updateAdapter = true
-                    )
+                    updateWithRepoData(it.value.value, page, it.value.last)
                     if (page < it.value.last) page++
                 }
-                is RepoResult.Failure -> {
-                    alert(it.error)
+                is RepoResult.Failure -> onGetRepoFailure(it.error)
+            }
+        }
+    }
+
+    private fun requestRepos(username: String) {
+        subscribe(repoRepository.getRepos(username, page = page)) {
+            when (it) {
+                is RepoResult.Success -> {
+                    updateWithRepoData(it.value.value, page, it.value.last)
+                    if (page < it.value.last) page++
+                }
+                is RepoResult.Failure -> onGetRepoFailure(it.error)
+            }
+        }
+    }
+
+    private fun requestTotalRepos(username: String) {
+        subscribe(repoRepository.getRepos(username, page = 1, perPage = 1)) {
+            when (it) {
+                is RepoResult.Success -> {
+                    val total = when {
+                        it.value.last == -1 -> it.value.value.size
+                        else -> it.value.last
+                    }
                     viewState.value = viewState.value?.copy(
+                        totalRepos = total,
                         loading = false,
                         refreshing = false,
                         updateAdapter = false
@@ -84,5 +119,25 @@ class ReposViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun updateWithRepoData(repos: List<Repo>, page: Int, last: Int) {
+        viewState.value = viewState.value?.copy(
+            repos = repos,
+            loading = false,
+            refreshing = false,
+            isFirstPage = page.isFirstPage(),
+            isLastPage = page.isLastPage(last),
+            updateAdapter = true
+        )
+    }
+
+    private fun onGetRepoFailure(error: String) {
+        alert(error)
+        viewState.value = viewState.value?.copy(
+            loading = false,
+            refreshing = false,
+            updateAdapter = false
+        )
     }
 }
