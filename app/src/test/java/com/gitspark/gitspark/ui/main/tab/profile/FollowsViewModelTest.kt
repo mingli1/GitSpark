@@ -53,6 +53,18 @@ class FollowsViewModelTest {
     }
 
     @Test
+    fun shouldSetFollowsCountOnExistingUser() {
+        val user = User().apply {
+            followers = 10
+            following = 20
+        }
+        viewModel.onResume(user = user)
+
+        assertThat(viewState().totalFollowers).isEqualTo(10)
+        assertThat(viewState().totalFollowing).isEqualTo(20)
+    }
+
+    @Test
     fun shouldUpdateViewStateOnRefresh() {
         viewModel.onRefresh()
 
