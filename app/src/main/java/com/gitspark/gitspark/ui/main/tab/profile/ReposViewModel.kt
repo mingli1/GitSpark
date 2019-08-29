@@ -2,10 +2,7 @@ package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.gitspark.gitspark.model.AuthUser
-import com.gitspark.gitspark.model.Repo
-import com.gitspark.gitspark.model.isFirstPage
-import com.gitspark.gitspark.model.isLastPage
+import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.repository.UserRepository
@@ -25,21 +22,15 @@ class ReposViewModel @Inject constructor(
     private var username: String? = null
 
     fun onResume(username: String? = null) {
+        this.username = username
         if (username == null) {
             val userData = userRepository.getCurrentUserData()
             userMediator.addSource(userData) { userMediator.value = it }
-
-            if (!resumed) {
-                updateViewState(reset = true)
-                resumed = true
-            }
         }
-        else {
-            this.username = username
-            if (!resumed) {
-                updateViewState(reset = true, username = username)
-                resumed = true
-            }
+
+        if (!resumed) {
+            updateViewState(reset = true)
+            resumed = true
         }
     }
 
@@ -47,9 +38,9 @@ class ReposViewModel @Inject constructor(
         resumed = false
     }
 
-    fun onRefresh() = updateViewState(reset = true, refresh = true, username = username)
+    fun onRefresh() = updateViewState(reset = true, refresh = true)
 
-    fun onScrolledToEnd() = updateViewState(username = username)
+    fun onScrolledToEnd() = updateViewState()
 
     fun onUserDataRetrieved(user: AuthUser) {
         viewState.value = ReposViewState(
@@ -59,8 +50,7 @@ class ReposViewModel @Inject constructor(
 
     private fun updateViewState(
         reset: Boolean = false,
-        refresh: Boolean = false,
-        username: String? = null
+        refresh: Boolean = false
     ) {
         viewState.value = viewState.value?.copy(
             loading = reset,
@@ -79,27 +69,11 @@ class ReposViewModel @Inject constructor(
     }
 
     private fun requestAuthRepos() {
-        subscribe(repoRepository.getAuthRepos(page = page)) {
-            when (it) {
-                is RepoResult.Success -> {
-                    updateWithRepoData(it.value.value, page, it.value.last)
-                    if (page < it.value.last) page++
-                }
-                is RepoResult.Failure -> onGetRepoFailure(it.error)
-            }
-        }
+        subscribe(repoRepository.getAuthRepos(page = page)) { handleGetReposResult(it) }
     }
 
     private fun requestRepos(username: String) {
-        subscribe(repoRepository.getRepos(username, page = page)) {
-            when (it) {
-                is RepoResult.Success -> {
-                    updateWithRepoData(it.value.value, page, it.value.last)
-                    if (page < it.value.last) page++
-                }
-                is RepoResult.Failure -> onGetRepoFailure(it.error)
-            }
-        }
+        subscribe(repoRepository.getRepos(username, page = page)) { handleGetReposResult(it) }
     }
 
     private fun requestTotalRepos(username: String) {
@@ -121,7 +95,14 @@ class ReposViewModel @Inject constructor(
         }
     }
 
-    private fun updateWithRepoData(repos: List<Repo>, page: Int, last: Int) {
+    private fun handleGetReposResult(it: RepoResult<Page<Repo>>) {
+        when (it) {
+            is RepoResult.Success -> updateWithRepoData(it.value.value, it.value.last)
+            is RepoResult.Failure -> onGetRepoFailure(it.error)
+        }
+    }
+
+    private fun updateWithRepoData(repos: List<Repo>, last: Int) {
         viewState.value = viewState.value?.copy(
             repos = repos,
             loading = false,
@@ -130,6 +111,7 @@ class ReposViewModel @Inject constructor(
             isLastPage = page.isLastPage(last),
             updateAdapter = true
         )
+        if (page < last) page++
     }
 
     private fun onGetRepoFailure(error: String) {
