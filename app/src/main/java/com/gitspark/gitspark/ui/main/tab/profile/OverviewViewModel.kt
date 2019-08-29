@@ -6,6 +6,7 @@ import com.gitspark.gitspark.helper.ContributionsHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.Contribution
+import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
@@ -28,9 +29,18 @@ class OverviewViewModel @Inject constructor(
     val contributionsAction = SingleLiveEvent<SortedMap<String, List<Contribution>>>()
     val navigateToFollowsAction = SingleLiveEvent<FollowState>()
 
-    fun onResume() {
-        val userData = userRepository.getCurrentUserData()
-        userDataMediator.addSource(userData) { userDataMediator.value = it }
+    private var username: String? = null
+
+    fun onResume(username: String? = null) {
+        if (username == null) {
+            val userData = userRepository.getCurrentUserData()
+            userDataMediator.addSource(userData) { userDataMediator.value = it }
+        }
+        else {
+            this.username = username
+            viewState.value = OverviewViewState(loading = true)
+            requestUser(username)
+        }
     }
 
     fun onCachedUserDataRetrieved(user: AuthUser) {
@@ -44,7 +54,7 @@ class OverviewViewModel @Inject constructor(
 
     fun onRefresh() {
         viewState.value = viewState.value?.copy(refreshing = true)
-        requestAuthUser(null)
+        username?.let { requestUser(it) } ?: requestAuthUser(null)
     }
 
     fun onFollowsFieldClicked(followState: FollowState) {
@@ -70,7 +80,19 @@ class OverviewViewModel @Inject constructor(
         }
     }
 
-    private fun updateViewStateWith(user: AuthUser) {
+    private fun requestUser(username: String) {
+        subscribe(userRepository.getUser(prefsHelper.getCachedToken(), username)) {
+            when (it) {
+                is UserResult.Success -> updateViewStateWith(it.value)
+                is UserResult.Failure -> {
+                    alert(it.error)
+                    viewState.value = viewState.value?.copy(loading = false)
+                }
+            }
+        }
+    }
+
+    private fun updateViewStateWith(user: User) {
         with (user) {
             var formattedDateTime = ""
             if (createdAt.isNotEmpty()) {
@@ -91,7 +113,7 @@ class OverviewViewModel @Inject constructor(
                 numFollowing = following,
                 loading = true,
                 refreshing = false,
-                planName = plan.planName,
+                planName = if (this is AuthUser) plan.planName else "",
                 createdDate = formattedDateTime
             )
         }

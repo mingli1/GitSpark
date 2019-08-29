@@ -10,6 +10,7 @@ import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.model.Contribution
+import com.gitspark.gitspark.ui.main.tab.BUNDLE_USERNAME
 import com.gitspark.gitspark.ui.main.tab.ProfileFragment
 import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -27,7 +28,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         setUpListeners()
     }
 
-    override fun viewModelOnResume() = viewModel.onResume()
+    override fun viewModelOnResume() = viewModel.onResume(arguments?.getString(BUNDLE_USERNAME))
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }

@@ -36,7 +36,7 @@ class UserRepository @Inject constructor(
             .create(UserService::class.java)
             .getUser(username)
             .map { getSuccess(it.toModel()) }
-            .onErrorReturn { getFailure("Failed to obtain user dat for $username") }
+            .onErrorReturn { getFailure("Failed to obtain user data for $username") }
     }
 
     fun getAuthUserFollowers(token: String, page: Int): Observable<UserResult<Page<User>>> {
