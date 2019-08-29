@@ -73,23 +73,9 @@ class ReposViewModelTest {
     }
 
     @Test
-    fun shouldRequestReposWhenUsernameExists() {
-        viewModel.onResume(username = "abc")
-
-        verify { repoRepository.getRepos("abc", page = 1, perPage = 1) }
-        verify { repoRepository.getRepos(any(), any(), any()) }
-        verify(exactly = 0) { repoRepository.getAuthRepos(any(), any()) }
-    }
-
-    @Test
-    fun shouldRequestReposOnRefreshWhenUsernameExists() {
-        viewModel.username = "abc"
-
-        viewModel.onRefresh()
-
-        verify { repoRepository.getRepos("abc", page = 1, perPage = 1) }
-        verify { repoRepository.getRepos(any(), any(), any()) }
-        verify(exactly = 0) { repoRepository.getAuthRepos(any(), any()) }
+    fun shouldSetTotalPublicReposWhenUserDataExists() {
+        viewModel.onResume(user = authUser)
+        assertThat(viewState().totalRepos).isEqualTo(10)
     }
 
     @Test

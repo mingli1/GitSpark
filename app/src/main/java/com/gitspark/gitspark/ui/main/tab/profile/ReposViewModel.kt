@@ -22,7 +22,7 @@ class ReposViewModel @Inject constructor(
     private var page = 1
     @VisibleForTesting var username: String? = null
 
-    fun onResume(username: String? = null) {
+    fun onResume(username: String? = null, user: User? = null) {
         this.username = username
         if (username == null) {
             val userData = userRepository.getCurrentUserData()
@@ -30,6 +30,7 @@ class ReposViewModel @Inject constructor(
         }
 
         if (!resumed) {
+            user?.let { viewState.value = ReposViewState(totalRepos = it.numPublicRepos) }
             updateViewState(reset = true)
             resumed = true
         }
@@ -62,10 +63,7 @@ class ReposViewModel @Inject constructor(
             refreshing = refresh,
             updateAdapter = false
         )
-        if (reset) {
-            page = 1
-            username?.let { requestTotalRepos(it) }
-        }
+        if (reset) page = 1
         username?.let { requestRepos(it) } ?: requestAuthRepos()
     }
 
@@ -75,25 +73,6 @@ class ReposViewModel @Inject constructor(
 
     private fun requestRepos(username: String) {
         subscribe(repoRepository.getRepos(username, page = page)) { handleGetReposResult(it) }
-    }
-
-    private fun requestTotalRepos(username: String) {
-        subscribe(repoRepository.getRepos(username, page = 1, perPage = 1)) {
-            when (it) {
-                is RepoResult.Success -> {
-                    val total = when {
-                        it.value.last == -1 -> it.value.value.size
-                        else -> it.value.last
-                    }
-                    viewState.value = viewState.value?.copy(
-                        totalRepos = total,
-                        loading = false,
-                        refreshing = false,
-                        updateAdapter = false
-                    )
-                }
-            }
-        }
     }
 
     private fun handleGetReposResult(it: RepoResult<Page<Repo>>) {
