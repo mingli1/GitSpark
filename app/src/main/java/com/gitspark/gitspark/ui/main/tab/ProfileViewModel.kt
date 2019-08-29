@@ -14,7 +14,7 @@ class ProfileViewModel @Inject constructor(
     val viewState = MutableLiveData<ProfileViewState>()
     val loadViewAction = SingleLiveAction()
 
-    fun getUserData(username: String, refresh: Boolean = false) {
+    fun requestUserData(username: String, refresh: Boolean = false) {
         viewState.value = viewState.value?.copy(
             loading = true,
             updatedUserData = false
@@ -25,6 +25,7 @@ class ProfileViewModel @Inject constructor(
                 is UserResult.Success -> {
                     viewState.value = viewState.value?.copy(
                         loading = false,
+                        refreshing = refresh,
                         updatedUserData = true,
                         data = it.value
                     )

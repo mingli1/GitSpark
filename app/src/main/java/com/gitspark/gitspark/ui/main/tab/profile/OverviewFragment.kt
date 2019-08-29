@@ -28,14 +28,24 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         setUpListeners()
     }
 
-    override fun viewModelOnResume() = viewModel.onResume(arguments?.getString(BUNDLE_USERNAME))
+    override fun viewModelOnResume() =
+        viewModel.onResume(
+            arguments?.getString(BUNDLE_USERNAME),
+            (parentFragment as ProfileFragment).userData
+        )
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.userDataMediator.observeOnce(viewLifecycleOwner) { viewModel.onCachedUserDataRetrieved(it) }
         viewModel.contributionsAction.observe(viewLifecycleOwner) { updateContributionsView(it) }
         viewModel.navigateToFollowsAction.observe(viewLifecycleOwner) { navigateToFollowsFragment(it) }
+        viewModel.refreshAction.observe(viewLifecycleOwner) {
+            (parentFragment as ProfileFragment).refreshUserData(arguments?.getString(BUNDLE_USERNAME)!!)
+        }
     }
+
+    fun notifyUserDataRefreshed() =
+        viewModel.onUserDataRefreshed((parentFragment as ProfileFragment).userData!!)
 
     private fun updateView(viewState: OverviewViewState) {
         with (viewState) {

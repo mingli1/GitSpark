@@ -9,6 +9,7 @@ import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
@@ -26,10 +27,11 @@ class OverviewViewModel @Inject constructor(
     val userDataMediator = MediatorLiveData<AuthUser>()
     val contributionsAction = SingleLiveEvent<SortedMap<String, List<Contribution>>>()
     val navigateToFollowsAction = SingleLiveEvent<FollowState>()
+    val refreshAction = SingleLiveAction()
 
     private var username: String? = null
 
-    fun onResume(username: String? = null) {
+    fun onResume(username: String? = null, user: User? = null) {
         if (username == null) {
             val userData = userRepository.getCurrentUserData()
             userDataMediator.addSource(userData) { userDataMediator.value = it }
@@ -37,7 +39,7 @@ class OverviewViewModel @Inject constructor(
         else {
             this.username = username
             viewState.value = OverviewViewState(loading = true)
-            requestUser(username)
+            user?.let { updateViewStateWith(it) }
         }
     }
 
@@ -52,8 +54,10 @@ class OverviewViewModel @Inject constructor(
 
     fun onRefresh() {
         viewState.value = viewState.value?.copy(refreshing = true)
-        username?.let { requestUser(it) } ?: requestAuthUser(null)
+        username?.let { refreshAction.call() } ?: requestAuthUser(null)
     }
+
+    fun onUserDataRefreshed(user: User) = updateViewStateWith(user)
 
     fun onFollowsFieldClicked(followState: FollowState) {
         navigateToFollowsAction.value = followState
@@ -73,18 +77,6 @@ class OverviewViewModel @Inject constructor(
                 is UserResult.Failure -> {
                     alert(it.error)
                     existingUser?.let { user -> updateViewStateWith(user) }
-                }
-            }
-        }
-    }
-
-    private fun requestUser(username: String) {
-        subscribe(userRepository.getUser(username)) {
-            when (it) {
-                is UserResult.Success -> updateViewStateWith(it.value)
-                is UserResult.Failure -> {
-                    alert(it.error)
-                    viewState.value = viewState.value?.copy(loading = false)
                 }
             }
         }

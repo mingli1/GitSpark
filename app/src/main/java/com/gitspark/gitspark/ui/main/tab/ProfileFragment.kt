@@ -53,7 +53,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
         super.onActivityCreated(savedInstanceState)
 
         arguments?.let {
-            viewModel.getUserData(it.getString(BUNDLE_USERNAME) ?: "")
+            viewModel.requestUserData(it.getString(BUNDLE_USERNAME) ?: "")
         } ?: setUpFragments()
     }
 
@@ -70,6 +70,8 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
     fun navigateToUserProfile(args: Bundle) {
         findNavController().navigate(R.id.profile_fragment, args)
     }
+
+    fun refreshUserData(username: String) = viewModel.requestUserData(username, refresh = true)
 
     private fun setUpFragments() {
         overViewFragment = OverviewFragment().apply { arguments = this@ProfileFragment.arguments }
@@ -96,7 +98,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
             loading_indicator.isVisible = loading
             if (updatedUserData) {
                 userData = data
-                //TODO add callback for refresh here
+                if (refreshing) overViewFragment.notifyUserDataRefreshed()
             }
         }
     }
