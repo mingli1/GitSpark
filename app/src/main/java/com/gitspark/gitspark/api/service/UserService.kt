@@ -14,6 +14,10 @@ interface UserService {
     @Headers("Accept: application/json")
     fun getAuthenticatedUser(): Observable<ApiAuthUser>
 
+    @GET("user/{username}")
+    @Headers("Accept: application/json")
+    fun getUser(@Path("username") username: String): Observable<ApiUser>
+
     @GET
     fun getContributionsSvg(@Url url: String): Observable<String>
 

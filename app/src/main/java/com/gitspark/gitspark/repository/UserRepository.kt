@@ -31,6 +31,14 @@ class UserRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain auth user data.") }
     }
 
+    fun getUser(token: String, username: String): Observable<UserResult<User>> {
+        return retrofitHelper.getRetrofit(token = token)
+            .create(UserService::class.java)
+            .getUser(username)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed to obtain user dat for $username") }
+    }
+
     fun getAuthUserFollowers(token: String, page: Int): Observable<UserResult<Page<User>>> {
         return retrofitHelper.getRetrofit(token = token)
             .create(UserService::class.java)

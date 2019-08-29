@@ -14,6 +14,7 @@ import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.tab.profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 
+const val BUNDLE_USERNAME = "BUNDLE_USERNAME"
 private const val FOLLOWS_INDEX = 2
 
 class ProfileFragment : Fragment() {
@@ -46,10 +47,10 @@ class ProfileFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        overViewFragment = OverviewFragment()
-        reposFragment = ReposFragment()
-        followsFragment = FollowsFragment()
-        starsFragment = StarsFragment()
+        overViewFragment = OverviewFragment().apply { arguments = this@ProfileFragment.arguments }
+        reposFragment = ReposFragment().apply { arguments = this@ProfileFragment.arguments }
+        followsFragment = FollowsFragment().apply { arguments = this@ProfileFragment.arguments }
+        starsFragment = StarsFragment().apply { arguments = this@ProfileFragment.arguments }
 
         setUpTabLayout()
     }

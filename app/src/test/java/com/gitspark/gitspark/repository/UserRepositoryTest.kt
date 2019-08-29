@@ -39,7 +39,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    fun shouldGetUserSuccess() {
+    fun shouldGetAuthUserSuccess() {
         every { userRepository.getAuthUser(any()) } returns
                 Observable.just(UserResult.Success(authUser))
         val observer = userRepository.getAuthUser(TOKEN).test()
@@ -47,10 +47,26 @@ class UserRepositoryTest {
     }
 
     @Test
-    fun shouldGetUserFailure() {
+    fun shouldGetAuthUserFailure() {
         every { userRepository.getAuthUser(any()) } returns
                 Observable.just(UserResult.Failure("failure"))
         val observer = userRepository.getAuthUser(TOKEN).test()
+        observer.assertValue(UserResult.Failure("failure"))
+    }
+
+    @Test
+    fun shouldGetUserSuccess() {
+        every { userRepository.getUser(any(), any()) } returns
+                Observable.just(UserResult.Success(user))
+        val observer = userRepository.getUser(TOKEN, "mingli1").test()
+        observer.assertValue(UserResult.Success(user))
+    }
+
+    @Test
+    fun shouldGetUserFailure() {
+        every { userRepository.getUser(any(), any()) } returns
+                Observable.just(UserResult.Failure("failure"))
+        val observer = userRepository.getUser(TOKEN, "mingli1").test()
         observer.assertValue(UserResult.Failure("failure"))
     }
 
