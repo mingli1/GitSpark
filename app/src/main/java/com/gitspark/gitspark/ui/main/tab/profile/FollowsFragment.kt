@@ -47,7 +47,11 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         setUpListeners()
     }
 
-    override fun viewModelOnResume() = viewModel.onResume()
+    override fun viewModelOnResume() =
+        viewModel.onResume(
+            arguments?.getString(BUNDLE_USERNAME),
+            (parentFragment as ProfileFragment).userData
+        )
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }

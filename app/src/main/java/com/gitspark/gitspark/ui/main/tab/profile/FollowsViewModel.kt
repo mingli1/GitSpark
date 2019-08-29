@@ -3,6 +3,9 @@ package com.gitspark.gitspark.ui.main.tab.profile
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.AuthUser
+import com.gitspark.gitspark.model.Page
+import com.gitspark.gitspark.model.User
+import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
@@ -21,6 +24,7 @@ class FollowsViewModel @Inject constructor(
     private var followersPage = 1
     private var followingPage = 1
     private var currState = FollowState.Followers
+    private var username: String? = null
 
     fun navigateToState(followState: FollowState) {
         currState = followState
@@ -28,11 +32,21 @@ class FollowsViewModel @Inject constructor(
         resumed = true
     }
 
-    fun onResume() {
-        val userData = userRepository.getCurrentUserData()
-        userMediator.addSource(userData) { userMediator.value = it }
+    fun onResume(username: String? = null, user: User? = null) {
+        this.username = username
+        if (username == null) {
+            val userData = userRepository.getCurrentUserData()
+            userMediator.addSource(userData) { userMediator.value = it }
+        }
 
         if (!resumed) {
+            user?.let {
+                viewState.value = FollowsViewState(
+                    followState = currState,
+                    totalFollowers = it.followers,
+                    totalFollowing = it.following
+                )
+            }
             updateViewState(true)
             resumed = true
         }
@@ -54,9 +68,7 @@ class FollowsViewModel @Inject constructor(
         )
     }
 
-    fun onScrolledToEnd() {
-        updateViewState()
-    }
+    fun onScrolledToEnd() = updateViewState()
 
     fun onFollowsSwitchClicked() {
         currState = when (currState) {
@@ -85,66 +97,68 @@ class FollowsViewModel @Inject constructor(
         when (currState) {
             FollowState.Followers -> {
                 if (reset) followersPage = 1
-                requestFollowers()
+                username?.let { requestFollowers(it) } ?: requestAuthFollowers()
             }
             FollowState.Following -> {
                 if (reset) followingPage = 1
-                requestFollowing()
+                username?.let { requestFollowing(it) } ?: requestAuthFollowing()
             }
         }
     }
 
-    private fun requestFollowers() {
-        subscribe(userRepository.getAuthUserFollowers(followersPage)) {
-            when (it) {
-                is UserResult.Success -> {
-                    val isLastPage = if (it.value.last == -1) true else followersPage == it.value.last
-                    viewState.value = viewState.value?.copy(
-                        data = it.value.value,
-                        loading = false,
-                        refreshing = false,
-                        isLastPage = isLastPage,
-                        currPage = followersPage,
-                        updateAdapter = true
-                    )
-                    if (followersPage < it.value.last) followersPage++
-                }
-                is UserResult.Failure -> {
-                    alert(it.error)
-                    viewState.value = viewState.value?.copy(
-                        loading = false,
-                        refreshing = false,
-                        updateAdapter = false
-                    )
-                }
+    private fun requestAuthFollowers() {
+        subscribe(userRepository.getAuthUserFollowers(followersPage)) { handleFollowersResult(it) }
+    }
+
+    private fun requestAuthFollowing() {
+        subscribe(userRepository.getAuthUserFollowing(followingPage)) { handleFollowingResult(it) }
+    }
+
+    private fun requestFollowers(username: String) {
+        subscribe(userRepository.getUserFollowers(username, followersPage)) { handleFollowersResult(it) }
+    }
+
+    private fun requestFollowing(username: String) {
+        subscribe(userRepository.getUserFollowing(username, followingPage)) { handleFollowingResult(it) }
+    }
+
+    private fun handleFollowersResult(it: UserResult<Page<User>>) {
+        when (it) {
+            is UserResult.Success -> {
+                onFollowsSuccess(it.value.value, followersPage, it.value.last)
+                if (followersPage < it.value.last) followersPage++
             }
+            is UserResult.Failure -> onFollowsFailure(it.error)
         }
     }
 
-    private fun requestFollowing() {
-        subscribe(userRepository.getAuthUserFollowing(followingPage)) {
-            when (it) {
-                is UserResult.Success -> {
-                    val isLastPage = if (it.value.last == -1) true else followingPage == it.value.last
-                    viewState.value = viewState.value?.copy(
-                        data = it.value.value,
-                        loading = false,
-                        refreshing = false,
-                        isLastPage = isLastPage,
-                        currPage = followingPage,
-                        updateAdapter = true
-                    )
-                    if (followingPage < it.value.last) followingPage++
-                }
-                is UserResult.Failure -> {
-                    alert(it.error)
-                    viewState.value = viewState.value?.copy(
-                        refreshing = false,
-                        loading = false,
-                        updateAdapter = false
-                    )
-                }
+    private fun handleFollowingResult(it: UserResult<Page<User>>) {
+        when (it) {
+            is UserResult.Success -> {
+                onFollowsSuccess(it.value.value, followingPage, it.value.last)
+                if (followingPage < it.value.last) followingPage++
             }
+            is UserResult.Failure -> onFollowsFailure(it.error)
         }
+    }
+
+    private fun onFollowsSuccess(data: List<User>, page: Int, last: Int) {
+        viewState.value = viewState.value?.copy(
+            data = data,
+            loading = false,
+            refreshing = false,
+            isLastPage = page.isLastPage(last),
+            currPage = page,
+            updateAdapter = true
+        )
+    }
+
+    private fun onFollowsFailure(error: String) {
+        alert(error)
+        viewState.value = viewState.value?.copy(
+            refreshing = false,
+            loading = false,
+            updateAdapter = false
+        )
     }
 }
