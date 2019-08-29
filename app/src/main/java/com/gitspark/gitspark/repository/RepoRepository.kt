@@ -21,8 +21,7 @@ class RepoRepository @Inject constructor(
         request: ApiAuthRepoRequest = ApiAuthRepoRequest(),
         page: Int
     ): Observable<RepoResult<Page<Repo>>> {
-        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
-            .create(RepoService::class.java)
+        return getRepoService()
             .getAuthRepos(request.visibility, request.affiliation, request.sort, page)
             .map {
                 getSuccess(it.toModel<Repo>().apply {
@@ -32,12 +31,26 @@ class RepoRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to get authenticated user repositories.") }
     }
 
+    fun getRepos(
+        username: String,
+        request: ApiAuthRepoRequest = ApiAuthRepoRequest(),
+        page: Int
+    ): Observable<RepoResult<Page<Repo>>> {
+        return getRepoService()
+            .getRepos(username, request.visibility, request.affiliation, request.sort, page)
+            .map {
+                getSuccess(it.toModel<Repo>().apply {
+                    value = it.response.map { repo -> repo.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to get repository data for $username") }
+    }
+
     fun getAuthStarredRepos(
         page: Int,
         perPage: Int = REPO_PER_PAGE
     ): Observable<RepoResult<Page<Repo>>> {
-        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
-            .create(RepoService::class.java)
+        return getRepoService()
             .getAuthStarredRepos(page, perPage)
             .map {
                 getSuccess(it.toModel<Repo>().apply {
@@ -46,6 +59,25 @@ class RepoRepository @Inject constructor(
             }
             .onErrorReturn { getFailure("Failed to get authenticated starred repositories.") }
     }
+
+    fun getStarredRepos(
+        username: String,
+        page: Int,
+        perPage: Int = REPO_PER_PAGE
+    ): Observable<RepoResult<Page<Repo>>> {
+        return getRepoService()
+            .getStarredRepos(username, page, perPage)
+            .map {
+                getSuccess(it.toModel<Repo>().apply {
+                    value = it.response.map { repo -> repo.toModel().apply { starred = true } }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to get starred repositories for $username") }
+    }
+
+    private fun getRepoService() =
+        retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
+            .create(RepoService::class.java)
 
     private fun <T> getSuccess(value: T): RepoResult<T> = RepoResult.Success(value)
 
