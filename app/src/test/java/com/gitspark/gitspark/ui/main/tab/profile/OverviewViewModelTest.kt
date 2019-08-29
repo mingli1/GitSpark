@@ -21,6 +21,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+private val user = User(name = "Ming Li")
+
 class OverviewViewModelTest {
 
     @Rule @JvmField val liveDataRule = InstantTaskExecutorRule()
@@ -45,10 +47,9 @@ class OverviewViewModelTest {
     }
 
     @Test
-    fun shouldGetUserDataOnResume() {
-        viewModel.onResume(username = "username")
-        assertThat(viewState()).isEqualTo(OverviewViewState(loading = true))
-        verify { userRepository.getUser("username") }
+    fun shouldUpdateViewStateWithUserDataOnResume() {
+        viewModel.onResume(username = "username", user = user)
+        assertThat(viewState().nameText).isEqualTo("Ming Li")
     }
 
     @Test
@@ -126,41 +127,16 @@ class OverviewViewModelTest {
     }
 
     @Test
-    fun shouldRequestUserWhenUsernameNotNullOnRefresh() {
-        viewModel.onResume(username = "username")
+    fun shouldCallRefreshWhenUsernameExistsOnRefresh() {
+        viewModel.onResume(username = "test")
         viewModel.onRefresh()
-        verify { userRepository.getUser("username") }
+        assertThat(viewModel.refreshAction.value).isNotNull
     }
 
     @Test
-    fun shouldGetUserDataOnSuccess() {
-        every { userRepository.getUser(any()) } returns
-                Observable.just(UserResult.Success(getUser()))
-
-        viewModel.onResume(username = "username")
-
+    fun shouldUpdateViewStateOnUserDataRefreshed() {
+        viewModel.onUserDataRefreshed(getUser())
         assertThat(viewState().nameText).isEqualTo("Steven")
-        assertThat(viewState().usernameText).isEqualTo("orz39")
-        assertThat(viewState().avatarUrl).isEqualTo("avatarUrl")
-        assertThat(viewState().bioText).isEqualTo("bio")
-        assertThat(viewState().locationText).isEqualTo("NJ")
-        assertThat(viewState().emailText).isEqualTo("orz39@gmail.com")
-        assertThat(viewState().companyText).isEqualTo("Google")
-        assertThat(viewState().numFollowers).isEqualTo(999)
-        assertThat(viewState().numFollowing).isEqualTo(999)
-        assertThat(viewState().planName).isEqualTo("")
-        assertThat(viewState().createdDate).isEqualTo("01-14-2008 04:33:35")
-    }
-
-    @Test
-    fun shouldGetUserDataFailure() {
-        every { userRepository.getUser(any()) } returns
-                Observable.just(UserResult.Failure("failure"))
-
-        viewModel.onResume(username = "username")
-
-        assertThat(viewModel.alertAction.value).isEqualTo("failure")
-        assertThat(viewState().loading).isFalse()
     }
 
     private fun getAuthUser() = AuthUser().apply {
