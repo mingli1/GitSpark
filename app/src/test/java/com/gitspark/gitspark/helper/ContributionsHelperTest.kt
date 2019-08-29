@@ -12,6 +12,10 @@ private const val SAMPLE_TOTAL_CONTRIBUTIONS = "<h2 class=\"f4 text-normal mb-2\
         "      877 contributions\n" +
         "        in the last year\n" +
         "    </h2>"
+private const val SAMPLE_TOTAL_CONTRIBUTIONS_2 = "<h2 class=\"f4 text-normal mb-2\">\n" +
+        "      12,774 contributions\n" +
+        "        in the last year\n" +
+        "    </h2>"
 
 class ContributionsHelperTest {
 
@@ -64,5 +68,11 @@ class ContributionsHelperTest {
     fun shouldGetTotalContributionsWhenNotExisting() {
         val num = contributionsHelper.getTotalContributions("")
         assertThat(num).isEqualTo(-1)
+    }
+
+    @Test
+    fun shouldGetTotalContributionsWithCommas() {
+        val num = contributionsHelper.getTotalContributions(SAMPLE_TOTAL_CONTRIBUTIONS_2)
+        assertThat(num).isEqualTo(12774)
     }
 }

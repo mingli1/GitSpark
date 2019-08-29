@@ -12,6 +12,12 @@ class StringExtensionsTest {
     }
 
     @Test
+    fun shouldContainAllOfStrings() {
+        assertThat("apple melon".containsAll("apple", "melon")).isTrue()
+        assertThat("banana apple".containsAll("banana", "apple", "orange")).isFalse()
+    }
+
+    @Test
     fun shouldGetMonthValue() {
         assertThat("January".monthValue()).isEqualTo(0)
         assertThat("February".monthValue()).isEqualTo(1)

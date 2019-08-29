@@ -5,6 +5,7 @@ import com.gitspark.gitspark.helper.ContributionsHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.GitHubPlan
+import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
 import io.mockk.MockKAnnotations
@@ -40,9 +41,16 @@ class OverviewViewModelTest {
     }
 
     @Test
-    fun shouldGetUserDataOnResume() {
+    fun shouldGetAuthUserDataOnResume() {
         viewModel.onResume()
         verify { userRepository.getCurrentUserData() }
+    }
+
+    @Test
+    fun shouldGetUserDataOnResume() {
+        viewModel.onResume(username = "username")
+        assertThat(viewState()).isEqualTo(OverviewViewState(loading = true))
+        verify { userRepository.getUser(any(), "username") }
     }
 
     @Test
@@ -109,6 +117,54 @@ class OverviewViewModelTest {
         assertThat(viewModel.navigateToFollowsAction.value).isEqualTo(FollowState.Following)
     }
 
+    @Test
+    fun shouldRequestAuthUserWhenUsernameNullOnRefresh() {
+        viewModel.viewState.value = OverviewViewState()
+
+        viewModel.onRefresh()
+
+        assertThat(viewState().refreshing).isTrue()
+        verify { userRepository.getAuthUser(any()) }
+    }
+
+    @Test
+    fun shouldRequestUserWhenUsernameNotNullOnRefresh() {
+        viewModel.onResume(username = "username")
+        viewModel.onRefresh()
+        verify { userRepository.getUser(any(), "username") }
+    }
+
+    @Test
+    fun shouldGetUserDataOnSuccess() {
+        every { userRepository.getUser(any(), any()) } returns
+                Observable.just(UserResult.Success(getUser()))
+
+        viewModel.onResume(username = "username")
+
+        assertThat(viewState().nameText).isEqualTo("Steven")
+        assertThat(viewState().usernameText).isEqualTo("orz39")
+        assertThat(viewState().avatarUrl).isEqualTo("avatarUrl")
+        assertThat(viewState().bioText).isEqualTo("bio")
+        assertThat(viewState().locationText).isEqualTo("NJ")
+        assertThat(viewState().emailText).isEqualTo("orz39@gmail.com")
+        assertThat(viewState().companyText).isEqualTo("Google")
+        assertThat(viewState().numFollowers).isEqualTo(999)
+        assertThat(viewState().numFollowing).isEqualTo(999)
+        assertThat(viewState().planName).isEqualTo("")
+        assertThat(viewState().createdDate).isEqualTo("01-14-2008 04:33:35")
+    }
+
+    @Test
+    fun shouldGetUserDataFailure() {
+        every { userRepository.getUser(any(), any()) } returns
+                Observable.just(UserResult.Failure("failure"))
+
+        viewModel.onResume(username = "username")
+
+        assertThat(viewModel.alertAction.value).isEqualTo("failure")
+        assertThat(viewState().loading).isFalse()
+    }
+
     private fun getAuthUser() = AuthUser().apply {
         name = "Steven"
         login = "orz39"
@@ -120,6 +176,19 @@ class OverviewViewModelTest {
         followers = 999
         following = 999
         plan = GitHubPlan(planName = "plan")
+        createdAt = "2008-01-14T04:33:35Z"
+    }
+
+    private fun getUser() = User().apply {
+        name = "Steven"
+        login = "orz39"
+        avatarUrl = "avatarUrl"
+        bio = "bio"
+        location = "NJ"
+        email = "orz39@gmail.com"
+        company = "Google"
+        followers = 999
+        following = 999
         createdAt = "2008-01-14T04:33:35Z"
     }
 
