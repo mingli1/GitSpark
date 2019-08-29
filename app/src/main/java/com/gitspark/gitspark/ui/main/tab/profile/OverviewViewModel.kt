@@ -114,7 +114,8 @@ class OverviewViewModel @Inject constructor(
                 loading = true,
                 refreshing = false,
                 planName = if (this is AuthUser) plan.planName else "",
-                createdDate = formattedDateTime
+                createdDate = formattedDateTime,
+                authUser = username == null
             )
         }
 

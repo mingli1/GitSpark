@@ -6,6 +6,10 @@ fun String.containsOneOf(vararg strs: String): Boolean {
     return strs.any { this.contains(it) }
 }
 
+fun String.containsAll(vararg strs: String): Boolean {
+    return strs.all { this.contains(it) }
+}
+
 fun String.monthValue(): Int {
     return when (this) {
         "January" -> 0

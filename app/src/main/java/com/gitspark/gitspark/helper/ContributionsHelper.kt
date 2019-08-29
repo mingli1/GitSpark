@@ -1,7 +1,7 @@
 package com.gitspark.gitspark.helper
 
 import android.annotation.SuppressLint
-import com.gitspark.gitspark.extension.containsOneOf
+import com.gitspark.gitspark.extension.containsAll
 import com.gitspark.gitspark.extension.monthValue
 import com.gitspark.gitspark.model.Contribution
 import java.text.SimpleDateFormat
@@ -30,7 +30,7 @@ class ContributionsHelper @Inject constructor() {
 
         while (scanner.hasNextLine()) {
             val line = scanner.nextLine()
-            if (line.containsOneOf(FILL_ATTR, DATA_COUNT_ATTR, DATA_DATE_ATTR)) {
+            if (line.containsAll(FILL_ATTR, DATA_COUNT_ATTR, DATA_DATE_ATTR)) {
                 val fillStart = line.indexOf(FILL_ATTR) + FILL_ATTR.length
                 val fillEnd = fillStart + HEX_LENGTH
                 val fillColor = line.substring(fillStart, fillEnd)
@@ -81,7 +81,7 @@ class ContributionsHelper @Inject constructor() {
         while (scanner.hasNextLine()) {
             val line = scanner.nextLine().trim()
             if (line.contains("contributions") && Character.isDigit(line[0])) {
-                return line.split(" ")[0].toInt()
+                return line.split(" ")[0].replace(",", "").toInt()
             }
         }
         scanner.close()

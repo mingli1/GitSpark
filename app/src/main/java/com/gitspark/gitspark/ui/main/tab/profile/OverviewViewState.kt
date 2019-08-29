@@ -14,5 +14,6 @@ data class OverviewViewState(
     val planName: String = "",
     val totalContributions: Int = 0,
     val createdDate: String = "",
-    val refreshing: Boolean = false
+    val refreshing: Boolean = false,
+    val authUser: Boolean = true
 )

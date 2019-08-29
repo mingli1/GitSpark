@@ -40,12 +40,19 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
     private fun updateView(viewState: OverviewViewState) {
         with (viewState) {
             if (avatarUrl.isNotEmpty()) avatar_image.loadImage(avatarUrl)
-            name_field.text = nameText
-            username_field.text = usernameText
-            plan_name_field.isVisible = planName != "free"
+            if (nameText.isEmpty()) {
+                name_field.text = usernameText
+                username_field.isVisible = false
+            }
+            else {
+                name_field.text = nameText
+                username_field.text = usernameText
+            }
+            plan_name_field.isVisible = planName.isNotEmpty() && planName != "free"
             plan_name_field.text = planName
             bio_field.isVisible = bioText.isNotEmpty()
             bio_field.text = bioText
+            edit_profile_button.isVisible = authUser
 
             location_field.isVisible = locationText.isNotEmpty()
             location_field.text = locationText
