@@ -15,6 +15,9 @@ internal abstract class FragmentModule {
     internal abstract fun contributesFeedFragment(): FeedFragment
 
     @ContributesAndroidInjector
+    internal abstract fun contributesProfileFragment(): ProfileFragment
+
+    @ContributesAndroidInjector
     internal abstract fun contributesSearchFragment(): SearchFragment
 
     @ContributesAndroidInjector

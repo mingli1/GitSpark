@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
+import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.tab.profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 const val BUNDLE_USERNAME = "BUNDLE_USERNAME"
 private const val FOLLOWS_INDEX = 2
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.java) {
 
     private lateinit var overViewFragment: OverviewFragment
     private lateinit var reposFragment: ReposFragment
@@ -53,6 +53,10 @@ class ProfileFragment : Fragment() {
         starsFragment = StarsFragment().apply { arguments = this@ProfileFragment.arguments }
 
         setUpTabLayout()
+    }
+
+    override fun observeViewModel() {
+
     }
 
     fun navigateToFollowsFragment(followState: FollowState) {
