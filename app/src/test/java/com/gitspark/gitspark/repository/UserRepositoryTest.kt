@@ -19,7 +19,6 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Test
 
-private const val TOKEN = "Basic abc123"
 private val authUser = AuthUser()
 private val user = User()
 
@@ -107,6 +106,38 @@ class UserRepositoryTest {
         every { userRepository.getAuthUserFollowing(any()) } returns
                 Observable.just(UserResult.Failure("failure"))
         val observer = userRepository.getAuthUserFollowing(1).test()
+        observer.assertValue(UserResult.Failure("failure"))
+    }
+
+    @Test
+    fun shouldGetUserFollowersSuccess() {
+        every { userRepository.getUserFollowers(any(), any()) } returns
+                Observable.just(UserResult.Success(Page(value = listOf(user))))
+        val observer = userRepository.getUserFollowers("username", 1).test()
+        observer.assertValue(UserResult.Success(Page(value = listOf(user))))
+    }
+
+    @Test
+    fun shouldGetUserFollowersFailure() {
+        every { userRepository.getUserFollowers(any(), any()) } returns
+                Observable.just(UserResult.Failure("failure"))
+        val observer = userRepository.getUserFollowers("username", 1).test()
+        observer.assertValue(UserResult.Failure("failure"))
+    }
+
+    @Test
+    fun shouldGetUserFollowingSuccess() {
+        every { userRepository.getUserFollowing(any(), any()) } returns
+                Observable.just(UserResult.Success(Page(value = listOf(user))))
+        val observer = userRepository.getUserFollowing("username", 1).test()
+        observer.assertValue(UserResult.Success(Page(value = listOf(user))))
+    }
+
+    @Test
+    fun shouldGetUserFollowingFailure() {
+        every { userRepository.getUserFollowing(any(), any()) } returns
+                Observable.just(UserResult.Failure("failure"))
+        val observer = userRepository.getUserFollowing("username", 1).test()
         observer.assertValue(UserResult.Failure("failure"))
     }
 

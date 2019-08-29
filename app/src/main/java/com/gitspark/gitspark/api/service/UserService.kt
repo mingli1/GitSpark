@@ -40,4 +40,12 @@ interface UserService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = USER_PER_PAGE
     ): Observable<ApiPage<ApiUser>>
+
+    @GET("users/{username}/following")
+    @Headers("Accept: application/json")
+    fun getUserFollowing(
+        @Path("username") username: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = USER_PER_PAGE
+    ): Observable<ApiPage<ApiUser>>
 }

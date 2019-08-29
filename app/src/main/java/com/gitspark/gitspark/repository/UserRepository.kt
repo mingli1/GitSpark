@@ -26,16 +26,14 @@ class UserRepository @Inject constructor(
 ) {
 
     fun getAuthUser(): Observable<UserResult<AuthUser>> {
-        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
-            .create(UserService::class.java)
+        return getUserService()
             .getAuthenticatedUser()
             .map { getSuccess(it.toModel()) }
             .onErrorReturn { getFailure("Failed to obtain auth user data.") }
     }
 
     fun getUser(username: String): Observable<UserResult<User>> {
-        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
-            .create(UserService::class.java)
+        return getUserService()
             .getUser(username)
             .map { getSuccess(it.toModel()) }
             .doOnError { println("error: $it") }
@@ -43,8 +41,7 @@ class UserRepository @Inject constructor(
     }
 
     fun getAuthUserFollowers(page: Int): Observable<UserResult<Page<User>>> {
-        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
-            .create(UserService::class.java)
+        return getUserService()
             .getAuthUserFollowers(page)
             .map { getSuccess(
                 it.toModel<User>().apply {
@@ -55,8 +52,7 @@ class UserRepository @Inject constructor(
     }
 
     fun getAuthUserFollowing(page: Int): Observable<UserResult<Page<User>>> {
-        return retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
-            .create(UserService::class.java)
+        return getUserService()
             .getAuthUserFollowing(page)
             .map { getSuccess(
                 it.toModel<User>().apply {
@@ -70,15 +66,28 @@ class UserRepository @Inject constructor(
         username: String,
         page: Int
     ): Observable<UserResult<Page<User>>> {
-        return retrofitHelper.getRetrofit()
-            .create(UserService::class.java)
+        return getUserService()
             .getUserFollowers(username, page)
             .map { getSuccess(
                 it.toModel<User>().apply {
                     value = it.response.map { user -> user.toModel() }
                 })
             }
-            .onErrorReturn { getFailure("Failed to obtain user followers.") }
+            .onErrorReturn { getFailure("Failed to obtain followers for $username.") }
+    }
+
+    fun getUserFollowing(
+        username: String,
+        page: Int
+    ): Observable<UserResult<Page<User>>> {
+        return getUserService()
+            .getUserFollowing(username, page)
+            .map { getSuccess(
+                it.toModel<User>().apply {
+                    value = it.response.map { user -> user.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain following for $username.") }
     }
 
     fun getContributionsSvg(username: String): Observable<UserResult<String>> {
@@ -100,6 +109,10 @@ class UserRepository @Inject constructor(
         timeHelper.isExpiredMinutes(timeHelper.parse(timestamp), USER_CACHE_DURATION_M)
 
     fun getCurrentUserData(): LiveData<AuthUser> = authUserDao.getAuthUser()
+
+    private fun getUserService() =
+        retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
+            .create(UserService::class.java)
 
     private fun <T> getSuccess(value: T): UserResult<T> = UserResult.Success(value)
 
