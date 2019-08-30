@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.repository
 
 import androidx.lifecycle.LiveData
+import com.gitspark.gitspark.api.model.ApiRateLimit
 import com.gitspark.gitspark.api.service.UserService
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
@@ -96,6 +97,10 @@ class UserRepository @Inject constructor(
             .getContributionsSvg(String.format(CONTRIBUTIONS_URL, username))
             .map { getSuccess(it) }
             .onErrorReturn { getFailure("Failed to obtain contributions data.") }
+    }
+
+    fun getRateLimit(): Observable<ApiRateLimit> {
+        return getUserService().getRateLimit()
     }
 
     fun isFollowing(username: String): Completable {

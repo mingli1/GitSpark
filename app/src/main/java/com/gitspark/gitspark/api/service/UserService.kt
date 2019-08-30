@@ -2,6 +2,7 @@ package com.gitspark.gitspark.api.service
 
 import com.gitspark.gitspark.api.model.ApiAuthUser
 import com.gitspark.gitspark.api.model.ApiPage
+import com.gitspark.gitspark.api.model.ApiRateLimit
 import com.gitspark.gitspark.api.model.ApiUser
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -52,4 +53,7 @@ interface UserService {
 
     @GET("user/following/{username}")
     fun isFollowing(@Path("username") username: String): Completable
+
+    @GET("rate_limit")
+    fun getRateLimit(): Observable<ApiRateLimit>
 }
