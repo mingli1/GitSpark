@@ -54,7 +54,11 @@ class MainActivity : AppCompatActivity() {
     private fun addDestinationListener() {
         navController?.observe(this) {
             it.addOnDestinationChangedListener { _, dest, args ->
-                bottom_navigation_view.isVisible = dest.id != R.id.profile_fragment || args == null
+                bottom_navigation_view.isVisible = when (dest.id) {
+                    R.id.profile_fragment -> args == null
+                    R.id.edit_profile_fragment -> false
+                    else -> true
+                }
             }
         }
     }

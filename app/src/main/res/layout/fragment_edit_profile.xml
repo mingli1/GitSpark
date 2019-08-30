@@ -29,7 +29,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/colorWhiteBackground">
             
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,12 +51,16 @@
                 <EditText
                     android:id="@+id/edit_name"
                     android:layout_width="match_parent"
-                    android:layout_height="36dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/rounded_edittext"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="8dp"
-                    android:ems="16"/>
+                    android:ems="16"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"/>
                 
             </LinearLayout>
             
