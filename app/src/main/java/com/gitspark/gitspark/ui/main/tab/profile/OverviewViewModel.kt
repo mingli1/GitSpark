@@ -39,6 +39,7 @@ class OverviewViewModel @Inject constructor(
         else {
             this.username = username
             viewState.value = OverviewViewState(loading = true)
+            checkIfFollowing(username)
             user?.let { updateViewStateWith(it) }
         }
     }
@@ -61,6 +62,13 @@ class OverviewViewModel @Inject constructor(
 
     fun onFollowsFieldClicked(followState: FollowState) {
         navigateToFollowsAction.value = followState
+    }
+
+    private fun checkIfFollowing(username: String) {
+        subscribe(userRepository.isFollowing(username),
+            { viewState.value = viewState.value?.copy(isFollowing = true) },
+            { viewState.value = viewState.value?.copy(isFollowing = false) }
+        )
     }
 
     private fun requestAuthUser(existingUser: AuthUser?) {

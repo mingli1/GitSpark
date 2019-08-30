@@ -62,7 +62,13 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
             plan_name_field.text = planName
             bio_field.isVisible = bioText.isNotEmpty()
             bio_field.text = bioText
+
             edit_profile_button.isVisible = authUser
+            follows_button.isVisible = !authUser
+            follows_button.text =
+                if (isFollowing) getString(R.string.unfollow_button_text)
+                else getString(R.string.follow_button_text)
+            is_following_text.isVisible = !authUser && isFollowing
 
             location_field.isVisible = locationText.isNotEmpty()
             location_field.text = locationText

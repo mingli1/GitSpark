@@ -98,6 +98,10 @@ class UserRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain contributions data.") }
     }
 
+    fun isFollowing(username: String): Completable {
+        return getUserService().isFollowing(username)
+    }
+
     fun cacheUserData(user: AuthUser): Completable {
         return Completable.fromAction {
             user.timestamp = timeHelper.nowAsString()

@@ -3,6 +3,7 @@ package com.gitspark.gitspark.api.service
 import com.gitspark.gitspark.api.model.ApiAuthUser
 import com.gitspark.gitspark.api.model.ApiPage
 import com.gitspark.gitspark.api.model.ApiUser
+import io.reactivex.Completable
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -48,4 +49,7 @@ interface UserService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = USER_PER_PAGE
     ): Observable<ApiPage<ApiUser>>
+
+    @GET("user/following/{username}")
+    fun isFollowing(@Path("username") username: String): Completable
 }

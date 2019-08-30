@@ -15,5 +15,6 @@ data class OverviewViewState(
     val totalContributions: Int = 0,
     val createdDate: String = "",
     val refreshing: Boolean = false,
-    val authUser: Boolean = true
+    val authUser: Boolean = true,
+    val isFollowing: Boolean = false
 )
