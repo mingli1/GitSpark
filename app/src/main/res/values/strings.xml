@@ -29,4 +29,13 @@
     <string name="user_profile_title">Profile (%1$s)</string>
     <string name="edit_profile_title">Edit Profile</string>
     <string name="name_label">Name</string>
+    <string name="name_disclaimer">A name displayed alongside your username (usually your full name). You may remove it at any time.</string>
+    <string name="bio_label">Bio</string>
+    <string name="email_label">Public email</string>
+    <string name="email_disclaimer">If your email is set to private, this email will not display on your public profile.</string>
+    <string name="url_label">Personal URL</string>
+    <string name="url_disclaimer">You can link a personal blog or website.</string>
+    <string name="company_label">Company</string>
+    <string name="location_label">Location</string>
+    <string name="hireable_text">Available for hire</string>
 </resources>

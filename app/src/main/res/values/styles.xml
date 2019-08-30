@@ -47,6 +47,10 @@
         <item name="android:textSize">14sp</item>
     </style>
     
+    <style name="BodyLight.ExtraSmall" parent="BodyLight">
+        <item name="android:textSize">12sp</item>
+    </style>
+    
     <style name="BodyLight.Bold" parent="BodyLight">
         <item name="android:textStyle">bold</item>
     </style>

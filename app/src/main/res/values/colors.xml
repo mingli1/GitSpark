@@ -11,6 +11,7 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhiteDark">#E5E5E5</color>
     <color name="colorWhiteBackground">#F2F2F2</color>
+    <color name="colorAlmostWhite">#F9F9F9</color>
     <color name="colorLightGray">#B5B5B5</color>
     <color name="colorDarkGray">#878787</color>
     <color name="colorDarkerGray">#545454</color>
