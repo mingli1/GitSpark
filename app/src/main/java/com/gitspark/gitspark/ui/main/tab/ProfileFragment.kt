@@ -69,7 +69,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
     }
 
     fun navigateToUserProfile(args: Bundle) {
-        findNavController().navigate(R.id.profile_fragment, args)
+        findNavController().navigate(R.id.action_profile_fragment_to_profile_fragment, args)
     }
 
     fun refreshUserData(username: String) = viewModel.requestUserData(username, refresh = true)
