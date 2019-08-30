@@ -41,6 +41,7 @@ class ReposAdapter(
                 forks_field.text = withSuffix(item.numForks)
                 private_label.isVisible = item.isPrivate
                 forked_label.isVisible = item.isForked
+                language_field.isVisible = item.repoLanguage.isNotEmpty()
                 language_field.text = item.repoLanguage
 
                 topics_container.removeAllViews()
