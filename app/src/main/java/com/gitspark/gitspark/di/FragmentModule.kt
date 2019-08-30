@@ -1,10 +1,7 @@
 package com.gitspark.gitspark.di
 
 import com.gitspark.gitspark.ui.main.tab.*
-import com.gitspark.gitspark.ui.main.tab.profile.FollowsFragment
-import com.gitspark.gitspark.ui.main.tab.profile.OverviewFragment
-import com.gitspark.gitspark.ui.main.tab.profile.ReposFragment
-import com.gitspark.gitspark.ui.main.tab.profile.StarsFragment
+import com.gitspark.gitspark.ui.main.tab.profile.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -37,4 +34,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesStarsFragment(): StarsFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesEditProfileFragment(): EditProfileFragment
 }

@@ -5,10 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.gitspark.gitspark.ui.base.ViewModelFactory
 import com.gitspark.gitspark.ui.login.LoginViewModel
 import com.gitspark.gitspark.ui.main.tab.*
-import com.gitspark.gitspark.ui.main.tab.profile.FollowsViewModel
-import com.gitspark.gitspark.ui.main.tab.profile.OverviewViewModel
-import com.gitspark.gitspark.ui.main.tab.profile.ReposViewModel
-import com.gitspark.gitspark.ui.main.tab.profile.StarsViewModel
+import com.gitspark.gitspark.ui.main.tab.profile.*
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -55,6 +52,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(StarsViewModel::class)
     internal abstract fun bindStarsViewModel(starsViewModel: StarsViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(EditProfileViewModel::class)
+    internal abstract fun bindEditProfileViewModel(editProfileViewModel: EditProfileViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
