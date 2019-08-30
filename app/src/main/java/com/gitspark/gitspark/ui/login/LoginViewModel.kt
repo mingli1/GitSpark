@@ -2,7 +2,6 @@ package com.gitspark.gitspark.ui.login
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
-import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.*
@@ -103,37 +102,18 @@ class LoginViewModel @Inject constructor(
         // this case only occurs when the user authenticates then uninstalls and re-installs
         // the app with the authentication still existing but not cached
         else {
-            deleteExistingToken()
+            deleteExistingToken(token)
         }
     }
 
-    private fun deleteExistingToken() {
-        subscribe(loginRepository.getAuthorizations(basicToken)) {
-            when (it) {
-                is LoginResult.Success -> {
-                    if (it.value.value.isNotEmpty()) {
-                        val authId = it.value.value.find { token ->
-                            token.note == BuildConfig.APPLICATION_ID
-                        }?.tokenId
-
-                        authId?.let {
-                            subscribe(loginRepository.deleteAuthorization(basicToken, it),
-                                { attemptLogin() },
-                                { throwable ->
-                                    alert("Error deleting token: ${throwable.message}")
-                                    setLoading(false)
-                                }
-                            )
-                        } ?: alert("Illegal state: Access token not cached and does not exist.")
-                    }
-                }
-                is LoginResult.Failure -> {
-                    alert(it.error)
-                    setLoading(false)
-                }
+    private fun deleteExistingToken(token: Token) {
+        subscribe(loginRepository.deleteAuthorization(basicToken, token.tokenId),
+            { attemptLogin() },
+            { throwable ->
+                alert("Error deleting token: ${throwable.message}")
+                setLoading(false)
             }
-
-        }
+        )
     }
 
     private fun setLoading(loading: Boolean) {
