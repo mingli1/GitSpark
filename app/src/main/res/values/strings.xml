@@ -17,7 +17,7 @@
     <string name="followers_text">Followers (%1$d)</string>
     <string name="edit_profile_button">Edit Profile</string>
     <string name="total_contribution">%1$d contributions in the past year</string>
-    <string name="joined_date">Joined GitHub at %1$s</string>
+    <string name="joined_date">Joined GitHub on %1$s</string>
     <string name="updated_repo">Updated at %1$s</string>
     <string name="private_label">private</string>
     <string name="forked_label">forked</string>
