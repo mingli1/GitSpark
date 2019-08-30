@@ -26,6 +26,10 @@ class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewMo
         return view
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+    }
+
     override fun observeViewModel() {
 
     }

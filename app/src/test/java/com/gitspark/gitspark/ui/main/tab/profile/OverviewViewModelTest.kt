@@ -189,6 +189,13 @@ class OverviewViewModelTest {
         assertThat(viewState().isFollowing).isTrue()
     }
 
+    @Test
+    fun shouldNavigateToEditProfile() {
+        viewModel.currentUserData = user
+        viewModel.onEditProfileButtonClicked()
+        assertThat(viewModel.navigateToEditProfileAction.value).isEqualTo(user)
+    }
+
     private fun getAuthUser() = AuthUser().apply {
         name = "Steven"
         login = "orz39"

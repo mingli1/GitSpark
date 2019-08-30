@@ -1,9 +1,6 @@
 package com.gitspark.gitspark.api.service
 
-import com.gitspark.gitspark.api.model.ApiAuthUser
-import com.gitspark.gitspark.api.model.ApiPage
-import com.gitspark.gitspark.api.model.ApiRateLimit
-import com.gitspark.gitspark.api.model.ApiUser
+import com.gitspark.gitspark.api.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import retrofit2.http.*
@@ -60,6 +57,9 @@ interface UserService {
 
     @DELETE("user/following/{username}")
     fun unfollowUser(@Path("username") username: String): Completable
+
+    @PATCH("user")
+    fun updateUser(@Body request: ApiEditProfileRequest): Observable<ApiAuthUser>
 
     @GET("rate_limit")
     fun getRateLimit(): Observable<ApiRateLimit>

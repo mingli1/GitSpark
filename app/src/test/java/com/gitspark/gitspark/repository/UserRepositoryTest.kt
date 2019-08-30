@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.repository
 
+import com.gitspark.gitspark.api.model.ApiEditProfileRequest
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.helper.TimeHelper
@@ -21,6 +22,15 @@ import org.junit.Test
 
 private val authUser = AuthUser()
 private val user = User()
+private val editRequest = ApiEditProfileRequest(
+    name = "",
+    email = "",
+    url = "",
+    company = "",
+    location = "",
+    hireable = false,
+    bio = ""
+)
 
 class UserRepositoryTest {
 
@@ -147,5 +157,21 @@ class UserRepositoryTest {
                 Observable.just(UserResult.Success("data"))
         val observer = userRepository.getContributionsSvg("username").test()
         observer.assertValue(UserResult.Success("data"))
+    }
+
+    @Test
+    fun shouldUpdateUserSuccess() {
+        every { userRepository.updateUser(any()) } returns
+                Observable.just(UserResult.Success(authUser))
+        val observer = userRepository.updateUser(editRequest).test()
+        observer.assertValue(UserResult.Success(authUser))
+    }
+
+    @Test
+    fun shouldUpdateUserFailure() {
+        every { userRepository.updateUser(any()) } returns
+                Observable.just(UserResult.Failure("failure"))
+        val observer = userRepository.updateUser(editRequest).test()
+        observer.assertValue(UserResult.Failure("failure"))
     }
 }

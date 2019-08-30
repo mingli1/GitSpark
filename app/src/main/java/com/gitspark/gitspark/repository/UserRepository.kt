@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.repository
 
 import androidx.lifecycle.LiveData
+import com.gitspark.gitspark.api.model.ApiEditProfileRequest
 import com.gitspark.gitspark.api.model.ApiRateLimit
 import com.gitspark.gitspark.api.service.UserService
 import com.gitspark.gitspark.helper.PreferencesHelper
@@ -109,6 +110,13 @@ class UserRepository @Inject constructor(
             .getContributionsSvg(String.format(CONTRIBUTIONS_URL, username))
             .map { getSuccess(it) }
             .onErrorReturn { getFailure("Failed to obtain contributions data.") }
+    }
+
+    fun updateUser(edit: ApiEditProfileRequest): Observable<UserResult<AuthUser>> {
+        return getUserService()
+            .updateUser(edit)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed up to update auth user data.") }
     }
 
     fun getRateLimit(): Observable<ApiRateLimit> {

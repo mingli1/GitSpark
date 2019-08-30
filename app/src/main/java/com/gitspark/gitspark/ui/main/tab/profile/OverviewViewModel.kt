@@ -31,7 +31,7 @@ class OverviewViewModel @Inject constructor(
     val refreshAction = SingleLiveAction()
     val navigateToEditProfileAction = SingleLiveEvent<User>()
 
-    var currentUserData: User? = null
+    @VisibleForTesting var currentUserData: User? = null
     @VisibleForTesting var username: String? = null
 
     fun onResume(username: String? = null, user: User? = null) {
