@@ -64,10 +64,35 @@ class OverviewViewModel @Inject constructor(
         navigateToFollowsAction.value = followState
     }
 
+    fun onFollowsButtonClicked(isFollowing: Boolean) {
+        if (isFollowing) unfollowUser()
+        else followUser()
+    }
+
     private fun checkIfFollowing(username: String) {
         subscribe(userRepository.isFollowing(username),
             { viewState.value = viewState.value?.copy(isFollowing = true) },
             { viewState.value = viewState.value?.copy(isFollowing = false) }
+        )
+    }
+
+    private fun unfollowUser() {
+        subscribe(userRepository.unfollowUser(username!!),
+            {
+                alert("Unfollowed $username. Note: it may take some time for numbers to update.")
+                viewState.value = viewState.value?.copy(isFollowing = false)
+            },
+            { alert("Error: ${it.message}") }
+        )
+    }
+
+    private fun followUser() {
+        subscribe(userRepository.followUser(username!!),
+            {
+                alert("Followed $username. Note: it may take some time for numbers to update.")
+                viewState.value = viewState.value?.copy(isFollowing = true)
+            },
+            { alert("Error: ${it.message}") }
         )
     }
 

@@ -96,6 +96,9 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
         followers_field.setOnClickListener { viewModel.onFollowsFieldClicked(FollowState.Followers) }
         following_field.setOnClickListener { viewModel.onFollowsFieldClicked(FollowState.Following) }
+        follows_button.setOnClickListener {
+            viewModel.onFollowsButtonClicked(follows_button.text == getString(R.string.unfollow_button_text))
+        }
     }
 
     private fun navigateToFollowsFragment(followState: FollowState) {
