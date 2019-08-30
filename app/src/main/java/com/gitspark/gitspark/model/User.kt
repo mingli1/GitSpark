@@ -17,6 +17,7 @@ open class User(
     var location: String = "",
     var email: String = "",
     var bio: String = "",
+    var blogUrl: String = "",
     var numPublicRepos: Int = 0,
     var numPublicGists: Int = 0,
     var followers: Int = 0,

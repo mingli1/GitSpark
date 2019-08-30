@@ -41,6 +41,7 @@ data class ApiAuthUser(
         it.company = company ?: ""
         it.location = location ?: ""
         it.email = email ?: ""
+        it.blogUrl = blogUrl ?: ""
         it.bio = bio ?: ""
         it.numPublicRepos = numPublicRepos ?: 0
         it.numPublicGists = numPublicGists ?: 0

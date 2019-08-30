@@ -7,6 +7,7 @@ data class OverviewViewState(
     val avatarUrl: String = "",
     val locationText: String = "",
     val emailText: String = "",
+    val urlText: String = "",
     val companyText: String = "",
     val numFollowing: Int = 0,
     val numFollowers: Int = 0,

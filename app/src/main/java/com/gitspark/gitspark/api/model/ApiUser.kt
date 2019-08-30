@@ -36,6 +36,7 @@ data class ApiUser(
         it.location = location ?: ""
         it.email = email ?: ""
         it.bio = bio ?: ""
+        it.blogUrl = blogUrl ?: ""
         it.numPublicRepos = numPublicRepos ?: 0
         it.numPublicGists = numPublicGists ?: 0
         it.followers = followers ?: 0

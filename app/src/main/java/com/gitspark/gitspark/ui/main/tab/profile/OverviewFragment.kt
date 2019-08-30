@@ -25,6 +25,7 @@ const val BUNDLE_COMPANY = "BUNDLE_COMPANY"
 const val BUNDLE_LOCATION = "BUNDLE_LOCATION"
 const val BUNDLE_HIREABLE = "BUNDLE_HIREABLE"
 const val BUNDLE_BIO = "BUNDLE_BIO"
+const val BUNDLE_URL = "BUNDLE_URL"
 
 class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class.java) {
 
@@ -84,6 +85,8 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
             location_field.text = locationText
             email_field.isVisible = emailText.isNotEmpty()
             email_field.text = emailText
+            url_field.isVisible = urlText.isNotEmpty()
+            url_field.text = urlText
             company_field.isVisible = companyText.isNotEmpty()
             company_field.text = companyText
 
@@ -131,6 +134,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
             putString(BUNDLE_LOCATION, user.location)
             putBoolean(BUNDLE_HIREABLE, user.hireable)
             putString(BUNDLE_BIO, user.bio)
+            putString(BUNDLE_URL, user.blogUrl)
         }
     }
 }

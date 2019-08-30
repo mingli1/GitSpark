@@ -139,6 +139,7 @@ class OverviewViewModel @Inject constructor(
                 bioText = bio,
                 locationText = location,
                 emailText = email,
+                urlText = blogUrl,
                 companyText = company,
                 numFollowers = followers,
                 numFollowing = following,
