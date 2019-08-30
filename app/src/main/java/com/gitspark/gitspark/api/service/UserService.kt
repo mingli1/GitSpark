@@ -54,6 +54,13 @@ interface UserService {
     @GET("user/following/{username}")
     fun isFollowing(@Path("username") username: String): Completable
 
+    @PUT("user/following/{username}")
+    @Headers("Content-Length: 0")
+    fun followUser(@Path("username") username: String): Completable
+
+    @DELETE("user/following/{username}")
+    fun unfollowUser(@Path("username") username: String): Completable
+
     @GET("rate_limit")
     fun getRateLimit(): Observable<ApiRateLimit>
 }

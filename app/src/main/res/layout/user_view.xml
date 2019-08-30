@@ -44,20 +44,6 @@
     
         </com.google.android.material.card.MaterialCardView>
     
-        <Button
-            android:id="@+id/unfollow_button"
-            style="@style/AppTheme.RoundedCornerMaterialButton"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:text="@string/unfollow_button_text"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-    
         <TextView
             android:id="@+id/name_field"
             style="@style/BodyLarge"
@@ -69,7 +55,7 @@
             android:singleLine="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/avatar_card_view"
-            app:layout_constraintEnd_toStartOf="@id/unfollow_button"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="Ming Li"/>
         
     </androidx.constraintlayout.widget.ConstraintLayout>

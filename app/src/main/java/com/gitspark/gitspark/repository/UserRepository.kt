@@ -91,6 +91,18 @@ class UserRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain following for $username.") }
     }
 
+    fun isFollowing(username: String): Completable {
+        return getUserService().isFollowing(username)
+    }
+
+    fun followUser(username: String): Completable {
+        return getUserService().followUser(username)
+    }
+
+    fun unfollowUser(username: String): Completable {
+        return getUserService().unfollowUser(username)
+    }
+
     fun getContributionsSvg(username: String): Observable<UserResult<String>> {
         return retrofitHelper.getRetrofit(lenient = true)
             .create(UserService::class.java)
@@ -101,10 +113,6 @@ class UserRepository @Inject constructor(
 
     fun getRateLimit(): Observable<ApiRateLimit> {
         return getUserService().getRateLimit()
-    }
-
-    fun isFollowing(username: String): Completable {
-        return getUserService().isFollowing(username)
     }
 
     fun cacheUserData(user: AuthUser): Completable {
