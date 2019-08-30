@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.ContributionsHelper
@@ -29,7 +30,7 @@ class OverviewViewModel @Inject constructor(
     val navigateToFollowsAction = SingleLiveEvent<FollowState>()
     val refreshAction = SingleLiveAction()
 
-    private var username: String? = null
+    @VisibleForTesting var username: String? = null
 
     fun onResume(username: String? = null, user: User? = null) {
         if (username == null) {

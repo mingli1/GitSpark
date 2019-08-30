@@ -161,6 +161,34 @@ class OverviewViewModelTest {
         assertThat(viewState().isFollowing).isFalse()
     }
 
+    @Test
+    fun shouldUnfollowUserOnFollowsButtonClicked() {
+        viewModel.viewState.value = OverviewViewState()
+        viewModel.username = "username"
+        every { userRepository.unfollowUser(any()) } returns
+                Completable.complete()
+
+        viewModel.onFollowsButtonClicked(true)
+
+        verify { userRepository.unfollowUser("username") }
+        assertThat(viewModel.alertAction.value).isEqualTo("Unfollowed username. Note: it may take some time for numbers to update.")
+        assertThat(viewState().isFollowing).isFalse()
+    }
+
+    @Test
+    fun shouldFollowUserOnFollowsButtonClicked() {
+        viewModel.viewState.value = OverviewViewState()
+        viewModel.username = "username"
+        every { userRepository.followUser(any()) } returns
+                Completable.complete()
+
+        viewModel.onFollowsButtonClicked(false)
+
+        verify { userRepository.followUser("username") }
+        assertThat(viewModel.alertAction.value).isEqualTo("Followed username. Note: it may take some time for numbers to update.")
+        assertThat(viewState().isFollowing).isTrue()
+    }
+
     private fun getAuthUser() = AuthUser().apply {
         name = "Steven"
         login = "orz39"
