@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 const val BUNDLE_USERNAME = "BUNDLE_USERNAME"
 private const val FOLLOWS_INDEX = 2
+private const val OFFSCREEN_PAGE_LIMIT = 3
 
 class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.java) {
 
@@ -64,7 +65,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
 
     fun navigateToFollowsFragment(followState: FollowState) {
         viewpager.setCurrentItem(FOLLOWS_INDEX, true)
-        followsFragment.onNavigatedTo(followState)
+        if (followsFragment.isAdded) followsFragment.onNavigatedTo(followState)
     }
 
     fun navigateToUserProfile(args: Bundle) {
@@ -90,6 +91,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
             addFragment(starsFragment, getString(R.string.stars_title))
         }
         viewpager.adapter = adapter
+        viewpager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
         tabs.setupWithViewPager(viewpager)
     }
 
