@@ -53,6 +53,12 @@ class OverviewViewModelTest {
     }
 
     @Test
+    fun shouldCheckIfFollowingWhenUsernameExistsOnResume() {
+        viewModel.onResume("username")
+        verify { userRepository.isFollowing("username") }
+    }
+
+    @Test
     fun shouldUpdateWithNewUserIfExpiredSuccess() {
         every { userRepository.isUserCacheExpired(any()) } returns true
         every { userRepository.getAuthUser() } returns
@@ -137,6 +143,22 @@ class OverviewViewModelTest {
     fun shouldUpdateViewStateOnUserDataRefreshed() {
         viewModel.onUserDataRefreshed(getUser())
         assertThat(viewState().nameText).isEqualTo("Steven")
+    }
+
+    @Test
+    fun shouldUpdateViewStateOnFollowing() {
+        every { userRepository.isFollowing(any()) } returns
+                Completable.complete()
+        viewModel.onResume(username = "username")
+        assertThat(viewState().isFollowing).isTrue()
+    }
+
+    @Test
+    fun shouldUpdateViewStateOnNotFollowing() {
+        every { userRepository.isFollowing(any()) } returns
+                Completable.never()
+        viewModel.onResume(username = "username")
+        assertThat(viewState().isFollowing).isFalse()
     }
 
     private fun getAuthUser() = AuthUser().apply {
