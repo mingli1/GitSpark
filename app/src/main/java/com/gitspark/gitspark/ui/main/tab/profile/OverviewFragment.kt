@@ -4,18 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.model.Contribution
+import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.main.tab.BUNDLE_USERNAME
 import com.gitspark.gitspark.ui.main.tab.ProfileFragment
 import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.profile_header.*
 import java.util.*
+
+const val BUNDLE_NAME = "BUNDLE_NAME"
+const val BUNDLE_EMAIL = "BUNDLE_EMAIL"
+const val BUNDLE_COMPANY = "BUNDLE_COMPANY"
+const val BUNDLE_LOCATION = "BUNDLE_LOCATION"
+const val BUNDLE_HIREABLE = "BUNDLE_HIREABLE"
+const val BUNDLE_BIO = "BUNDLE_BIO"
 
 class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class.java) {
 
@@ -42,6 +51,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         viewModel.refreshAction.observe(viewLifecycleOwner) {
             (parentFragment as ProfileFragment).refreshUserData(arguments?.getString(BUNDLE_USERNAME)!!)
         }
+        viewModel.navigateToEditProfileAction.observe(viewLifecycleOwner) { navigateToEditProfileFragment(it) }
     }
 
     fun notifyUserDataRefreshed() =
@@ -99,9 +109,28 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         follows_button.setOnClickListener {
             viewModel.onFollowsButtonClicked(follows_button.text == getString(R.string.unfollow_button_text))
         }
+        edit_profile_button.setOnClickListener { viewModel.onEditProfileButtonClicked() }
     }
 
     private fun navigateToFollowsFragment(followState: FollowState) {
         (parentFragment as ProfileFragment).navigateToFollowsFragment(followState)
+    }
+
+    private fun navigateToEditProfileFragment(user: User) {
+        findNavController().navigate(
+            R.id.action_profile_fragment_to_edit_profile_fragment,
+            getEditProfileBundle(user)
+        )
+    }
+
+    companion object {
+        fun getEditProfileBundle(user: User) = Bundle().apply {
+            putString(BUNDLE_NAME, user.name)
+            putString(BUNDLE_EMAIL, user.email)
+            putString(BUNDLE_COMPANY, user.company)
+            putString(BUNDLE_LOCATION, user.location)
+            putBoolean(BUNDLE_HIREABLE, user.hireable)
+            putString(BUNDLE_BIO, user.bio)
+        }
     }
 }

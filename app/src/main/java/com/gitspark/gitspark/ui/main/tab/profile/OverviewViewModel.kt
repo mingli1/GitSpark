@@ -29,7 +29,9 @@ class OverviewViewModel @Inject constructor(
     val contributionsAction = SingleLiveEvent<SortedMap<String, List<Contribution>>>()
     val navigateToFollowsAction = SingleLiveEvent<FollowState>()
     val refreshAction = SingleLiveAction()
+    val navigateToEditProfileAction = SingleLiveEvent<User>()
 
+    var currentUserData: User? = null
     @VisibleForTesting var username: String? = null
 
     fun onResume(username: String? = null, user: User? = null) {
@@ -68,6 +70,10 @@ class OverviewViewModel @Inject constructor(
     fun onFollowsButtonClicked(isFollowing: Boolean) {
         if (isFollowing) unfollowUser()
         else followUser()
+    }
+
+    fun onEditProfileButtonClicked() {
+        currentUserData?.let { navigateToEditProfileAction.value = it }
     }
 
     private fun checkIfFollowing(username: String) {
@@ -117,6 +123,7 @@ class OverviewViewModel @Inject constructor(
     }
 
     private fun updateViewStateWith(user: User) {
+        currentUserData = user
         with (user) {
             var formattedDateTime = ""
             if (createdAt.isNotEmpty()) {
