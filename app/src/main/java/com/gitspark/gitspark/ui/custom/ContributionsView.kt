@@ -26,8 +26,8 @@ class ContributionsView(context: Context, attrs: AttributeSet) : View(context, a
     private var bitmap: Bitmap? = null
     private val bitmapMatrix = Matrix()
 
-    private var viewWidth = 0
-    private var viewHeight = 0
+    private var viewWidth = 1
+    private var viewHeight = 1
 
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(Color.WHITE)
