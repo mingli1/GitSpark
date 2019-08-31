@@ -148,5 +148,11 @@ class ReposViewModelTest {
         ))
     }
 
+    @Test
+    fun shouldNavigateToRepoDetailFragmentOnSelected() {
+        viewModel.onRepoSelected("mingli1/GitSpark")
+        assertThat(viewModel.navigateToRepoDetailAction.value).isEqualTo("mingli1/GitSpark")
+    }
+
     private fun viewState() = viewModel.viewState.value!!
 }
