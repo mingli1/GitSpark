@@ -2,6 +2,7 @@ package com.gitspark.gitspark.api.service
 
 import com.gitspark.gitspark.api.model.ApiPage
 import com.gitspark.gitspark.api.model.ApiRepo
+import com.gitspark.gitspark.api.model.ApiRepoContent
 import com.gitspark.gitspark.api.model.ApiStarredRepo
 import io.reactivex.Observable
 import retrofit2.http.GET
@@ -48,4 +49,10 @@ interface RepoService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = REPO_PER_PAGE
     ): Observable<ApiPage<ApiStarredRepo>>
+
+    @GET("repos/{owner}/{repo}/readme")
+    fun getReadme(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Observable<ApiRepoContent>
 }

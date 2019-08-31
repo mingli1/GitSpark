@@ -7,6 +7,7 @@ import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
+import com.gitspark.gitspark.model.RepoContent
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -74,6 +75,16 @@ class RepoRepository @Inject constructor(
                 })
             }
             .onErrorReturn { getFailure("Failed to get starred repositories for $username") }
+    }
+
+    fun getReadme(
+        username: String,
+        repoName: String
+    ): Observable<RepoResult<RepoContent>> {
+        return getRepoService()
+            .getReadme(username, repoName)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed to get README content for $username/$repoName") }
     }
 
     private fun getRepoService() =
