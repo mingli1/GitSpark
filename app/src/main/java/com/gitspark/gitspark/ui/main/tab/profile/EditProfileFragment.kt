@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.model.ApiEditProfileRequest
@@ -17,11 +18,11 @@ import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
-interface EditProfileCallback {
-    fun updateOverviewWithEditedUserData(user: AuthUser): Boolean
-}
-
 class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewModel::class.java) {
+
+    private val sharedViewModel by lazy {
+        ViewModelProviders.of(activity!!, viewModelFactory)[ProfileSharedViewModel::class.java]
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_edit_profile, container, false)
@@ -99,7 +100,7 @@ class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewMo
     }
 
     private fun finishFragment(user: AuthUser) {
-        if ((parentFragment as EditProfileCallback).updateOverviewWithEditedUserData(user))
-            findNavController().navigateUp()
+        sharedViewModel.userData.value = user
+        findNavController().navigateUp()
     }
 }

@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.observeOnce
-import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.Contribution
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.main.tab.BUNDLE_USERNAME
@@ -30,6 +30,10 @@ const val BUNDLE_BIO = "BUNDLE_BIO"
 const val BUNDLE_URL = "BUNDLE_URL"
 
 class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class.java) {
+
+    private val sharedViewModel by lazy {
+        ViewModelProviders.of(activity!!, viewModelFactory)[ProfileSharedViewModel::class.java]
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_overview, container, false)
@@ -55,12 +59,11 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
             (parentFragment as UserDataCallback).refreshUserData(arguments?.getString(BUNDLE_USERNAME)!!)
         }
         viewModel.navigateToEditProfileAction.observe(viewLifecycleOwner) { navigateToEditProfileFragment(it) }
+        sharedViewModel.userData.observe(viewLifecycleOwner) { viewModel.onUserDataRefreshed(it) }
     }
 
     fun notifyUserDataRefreshed() =
         viewModel.onUserDataRefreshed((parentFragment as UserDataCallback).getData()!!)
-
-    fun notifyUserDataEdited(user: AuthUser) = viewModel.onUserDataRefreshed(user)
 
     private fun updateView(viewState: OverviewViewState) {
         with (viewState) {
