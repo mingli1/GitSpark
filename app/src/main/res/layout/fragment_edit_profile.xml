@@ -263,5 +263,7 @@
         android:layout_margin="16dp"
         android:layout_gravity="bottom"
         android:textAllCaps="false"/>
+    
+    <include layout="@layout/full_screen_progress_spinner"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.main.tab.profile
 
 data class EditProfileViewState(
+    val loading: Boolean = false,
     val nameText: String = "",
     val emailText: String = "",
     val bioText: String = "",

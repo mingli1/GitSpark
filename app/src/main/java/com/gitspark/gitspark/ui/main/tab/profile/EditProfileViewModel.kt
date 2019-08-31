@@ -2,10 +2,15 @@ package com.gitspark.gitspark.ui.main.tab.profile
 
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.api.model.ApiEditProfileRequest
+import com.gitspark.gitspark.model.AuthUser
+import com.gitspark.gitspark.repository.UserRepository
+import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
-class EditProfileViewModel @Inject constructor() : BaseViewModel() {
+class EditProfileViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : BaseViewModel() {
 
     val viewState = MutableLiveData<EditProfileViewState>()
 
@@ -49,5 +54,32 @@ class EditProfileViewModel @Inject constructor() : BaseViewModel() {
 
     fun onCompanyEdited(company: String) {
         viewState.value = viewState.value?.copy(companyText = company)
+    }
+
+    fun onUpdateProfileClicked() {
+        viewState.value = viewState.value?.copy(loading = true)
+        viewState.value?.let {
+            subscribe(userRepository.updateUser(ApiEditProfileRequest(
+                name = it.nameText,
+                email = it.emailText,
+                url = it.urlText,
+                company = it.companyText,
+                location = it.locationText,
+                hireable = it.hireable,
+                bio = it.bioText
+            ))) { result -> handleUpdateProfileResult(result) }
+        }
+    }
+
+    private fun handleUpdateProfileResult(result: UserResult<AuthUser>) {
+        when (result) {
+            is UserResult.Success -> {
+
+            }
+            is UserResult.Failure -> {
+                alert(result.error)
+                viewState.value = viewState.value?.copy(loading = false)
+            }
+        }
     }
 }

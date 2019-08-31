@@ -8,10 +8,12 @@ import androidx.appcompat.widget.Toolbar
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.model.ApiEditProfileRequest
 import com.gitspark.gitspark.extension.afterTextChanged
+import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewModel::class.java) {
 
@@ -54,6 +56,8 @@ class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewMo
 
     private fun updateView(viewState: EditProfileViewState) {
         with (viewState) {
+            loading_indicator.isVisible = loading
+
             if (edit_name.text.toString() != nameText) edit_name.setText(nameText)
             if (edit_bio.text.toString() != bioText) edit_bio.setText(bioText)
             if (edit_email.text.toString() != emailText) edit_email.setText(emailText)
@@ -83,6 +87,7 @@ class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewMo
             edit_company.afterTextChanged { onCompanyEdited(edit_company.text.toString()) }
             edit_location.afterTextChanged { onLocationEdited(edit_location.text.toString()) }
             hireable_checkbox.setOnCheckedChangeListener { _, isChecked -> onHireabledChecked(isChecked) }
+            update_profile_button.setOnClickListener { onUpdateProfileClicked() }
         }
     }
 }
