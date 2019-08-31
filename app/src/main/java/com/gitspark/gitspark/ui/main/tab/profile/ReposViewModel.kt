@@ -7,16 +7,19 @@ import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.repository.UserRepository
+import com.gitspark.gitspark.ui.adapter.RepoDetailNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
 class ReposViewModel @Inject constructor(
     private val repoRepository: RepoRepository,
     private val userRepository: UserRepository
-) : BaseViewModel() {
+) : BaseViewModel(), RepoDetailNavigator {
 
     val viewState = MutableLiveData<ReposViewState>()
     val userMediator = MediatorLiveData<AuthUser>()
+    val navigateToRepoDetailAction = SingleLiveEvent<String>()
 
     private var resumed = false
     private var page = 1
@@ -48,6 +51,10 @@ class ReposViewModel @Inject constructor(
         viewState.value = ReposViewState(
             totalRepos = user.numPublicRepos + user.totalPrivateRepos
         )
+    }
+
+    override fun onRepoSelected(fullName: String) {
+        navigateToRepoDetailAction.value = fullName
     }
 
     private fun updateViewState(

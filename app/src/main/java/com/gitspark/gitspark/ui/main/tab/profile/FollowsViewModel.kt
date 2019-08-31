@@ -8,13 +8,14 @@ import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
+import com.gitspark.gitspark.ui.adapter.UserProfileNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
 class FollowsViewModel @Inject constructor(
     private val userRepository: UserRepository
-) : BaseViewModel() {
+) : BaseViewModel(), UserProfileNavigator {
 
     val viewState = MutableLiveData<FollowsViewState>()
     val userMediator = MediatorLiveData<AuthUser>()
@@ -78,7 +79,7 @@ class FollowsViewModel @Inject constructor(
         updateViewState(true)
     }
 
-    fun onUserClicked(username: String) {
+    override fun onUserSelected(username: String) {
         navigateToProfile.value = username
     }
 

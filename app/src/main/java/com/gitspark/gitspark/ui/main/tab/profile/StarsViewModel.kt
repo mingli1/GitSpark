@@ -8,14 +8,17 @@ import com.gitspark.gitspark.model.isFirstPage
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
+import com.gitspark.gitspark.ui.adapter.RepoDetailNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
 class StarsViewModel @Inject constructor(
     private val repoRepository: RepoRepository
-) : BaseViewModel() {
+) : BaseViewModel(), RepoDetailNavigator {
 
     val viewState = MutableLiveData<StarsViewState>()
+    val navigateToRepoDetailAction = SingleLiveEvent<String>()
 
     private var resumed = false
     private var page = 1
@@ -36,6 +39,10 @@ class StarsViewModel @Inject constructor(
     fun onRefresh() = updateViewState(reset = true, refresh = true, fetchTotal = true)
 
     fun onScrolledToEnd() = updateViewState()
+
+    override fun onRepoSelected(fullName: String) {
+        navigateToRepoDetailAction.value = fullName
+    }
 
     private fun updateViewState(
         reset: Boolean = false,

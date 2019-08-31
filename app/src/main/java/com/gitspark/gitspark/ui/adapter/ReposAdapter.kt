@@ -17,7 +17,8 @@ import org.threeten.bp.format.DateTimeFormatter
 private const val MAX_TOPICS_SHOWN = 3
 
 class ReposAdapter(
-    private val colorHelper: LanguageColorHelper
+    private val colorHelper: LanguageColorHelper,
+    private val navigator: RepoDetailNavigator
 ) : PaginationAdapter() {
 
     override fun bind(item: Pageable, view: View) {
@@ -73,6 +74,7 @@ class ReposAdapter(
                         setTint(context.getColor(R.color.colorYellow))
                     }
                 }
+                repo_card.setOnClickListener { navigator.onRepoSelected(item.fullName) }
             }
         }
     }

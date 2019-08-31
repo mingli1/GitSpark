@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                 bottom_navigation_view.isVisible = when (dest.id) {
                     R.id.profile_fragment -> args == null
                     R.id.edit_profile_fragment -> false
+                    R.id.repo_detail_fragment -> false
                     else -> true
                 }
             }
