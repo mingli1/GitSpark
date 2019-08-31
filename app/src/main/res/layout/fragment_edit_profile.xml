@@ -45,6 +45,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/name_label"
+                    android:textColor="@color/colorPrimaryDark"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -78,6 +79,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/bio_label"
+                    android:textColor="@color/colorPrimaryDark"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -113,6 +115,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/email_label"
+                    android:textColor="@color/colorPrimaryDark"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -146,6 +149,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/url_label"
+                    android:textColor="@color/colorPrimaryDark"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -189,6 +193,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/location_label"
+                    android:textColor="@color/colorPrimaryDark"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -213,6 +218,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/company_label"
+                    android:textColor="@color/colorPrimaryDark"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>

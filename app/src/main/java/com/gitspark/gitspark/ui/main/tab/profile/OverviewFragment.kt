@@ -10,6 +10,7 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.observeOnce
+import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.Contribution
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.main.tab.BUNDLE_USERNAME
@@ -58,6 +59,8 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
 
     fun notifyUserDataRefreshed() =
         viewModel.onUserDataRefreshed((parentFragment as UserDataCallback).getData()!!)
+
+    fun notifyUserDataEdited(user: AuthUser) = viewModel.onUserDataRefreshed(user)
 
     private fun updateView(viewState: OverviewViewState) {
         with (viewState) {

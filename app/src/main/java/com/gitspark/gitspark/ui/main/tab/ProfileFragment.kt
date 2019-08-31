@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
-import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
@@ -33,7 +33,8 @@ interface UserDataCallback {
 class ProfileFragment :
     BaseFragment<ProfileViewModel>(ProfileViewModel::class.java),
     NavigationListener,
-    UserDataCallback
+    UserDataCallback,
+    EditProfileCallback
 {
 
     private lateinit var overViewFragment: OverviewFragment
@@ -85,6 +86,11 @@ class ProfileFragment :
         viewModel.requestUserData(username, refresh = true)
 
     override fun getData(): User? = userData
+
+    override fun updateOverviewWithEditedUserData(user: AuthUser): Boolean {
+        if (overViewFragment.isAdded) overViewFragment.notifyUserDataEdited(user)
+        return overViewFragment.isAdded
+    }
 
     private fun setUpFragments() {
         overViewFragment = OverviewFragment().apply { arguments = this@ProfileFragment.arguments }

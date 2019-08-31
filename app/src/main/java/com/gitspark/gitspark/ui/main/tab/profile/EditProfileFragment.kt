@@ -5,15 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.model.ApiEditProfileRequest
 import com.gitspark.gitspark.extension.afterTextChanged
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+
+interface EditProfileCallback {
+    fun updateOverviewWithEditedUserData(user: AuthUser): Boolean
+}
 
 class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewModel::class.java) {
 
@@ -52,6 +58,7 @@ class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewMo
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.finishFragmentAction.observe(viewLifecycleOwner) { finishFragment(it) }
     }
 
     private fun updateView(viewState: EditProfileViewState) {
@@ -89,5 +96,10 @@ class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewMo
             hireable_checkbox.setOnCheckedChangeListener { _, isChecked -> onHireabledChecked(isChecked) }
             update_profile_button.setOnClickListener { onUpdateProfileClicked() }
         }
+    }
+
+    private fun finishFragment(user: AuthUser) {
+        if ((parentFragment as EditProfileCallback).updateOverviewWithEditedUserData(user))
+            findNavController().navigateUp()
     }
 }

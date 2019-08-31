@@ -6,6 +6,7 @@ import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
 class EditProfileViewModel @Inject constructor(
@@ -13,6 +14,7 @@ class EditProfileViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<EditProfileViewState>()
+    val finishFragmentAction = SingleLiveEvent<AuthUser>()
 
     fun fillInitialData(edit: ApiEditProfileRequest) {
         with (edit) {
@@ -73,13 +75,9 @@ class EditProfileViewModel @Inject constructor(
 
     private fun handleUpdateProfileResult(result: UserResult<AuthUser>) {
         when (result) {
-            is UserResult.Success -> {
-
-            }
-            is UserResult.Failure -> {
-                alert(result.error)
-                viewState.value = viewState.value?.copy(loading = false)
-            }
+            is UserResult.Success -> finishFragmentAction.value = result.value
+            is UserResult.Failure -> alert(result.error)
         }
+        viewState.value = viewState.value?.copy(loading = false)
     }
 }
