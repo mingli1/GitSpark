@@ -77,6 +77,14 @@ class RepoRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to get starred repositories for $username") }
     }
 
+    fun getRawContent(url: String): Observable<RepoResult<String>> {
+        return retrofitHelper.getRetrofit(lenient = true)
+            .create(RepoService::class.java)
+            .getRawContent(url)
+            .map { getSuccess(it) }
+            .onErrorReturn { getFailure("Failed to obtain raw content for $url") }
+    }
+
     fun getReadme(
         username: String,
         repoName: String

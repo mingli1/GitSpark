@@ -5,10 +5,7 @@ import com.gitspark.gitspark.api.model.ApiRepo
 import com.gitspark.gitspark.api.model.ApiRepoContent
 import com.gitspark.gitspark.api.model.ApiStarredRepo
 import io.reactivex.Observable
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 const val REPO_PER_PAGE = 50
 
@@ -49,6 +46,10 @@ interface RepoService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = REPO_PER_PAGE
     ): Observable<ApiPage<ApiStarredRepo>>
+
+    @GET
+    @Headers("Accept: application/vnd.github.VERSION.raw")
+    fun getRawContent(@Url url: String): Observable<String>
 
     @GET("repos/{owner}/{repo}/readme")
     fun getReadme(
