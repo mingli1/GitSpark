@@ -21,14 +21,27 @@ const val BUNDLE_USERNAME = "BUNDLE_USERNAME"
 private const val FOLLOWS_INDEX = 2
 private const val OFFSCREEN_PAGE_LIMIT = 3
 
-class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.java) {
+interface NavigationListener {
+    fun navigateToFollowsFragment(followState: FollowState)
+}
+
+interface UserDataCallback {
+    fun getData(): User?
+    fun refreshUserData(username: String)
+}
+
+class ProfileFragment :
+    BaseFragment<ProfileViewModel>(ProfileViewModel::class.java),
+    NavigationListener,
+    UserDataCallback
+{
 
     private lateinit var overViewFragment: OverviewFragment
     private lateinit var reposFragment: ReposFragment
     private lateinit var followsFragment: FollowsFragment
     private lateinit var starsFragment: StarsFragment
 
-    var userData: User? = null
+    private var userData: User? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
@@ -63,16 +76,15 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(ProfileViewModel::class.j
         viewModel.loadViewAction.observe(viewLifecycleOwner) { setUpFragments() }
     }
 
-    fun navigateToFollowsFragment(followState: FollowState) {
+    override fun navigateToFollowsFragment(followState: FollowState) {
         viewpager.setCurrentItem(FOLLOWS_INDEX, true)
         if (followsFragment.isAdded) followsFragment.onNavigatedTo(followState)
     }
 
-    fun navigateToUserProfile(args: Bundle) {
-        findNavController().navigate(R.id.action_profile_fragment_to_profile_fragment, args)
-    }
+    override fun refreshUserData(username: String) =
+        viewModel.requestUserData(username, refresh = true)
 
-    fun refreshUserData(username: String) = viewModel.requestUserData(username, refresh = true)
+    override fun getData(): User? = userData
 
     private fun setUpFragments() {
         overViewFragment = OverviewFragment().apply { arguments = this@ProfileFragment.arguments }

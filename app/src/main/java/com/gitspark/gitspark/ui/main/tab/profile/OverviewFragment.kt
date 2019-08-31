@@ -13,7 +13,8 @@ import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.model.Contribution
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.main.tab.BUNDLE_USERNAME
-import com.gitspark.gitspark.ui.main.tab.ProfileFragment
+import com.gitspark.gitspark.ui.main.tab.NavigationListener
+import com.gitspark.gitspark.ui.main.tab.UserDataCallback
 import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.profile_header.*
@@ -41,7 +42,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
     override fun viewModelOnResume() =
         viewModel.onResume(
             arguments?.getString(BUNDLE_USERNAME),
-            (parentFragment as ProfileFragment).userData
+            (parentFragment as UserDataCallback).getData()
         )
 
     override fun observeViewModel() {
@@ -50,13 +51,13 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         viewModel.contributionsAction.observe(viewLifecycleOwner) { updateContributionsView(it) }
         viewModel.navigateToFollowsAction.observe(viewLifecycleOwner) { navigateToFollowsFragment(it) }
         viewModel.refreshAction.observe(viewLifecycleOwner) {
-            (parentFragment as ProfileFragment).refreshUserData(arguments?.getString(BUNDLE_USERNAME)!!)
+            (parentFragment as UserDataCallback).refreshUserData(arguments?.getString(BUNDLE_USERNAME)!!)
         }
         viewModel.navigateToEditProfileAction.observe(viewLifecycleOwner) { navigateToEditProfileFragment(it) }
     }
 
     fun notifyUserDataRefreshed() =
-        viewModel.onUserDataRefreshed((parentFragment as ProfileFragment).userData!!)
+        viewModel.onUserDataRefreshed((parentFragment as UserDataCallback).getData()!!)
 
     private fun updateView(viewState: OverviewViewState) {
         with (viewState) {
@@ -116,7 +117,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
     }
 
     private fun navigateToFollowsFragment(followState: FollowState) {
-        (parentFragment as ProfileFragment).navigateToFollowsFragment(followState)
+        (parentFragment as NavigationListener).navigateToFollowsFragment(followState)
     }
 
     private fun navigateToEditProfileFragment(user: User) {

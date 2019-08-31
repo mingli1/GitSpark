@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
@@ -13,7 +14,7 @@ import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.FollowsAdapter
 import com.gitspark.gitspark.ui.main.tab.BUNDLE_USERNAME
-import com.gitspark.gitspark.ui.main.tab.ProfileFragment
+import com.gitspark.gitspark.ui.main.tab.UserDataCallback
 import kotlinx.android.synthetic.main.fragment_follows.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
@@ -51,7 +52,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     override fun viewModelOnResume() =
         viewModel.onResume(
             arguments?.getString(BUNDLE_USERNAME),
-            (parentFragment as ProfileFragment).userData
+            (parentFragment as UserDataCallback).getData()
         )
 
     override fun observeViewModel() {
@@ -111,6 +112,6 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
 
     private fun navigateToProfile(username: String) {
         val bundle = Bundle().apply { putString(BUNDLE_USERNAME, username) }
-        (parentFragment as ProfileFragment).navigateToUserProfile(bundle)
+        findNavController().navigate(R.id.action_profile_fragment_to_profile_fragment, bundle)
     }
 }

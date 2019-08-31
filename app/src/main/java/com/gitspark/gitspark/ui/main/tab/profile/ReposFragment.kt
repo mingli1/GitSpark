@@ -13,7 +13,7 @@ import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.ReposAdapter
 import com.gitspark.gitspark.ui.main.tab.BUNDLE_USERNAME
-import com.gitspark.gitspark.ui.main.tab.ProfileFragment
+import com.gitspark.gitspark.ui.main.tab.UserDataCallback
 import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
@@ -50,7 +50,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
     override fun viewModelOnResume() =
         viewModel.onResume(
             arguments?.getString(BUNDLE_USERNAME),
-            (parentFragment as ProfileFragment).userData
+            (parentFragment as UserDataCallback).getData()
         )
 
     override fun observeViewModel() {
