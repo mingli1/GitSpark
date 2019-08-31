@@ -37,4 +37,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesEditProfileFragment(): EditProfileFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesRepoDetailFragment(): RepoDetailFragment
 }

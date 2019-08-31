@@ -13,8 +13,6 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.FollowsAdapter
-import com.gitspark.gitspark.ui.main.tab.BUNDLE_USERNAME
-import com.gitspark.gitspark.ui.main.tab.UserDataCallback
 import kotlinx.android.synthetic.main.fragment_follows.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 

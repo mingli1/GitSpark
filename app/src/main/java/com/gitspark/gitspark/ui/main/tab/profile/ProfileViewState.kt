@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.main.tab
+package com.gitspark.gitspark.ui.main.tab.profile
 
 import com.gitspark.gitspark.model.User
 

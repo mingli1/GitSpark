@@ -7,7 +7,7 @@
     
     <fragment
         android:id="@+id/profile_fragment"
-        android:name="com.gitspark.gitspark.ui.main.tab.ProfileFragment"
+        android:name="com.gitspark.gitspark.ui.main.tab.profile.ProfileFragment"
         android:label="ProfileFragment">
     
         <action
@@ -25,6 +25,14 @@
             app:exitAnim="@anim/fragment_close_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit"/>
+    
+        <action
+            android:id="@+id/action_profile_fragment_to_repo_detail_fragment"
+            app:destination="@id/repo_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
 
     </fragment>
     
@@ -32,5 +40,10 @@
         android:id="@+id/edit_profile_fragment"
         android:name="com.gitspark.gitspark.ui.main.tab.profile.EditProfileFragment"
         android:label="EditProfileFragment"/>
+    
+    <fragment
+        android:id="@+id/repo_detail_fragment"
+        android:name="com.gitspark.gitspark.ui.main.tab.RepoDetailFragment"
+        android:label="RepoDetailFragment"/>
 
 </navigation>

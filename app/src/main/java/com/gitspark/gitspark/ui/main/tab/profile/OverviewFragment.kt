@@ -13,9 +13,6 @@ import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.model.Contribution
 import com.gitspark.gitspark.model.User
-import com.gitspark.gitspark.ui.main.tab.BUNDLE_USERNAME
-import com.gitspark.gitspark.ui.main.tab.NavigationListener
-import com.gitspark.gitspark.ui.main.tab.UserDataCallback
 import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.profile_header.*
@@ -56,7 +53,9 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         viewModel.contributionsAction.observe(viewLifecycleOwner) { updateContributionsView(it) }
         viewModel.navigateToFollowsAction.observe(viewLifecycleOwner) { navigateToFollowsFragment(it) }
         viewModel.refreshAction.observe(viewLifecycleOwner) {
-            (parentFragment as UserDataCallback).refreshUserData(arguments?.getString(BUNDLE_USERNAME)!!)
+            (parentFragment as UserDataCallback).refreshUserData(arguments?.getString(
+                BUNDLE_USERNAME
+            )!!)
         }
         viewModel.navigateToEditProfileAction.observe(viewLifecycleOwner) { navigateToEditProfileFragment(it) }
         sharedViewModel.userData.observe(viewLifecycleOwner) { viewModel.onUserDataRefreshed(it) }

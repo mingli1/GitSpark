@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.main.tab
+package com.gitspark.gitspark.ui.main.tab.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,6 @@ import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
-import com.gitspark.gitspark.ui.main.tab.profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
@@ -102,7 +101,8 @@ class ProfileFragment :
             addFragment(starsFragment, getString(R.string.stars_title))
         }
         viewpager.adapter = adapter
-        viewpager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
+        viewpager.offscreenPageLimit =
+            OFFSCREEN_PAGE_LIMIT
         tabs.setupWithViewPager(viewpager)
     }
 
