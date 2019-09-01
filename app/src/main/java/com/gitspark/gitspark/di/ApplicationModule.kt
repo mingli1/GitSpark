@@ -10,7 +10,6 @@ import com.gitspark.gitspark.room.Database
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import io.noties.markwon.Markwon
 import javax.inject.Singleton
 
 @Module
@@ -37,8 +36,4 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideAuthUserDao(database: Database) = database.authUserDao()
-
-    @Provides
-    @Singleton
-    fun provideMarkwon(context: Context) = Markwon.create(context)
 }

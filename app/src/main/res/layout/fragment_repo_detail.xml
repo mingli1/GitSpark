@@ -20,11 +20,13 @@
         
     </com.google.android.material.appbar.AppBarLayout>
     
-    <TextView
-        android:id="@+id/readme"
+    <br.tiagohm.markdownview.MarkdownView
+        android:id="@+id/readme_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:escapeHtml="false"/>
+    
+    <include layout="@layout/full_screen_progress_spinner"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

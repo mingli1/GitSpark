@@ -5,10 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.adapter.BUNDLE_REPO_FULLNAME
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
+import kotlinx.android.synthetic.main.fragment_repo_detail.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel::class.java) {
 
@@ -28,7 +33,23 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
         return view
     }
 
-    override fun observeViewModel() {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        arguments?.let {
+            val names = it.getString(BUNDLE_REPO_FULLNAME)!!.split("/")
+            viewModel.loadRepoData(names[0], names[1])
+        }
+        readme_view.addStyleSheet(Github())
+    }
 
+    override fun observeViewModel() {
+        viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+    }
+
+    private fun updateView(viewState: RepoDetailViewState) {
+        with (viewState) {
+            loading_indicator.isVisible = loading
+            if (readmeUrl.isNotEmpty()) readme_view.loadMarkdownFromUrl(readmeUrl)
+        }
     }
 }
