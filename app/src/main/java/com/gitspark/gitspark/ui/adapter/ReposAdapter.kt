@@ -42,6 +42,7 @@ class ReposAdapter(
                 forks_field.text = withSuffix(item.numForks)
                 private_label.isVisible = item.isPrivate
                 forked_label.isVisible = item.isForked
+                archived_label.isVisible = item.archived
                 language_field.isVisible = item.repoLanguage.isNotEmpty()
                 language_field.text = item.repoLanguage
 

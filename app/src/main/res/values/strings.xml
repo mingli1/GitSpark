@@ -21,6 +21,7 @@
     <string name="updated_repo">Updated at %1$s</string>
     <string name="private_label">private</string>
     <string name="forked_label">forked</string>
+    <string name="archived_label">archived</string>
     <string name="followers_button_text">Followers</string>
     <string name="following_button_text">Following</string>
     <string name="follow_button_text">Follow</string>
