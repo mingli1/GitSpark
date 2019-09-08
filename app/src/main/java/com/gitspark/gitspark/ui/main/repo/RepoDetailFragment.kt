@@ -10,15 +10,22 @@ import androidx.fragment.app.Fragment
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.ui.adapter.BUNDLE_REPO
+import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.squareup.moshi.JsonAdapter
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
-class RepoDetailFragment : Fragment() {
+interface RepoDataCallback {
+    fun getData(): Repo
+}
+
+class RepoDetailFragment : Fragment(), RepoDataCallback {
 
     @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
     private lateinit var repoData: Repo
+    private lateinit var repoOverviewFragment: RepoOverviewFragment
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -47,4 +54,17 @@ class RepoDetailFragment : Fragment() {
 
         return view
     }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        repoOverviewFragment = RepoOverviewFragment()
+        val adapter = ViewPagerAdapter(childFragmentManager).apply {
+            addFragment(repoOverviewFragment, getString(R.string.overview_title))
+        }
+        viewpager.adapter = adapter
+        tabs.setupWithViewPager(viewpager)
+    }
+
+    override fun getData() = repoData
 }
