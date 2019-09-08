@@ -1,7 +1,11 @@
 package com.gitspark.gitspark.di
 
-import com.gitspark.gitspark.ui.main.tab.*
-import com.gitspark.gitspark.ui.main.tab.profile.*
+import com.gitspark.gitspark.ui.main.feed.FeedFragment
+import com.gitspark.gitspark.ui.main.issues.IssuesFragment
+import com.gitspark.gitspark.ui.main.pr.PullRequestsFragment
+import com.gitspark.gitspark.ui.main.profile.*
+import com.gitspark.gitspark.ui.main.repo.RepoDetailFragment
+import com.gitspark.gitspark.ui.main.search.SearchFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

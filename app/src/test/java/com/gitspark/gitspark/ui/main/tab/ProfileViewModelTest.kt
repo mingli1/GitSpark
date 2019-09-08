@@ -4,8 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
-import com.gitspark.gitspark.ui.main.tab.profile.ProfileViewModel
-import com.gitspark.gitspark.ui.main.tab.profile.ProfileViewState
+import com.gitspark.gitspark.ui.main.profile.ProfileViewModel
+import com.gitspark.gitspark.ui.main.profile.ProfileViewState
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK

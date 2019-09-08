@@ -4,8 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.gitspark.gitspark.ui.base.ViewModelFactory
 import com.gitspark.gitspark.ui.login.LoginViewModel
-import com.gitspark.gitspark.ui.main.tab.*
-import com.gitspark.gitspark.ui.main.tab.profile.*
+import com.gitspark.gitspark.ui.main.feed.FeedViewModel
+import com.gitspark.gitspark.ui.main.issues.IssuesViewModel
+import com.gitspark.gitspark.ui.main.pr.PullRequestsViewModel
+import com.gitspark.gitspark.ui.main.profile.*
+import com.gitspark.gitspark.ui.main.search.SearchViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

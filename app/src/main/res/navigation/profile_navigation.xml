@@ -7,7 +7,7 @@
     
     <fragment
         android:id="@+id/profile_fragment"
-        android:name="com.gitspark.gitspark.ui.main.tab.profile.ProfileFragment"
+        android:name="com.gitspark.gitspark.ui.main.profile.ProfileFragment"
         android:label="ProfileFragment">
     
         <action
@@ -38,12 +38,12 @@
     
     <fragment
         android:id="@+id/edit_profile_fragment"
-        android:name="com.gitspark.gitspark.ui.main.tab.profile.EditProfileFragment"
+        android:name="com.gitspark.gitspark.ui.main.profile.EditProfileFragment"
         android:label="EditProfileFragment"/>
     
     <fragment
         android:id="@+id/repo_detail_fragment"
-        android:name="com.gitspark.gitspark.ui.main.tab.RepoDetailFragment"
+        android:name="com.gitspark.gitspark.ui.main.repo.RepoDetailFragment"
         android:label="RepoDetailFragment"/>
 
 </navigation>

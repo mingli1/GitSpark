@@ -4,7 +4,7 @@ import android.view.View
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.model.User
-import com.gitspark.gitspark.ui.main.tab.profile.FollowState
+import com.gitspark.gitspark.ui.main.profile.FollowState
 import kotlinx.android.synthetic.main.user_view.view.*
 
 class FollowsAdapter(private val navigator: UserProfileNavigator) : PaginationAdapter() {
