@@ -40,4 +40,9 @@
     <string name="company_label">Company</string>
     <string name="location_label">Location</string>
     <string name="hireable_text">Available for hire</string>
+    <string name="watch_button_text">Watch</string>
+    <string name="star_button_text">Star</string>
+    <string name="fork_button_text">Fork</string>
+    <string name="contributors_button_text">View contributors</string>
+    <string name="readme_label_text">README</string>
 </resources>
