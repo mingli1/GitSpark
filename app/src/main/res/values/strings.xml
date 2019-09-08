@@ -45,4 +45,7 @@
     <string name="fork_button_text">Fork</string>
     <string name="contributors_button_text">View contributors</string>
     <string name="readme_label_text">README</string>
+    <string name="num_stars_text">%1$d stars</string>
+    <string name="num_watchers_text">%1$d watching</string>
+    <string name="num_forks_text">%1$d forks</string>
 </resources>

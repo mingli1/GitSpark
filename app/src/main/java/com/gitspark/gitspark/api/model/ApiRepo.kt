@@ -22,7 +22,7 @@ data class ApiRepo(
     @field:Json(name = "language") val language: String?,
     @field:Json(name = "forks_count") val numForks: Int?,
     @field:Json(name = "stargazers_count") val stars: Int?,
-    @field:Json(name = "watchers_count") val watches: Int?,
+    @field:Json(name = "subscribers_count") val watches: Int?,
     @field:Json(name = "default_branch") val defaultBranch: String?,
     @field:Json(name = "open_issues_count") val numOpenIssues: Int?,
     @field:Json(name = "topics") val topics: List<String>?,
