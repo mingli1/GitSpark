@@ -190,8 +190,9 @@ class StarsViewModelTest {
 
     @Test
     fun shouldNavigateToRepoDetailFragmentOnSelected() {
-        viewModel.onRepoSelected("mingli1/GitSpark")
-        assertThat(viewModel.navigateToRepoDetailAction.value).isEqualTo("mingli1/GitSpark")
+        val repo = Repo(fullName = "mingli1/GitSpark")
+        viewModel.onRepoSelected(repo)
+        assertThat(viewModel.navigateToRepoDetailAction.value).isEqualTo(repo)
     }
 
     private fun viewState() = viewModel.viewState.value!!
