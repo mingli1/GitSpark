@@ -11,6 +11,14 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_repo_overview.*
+import kotlinx.android.synthetic.main.fragment_repo_overview.archived_label
+import kotlinx.android.synthetic.main.fragment_repo_overview.forked_label
+import kotlinx.android.synthetic.main.fragment_repo_overview.forks_field
+import kotlinx.android.synthetic.main.fragment_repo_overview.language_field
+import kotlinx.android.synthetic.main.fragment_repo_overview.private_label
+import kotlinx.android.synthetic.main.fragment_repo_overview.stars_field
+import kotlinx.android.synthetic.main.fragment_repo_overview.topics_container
+import kotlinx.android.synthetic.main.fragment_repo_overview.updated_field
 
 private const val MAX_TOPICS_SHOWN = 4
 
@@ -33,6 +41,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         with (viewState) {
             repo_name_field.text = repoName
             repo_description_field.text = repoDescription
+            repo_description_field.isVisible = repoDescription.isNotEmpty()
             updated_field.isVisible = updatedText.isNotEmpty()
             updated_field.text = getString(R.string.updated_repo, updatedText)
 
@@ -67,6 +76,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
                     }
                 }
             }
+            topics_container.isVisible = topics.isNotEmpty()
 
             watchers_field.text = getString(R.string.num_watchers_text, numWatchers)
             stars_field.text = getString(R.string.num_stars_text, numStars)
