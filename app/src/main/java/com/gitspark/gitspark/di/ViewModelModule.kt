@@ -61,10 +61,6 @@ internal abstract class ViewModelModule {
     @ViewModelKey(ProfileSharedViewModel::class)
     internal abstract fun bindProfileSharedViewModel(profileSharedViewModel: ProfileSharedViewModel): ViewModel
 
-    @Binds @IntoMap
-    @ViewModelKey(RepoDetailViewModel::class)
-    internal abstract fun bindRepoDetailViewModel(repoDetailViewModel: RepoDetailViewModel): ViewModel
-
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
 }

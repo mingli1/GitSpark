@@ -6,7 +6,9 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.gitspark.gitspark.BuildConfig
+import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.room.Database
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -36,4 +38,8 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideAuthUserDao(database: Database) = database.authUserDao()
+
+    @Provides
+    @Singleton
+    fun provideRepoJsonAdapter(moshi: Moshi): JsonAdapter<Repo> = moshi.adapter(Repo::class.java)
 }

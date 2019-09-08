@@ -1,21 +1,36 @@
 package com.gitspark.gitspark.ui.main.tab
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import br.tiagohm.markdownview.css.styles.Github
+import androidx.fragment.app.Fragment
 import com.gitspark.gitspark.R
-import com.gitspark.gitspark.extension.isVisible
-import com.gitspark.gitspark.extension.observe
-import com.gitspark.gitspark.ui.adapter.BUNDLE_REPO_FULLNAME
-import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.model.Repo
+import com.gitspark.gitspark.ui.adapter.BUNDLE_REPO
 import com.gitspark.gitspark.ui.main.MainActivity
-import kotlinx.android.synthetic.main.fragment_repo_detail.*
-import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+import com.squareup.moshi.JsonAdapter
+import dagger.android.support.AndroidSupportInjection
+import javax.inject.Inject
 
-class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel::class.java) {
+class RepoDetailFragment : Fragment() {
+
+    @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
+    private lateinit var repoData: Repo
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.getString(BUNDLE_REPO)?.let {
+            repoData = repoJsonAdapter.fromJson(it) ?: Repo()
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_repo_detail, container, false)
@@ -26,30 +41,10 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
             supportActionBar?.run {
                 setDisplayHomeAsUpEnabled(true)
                 setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
-                title = arguments?.getString(BUNDLE_REPO_FULLNAME) ?: ""
+                title = repoData.fullName
             }
         }
 
         return view
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        arguments?.let {
-            val names = it.getString(BUNDLE_REPO_FULLNAME)!!.split("/")
-            viewModel.loadRepoData(names[0], names[1])
-        }
-        readme_view.addStyleSheet(Github())
-    }
-
-    override fun observeViewModel() {
-        viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
-    }
-
-    private fun updateView(viewState: RepoDetailViewState) {
-        with (viewState) {
-            loading_indicator.isVisible = loading
-            if (readmeUrl.isNotEmpty()) readme_view.loadMarkdownFromUrl(readmeUrl)
-        }
     }
 }

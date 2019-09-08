@@ -12,9 +12,11 @@ import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.LanguageColorHelper
-import com.gitspark.gitspark.ui.adapter.BUNDLE_REPO_FULLNAME
+import com.gitspark.gitspark.model.Repo
+import com.gitspark.gitspark.ui.adapter.BUNDLE_REPO
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.ReposAdapter
+import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
@@ -24,6 +26,7 @@ private const val LABEL = "Starred"
 class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
 
     @Inject lateinit var colorHelper: LanguageColorHelper
+    @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var reposAdapter: ReposAdapter
     private lateinit var paginationListener: PaginationListener
@@ -87,8 +90,10 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
         repos_list.addOnScrollListener(paginationListener)
     }
 
-    private fun navigateToRepoDetailFragment(fullName: String) {
-        val bundle = Bundle().apply { putString(BUNDLE_REPO_FULLNAME, fullName) }
+    private fun navigateToRepoDetailFragment(repo: Repo) {
+        val bundle = Bundle().apply {
+            putString(BUNDLE_REPO, repoJsonAdapter.toJson(repo))
+        }
         findNavController().navigate(R.id.action_profile_fragment_to_repo_detail_fragment, bundle)
     }
 }

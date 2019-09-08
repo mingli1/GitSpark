@@ -19,7 +19,7 @@ class ReposViewModel @Inject constructor(
 
     val viewState = MutableLiveData<ReposViewState>()
     val userMediator = MediatorLiveData<AuthUser>()
-    val navigateToRepoDetailAction = SingleLiveEvent<String>()
+    val navigateToRepoDetailAction = SingleLiveEvent<Repo>()
 
     private var resumed = false
     private var page = 1
@@ -53,8 +53,8 @@ class ReposViewModel @Inject constructor(
         )
     }
 
-    override fun onRepoSelected(fullName: String) {
-        navigateToRepoDetailAction.value = fullName
+    override fun onRepoSelected(repo: Repo) {
+        navigateToRepoDetailAction.value = repo
     }
 
     private fun updateViewState(

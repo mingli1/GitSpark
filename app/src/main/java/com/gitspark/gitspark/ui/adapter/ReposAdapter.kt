@@ -75,7 +75,7 @@ class ReposAdapter(
                         setTint(context.getColor(R.color.colorYellow))
                     }
                 }
-                repo_card.setOnClickListener { navigator.onRepoSelected(item.fullName) }
+                repo_card.setOnClickListener { navigator.onRepoSelected(item) }
             }
         }
     }

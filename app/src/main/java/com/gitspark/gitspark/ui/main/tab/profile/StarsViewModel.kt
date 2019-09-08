@@ -18,7 +18,7 @@ class StarsViewModel @Inject constructor(
 ) : BaseViewModel(), RepoDetailNavigator {
 
     val viewState = MutableLiveData<StarsViewState>()
-    val navigateToRepoDetailAction = SingleLiveEvent<String>()
+    val navigateToRepoDetailAction = SingleLiveEvent<Repo>()
 
     private var resumed = false
     private var page = 1
@@ -40,8 +40,8 @@ class StarsViewModel @Inject constructor(
 
     fun onScrolledToEnd() = updateViewState()
 
-    override fun onRepoSelected(fullName: String) {
-        navigateToRepoDetailAction.value = fullName
+    override fun onRepoSelected(repo: Repo) {
+        navigateToRepoDetailAction.value = repo
     }
 
     private fun updateViewState(
