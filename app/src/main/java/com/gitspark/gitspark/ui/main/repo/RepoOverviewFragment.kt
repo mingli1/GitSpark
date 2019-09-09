@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.fragment_repo_overview.private_label
 import kotlinx.android.synthetic.main.fragment_repo_overview.stars_field
 import kotlinx.android.synthetic.main.fragment_repo_overview.topics_container
 import kotlinx.android.synthetic.main.fragment_repo_overview.updated_field
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 private const val MAX_TOPICS_SHOWN = 4
 
@@ -31,6 +33,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.loadRepo((parentFragment as RepoDataCallback).getData())
+        readme_view.addStyleSheet(Github())
     }
 
     override fun observeViewModel() {
@@ -39,6 +42,8 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
 
     private fun updateView(viewState: RepoOverviewViewState) {
         with (viewState) {
+            loading_indicator.isVisible = loading
+
             repo_name_field.text = repoName
             repo_description_field.text = repoDescription
             repo_description_field.isVisible = repoDescription.isNotEmpty()
@@ -81,6 +86,10 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             watchers_field.text = getString(R.string.num_watchers_text, numWatchers)
             stars_field.text = getString(R.string.num_stars_text, numStars)
             forks_field.text = getString(R.string.num_forks_text, numForks)
+
+            readme_label.isVisible = readmeUrl.isNotEmpty()
+            readme_view.isVisible = readmeUrl.isNotEmpty()
+            if (readmeUrl.isNotEmpty()) readme_view.loadMarkdownFromUrl(readmeUrl)
         }
     }
 }

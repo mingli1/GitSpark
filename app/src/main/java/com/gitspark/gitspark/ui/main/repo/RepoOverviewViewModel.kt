@@ -3,6 +3,8 @@ package com.gitspark.gitspark.ui.main.repo
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.model.Repo
+import com.gitspark.gitspark.repository.RepoRepository
+import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
@@ -11,6 +13,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 
 class RepoOverviewViewModel @Inject constructor(
+    private val repoRepository: RepoRepository,
     private val colorHelper: LanguageColorHelper
 ) : BaseViewModel() {
 
@@ -42,8 +45,25 @@ class RepoOverviewViewModel @Inject constructor(
                 numWatchers = numWatches,
                 numStars = numStars,
                 numForks = numForks,
-                readmeUrl = "" // TODO make call for readme
+                loading = true
             )
+        }
+
+        requestRepoReadme(repo.owner.login, repo.repoName)
+    }
+
+    private fun requestRepoReadme(owner: String, repoName: String) {
+        subscribe(repoRepository.getReadme(owner, repoName)) {
+            when (it) {
+                is RepoResult.Success -> {
+                    viewState.value = viewState.value?.copy(
+                        loading = false,
+                        readmeUrl = it.value.downloadUrl
+                    )
+                }
+                is RepoResult.Failure ->
+                    viewState.value = viewState.value?.copy(loading = false)
+            }
         }
     }
 }
