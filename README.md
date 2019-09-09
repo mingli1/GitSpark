@@ -1,6 +1,13 @@
-# GitSpark [![Build Status](https://travis-ci.com/mingli1/GitSpark.svg?branch=master)](https://travis-ci.com/mingli1/GitSpark)
+# GitSpark [![Build Status](https://travis-ci.com/mingli1/GitSpark.svg?branch=master)](https://travis-ci.com/mingli1/GitSpark) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) 
 
 An Android GitHub client made mostly to practice modern Android MVVM architecture.
+
+## Install
+To build locally, you'll need to get your own GitHub API keys by [creating an OAuth application](https://github.com/settings/applications/new) and in `GitSpark/gradle.properties` or `~/.gradle/gradle.properties` you need to add these lines
+```
+GITHUB_CLIENT_ID="your client id"
+GITHUB_CLIENT_SECRET="your client secret"
+```
 
 ## Libraries used
 * [AndroidX](https://developer.android.com/jetpack/androidx)
