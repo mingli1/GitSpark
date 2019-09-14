@@ -27,6 +27,16 @@ abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHo
 
     abstract fun bind(item: Pageable, view: View)
 
+    fun setItems(items: List<Pageable>, isLastPage: Boolean) {
+        if (items.isEmpty()) return
+        with (this.items) {
+            clear()
+            addAll(items)
+            if (!isLastPage) add(Loading)
+        }
+        notifyDataSetChanged()
+    }
+
     fun addInitialItems(items: List<Pageable>, isOnlyPage: Boolean) {
         if (items.isEmpty()) return
         this.items.clear()

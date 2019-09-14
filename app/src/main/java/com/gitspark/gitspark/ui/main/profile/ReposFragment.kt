@@ -66,7 +66,12 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.onDestroyView()
+        repos_list.adapter = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
     }
 
     private fun updateView(viewState: ReposViewState) {
@@ -76,12 +81,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
             num_repos_field.text = getString(R.string.num_repos_text, LABEL, totalRepos)
 
             if (updateAdapter) {
-                if (isFirstPage) {
-                    repos_list.adapter = null
-                    repos_list.adapter = reposAdapter
-                    reposAdapter.addInitialItems(repos, isLastPage)
-                }
-                else reposAdapter.addItemsOnLoadingComplete(repos, isLastPage)
+                reposAdapter.setItems(repos, isLastPage)
 
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false

@@ -39,7 +39,7 @@ class ReposViewModel @Inject constructor(
         }
     }
 
-    fun onDestroyView() {
+    fun onDestroy() {
         resumed = false
     }
 
@@ -48,7 +48,9 @@ class ReposViewModel @Inject constructor(
     fun onScrolledToEnd() = updateViewState()
 
     fun onUserDataRetrieved(user: AuthUser) {
-        viewState.value = ReposViewState(
+        viewState.value = viewState.value?.copy(
+            totalRepos = user.numPublicRepos + user.totalPrivateRepos
+        ) ?: ReposViewState(
             totalRepos = user.numPublicRepos + user.totalPrivateRepos
         )
     }
@@ -89,9 +91,12 @@ class ReposViewModel @Inject constructor(
         }
     }
 
-    private fun updateWithRepoData(repos: List<Repo>, last: Int) {
+    private fun updateWithRepoData(reposToAdd: List<Repo>, last: Int) {
+        val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.repos ?: arrayListOf()
+        updatedList.addAll(reposToAdd)
+
         viewState.value = viewState.value?.copy(
-            repos = repos,
+            repos = updatedList,
             loading = false,
             refreshing = false,
             isFirstPage = page.isFirstPage(),

@@ -3,7 +3,7 @@ package com.gitspark.gitspark.ui.main.profile
 import com.gitspark.gitspark.model.Repo
 
 data class ReposViewState(
-    val repos: List<Repo> = emptyList(),
+    val repos: ArrayList<Repo> = arrayListOf(),
     val loading: Boolean = false,
     val refreshing: Boolean = false,
     val totalRepos: Int = 0,
