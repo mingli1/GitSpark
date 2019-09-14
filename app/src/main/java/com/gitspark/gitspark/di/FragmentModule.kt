@@ -4,6 +4,7 @@ import com.gitspark.gitspark.ui.main.feed.FeedFragment
 import com.gitspark.gitspark.ui.main.issues.IssuesFragment
 import com.gitspark.gitspark.ui.main.pr.PullRequestsFragment
 import com.gitspark.gitspark.ui.main.profile.*
+import com.gitspark.gitspark.ui.main.repo.RepoCodeFragment
 import com.gitspark.gitspark.ui.main.repo.RepoDetailFragment
 import com.gitspark.gitspark.ui.main.repo.RepoOverviewFragment
 import com.gitspark.gitspark.ui.main.search.SearchFragment
@@ -48,4 +49,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesRepoOverviewFragment(): RepoOverviewFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesRepoCodeFragment(): RepoCodeFragment
 }
