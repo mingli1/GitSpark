@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.main.tab
+package com.gitspark.gitspark.ui.main.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.gitspark.gitspark.model.User
