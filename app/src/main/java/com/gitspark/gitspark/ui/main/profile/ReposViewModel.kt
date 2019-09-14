@@ -99,7 +99,6 @@ class ReposViewModel @Inject constructor(
             repos = updatedList,
             loading = false,
             refreshing = false,
-            isFirstPage = page.isFirstPage(),
             isLastPage = page.isLastPage(last),
             updateAdapter = true
         )

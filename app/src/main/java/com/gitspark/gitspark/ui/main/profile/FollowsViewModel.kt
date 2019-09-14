@@ -2,10 +2,7 @@ package com.gitspark.gitspark.ui.main.profile
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.gitspark.gitspark.model.AuthUser
-import com.gitspark.gitspark.model.Page
-import com.gitspark.gitspark.model.User
-import com.gitspark.gitspark.model.isLastPage
+import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.adapter.UserProfileNavigator
@@ -53,7 +50,7 @@ class FollowsViewModel @Inject constructor(
         }
     }
 
-    fun onDestroyView() {
+    fun onDestroy() {
         resumed = false
     }
 
@@ -62,7 +59,11 @@ class FollowsViewModel @Inject constructor(
     }
 
     fun onUserDataRetrieved(user: AuthUser) {
-        viewState.value = FollowsViewState(
+        viewState.value = viewState.value?.copy(
+            followState = currState,
+            totalFollowers = user.followers,
+            totalFollowing = user.following
+        ) ?: FollowsViewState(
             followState = currState,
             totalFollowers = user.followers,
             totalFollowing = user.following
@@ -126,7 +127,7 @@ class FollowsViewModel @Inject constructor(
     private fun handleFollowersResult(it: UserResult<Page<User>>) {
         when (it) {
             is UserResult.Success -> {
-                onFollowsSuccess(it.value.value, followersPage, it.value.last)
+                onFollowsSuccess(it.value.value, followersPage, it.value.last, true)
                 if (followersPage < it.value.last) followersPage++
             }
             is UserResult.Failure -> onFollowsFailure(it.error)
@@ -136,22 +137,36 @@ class FollowsViewModel @Inject constructor(
     private fun handleFollowingResult(it: UserResult<Page<User>>) {
         when (it) {
             is UserResult.Success -> {
-                onFollowsSuccess(it.value.value, followingPage, it.value.last)
+                onFollowsSuccess(it.value.value, followingPage, it.value.last, false)
                 if (followingPage < it.value.last) followingPage++
             }
             is UserResult.Failure -> onFollowsFailure(it.error)
         }
     }
 
-    private fun onFollowsSuccess(data: List<User>, page: Int, last: Int) {
-        viewState.value = viewState.value?.copy(
-            data = data,
-            loading = false,
-            refreshing = false,
-            isLastPage = page.isLastPage(last),
-            currPage = page,
-            updateAdapter = true
-        )
+    private fun onFollowsSuccess(usersToAdd: List<User>, page: Int, last: Int, followers: Boolean) {
+        val data = if (followers) viewState.value?.followers else viewState.value?.following
+        val updatedList = if (page.isFirstPage()) arrayListOf() else data ?: arrayListOf()
+        updatedList.addAll(usersToAdd)
+
+        if (followers) {
+            viewState.value = viewState.value?.copy(
+                followers = updatedList,
+                loading = false,
+                refreshing = false,
+                isLastPage = page.isLastPage(last),
+                updateAdapter = true
+            )
+        }
+        else {
+            viewState.value = viewState.value?.copy(
+                following = updatedList,
+                loading = false,
+                refreshing = false,
+                isLastPage = page.isLastPage(last),
+                updateAdapter = true
+            )
+        }
     }
 
     private fun onFollowsFailure(error: String) {

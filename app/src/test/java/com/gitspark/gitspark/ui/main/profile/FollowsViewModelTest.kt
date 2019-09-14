@@ -118,12 +118,12 @@ class FollowsViewModelTest {
 
         viewModel.onScrolledToEnd()
 
+        val updatedList = arrayListOf<User>().apply { addAll(followsSuccess.value.value) }
         assertThat(viewState()).isEqualTo(FollowsViewState(
-            data = followsSuccess.value.value,
+            followers = updatedList,
             loading = false,
             refreshing = false,
             isLastPage = false,
-            currPage = 1,
             updateAdapter = true
         ))
     }
@@ -149,12 +149,12 @@ class FollowsViewModelTest {
 
         viewModel.onFollowsSwitchClicked()
 
+        val updatedList = arrayListOf<User>().apply { addAll(followsSuccess.value.value) }
         assertThat(viewState()).isEqualTo(FollowsViewState(
-            data = followsSuccess.value.value,
+            following = updatedList,
             loading = false,
             refreshing = false,
             isLastPage = false,
-            currPage = 1,
             updateAdapter = true,
             followState = FollowState.Following
         ))

@@ -61,7 +61,12 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.onDestroyView()
+        follows_list.adapter = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
     }
 
     fun onNavigatedTo(followState: FollowState) = viewModel.navigateToState(followState)
@@ -81,14 +86,14 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
             }
 
             if (updateAdapter) {
-                when (currPage) {
-                    1 -> {
-                        follows_list.adapter = null
-                        follows_list.adapter = getAdapter(followState)
-                        getAdapter(followState).addInitialUsers(data, isLastPage, followState)
-                    }
-                    else -> getAdapter(followState).addItemsOnLoadingComplete(data, isLastPage)
+                val data = when (followState) {
+                    FollowState.Followers -> followers
+                    FollowState.Following -> following
                 }
+                follows_list.adapter = null
+                follows_list.adapter = getAdapter(followState)
+                getAdapter(followState).setItems(data, isLastPage)
+
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
             }

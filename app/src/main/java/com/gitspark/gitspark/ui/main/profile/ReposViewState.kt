@@ -8,6 +8,5 @@ data class ReposViewState(
     val refreshing: Boolean = false,
     val totalRepos: Int = 0,
     val updateAdapter: Boolean = false,
-    val isLastPage: Boolean = false,
-    val isFirstPage: Boolean = false
+    val isLastPage: Boolean = false
 )

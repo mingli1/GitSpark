@@ -128,7 +128,6 @@ class ReposViewModelTest {
             repos = updatedList,
             loading = false,
             refreshing = false,
-            isFirstPage = true,
             isLastPage = false,
             updateAdapter = true
         ))
