@@ -32,7 +32,7 @@ class StarsViewModel @Inject constructor(
         }
     }
 
-    fun onDestroyView() {
+    fun onDestroy() {
         resumed = false
     }
 
@@ -95,12 +95,14 @@ class StarsViewModel @Inject constructor(
         }
     }
 
-    private fun onGetStarredReposSuccess(repos: List<Repo>, last: Int) {
+    private fun onGetStarredReposSuccess(reposToAdd: List<Repo>, last: Int) {
+        val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.repos ?: arrayListOf()
+        updatedList.addAll(reposToAdd)
+
         viewState.value = viewState.value?.copy(
-            repos = repos,
+            repos = updatedList,
             loading = false,
             refreshing = false,
-            isFirstPage = page.isFirstPage(),
             isLastPage = page.isLastPage(last),
             updateAdapter = true
         )

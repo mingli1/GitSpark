@@ -163,11 +163,11 @@ class StarsViewModelTest {
 
         viewModel.onRefresh()
 
+        val updatedList = arrayListOf<Repo>().apply { addAll(reposSuccess.value.value) }
         assertThat(viewState()).isEqualTo(StarsViewState(
-            repos = reposSuccess.value.value,
+            repos = updatedList,
             loading = false,
             refreshing = false,
-            isFirstPage = true,
             isLastPage = false,
             updateAdapter = true
         ))
