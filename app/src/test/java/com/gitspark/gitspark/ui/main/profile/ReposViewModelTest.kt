@@ -123,8 +123,9 @@ class ReposViewModelTest {
 
         viewModel.onScrolledToEnd()
 
+        val updatedList = arrayListOf<Repo>().apply { addAll(reposSuccess.value.value) }
         assertThat(viewState()).isEqualTo(ReposViewState(
-            repos = reposSuccess.value.value,
+            repos = updatedList,
             loading = false,
             refreshing = false,
             isFirstPage = true,
