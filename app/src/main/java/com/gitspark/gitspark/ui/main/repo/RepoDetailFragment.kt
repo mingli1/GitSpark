@@ -26,6 +26,7 @@ class RepoDetailFragment : Fragment(), RepoDataCallback {
     @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
     private lateinit var repoData: Repo
     private lateinit var repoOverviewFragment: RepoOverviewFragment
+    private lateinit var repoCodeFragment: RepoCodeFragment
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -59,8 +60,10 @@ class RepoDetailFragment : Fragment(), RepoDataCallback {
         super.onActivityCreated(savedInstanceState)
 
         repoOverviewFragment = RepoOverviewFragment()
+        repoCodeFragment = RepoCodeFragment()
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             addFragment(repoOverviewFragment, getString(R.string.overview_title))
+            addFragment(repoCodeFragment, getString(R.string.code_title))
         }
         viewpager.adapter = adapter
         tabs.setupWithViewPager(viewpager)

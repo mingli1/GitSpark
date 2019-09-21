@@ -53,6 +53,8 @@
                 style="@style/HeaderBold"
                 android:text="@string/dir_back"
                 android:background="?attr/selectableItemBackground"
+                android:focusable="true"
+                android:clickable="true"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="8dp"
