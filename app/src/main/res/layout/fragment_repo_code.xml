@@ -22,16 +22,19 @@
                 style="@style/Body"
                 android:text="@string/branch_prompt"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginBottom="16dp"/>
     
             <Spinner
                 android:id="@+id/branch_spinner"
-                android:layout_width="108dp"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:dropDownWidth="96dp"
+                android:dropDownWidth="150dp"
+                android:overlapAnchor="false"
+                android:background="@drawable/spinner_background"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="12dp"/>
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"/>
             
         </LinearLayout>
     

@@ -6,22 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.ui.adapter.BUNDLE_REPO
 import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
+import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.squareup.moshi.JsonAdapter
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
 interface RepoDataCallback {
     fun getData(): Repo
 }
 
-class RepoDetailFragment : Fragment(), RepoDataCallback {
+class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel::class.java), RepoDataCallback {
 
     @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
     private lateinit var repoData: Repo
@@ -67,7 +70,16 @@ class RepoDetailFragment : Fragment(), RepoDataCallback {
         }
         viewpager.adapter = adapter
         tabs.setupWithViewPager(viewpager)
+
+        viewModel.fetchAdditionalRepoData(repoData)
     }
 
     override fun getData() = repoData
+
+    override fun observeViewModel() {
+        viewModel.loading.observe(viewLifecycleOwner) { loading_indicator.isVisible = it }
+        viewModel.branchesData.observe(viewLifecycleOwner) {
+            repoCodeFragment.notifyBranchDataRetrieved(it)
+        }
+    }
 }

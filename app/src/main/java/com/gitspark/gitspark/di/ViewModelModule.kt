@@ -9,6 +9,7 @@ import com.gitspark.gitspark.ui.main.issues.IssuesViewModel
 import com.gitspark.gitspark.ui.main.pr.PullRequestsViewModel
 import com.gitspark.gitspark.ui.main.profile.*
 import com.gitspark.gitspark.ui.main.repo.RepoCodeViewModel
+import com.gitspark.gitspark.ui.main.repo.RepoDetailViewModel
 import com.gitspark.gitspark.ui.main.repo.RepoOverviewViewModel
 import com.gitspark.gitspark.ui.main.search.SearchViewModel
 import dagger.Binds
@@ -65,6 +66,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(ProfileSharedViewModel::class)
     internal abstract fun bindProfileSharedViewModel(profileSharedViewModel: ProfileSharedViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(RepoDetailViewModel::class)
+    internal abstract fun bindRepoDetailViewModel(repoDetailViewModel: RepoDetailViewModel): ViewModel
 
     @Binds @IntoMap
     @ViewModelKey(RepoOverviewViewModel::class)
