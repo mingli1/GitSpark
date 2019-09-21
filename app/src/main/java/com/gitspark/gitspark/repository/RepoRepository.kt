@@ -95,6 +95,32 @@ class RepoRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to get README content for $username/$repoName") }
     }
 
+    fun getFile(
+        username: String,
+        repoName: String,
+        path: String = ""
+    ): Observable<RepoResult<RepoContent>> {
+        return getRepoService()
+            .getFile(username, repoName, path)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed to obtain file at path $path") }
+    }
+
+    fun getDirectory(
+        username: String,
+        repoName: String,
+        path: String = ""
+    ): Observable<RepoResult<Page<RepoContent>>> {
+        return getRepoService()
+            .getDirectory(username, repoName, path)
+            .map {
+                getSuccess(it.toModel<RepoContent>().apply {
+                    value = it.response.map { content -> content.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain directory at path $path") }
+    }
+
     private fun getRepoService() =
         retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(RepoService::class.java)

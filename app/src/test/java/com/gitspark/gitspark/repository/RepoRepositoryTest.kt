@@ -3,6 +3,7 @@ package com.gitspark.gitspark.repository
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.Page
+import com.gitspark.gitspark.model.RepoContent
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -91,6 +92,25 @@ class RepoRepositoryTest {
         every { repoRepository.getStarredRepos(any(), any(), any()) } returns
                 Observable.just(RepoResult.Failure("failure"))
         val observer = repoRepository.getStarredRepos("username", page = 1).test()
+        observer.assertValue(RepoResult.Failure("failure"))
+    }
+
+    @Test
+    fun shouldGetReadmeSuccess() {
+        val repoContent = RepoContent()
+        every { repoRepository.getReadme(any(), any()) } returns
+                Observable.just(RepoResult.Success(repoContent))
+
+        val observer = repoRepository.getReadme("username", "repo").test()
+
+        observer.assertValue(RepoResult.Success(repoContent))
+    }
+
+    @Test
+    fun shouldGetReadmeFailure() {
+        every { repoRepository.getReadme(any(), any()) } returns
+                Observable.just(RepoResult.Failure("failure"))
+        val observer = repoRepository.getReadme("username", "repo").test()
         observer.assertValue(RepoResult.Failure("failure"))
     }
 }
