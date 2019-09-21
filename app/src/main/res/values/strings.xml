@@ -48,4 +48,6 @@
     <string name="num_stars_text">%1$d stars</string>
     <string name="num_watchers_text">%1$d watching</string>
     <string name="num_forks_text">%1$d forks</string>
+    <string name="branch_prompt">Branch:</string>
+    <string name="dir_back">..</string>
 </resources>
