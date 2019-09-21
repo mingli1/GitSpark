@@ -1,13 +1,11 @@
 package com.gitspark.gitspark.api.service
 
-import com.gitspark.gitspark.api.model.ApiPage
-import com.gitspark.gitspark.api.model.ApiRepo
-import com.gitspark.gitspark.api.model.ApiRepoContent
-import com.gitspark.gitspark.api.model.ApiStarredRepo
+import com.gitspark.gitspark.api.model.*
 import io.reactivex.Observable
 import retrofit2.http.*
 
 const val REPO_PER_PAGE = 50
+const val BRANCHES_PER_PAGE = 50
 
 interface RepoService {
 
@@ -70,4 +68,12 @@ interface RepoService {
         @Path("repo") repo: String,
         @Path("path") path: String = ""
     ): Observable<ApiPage<ApiRepoContent>>
+
+    @GET("repos/{owner}/{repo}/branches")
+    fun getBranches(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = BRANCHES_PER_PAGE
+    ): Observable<ApiPage<ApiBranch>>
 }

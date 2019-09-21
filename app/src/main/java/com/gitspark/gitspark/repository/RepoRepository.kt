@@ -5,6 +5,7 @@ import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.api.service.RepoService
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
+import com.gitspark.gitspark.model.Branch
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.RepoContent
@@ -119,6 +120,21 @@ class RepoRepository @Inject constructor(
                 })
             }
             .onErrorReturn { getFailure("Failed to obtain directory at path $path") }
+    }
+
+    fun getBranches(
+        username: String,
+        repoName: String,
+        page: Int = 1
+    ): Observable<RepoResult<Page<Branch>>> {
+        return getRepoService()
+            .getBranches(username, repoName, page)
+            .map {
+                getSuccess(it.toModel<Branch>().apply {
+                    value = it.response.map { branch -> branch.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain branches for $username/$repoName") }
     }
 
     private fun getRepoService() =
