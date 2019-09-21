@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/selectableItemBackground"
+    android:focusable="true"
+    android:clickable="true">
+    
+    <TextView
+        android:id="@+id/repo_content_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/BodyLarge"
+        android:padding="16dp"
+        android:drawablePadding="24dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        tools:drawableStart="@drawable/ic_file"
+        tools:text=".gitignore"/>
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLightGray"/>
+
+</LinearLayout>

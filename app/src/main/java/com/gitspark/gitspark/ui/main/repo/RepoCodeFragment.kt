@@ -18,10 +18,6 @@ class RepoCodeFragment : BaseFragment<RepoCodeViewModel>(RepoCodeViewModel::clas
         return inflater.inflate(R.layout.fragment_repo_code, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
-
     fun notifyBranchDataRetrieved(branches: List<Branch>) {
         val branchNames = branches.map { it.name }
         branchSpinnerAdapter = ArrayAdapter(
