@@ -11,7 +11,6 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.model.Branch
-import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.ui.adapter.RepoContentAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_repo_code.*
@@ -21,7 +20,6 @@ class RepoCodeFragment : BaseFragment<RepoCodeViewModel>(RepoCodeViewModel::clas
 
     private lateinit var branchSpinnerAdapter: ArrayAdapter<String>
     private lateinit var repoContentAdapter: RepoContentAdapter
-    private lateinit var repo: Repo
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_repo_code, container, false)
@@ -32,10 +30,10 @@ class RepoCodeFragment : BaseFragment<RepoCodeViewModel>(RepoCodeViewModel::clas
 
         dir_list.setHasFixedSize(true)
         dir_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        repoContentAdapter = RepoContentAdapter()
+        repoContentAdapter = RepoContentAdapter(viewModel)
         if (dir_list.adapter == null) dir_list.adapter = repoContentAdapter
 
-        repo = (parentFragment as RepoDataCallback).getData()
+        viewModel.currRepo = (parentFragment as RepoDataCallback).getData()
     }
 
     fun notifyBranchDataRetrieved(branches: List<Branch>) {
@@ -50,10 +48,7 @@ class RepoCodeFragment : BaseFragment<RepoCodeViewModel>(RepoCodeViewModel::clas
         branch_spinner.adapter = branchSpinnerAdapter
 
         // fetch for default branch initially
-        viewModel.fetchDirectory(
-            repo = repo,
-            branchName = branchNames[0]
-        )
+        viewModel.fetchDirectory(branchName = branchNames[0])
     }
 
     override fun observeViewModel() {

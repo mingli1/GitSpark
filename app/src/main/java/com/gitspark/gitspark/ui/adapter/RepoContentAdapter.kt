@@ -9,7 +9,9 @@ import com.gitspark.gitspark.model.RepoContent
 import com.gitspark.gitspark.model.TYPE_FILE
 import kotlinx.android.synthetic.main.repo_content_view.view.*
 
-class RepoContentAdapter : RecyclerView.Adapter<RepoContentAdapter.ViewHolder>() {
+class RepoContentAdapter(
+    private val navigator: RepoContentNavigator
+) : RecyclerView.Adapter<RepoContentAdapter.ViewHolder>() {
 
     private val items = arrayListOf<RepoContent>()
 
@@ -39,6 +41,10 @@ class RepoContentAdapter : RecyclerView.Adapter<RepoContentAdapter.ViewHolder>()
                     null,
                     null
                 )
+                path_selector.setOnClickListener {
+                    // TODO: Handle clicks for files
+                    navigator.onDirectorySelected(item.path)
+                }
             }
         }
     }

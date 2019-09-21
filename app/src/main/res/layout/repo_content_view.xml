@@ -8,6 +8,7 @@
     android:layout_height="wrap_content">
     
     <LinearLayout
+        android:id="@+id/path_selector"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

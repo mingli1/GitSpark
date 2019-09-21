@@ -7,26 +7,31 @@ import com.gitspark.gitspark.model.TYPE_DIRECTORY
 import com.gitspark.gitspark.model.TYPE_FILE
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
+import com.gitspark.gitspark.ui.adapter.RepoContentNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
 class RepoCodeViewModel @Inject constructor(
     private val repoRepository: RepoRepository
-) : BaseViewModel() {
+) : BaseViewModel(), RepoContentNavigator {
 
     val viewState = MutableLiveData<RepoCodeViewState>()
+    lateinit var currRepo: Repo
+    private var currentBranch = "master"
 
-    fun fetchDirectory(repo: Repo, path: String = "", branchName: String = "") {
+    fun fetchDirectory(path: String = "", branchName: String = "") {
+        currentBranch = branchName
+
         viewState.value = viewState.value?.copy(loading = true, updateContent = false) ?:
                 RepoCodeViewState(loading = true)
-        subscribe(repoRepository.getDirectory(repo.owner.login, repo.repoName, path, branchName)) {
+        subscribe(repoRepository.getDirectory(currRepo.owner.login, currRepo.repoName, path, branchName)) {
             when (it) {
                 is RepoResult.Success -> {
                     viewState.value = viewState.value?.copy(
                         loading = false,
                         updateContent = true,
                         contentData = orderContents(it.value.value),
-                        path = repo.repoName + "/" + path
+                        path = currRepo.repoName + "/" + path
                     )
                 }
                 is RepoResult.Failure -> {
@@ -36,6 +41,8 @@ class RepoCodeViewModel @Inject constructor(
             }
         }
     }
+
+    override fun onDirectorySelected(path: String) = fetchDirectory(path, currentBranch)
 
     private fun orderContents(contents: List<RepoContent>): List<RepoContent> {
         val ordered = mutableListOf<RepoContent>()
