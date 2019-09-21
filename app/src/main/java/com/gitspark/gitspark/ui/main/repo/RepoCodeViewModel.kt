@@ -16,16 +16,17 @@ class RepoCodeViewModel @Inject constructor(
 
     val viewState = MutableLiveData<RepoCodeViewState>()
 
-    fun fetchContentsForBranch(repo: Repo, branchName: String) {
+    fun fetchDirectory(repo: Repo, path: String = "", branchName: String = "") {
         viewState.value = viewState.value?.copy(loading = true, updateContent = false) ?:
                 RepoCodeViewState(loading = true)
-        subscribe(repoRepository.getDirectory(repo.owner.login, repo.repoName, ref = branchName)) {
+        subscribe(repoRepository.getDirectory(repo.owner.login, repo.repoName, path, branchName)) {
             when (it) {
                 is RepoResult.Success -> {
                     viewState.value = viewState.value?.copy(
                         loading = false,
                         updateContent = true,
-                        contentData = orderContents(it.value.value)
+                        contentData = orderContents(it.value.value),
+                        path = repo.repoName + "/" + path
                     )
                 }
                 is RepoResult.Failure -> {
