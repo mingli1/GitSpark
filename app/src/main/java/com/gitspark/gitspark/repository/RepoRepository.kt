@@ -99,10 +99,11 @@ class RepoRepository @Inject constructor(
     fun getFile(
         username: String,
         repoName: String,
-        path: String = ""
+        path: String = "",
+        ref: String
     ): Observable<RepoResult<RepoContent>> {
         return getRepoService()
-            .getFile(username, repoName, path)
+            .getFile(username, repoName, path, ref)
             .map { getSuccess(it.toModel()) }
             .onErrorReturn { getFailure("Failed to obtain file at path $path") }
     }
@@ -110,10 +111,11 @@ class RepoRepository @Inject constructor(
     fun getDirectory(
         username: String,
         repoName: String,
-        path: String = ""
+        path: String = "",
+        ref: String
     ): Observable<RepoResult<Page<RepoContent>>> {
         return getRepoService()
-            .getDirectory(username, repoName, path)
+            .getDirectory(username, repoName, path, ref)
             .map {
                 getSuccess(it.toModel<RepoContent>().apply {
                     value = it.response.map { content -> content.toModel() }

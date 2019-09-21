@@ -59,14 +59,16 @@ interface RepoService {
     fun getFile(
         @Path("owner") owner: String,
         @Path("repo") repo: String,
-        @Path("path") path: String = ""
+        @Path("path") path: String = "",
+        @Query("ref") ref: String
     ): Observable<ApiRepoContent>
 
     @GET("repos/{owner}/{repo}/contents/{path}")
     fun getDirectory(
         @Path("owner") owner: String,
         @Path("repo") repo: String,
-        @Path("path") path: String = ""
+        @Path("path") path: String = "",
+        @Query("ref") ref: String
     ): Observable<ApiPage<ApiRepoContent>>
 
     @GET("repos/{owner}/{repo}/branches")

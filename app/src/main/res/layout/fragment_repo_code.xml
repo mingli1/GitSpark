@@ -1,98 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/colorWhiteBackground">
+        android:layout_height="match_parent">
         
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-    
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Body"
-                android:text="@string/branch_prompt"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="16dp"/>
-    
-            <Spinner
-                android:id="@+id/branch_spinner"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:dropDownWidth="150dp"
-                android:overlapAnchor="false"
-                android:background="@drawable/spinner_background"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"/>
+            android:orientation="vertical"
+            android:background="@color/colorWhiteBackground">
             
-        </LinearLayout>
-    
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorLightGray"/>
-        
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:background="@color/colorWhite">
-    
-            <TextView
-                android:id="@+id/dir_back_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/HeaderBold"
-                android:text="@string/dir_back"
-                android:background="?attr/selectableItemBackground"
-                android:focusable="true"
-                android:clickable="true"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
-                android:layout_marginStart="16dp"/>
-
-            <TextView
-                android:id="@+id/path_label"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/BodyBold"
-                android:textColor="@color/colorPrimaryDark"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:ellipsize="start"
-                android:singleLine="true"
-                tools:text="GitSpark/app/src/main/java/com/gitspark/gitspark/ui/"/>
-
+                android:orientation="horizontal">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Body"
+                    android:text="@string/branch_prompt"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp"/>
+                
+                <Spinner
+                    android:id="@+id/branch_spinner"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:dropDownWidth="150dp"
+                    android:overlapAnchor="false"
+                    android:background="@drawable/spinner_background"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"/>
+            
+            </LinearLayout>
+            
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGray"/>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite">
+                
+                <TextView
+                    android:id="@+id/dir_back_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/HeaderBold"
+                    android:text="@string/dir_back"
+                    android:background="?attr/selectableItemBackground"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginStart="16dp"/>
+                
+                <TextView
+                    android:id="@+id/path_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/BodyBold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:ellipsize="start"
+                    android:singleLine="true"
+                    tools:text="GitSpark/app/src/main/java/com/gitspark/gitspark/ui/"/>
+            
+            </LinearLayout>
+            
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGray"/>
+            
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorLightGray"/>
+            
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dir_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        
         </LinearLayout>
     
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorLightGray"/>
+    </ScrollView>
     
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/colorLightGray"/>
-        
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/dir_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        
-    </LinearLayout>
+    <include layout="@layout/full_screen_progress_spinner"/>
     
-</ScrollView>
+</FrameLayout>

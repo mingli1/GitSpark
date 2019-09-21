@@ -1,5 +1,8 @@
 package com.gitspark.gitspark.model
 
+const val TYPE_FILE = "file"
+const val TYPE_DIRECTORY = "dir"
+
 data class RepoContent(
     val type: String = "",
     val encoding: String = "",
