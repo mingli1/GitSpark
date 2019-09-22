@@ -13,6 +13,7 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.model.Branch
 import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_CONTENT
+import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_EXTENSION
 import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_NAME
 import com.gitspark.gitspark.ui.adapter.RepoContentAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
@@ -85,10 +86,11 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
         branch_spinner.adapter = branchSpinnerAdapter
     }
 
-    private fun navigateToRepoCodeFragment(pair: Pair<String, String>) {
+    private fun navigateToRepoCodeFragment(triple: Triple<String, String, String>) {
         val data = Bundle().apply {
-            putString(BUNDLE_FILE_CONTENT, pair.first)
-            putString(BUNDLE_FILE_NAME, pair.second)
+            putString(BUNDLE_FILE_CONTENT, triple.first)
+            putString(BUNDLE_FILE_NAME, triple.second)
+            putString(BUNDLE_FILE_EXTENSION, triple.third)
         }
         findNavController().navigate(
             R.id.action_repo_detail_fragment_to_repo_code_fragment,

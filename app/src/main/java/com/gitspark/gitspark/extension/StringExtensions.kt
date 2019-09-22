@@ -36,5 +36,5 @@ fun withSuffix(num: Int): String {
 fun String.getExtension(): String {
     val i = lastIndexOf(".")
     if (i < 0) return ""
-    return substring(i + 1)
+    return substring(i + 1).toLowerCase()
 }

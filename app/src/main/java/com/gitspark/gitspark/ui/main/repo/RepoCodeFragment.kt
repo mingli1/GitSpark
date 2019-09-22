@@ -8,8 +8,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import br.tiagohm.codeview.Language
 import br.tiagohm.codeview.Theme
+import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_CONTENT
+import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_EXTENSION
 import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_NAME
 import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_repo_code.*
@@ -34,14 +38,28 @@ class RepoCodeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        markdown_view.addStyleSheet(Github())
 
         val content = arguments?.getString(BUNDLE_FILE_CONTENT) ?: ""
 
-        code_view.run {
-            theme = Theme.GITHUB
-            code = content
-            language = Language.AUTO
-            apply()
+        when (arguments?.getString(BUNDLE_FILE_EXTENSION) ?: "") {
+            "png", "jpg", "jpeg", "gif", "bmp" -> {
+                image_view.isVisible = true
+                image_view.loadImage(content)
+            }
+            "md" -> {
+                markdown_view.isVisible = true
+                markdown_view.loadMarkdownFromUrl(content)
+            }
+            else -> {
+                code_view.isVisible = true
+                code_view.run {
+                    theme = Theme.GITHUB
+                    code = content
+                    language = Language.AUTO
+                    apply()
+                }
+            }
         }
     }
 }

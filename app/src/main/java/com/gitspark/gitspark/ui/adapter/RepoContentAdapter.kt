@@ -36,15 +36,19 @@ class RepoContentAdapter(
             with (view) {
                 repo_content_view.text = item.name
                 repo_content_view.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    if (item.type == TYPE_FILE) resources.getDrawable(R.drawable.ic_file, null)
-                    else resources.getDrawable(R.drawable.ic_directory, null),
+                    when (item.type) {
+                        TYPE_FILE -> resources.getDrawable(R.drawable.ic_file, null)
+                        else -> resources.getDrawable(R.drawable.ic_directory, null)
+                    },
                     null,
                     null,
                     null
                 )
                 path_selector.setOnClickListener {
-                    if (item.type == TYPE_FILE) navigator.onFileSelected(item.downloadUrl, item.name)
-                    else navigator.onDirectorySelected(item.path)
+                    when (item.type) {
+                        TYPE_FILE -> navigator.onFileSelected(item.downloadUrl, item.name, item.name.getExtension())
+                        else -> navigator.onDirectorySelected(item.path)
+                    }
                 }
             }
         }
