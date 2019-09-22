@@ -10,6 +10,7 @@ import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.ui.adapter.RepoContentNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import java.util.*
 import javax.inject.Inject
 
 class RepoContentViewModel @Inject constructor(
@@ -24,6 +25,7 @@ class RepoContentViewModel @Inject constructor(
     lateinit var branchNames: List<String>
 
     private val directoryCache = mutableMapOf<String, List<RepoContent>>()
+    private val pathStack = Stack<String>()
     private var destroyed = false
     private var currentBranch = "master"
 
@@ -39,12 +41,14 @@ class RepoContentViewModel @Inject constructor(
         }
     }
 
-    fun fetchDirectory(path: String = "", branchName: String = "") {
+    fun fetchDirectory(path: String = "", branchName: String = "", back: Boolean = false) {
         currentBranch = branchName
 
         subscribe(userRepository.getRateLimit()) {
             println("rate limit remaining: ${it.rate.remaining}")
         }
+
+        if (!back) pathStack.push(path)
 
         if (directoryCache.containsKey(path)) {
             viewState.value = viewState.value?.copy(
@@ -81,6 +85,12 @@ class RepoContentViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onDirectoryBackClicked() {
+        if (pathStack.size <= 1) return
+        pathStack.pop()
+        fetchDirectory(path = pathStack.peek(), branchName = currentBranch, back = true)
     }
 
     fun onDestroyView() {

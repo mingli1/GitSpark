@@ -38,6 +38,8 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
 
         viewModel.currRepo = (parentFragment as RepoDataCallback).getData()
         viewModel.onResume()
+
+        setUpListeners()
     }
 
     override fun onDestroyView() {
@@ -92,5 +94,9 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
             R.id.action_repo_detail_fragment_to_repo_code_fragment,
             data
         )
+    }
+
+    private fun setUpListeners() {
+        dir_back_button.setOnClickListener { viewModel.onDirectoryBackClicked() }
     }
 }
