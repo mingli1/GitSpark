@@ -50,7 +50,14 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
     }
 
     fun notifyBranchDataRetrieved(branches: List<Branch>) {
-        val branchNames = branches.map { it.name }
+        val branchNames = mutableListOf<String>()
+        branches.find { it.name == "master" }?.let {
+            branchNames.add(it.name)
+            branches.forEach { b ->
+                if (b.name != "master") branchNames.add(b.name)
+            }
+        } ?: branchNames.addAll(branches.map { it.name })
+
         createBranchSpinner(branchNames)
 
         viewModel.branchNames = branchNames
