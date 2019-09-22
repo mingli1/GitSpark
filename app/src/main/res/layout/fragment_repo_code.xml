@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme">
+        
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:titleTextColor="@color/colorWhite"/>
+    
+    </com.google.android.material.appbar.AppBarLayout>
+    
     <br.tiagohm.codeview.CodeView
         android:id="@+id/code_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:cv_font_size="14"
         app:cv_zoom_enable="true"/>
 
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
