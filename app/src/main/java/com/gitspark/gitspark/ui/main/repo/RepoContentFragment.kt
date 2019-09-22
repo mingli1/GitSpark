@@ -37,19 +37,20 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
         if (dir_list.adapter == null) dir_list.adapter = repoContentAdapter
 
         viewModel.currRepo = (parentFragment as RepoDataCallback).getData()
+        viewModel.onResume()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        dir_list.adapter = null
+        viewModel.onDestroyView()
     }
 
     fun notifyBranchDataRetrieved(branches: List<Branch>) {
         val branchNames = branches.map { it.name }
-        branchSpinnerAdapter = ArrayAdapter(
-            context!!,
-            android.R.layout.simple_spinner_item,
-            branchNames
-        ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
-        branch_spinner.adapter = branchSpinnerAdapter
+        createBranchSpinner(branchNames)
 
+        viewModel.branchNames = branchNames
         // fetch for default branch initially
         viewModel.fetchDirectory(branchName = branchNames[0])
     }
@@ -66,7 +67,20 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
             loading_indicator.isVisible = loading
             if (updateContent) repoContentAdapter.setContent(contentData)
             path_label.text = path
+
+            if (updateBranchSpinner) createBranchSpinner(branchNames)
         }
+    }
+
+    private fun createBranchSpinner(branchNames: List<String>) {
+        branchSpinnerAdapter = ArrayAdapter(
+            context!!,
+            android.R.layout.simple_spinner_item,
+            branchNames
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        branch_spinner.adapter = branchSpinnerAdapter
     }
 
     private fun navigateToRepoCodeFragment(pair: Pair<String, String>) {

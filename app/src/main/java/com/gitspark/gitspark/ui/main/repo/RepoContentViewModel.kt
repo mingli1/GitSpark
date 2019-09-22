@@ -19,13 +19,31 @@ class RepoContentViewModel @Inject constructor(
     val navigateToRepoCodeAction = SingleLiveEvent<Pair<String, String>>()
 
     lateinit var currRepo: Repo
+    lateinit var branchNames: List<String>
+    private var destroyed = false
     private var currentBranch = "master"
+
+    fun onResume() {
+        if (destroyed) {
+            viewState.value = viewState.value?.copy(
+                loading = false,
+                updateContent = true,
+                updateBranchSpinner = true,
+                branchNames = branchNames
+            )
+            destroyed = false
+        }
+    }
 
     fun fetchDirectory(path: String = "", branchName: String = "") {
         currentBranch = branchName
 
-        viewState.value = viewState.value?.copy(loading = true, updateContent = false) ?:
-                RepoContentViewState(loading = true)
+        viewState.value = viewState.value?.copy(
+            loading = true,
+            updateContent = false,
+            updateBranchSpinner = false
+        ) ?: RepoContentViewState(loading = true)
+
         subscribe(repoRepository.getDirectory(currRepo.owner.login, currRepo.repoName, path, branchName)) {
             when (it) {
                 is RepoResult.Success -> {
@@ -44,18 +62,20 @@ class RepoContentViewModel @Inject constructor(
         }
     }
 
+    fun onDestroyView() {
+        destroyed = true
+    }
+
     override fun onDirectorySelected(path: String) = fetchDirectory(path, currentBranch)
 
     override fun onFileSelected(url: String, fileName: String) {
-        viewState.value = viewState.value?.copy(loading = true, updateContent = false)
+        viewState.value = viewState.value?.copy(loading = true, updateContent = false, updateBranchSpinner = false)
         subscribe(repoRepository.getRawContent(url)) {
             when (it) {
                 is RepoResult.Success -> navigateToRepoCodeAction.value = Pair(it.value, fileName)
-                is RepoResult.Failure -> {
-                    alert(it.error)
-                    viewState.value = viewState.value?.copy(loading = false)
-                }
+                is RepoResult.Failure -> alert(it.error)
             }
+            viewState.value = viewState.value?.copy(loading = false)
         }
     }
 
