@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.getExtension
 import com.gitspark.gitspark.extension.inflate
 import com.gitspark.gitspark.model.RepoContent
 import com.gitspark.gitspark.model.TYPE_FILE
@@ -42,8 +43,11 @@ class RepoContentAdapter(
                     null
                 )
                 path_selector.setOnClickListener {
-                    // TODO: Handle clicks for files
-                    navigator.onDirectorySelected(item.path)
+                    if (item.type == TYPE_FILE) navigator.onFileSelected(
+                        item.downloadUrl,
+                        item.name.getExtension()
+                    )
+                    else navigator.onDirectorySelected(item.path)
                 }
             }
         }

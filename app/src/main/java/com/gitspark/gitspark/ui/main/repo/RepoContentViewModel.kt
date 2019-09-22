@@ -8,6 +8,7 @@ import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.adapter.RepoContentNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
 class RepoContentViewModel @Inject constructor(
@@ -15,6 +16,8 @@ class RepoContentViewModel @Inject constructor(
 ) : BaseViewModel(), RepoContentNavigator {
 
     val viewState = MutableLiveData<RepoContentViewState>()
+    val navigateToRepoCodeAction = SingleLiveEvent<Pair<String, String>>()
+
     lateinit var currRepo: Repo
     private var currentBranch = "master"
 
@@ -42,6 +45,19 @@ class RepoContentViewModel @Inject constructor(
     }
 
     override fun onDirectorySelected(path: String) = fetchDirectory(path, currentBranch)
+
+    override fun onFileSelected(url: String, extension: String) {
+        viewState.value = viewState.value?.copy(loading = true, updateContent = false)
+        subscribe(repoRepository.getRawContent(url)) {
+            when (it) {
+                is RepoResult.Success -> navigateToRepoCodeAction.value = Pair(it.value, extension)
+                is RepoResult.Failure -> {
+                    alert(it.error)
+                    viewState.value = viewState.value?.copy(loading = false)
+                }
+            }
+        }
+    }
 
     private fun orderContents(contents: List<RepoContent>): List<RepoContent> {
         val ordered = mutableListOf<RepoContent>()

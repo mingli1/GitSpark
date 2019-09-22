@@ -32,3 +32,9 @@ fun withSuffix(num: Int): String {
     val exp = (Math.log(num.toDouble()) / Math.log(1000.0)).toInt()
     return String.format("%.1f%c", num / 1000f.pow(exp), "KMGTPE"[exp - 1])
 }
+
+fun String.getExtension(): String {
+    val i = lastIndexOf(".")
+    if (i < 0) return ""
+    return substring(i + 1)
+}

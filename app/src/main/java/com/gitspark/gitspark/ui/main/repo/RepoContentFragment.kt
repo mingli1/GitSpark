@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.model.Branch
+import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_CONTENT
+import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_EXTENSION
 import com.gitspark.gitspark.ui.adapter.RepoContentAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
-import kotlinx.android.synthetic.main.fragment_repo_code.*
+import kotlinx.android.synthetic.main.fragment_repo_content.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewModel::class.java) {
@@ -22,7 +25,7 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
     private lateinit var repoContentAdapter: RepoContentAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_repo_code, container, false)
+        return inflater.inflate(R.layout.fragment_repo_content, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -53,6 +56,9 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateViewState(it) }
+        viewModel.navigateToRepoCodeAction.observe(viewLifecycleOwner) {
+            navigateToRepoCodeFragment(it)
+        }
     }
 
     private fun updateViewState(viewState: RepoContentViewState) {
@@ -61,5 +67,16 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
             if (updateContent) repoContentAdapter.setContent(contentData)
             path_label.text = path
         }
+    }
+
+    private fun navigateToRepoCodeFragment(pair: Pair<String, String>) {
+        val data = Bundle().apply {
+            putString(BUNDLE_FILE_CONTENT, pair.first)
+            putString(BUNDLE_FILE_EXTENSION, pair.second)
+        }
+        findNavController().navigate(
+            R.id.action_repo_detail_fragment_to_repo_code_fragment,
+            data
+        )
     }
 }
