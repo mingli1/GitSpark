@@ -6,13 +6,15 @@ import com.gitspark.gitspark.model.RepoContent
 import com.gitspark.gitspark.model.TYPE_DIRECTORY
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
+import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.ui.adapter.RepoContentNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
 class RepoContentViewModel @Inject constructor(
-    private val repoRepository: RepoRepository
+    private val repoRepository: RepoRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel(), RepoContentNavigator {
 
     val viewState = MutableLiveData<RepoContentViewState>()
@@ -20,6 +22,8 @@ class RepoContentViewModel @Inject constructor(
 
     lateinit var currRepo: Repo
     lateinit var branchNames: List<String>
+
+    private val directoryCache = mutableMapOf<String, List<RepoContent>>()
     private var destroyed = false
     private var currentBranch = "master"
 
@@ -38,6 +42,20 @@ class RepoContentViewModel @Inject constructor(
     fun fetchDirectory(path: String = "", branchName: String = "") {
         currentBranch = branchName
 
+        subscribe(userRepository.getRateLimit()) {
+            println("rate limit remaining: ${it.rate.remaining}")
+        }
+
+        if (directoryCache.containsKey(path)) {
+            viewState.value = viewState.value?.copy(
+                loading = false,
+                updateContent = true,
+                contentData = directoryCache[path] ?: emptyList(),
+                path = currRepo.repoName + "/" + path
+            )
+            return
+        }
+
         viewState.value = viewState.value?.copy(
             loading = true,
             updateContent = false,
@@ -47,10 +65,13 @@ class RepoContentViewModel @Inject constructor(
         subscribe(repoRepository.getDirectory(currRepo.owner.login, currRepo.repoName, path, branchName)) {
             when (it) {
                 is RepoResult.Success -> {
+                    val orderedContent = orderContents(it.value.value)
+                    directoryCache[path] = orderedContent
+
                     viewState.value = viewState.value?.copy(
                         loading = false,
                         updateContent = true,
-                        contentData = orderContents(it.value.value),
+                        contentData = orderedContent,
                         path = currRepo.repoName + "/" + path
                     )
                 }
