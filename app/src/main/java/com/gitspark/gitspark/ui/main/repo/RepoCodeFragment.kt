@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import br.tiagohm.codeview.Language
+import br.tiagohm.codeview.Theme
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_CONTENT
-import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_EXTENSION
 import kotlinx.android.synthetic.main.fragment_repo_code.*
 
 class RepoCodeFragment : Fragment() {
@@ -20,7 +21,12 @@ class RepoCodeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val content = arguments?.getString(BUNDLE_FILE_CONTENT) ?: ""
-        val extension = arguments?.getString(BUNDLE_FILE_EXTENSION) ?: ""
-        code_view.setCode(content, extension)
+
+        code_view.run {
+            theme = Theme.GITHUB
+            code = content
+            language = Language.AUTO
+            apply()
+        }
     }
 }

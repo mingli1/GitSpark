@@ -43,10 +43,7 @@ class RepoContentAdapter(
                     null
                 )
                 path_selector.setOnClickListener {
-                    if (item.type == TYPE_FILE) navigator.onFileSelected(
-                        item.downloadUrl,
-                        item.name.getExtension()
-                    )
+                    if (item.type == TYPE_FILE) navigator.onFileSelected(item.downloadUrl)
                     else navigator.onDirectorySelected(item.path)
                 }
             }

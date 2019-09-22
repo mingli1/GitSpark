@@ -16,7 +16,7 @@ class RepoContentViewModel @Inject constructor(
 ) : BaseViewModel(), RepoContentNavigator {
 
     val viewState = MutableLiveData<RepoContentViewState>()
-    val navigateToRepoCodeAction = SingleLiveEvent<Pair<String, String>>()
+    val navigateToRepoCodeAction = SingleLiveEvent<String>()
 
     lateinit var currRepo: Repo
     private var currentBranch = "master"
@@ -46,11 +46,11 @@ class RepoContentViewModel @Inject constructor(
 
     override fun onDirectorySelected(path: String) = fetchDirectory(path, currentBranch)
 
-    override fun onFileSelected(url: String, extension: String) {
+    override fun onFileSelected(url: String) {
         viewState.value = viewState.value?.copy(loading = true, updateContent = false)
         subscribe(repoRepository.getRawContent(url)) {
             when (it) {
-                is RepoResult.Success -> navigateToRepoCodeAction.value = Pair(it.value, extension)
+                is RepoResult.Success -> navigateToRepoCodeAction.value = it.value
                 is RepoResult.Failure -> {
                     alert(it.error)
                     viewState.value = viewState.value?.copy(loading = false)

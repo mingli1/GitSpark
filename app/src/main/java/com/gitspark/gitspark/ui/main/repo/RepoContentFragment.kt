@@ -13,7 +13,6 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.model.Branch
 import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_CONTENT
-import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_EXTENSION
 import com.gitspark.gitspark.ui.adapter.RepoContentAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_repo_content.*
@@ -69,11 +68,8 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
         }
     }
 
-    private fun navigateToRepoCodeFragment(pair: Pair<String, String>) {
-        val data = Bundle().apply {
-            putString(BUNDLE_FILE_CONTENT, pair.first)
-            putString(BUNDLE_FILE_EXTENSION, pair.second)
-        }
+    private fun navigateToRepoCodeFragment(content: String) {
+        val data = Bundle().apply { putString(BUNDLE_FILE_CONTENT, content) }
         findNavController().navigate(
             R.id.action_repo_detail_fragment_to_repo_code_fragment,
             data
