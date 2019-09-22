@@ -6,7 +6,6 @@ import com.gitspark.gitspark.model.RepoContent
 import com.gitspark.gitspark.model.TYPE_DIRECTORY
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
-import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.ui.adapter.RepoContentNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
@@ -14,8 +13,7 @@ import java.util.*
 import javax.inject.Inject
 
 class RepoContentViewModel @Inject constructor(
-    private val repoRepository: RepoRepository,
-    private val userRepository: UserRepository
+    private val repoRepository: RepoRepository
 ) : BaseViewModel(), RepoContentNavigator {
 
     val viewState = MutableLiveData<RepoContentViewState>()
@@ -43,10 +41,6 @@ class RepoContentViewModel @Inject constructor(
 
     fun fetchDirectory(path: String = "", branchName: String = "", back: Boolean = false) {
         currentBranch = branchName
-
-        subscribe(userRepository.getRateLimit()) {
-            println("rate limit remaining: ${it.rate.remaining}")
-        }
 
         if (!back) pathStack.push(path)
 
