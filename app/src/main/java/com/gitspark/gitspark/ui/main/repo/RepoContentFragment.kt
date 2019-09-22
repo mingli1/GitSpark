@@ -52,7 +52,7 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
 
         viewModel.branchNames = branchNames
         // fetch for default branch initially
-        viewModel.fetchDirectory(branchName = branchNames[0])
+        if (branches.isNotEmpty()) viewModel.fetchDirectory(branchName = branchNames[0])
     }
 
     override fun observeViewModel() {
