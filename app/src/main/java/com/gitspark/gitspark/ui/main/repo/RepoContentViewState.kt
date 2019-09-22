@@ -8,5 +8,6 @@ data class RepoContentViewState(
     val contentData: List<RepoContent> = emptyList(),
     val updateContent: Boolean = false,
     val branchNames: List<String> = emptyList(),
-    val updateBranchSpinner: Boolean = false
+    val updateBranchSpinner: Boolean = false,
+    val branchPosition: Int = 0
 )

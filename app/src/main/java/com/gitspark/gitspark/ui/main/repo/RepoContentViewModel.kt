@@ -26,6 +26,7 @@ class RepoContentViewModel @Inject constructor(
     private val pathStack = Stack<String>()
     private var destroyed = false
     private var currentBranch = "master"
+    private var branchPosition = 0
 
     fun onResume() {
         if (destroyed) {
@@ -33,7 +34,8 @@ class RepoContentViewModel @Inject constructor(
                 loading = false,
                 updateContent = true,
                 updateBranchSpinner = true,
-                branchNames = branchNames
+                branchNames = branchNames,
+                branchPosition = branchPosition
             )
             destroyed = false
         }
@@ -85,6 +87,17 @@ class RepoContentViewModel @Inject constructor(
         if (pathStack.size <= 1) return
         pathStack.pop()
         fetchDirectory(path = pathStack.peek(), branchName = currentBranch, back = true)
+    }
+
+    fun onBranchSelected(newBranch: String, position: Int) {
+        if (currentBranch == newBranch) return
+        currentBranch = newBranch
+        branchPosition = position
+
+        directoryCache.clear()
+        pathStack.clear()
+
+        fetchDirectory(path = "", branchName = currentBranch)
     }
 
     fun onDestroyView() {

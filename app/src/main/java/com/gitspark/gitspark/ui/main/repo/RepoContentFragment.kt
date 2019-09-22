@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.extension.onItemSelected
 import com.gitspark.gitspark.model.Branch
 import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_CONTENT
 import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_EXTENSION
@@ -78,11 +79,11 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
             if (updateContent) repoContentAdapter.setContent(contentData)
             path_label.text = path
 
-            if (updateBranchSpinner) createBranchSpinner(branchNames)
+            if (updateBranchSpinner) createBranchSpinner(branchNames, branchPosition)
         }
     }
 
-    private fun createBranchSpinner(branchNames: List<String>) {
+    private fun createBranchSpinner(branchNames: List<String>, selected: Int = 0) {
         branchSpinnerAdapter = ArrayAdapter(
             context!!,
             android.R.layout.simple_spinner_item,
@@ -91,6 +92,7 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
         branch_spinner.adapter = branchSpinnerAdapter
+        branch_spinner.setSelection(selected)
     }
 
     private fun navigateToRepoCodeFragment(triple: Triple<String, String, String>) {
@@ -107,5 +109,8 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
 
     private fun setUpListeners() {
         dir_back_button.setOnClickListener { viewModel.onDirectoryBackClicked() }
+        branch_spinner.onItemSelected {
+            viewModel.onBranchSelected(branch_spinner.getItemAtPosition(it) as String, it)
+        }
     }
 }
