@@ -16,7 +16,7 @@ import com.gitspark.gitspark.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_repo_code.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
-class RepoCodeFragment : BaseFragment<RepoCodeViewModel>(RepoCodeViewModel::class.java) {
+class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewModel::class.java) {
 
     private lateinit var branchSpinnerAdapter: ArrayAdapter<String>
     private lateinit var repoContentAdapter: RepoContentAdapter
@@ -55,7 +55,7 @@ class RepoCodeFragment : BaseFragment<RepoCodeViewModel>(RepoCodeViewModel::clas
         viewModel.viewState.observe(viewLifecycleOwner) { updateViewState(it) }
     }
 
-    private fun updateViewState(viewState: RepoCodeViewState) {
+    private fun updateViewState(viewState: RepoContentViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
             if (updateContent) repoContentAdapter.setContent(contentData)

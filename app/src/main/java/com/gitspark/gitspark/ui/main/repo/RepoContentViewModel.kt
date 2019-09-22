@@ -4,18 +4,17 @@ import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.RepoContent
 import com.gitspark.gitspark.model.TYPE_DIRECTORY
-import com.gitspark.gitspark.model.TYPE_FILE
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.adapter.RepoContentNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
-class RepoCodeViewModel @Inject constructor(
+class RepoContentViewModel @Inject constructor(
     private val repoRepository: RepoRepository
 ) : BaseViewModel(), RepoContentNavigator {
 
-    val viewState = MutableLiveData<RepoCodeViewState>()
+    val viewState = MutableLiveData<RepoContentViewState>()
     lateinit var currRepo: Repo
     private var currentBranch = "master"
 
@@ -23,7 +22,7 @@ class RepoCodeViewModel @Inject constructor(
         currentBranch = branchName
 
         viewState.value = viewState.value?.copy(loading = true, updateContent = false) ?:
-                RepoCodeViewState(loading = true)
+                RepoContentViewState(loading = true)
         subscribe(repoRepository.getDirectory(currRepo.owner.login, currRepo.repoName, path, branchName)) {
             when (it) {
                 is RepoResult.Success -> {

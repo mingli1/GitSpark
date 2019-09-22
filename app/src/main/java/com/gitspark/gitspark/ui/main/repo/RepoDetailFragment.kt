@@ -29,7 +29,7 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
     @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
     private lateinit var repoData: Repo
     private lateinit var repoOverviewFragment: RepoOverviewFragment
-    private lateinit var repoCodeFragment: RepoCodeFragment
+    private lateinit var repoContentFragment: RepoContentFragment
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -63,10 +63,10 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
         super.onActivityCreated(savedInstanceState)
 
         repoOverviewFragment = RepoOverviewFragment()
-        repoCodeFragment = RepoCodeFragment()
+        repoContentFragment = RepoContentFragment()
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             addFragment(repoOverviewFragment, getString(R.string.overview_title))
-            addFragment(repoCodeFragment, getString(R.string.code_title))
+            addFragment(repoContentFragment, getString(R.string.code_title))
         }
         viewpager.adapter = adapter
         tabs.setupWithViewPager(viewpager)
@@ -79,7 +79,7 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
     override fun observeViewModel() {
         viewModel.loading.observe(viewLifecycleOwner) { loading_indicator.isVisible = it }
         viewModel.branchesData.observe(viewLifecycleOwner) {
-            repoCodeFragment.notifyBranchDataRetrieved(it)
+            repoContentFragment.notifyBranchDataRetrieved(it)
         }
     }
 }
