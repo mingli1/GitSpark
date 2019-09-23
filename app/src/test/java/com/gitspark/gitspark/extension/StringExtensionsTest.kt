@@ -41,4 +41,11 @@ class StringExtensionsTest {
         assertThat(withSuffix(25140)).isEqualTo("25.1K")
         assertThat(withSuffix(1234567)).isEqualTo("1.2M")
     }
+
+    @Test
+    fun shouldGetExtension() {
+        assertThat("something.txt".getExtension()).isEqualTo("txt")
+        assertThat("something".getExtension()).isEqualTo("")
+        assertThat(".travis.yml".getExtension()).isEqualTo("yml")
+    }
 }

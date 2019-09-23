@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.main.repo
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.RepoContent
@@ -22,9 +23,9 @@ class RepoContentViewModel @Inject constructor(
     lateinit var currRepo: Repo
     lateinit var branchNames: List<String>
 
-    private val directoryCache = mutableMapOf<String, List<RepoContent>>()
-    private val pathStack = Stack<String>()
-    private var destroyed = false
+    @VisibleForTesting val directoryCache = mutableMapOf<String, List<RepoContent>>()
+    @VisibleForTesting val pathStack = Stack<String>()
+    @VisibleForTesting var destroyed = false
     private var currentBranch = "master"
     private var branchPosition = 0
 
