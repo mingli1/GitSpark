@@ -32,6 +32,7 @@ class RepoContentViewModelTest {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
         viewModel = RepoContentViewModel(repoRepository)
+        viewModel.currRepo = Repo(repoName = "repo")
     }
 
     @Test
@@ -56,7 +57,6 @@ class RepoContentViewModelTest {
     fun shouldFetchDirectoryFromCache() {
         viewModel.directoryCache["path"] = emptyList()
         viewModel.viewState.value = RepoContentViewState()
-        viewModel.currRepo = Repo(repoName = "repo")
 
         viewModel.fetchDirectory(path = "path")
 
@@ -70,7 +70,6 @@ class RepoContentViewModelTest {
 
     @Test
     fun shouldFetchDirectoryOnSuccess() {
-        viewModel.currRepo = Repo(repoName = "repo")
         val page = Page<RepoContent>(value = emptyList())
         every { repoRepository.getDirectory(any(), any(), any(), any()) } returns
                 Observable.just(RepoResult.Success(page))
@@ -87,7 +86,6 @@ class RepoContentViewModelTest {
 
     @Test
     fun shouldAlertOnDirectoryFailure() {
-        viewModel.currRepo = Repo(repoName = "repo")
         every { repoRepository.getDirectory(any(), any(), any(), any()) } returns
                 Observable.just(RepoResult.Failure("failure"))
 
@@ -99,7 +97,6 @@ class RepoContentViewModelTest {
 
     @Test
     fun shouldPushPathOnStackWhenNotBacking() {
-        viewModel.currRepo = Repo(repoName = "repo")
         viewModel.fetchDirectory(path = "path", back = false)
         assertThat(viewModel.pathStack.peek()).isEqualTo("path")
     }
@@ -108,6 +105,36 @@ class RepoContentViewModelTest {
     fun shouldDestroyOnDestroyView() {
         viewModel.onDestroyView()
         assertThat(viewModel.destroyed).isTrue()
+    }
+
+    @Test
+    fun shouldFetchDirectoryOnBackClicked() {
+        viewModel.pathStack.push("path1")
+        viewModel.pathStack.push("path2")
+        val page = Page<RepoContent>(value = emptyList())
+        every { repoRepository.getDirectory(any(), any(), any(), any()) } returns
+                Observable.just(RepoResult.Success(page))
+
+        viewModel.onDirectoryBackClicked()
+
+        assertThat(viewModel.pathStack.size).isEqualTo(1)
+        assertThat(viewState().path).isEqualTo("repo/path1")
+    }
+
+    @Test
+    fun shouldNavigateToRepoCodeFragmentOnFileSelected() {
+        every { repoRepository.getRawContent(any()) } returns
+                Observable.just(RepoResult.Success("raw"))
+        viewModel.onFileSelected("a", "b", "c")
+        assertThat(viewModel.navigateToRepoCodeAction.value).isEqualTo(Triple("raw", "b", "c"))
+    }
+
+    @Test
+    fun shouldNavigateToRepoCodeFragmentOnImageSelected() {
+        every { repoRepository.getRawContent(any()) } returns
+                Observable.just(RepoResult.Success("raw"))
+        viewModel.onFileSelected("a", "b", "png")
+        assertThat(viewModel.navigateToRepoCodeAction.value).isEqualTo(Triple("a", "b", "png"))
     }
 
     private fun viewState() = viewModel.viewState.value!!
