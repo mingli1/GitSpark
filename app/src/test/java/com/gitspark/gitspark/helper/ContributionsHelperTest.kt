@@ -16,6 +16,10 @@ private const val SAMPLE_TOTAL_CONTRIBUTIONS_2 = "<h2 class=\"f4 text-normal mb-
         "      12,774 contributions\n" +
         "        in the last year\n" +
         "    </h2>"
+private const val SAMPLE_TOTAL_CONTRIBUTIONS_3 = "<h2 class=\"f4 text-normal mb-2\">\n" +
+        "      1 contribution\n" +
+        "        in the last year\n" +
+        "    </h2>"
 
 class ContributionsHelperTest {
 
@@ -74,5 +78,11 @@ class ContributionsHelperTest {
     fun shouldGetTotalContributionsWithCommas() {
         val num = contributionsHelper.getTotalContributions(SAMPLE_TOTAL_CONTRIBUTIONS_2)
         assertThat(num).isEqualTo(12774)
+    }
+
+    @Test
+    fun shouldGetTotalContributionSingle() {
+        val num = contributionsHelper.getTotalContributions(SAMPLE_TOTAL_CONTRIBUTIONS_3)
+        assertThat(num).isEqualTo(1)
     }
 }

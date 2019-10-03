@@ -80,7 +80,7 @@ class ContributionsHelper @Inject constructor() {
         val scanner = Scanner(svg)
         while (scanner.hasNextLine()) {
             val line = scanner.nextLine().trim()
-            if (line.contains("contributions") && Character.isDigit(line[0])) {
+            if (line.contains("contribution") && Character.isDigit(line[0])) {
                 return line.split(" ")[0].replace(",", "").toInt()
             }
         }

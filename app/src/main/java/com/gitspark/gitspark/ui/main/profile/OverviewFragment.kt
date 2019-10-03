@@ -99,7 +99,9 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
             following_field.text = getString(R.string.following_text, numFollowing)
             followers_field.text = getString(R.string.followers_text, numFollowers)
 
-            total_contributions_field.text = getString(R.string.total_contribution, totalContributions)
+            total_contributions_field.text =
+                if (totalContributions == 1) getString(R.string.total_contribution_single)
+                else getString(R.string.total_contribution, totalContributions)
             created_at_field.text = getString(R.string.joined_date, createdDate)
 
             loading_indicator.isVisible = loading
