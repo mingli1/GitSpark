@@ -55,6 +55,17 @@ class ReposViewModel @Inject constructor(
         )
     }
 
+    fun onRepoDataUpdated(newData: Repo) {
+        val repos = viewState.value?.repos ?: return
+        val index = repos.indexOfFirst { it.fullName == newData.fullName }
+        repos[index] = newData
+
+        viewState.value = viewState.value?.copy(
+            repos = repos,
+            updateAdapter = true
+        )
+    }
+
     override fun onRepoSelected(repo: Repo) {
         navigateToRepoDetailAction.value = repo
     }

@@ -6,6 +6,7 @@ import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
@@ -18,6 +19,7 @@ class RepoOverviewViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<RepoOverviewViewState>()
+    val updatedRepoData = SingleLiveEvent<Repo>()
     private lateinit var repo: Repo
     private var userWatching = false
     private var userStarring = false
@@ -97,6 +99,7 @@ class RepoOverviewViewModel @Inject constructor(
                         numStars = newStars,
                         userStarring = false
                     )
+                    updatedRepoData.value = repo.copy(numStars = newStars)
                 },
                 { alert("Failed to unstar repository.") }
             )
@@ -109,6 +112,7 @@ class RepoOverviewViewModel @Inject constructor(
                         numStars = newStars,
                         userStarring = true
                     )
+                    updatedRepoData.value = repo.copy(numStars = newStars)
                 },
                 { alert("Failed to star repository") }
             )

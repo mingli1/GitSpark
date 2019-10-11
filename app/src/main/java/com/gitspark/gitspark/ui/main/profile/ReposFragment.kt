@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
@@ -15,6 +16,7 @@ import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.ui.adapter.BUNDLE_REPO
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.ReposAdapter
+import com.gitspark.gitspark.ui.main.repo.RepoDetailSharedViewModel
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -29,6 +31,10 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
     private lateinit var reposAdapter: ReposAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: PaginationListener
+
+    private val sharedViewModel by lazy {
+        ViewModelProviders.of(activity!!, viewModelFactory)[RepoDetailSharedViewModel::class.java]
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_repos, container, false)
@@ -62,6 +68,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
         viewModel.navigateToRepoDetailAction.observe(viewLifecycleOwner) {
             navigateToRepoDetailFragment(it)
         }
+        sharedViewModel.repoData.observe(viewLifecycleOwner) { viewModel.onRepoDataUpdated(it) }
     }
 
     override fun onDestroyView() {
