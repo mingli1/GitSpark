@@ -83,9 +83,15 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             }
             topics_container.isVisible = topics.isNotEmpty()
 
-            watching_field.text = getString(R.string.num_watchers_text, numWatchers)
-            stars_field.text = getString(R.string.num_stars_text, numStars)
-            forks_field.text = getString(R.string.num_forks_text, numForks)
+            watching_field.text =
+                if (numWatchers == 1) getString(R.string.num_watchers_text_single)
+                else getString(R.string.num_watchers_text, numWatchers)
+            stars_field.text =
+                if (numStars == 1) getString(R.string.num_stars_text_single)
+                else getString(R.string.num_stars_text, numStars)
+            forks_field.text =
+                if (numForks == 1) getString(R.string.num_forks_text_single)
+                else getString(R.string.num_forks_text, numForks)
 
             readme_label.isVisible = readmeUrl.isNotEmpty()
             readme_view.isVisible = readmeUrl.isNotEmpty()
