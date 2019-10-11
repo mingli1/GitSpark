@@ -83,7 +83,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             }
             topics_container.isVisible = topics.isNotEmpty()
 
-            watchers_field.text = getString(R.string.num_watchers_text, numWatchers)
+            watching_field.text = getString(R.string.num_watchers_text, numWatchers)
             stars_field.text = getString(R.string.num_stars_text, numStars)
             forks_field.text = getString(R.string.num_forks_text, numForks)
 
