@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.api.service
 
 import com.gitspark.gitspark.api.model.*
+import io.reactivex.Completable
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -78,4 +79,16 @@ interface RepoService {
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = BRANCHES_PER_PAGE
     ): Observable<ApiPage<ApiBranch>>
+
+    @GET("user/starred/{owner}/{repo}")
+    fun isStarredByAuthUser(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Completable
+
+    @GET("repos/{owner}/{repo}/subscription")
+    fun isWatchedByAuthUser(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Completable
 }

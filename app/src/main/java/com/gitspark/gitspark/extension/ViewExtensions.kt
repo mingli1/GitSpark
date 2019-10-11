@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.extension
 
+import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -57,5 +58,12 @@ fun Spinner.onItemSelected(cb: (Int) -> Unit) {
             cb(position)
         }
         override fun onNothingSelected(parent: AdapterView<*>?) {}
+    }
+}
+
+fun Drawable.setColor(color: Int) {
+    this.run {
+        mutate()
+        setTint(color)
     }
 }

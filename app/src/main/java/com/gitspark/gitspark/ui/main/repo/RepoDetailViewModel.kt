@@ -15,12 +15,15 @@ class RepoDetailViewModel @Inject constructor(
 
     val loading = MutableLiveData<Boolean>()
     val branchesData = SingleLiveEvent<List<Branch>>()
+    val watchingData = SingleLiveEvent<Boolean>()
+    val starringData = SingleLiveEvent<Boolean>()
     private var dataLoaded = false
 
     fun fetchAdditionalRepoData(repo: Repo) {
         if (!dataLoaded) {
             loading.value = true
             requestRepoBranches(repo.owner.login, repo.repoName)
+            requestRepoActivityData(repo.owner.login, repo.repoName)
             dataLoaded = true
         }
     }
@@ -33,5 +36,14 @@ class RepoDetailViewModel @Inject constructor(
             }
             loading.value = false
         }
+    }
+
+    private fun requestRepoActivityData(username: String, repoName: String) {
+        subscribe(repoRepository.isWatchedByAuthUser(username, repoName),
+            { watchingData.value = true },
+            { watchingData.value = false })
+        subscribe(repoRepository.isStarredByAuthUser(username, repoName),
+            { starringData.value = true },
+            { starringData.value = false })
     }
 }

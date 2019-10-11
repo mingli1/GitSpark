@@ -18,4 +18,5 @@
     <color name="colorTopicsBackground">#BFEEFF</color>
     <color name="colorTopicsText">#212FFF</color>
     <color name="colorYellow">#FFD700</color>
+    <color name="colorDrawableDefault">#7F7F7F</color>
 </resources>

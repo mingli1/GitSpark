@@ -8,6 +8,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
@@ -112,5 +113,21 @@ class RepoRepositoryTest {
                 Observable.just(RepoResult.Failure("failure"))
         val observer = repoRepository.getReadme("username", "repo").test()
         observer.assertValue(RepoResult.Failure("failure"))
+    }
+
+    @Test
+    fun shouldGetIfStarredByUser() {
+        every { repoRepository.isStarredByAuthUser(any(), any()) } returns
+                Completable.complete()
+        val observer = repoRepository.isStarredByAuthUser("username", "repo").test()
+        observer.assertComplete()
+    }
+
+    @Test
+    fun shouldGetIfWatchedByUser() {
+        every { repoRepository.isWatchedByAuthUser(any(), any()) } returns
+                Completable.complete()
+        val observer = repoRepository.isWatchedByAuthUser("username", "repo").test()
+        observer.assertComplete()
     }
 }

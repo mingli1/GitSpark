@@ -9,6 +9,7 @@ import com.gitspark.gitspark.model.Branch
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.RepoContent
+import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -137,6 +138,14 @@ class RepoRepository @Inject constructor(
                 })
             }
             .onErrorReturn { getFailure("Failed to obtain branches for $username/$repoName") }
+    }
+
+    fun isStarredByAuthUser(username: String, repoName: String): Completable {
+        return getRepoService().isStarredByAuthUser(username, repoName)
+    }
+
+    fun isWatchedByAuthUser(username: String, repoName: String): Completable {
+        return getRepoService().isWatchedByAuthUser(username, repoName)
     }
 
     private fun getRepoService() =

@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.extension.withSuffix
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.model.Repo
@@ -63,17 +64,11 @@ class ReposAdapter(
                 }
 
                 colorHelper.getColor(item.repoLanguage)?.let {
-                    language_field.compoundDrawablesRelative[0].apply {
-                        mutate()
-                        setTint(it)
-                    }
+                    language_field.compoundDrawablesRelative[0].setColor(it)
                 }
 
                 if (item.starred) {
-                    stars_field.compoundDrawablesRelative[0].apply {
-                        mutate()
-                        setTint(context.getColor(R.color.colorYellow))
-                    }
+                    stars_field.compoundDrawablesRelative[0].setColor(context.getColor(R.color.colorYellow))
                 }
                 repo_card.setOnClickListener { navigator.onRepoSelected(item) }
             }

@@ -10,6 +10,7 @@ import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_repo_overview.*
 import kotlinx.android.synthetic.main.fragment_repo_overview.archived_label
@@ -40,6 +41,14 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
     }
 
+    fun notifyWatchingDataRetrieved(watching: Boolean) {
+        if (watching) watch_button.drawable.setColor(context!!.getColor(R.color.colorPrimaryDark))
+    }
+
+    fun notifyStarringDataRetrieved(starring: Boolean) {
+        if (starring) star_button.drawable.setColor(context!!.getColor(R.color.colorPrimaryDark))
+    }
+
     private fun updateView(viewState: RepoOverviewViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
@@ -55,10 +64,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             archived_label.isVisible = isArchived
 
             if (languageColor != -1) {
-                language_field.compoundDrawablesRelative[0].apply {
-                    mutate()
-                    setTint(languageColor)
-                }
+                language_field.compoundDrawablesRelative[0].setColor(languageColor)
             }
             language_field.isVisible = repoLanguage.isNotEmpty()
             language_field.text = repoLanguage

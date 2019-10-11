@@ -78,8 +78,8 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
 
     override fun observeViewModel() {
         viewModel.loading.observe(viewLifecycleOwner) { loading_indicator.isVisible = it }
-        viewModel.branchesData.observe(viewLifecycleOwner) {
-            repoContentFragment.notifyBranchDataRetrieved(it)
-        }
+        viewModel.branchesData.observe(viewLifecycleOwner) { repoContentFragment.notifyBranchDataRetrieved(it) }
+        viewModel.watchingData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyWatchingDataRetrieved(it) }
+        viewModel.starringData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyStarringDataRetrieved(it) }
     }
 }
