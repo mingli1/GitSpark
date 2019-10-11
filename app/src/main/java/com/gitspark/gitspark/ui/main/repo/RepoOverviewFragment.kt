@@ -41,13 +41,9 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
     }
 
-    fun notifyWatchingDataRetrieved(watching: Boolean) {
-        if (watching) watch_button.drawable.setColor(context!!.getColor(R.color.colorPrimaryDark))
-    }
+    fun notifyWatchingDataRetrieved(watching: Boolean) = viewModel.setUserWatching(watching)
 
-    fun notifyStarringDataRetrieved(starring: Boolean) {
-        if (starring) star_button.drawable.setColor(context!!.getColor(R.color.colorPrimaryDark))
-    }
+    fun notifyStarringDataRetrieved(starring: Boolean) = viewModel.setUserStarring(starring)
 
     private fun updateView(viewState: RepoOverviewViewState) {
         with (viewState) {
@@ -98,6 +94,11 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             forks_field.text =
                 if (numForks == 1) getString(R.string.num_forks_text_single)
                 else getString(R.string.num_forks_text, numForks)
+
+            watch_button.drawable.setColor(context!!.getColor(
+                if (userWatching) R.color.colorPrimaryDark else R.color.colorDrawableDefault))
+            star_button.drawable.setColor(context!!.getColor(
+                if (userStarring) R.color.colorPrimaryDark else R.color.colorDrawableDefault))
 
             readme_label.isVisible = readmeUrl.isNotEmpty()
             readme_view.isVisible = readmeUrl.isNotEmpty()

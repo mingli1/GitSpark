@@ -31,7 +31,22 @@ class RepoOverviewViewModel @Inject constructor(
                 updatedText = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss").format(dateTime)
             }
 
-            viewState.value = RepoOverviewViewState(
+            viewState.value = viewState.value?.copy(
+                repoName = repoName,
+                repoDescription = repoDescription,
+                topics = topics,
+                isArchived = archived,
+                isPrivate = isPrivate,
+                isForked = isForked,
+                repoLanguage = repoLanguage,
+                languageColor = colorHelper.getColor(repoLanguage) ?: -1,
+                updatedText = updatedText,
+                licenseText = license.licenseName ?: "",
+                numWatchers = numWatches,
+                numStars = numStars,
+                numForks = numForks,
+                loading = true
+            ) ?: RepoOverviewViewState(
                 repoName = repoName,
                 repoDescription = repoDescription,
                 topics = topics,
@@ -50,6 +65,16 @@ class RepoOverviewViewModel @Inject constructor(
         }
 
         requestRepoReadme(repo.owner.login, repo.repoName)
+    }
+
+    fun setUserWatching(watching: Boolean) {
+        viewState.value = viewState.value?.copy(userWatching = watching)
+            ?: RepoOverviewViewState(userWatching = watching)
+    }
+
+    fun setUserStarring(starring: Boolean) {
+        viewState.value = viewState.value?.copy(userStarring = starring)
+            ?: RepoOverviewViewState(userStarring = starring)
     }
 
     private fun requestRepoReadme(owner: String, repoName: String) {

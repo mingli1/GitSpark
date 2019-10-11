@@ -15,5 +15,7 @@ data class RepoOverviewViewState(
     val numStars: Int = 0,
     val numForks: Int = 0,
     val readmeUrl: String = "",
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val userWatching: Boolean = false,
+    val userStarring: Boolean = false
 )
