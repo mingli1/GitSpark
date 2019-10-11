@@ -18,10 +18,12 @@ class RepoOverviewViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<RepoOverviewViewState>()
+    private lateinit var repo: Repo
     private var userWatching = false
     private var userStarring = false
 
     fun loadRepo(repo: Repo) {
+        this.repo = repo
         with (repo) {
             var updatedText = ""
             if (repoPushedAt.isNotEmpty()) {
@@ -82,11 +84,36 @@ class RepoOverviewViewModel @Inject constructor(
     }
 
     fun onWatchButtonClicked() {
-
+        // TODO: added watching and ignored options and change watching data to include
+        // subscribed and ignored attributes
     }
 
     fun onStarButtonClicked() {
-
+        if (userStarring) {
+            subscribe(repoRepository.unstarRepo(repo.owner.login, repo.repoName),
+                {
+                    val newStars = (viewState.value?.numStars ?: 0) - 1
+                    viewState.value = viewState.value?.copy(
+                        numStars = newStars,
+                        userStarring = false
+                    )
+                },
+                { alert("Failed to unstar repository.") }
+            )
+        }
+        else {
+            subscribe(repoRepository.starRepo(repo.owner.login, repo.repoName),
+                {
+                    val newStars = (viewState.value?.numStars ?: 0) + 1
+                    viewState.value = viewState.value?.copy(
+                        numStars = newStars,
+                        userStarring = true
+                    )
+                },
+                { alert("Failed to star repository") }
+            )
+        }
+        userStarring = !userStarring
     }
 
     fun onForkButtonClicked() {
