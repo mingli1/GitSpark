@@ -94,5 +94,17 @@ class RepoOverviewViewModelTest {
         assertThat(viewState().loading).isFalse()
     }
 
+    @Test
+    fun shouldSetUserWatching() {
+        viewModel.setUserWatching(true)
+        assertThat(viewState().userWatching).isTrue()
+    }
+
+    @Test
+    fun shouldSetUserStarring() {
+        viewModel.setUserStarring(true)
+        assertThat(viewState().userStarring).isTrue()
+    }
+
     private fun viewState() = viewModel.viewState.value!!
 }

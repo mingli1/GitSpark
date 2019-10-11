@@ -9,6 +9,7 @@ import com.gitspark.gitspark.repository.RepoResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
@@ -55,5 +56,31 @@ class RepoDetailViewModelTest {
 
         assertThat(viewModel.alertAction.value).isEqualTo("failure")
         assertThat(viewModel.loading.value).isFalse()
+    }
+
+    @Test
+    fun shouldGetRepoActivityDataSuccess() {
+        every { repoRepository.isWatchedByAuthUser(any(), any()) } returns
+                Completable.complete()
+        every { repoRepository.isStarredByAuthUser(any(), any()) } returns
+                Completable.complete()
+
+        viewModel.fetchAdditionalRepoData(Repo())
+
+        assertThat(viewModel.watchingData.value).isTrue()
+        assertThat(viewModel.starringData.value).isTrue()
+    }
+
+    @Test
+    fun shouldGetRepoActivityDataFailure() {
+        every { repoRepository.isWatchedByAuthUser(any(), any()) } returns
+                Completable.error(Throwable())
+        every { repoRepository.isStarredByAuthUser(any(), any()) } returns
+                Completable.error(Throwable())
+
+        viewModel.fetchAdditionalRepoData(Repo())
+
+        assertThat(viewModel.watchingData.value).isFalse()
+        assertThat(viewModel.starringData.value).isFalse()
     }
 }
