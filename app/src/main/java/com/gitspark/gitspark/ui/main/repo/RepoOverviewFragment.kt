@@ -35,6 +35,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         super.onActivityCreated(savedInstanceState)
         viewModel.loadRepo((parentFragment as RepoDataCallback).getData())
         readme_view.addStyleSheet(Github())
+        setUpListeners()
     }
 
     override fun observeViewModel() {
@@ -104,5 +105,11 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             readme_view.isVisible = readmeUrl.isNotEmpty()
             if (readmeUrl.isNotEmpty()) readme_view.loadMarkdownFromUrl(readmeUrl)
         }
+    }
+
+    private fun setUpListeners() {
+        watch_button.setOnClickListener { viewModel.onWatchButtonClicked() }
+        star_button.setOnClickListener { viewModel.onStarButtonClicked() }
+        fork_button.setOnClickListener { viewModel.onForkButtonClicked() }
     }
 }

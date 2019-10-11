@@ -91,4 +91,36 @@ interface RepoService {
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): Completable
+
+    @PUT("repos/{owner}/{repo}/subscription")
+    fun watchRepo(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("subscribed") subscribed: Boolean,
+        @Query("ignored") ignored: Boolean
+    ): Completable
+
+    @DELETE("repos/{owner}/{repo}/subscription")
+    fun unwatchRepo(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Completable
+
+    @PUT("user/starred/{owner}/{repo}")
+    fun starRepo(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Completable
+
+    @DELETE("user/starred/{owner}/{repo}")
+    fun unstarRepo(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Completable
+
+    @POST("repos/{owner}/{repo}/forks")
+    fun forkRepo(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Completable
 }

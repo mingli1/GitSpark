@@ -18,6 +18,8 @@ class RepoOverviewViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<RepoOverviewViewState>()
+    private var userWatching = false
+    private var userStarring = false
 
     fun loadRepo(repo: Repo) {
         with (repo) {
@@ -68,13 +70,27 @@ class RepoOverviewViewModel @Inject constructor(
     }
 
     fun setUserWatching(watching: Boolean) {
+        userWatching = watching
         viewState.value = viewState.value?.copy(userWatching = watching)
             ?: RepoOverviewViewState(userWatching = watching)
     }
 
     fun setUserStarring(starring: Boolean) {
+        userStarring = starring
         viewState.value = viewState.value?.copy(userStarring = starring)
             ?: RepoOverviewViewState(userStarring = starring)
+    }
+
+    fun onWatchButtonClicked() {
+
+    }
+
+    fun onStarButtonClicked() {
+
+    }
+
+    fun onForkButtonClicked() {
+
     }
 
     private fun requestRepoReadme(owner: String, repoName: String) {

@@ -140,13 +140,26 @@ class RepoRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain branches for $username/$repoName") }
     }
 
-    fun isStarredByAuthUser(username: String, repoName: String): Completable {
-        return getRepoService().isStarredByAuthUser(username, repoName)
-    }
+    fun isStarredByAuthUser(username: String, repoName: String) =
+        getRepoService().isStarredByAuthUser(username, repoName)
 
-    fun isWatchedByAuthUser(username: String, repoName: String): Completable {
-        return getRepoService().isWatchedByAuthUser(username, repoName)
-    }
+    fun isWatchedByAuthUser(username: String, repoName: String) =
+        getRepoService().isWatchedByAuthUser(username, repoName)
+
+    fun watchRepo(username: String, repoName: String, subscribed: Boolean, ignored: Boolean) =
+        getRepoService().watchRepo(username, repoName, subscribed, ignored)
+
+    fun unwatchRepo(username: String, repoName: String) =
+        getRepoService().unwatchRepo(username, repoName)
+
+    fun starRepo(username: String, repoName: String) =
+        getRepoService().starRepo(username, repoName)
+
+    fun unstarRepo(username: String, repoName: String) =
+        getRepoService().unstarRepo(username, repoName)
+
+    fun forkRepo(username: String, repoName: String) =
+        getRepoService().forkRepo(username, repoName)
 
     private fun getRepoService() =
         retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
