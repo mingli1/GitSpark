@@ -40,6 +40,18 @@ class StarsViewModel @Inject constructor(
 
     fun onScrolledToEnd() = updateViewState()
 
+    fun onUpdatedRepoData(newData: Repo) {
+        val repos = viewState.value?.repos ?: return
+        val index = repos.indexOfFirst { it.fullName == newData.fullName }
+        if (index < 0) return
+        repos[index] = newData
+
+        viewState.value = viewState.value?.copy(
+            repos = repos,
+            updateAdapter = true
+        )
+    }
+
     override fun onRepoSelected(repo: Repo) {
         navigateToRepoDetailAction.value = repo
     }

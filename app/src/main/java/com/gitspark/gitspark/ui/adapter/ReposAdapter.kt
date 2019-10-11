@@ -67,9 +67,6 @@ class ReposAdapter(
                     language_field.compoundDrawablesRelative[0].setColor(it)
                 }
 
-                if (item.starred) {
-                    stars_field.compoundDrawablesRelative[0].setColor(context.getColor(R.color.colorYellow))
-                }
                 repo_card.setOnClickListener { navigator.onRepoSelected(item) }
             }
         }
