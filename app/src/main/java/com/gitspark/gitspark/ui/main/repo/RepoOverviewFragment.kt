@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.model.ApiSubscribed
@@ -16,6 +17,7 @@ import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
+import com.gitspark.gitspark.ui.main.shared.*
 import kotlinx.android.synthetic.main.fragment_repo_overview.*
 import kotlinx.android.synthetic.main.fragment_repo_overview.archived_label
 import kotlinx.android.synthetic.main.fragment_repo_overview.forked_label
@@ -49,6 +51,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.updatedRepoData.observe(viewLifecycleOwner) { sharedViewModel.repoData.value = it }
         viewModel.forkButtonAction.observe(viewLifecycleOwner) { showForkConfirmDialog(it) }
+        viewModel.navigateToUserListAction.observe(viewLifecycleOwner) { navigateToUserListFragment(it) }
     }
 
     override fun onPositiveClicked() = viewModel.onForkConfirmClicked()
@@ -124,6 +127,14 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         watch_button.setOnClickListener { viewModel.onWatchButtonClicked() }
         star_button.setOnClickListener { viewModel.onStarButtonClicked() }
         fork_button.setOnClickListener { viewModel.onForkButtonClicked() }
+
+        watching_field.setOnClickListener {
+            viewModel.onUserListClicked(getString(R.string.watchers_title), UserListType.Watchers)
+        }
+        stars_field.setOnClickListener {
+            viewModel.onUserListClicked(getString(R.string.stargazers_title), UserListType.Stargazers)
+        }
+        forks_field.setOnClickListener {  }
     }
 
     private fun showForkConfirmDialog(name: String) {
@@ -131,5 +142,17 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             getString(R.string.fork_confirm_title, name),
             getString(R.string.fork_confirm_message)
         ).show(childFragmentManager, null)
+    }
+
+    private fun navigateToUserListFragment(triple: Triple<String, UserListType, String>) {
+        val data = Bundle().apply {
+            putString(BUNDLE_TITLE, triple.first)
+            putSerializable(BUNDLE_USER_LIST_TYPE, triple.second)
+            putString(BUNDLE_ARGUMENTS, triple.third)
+        }
+        findNavController().navigate(
+            R.id.action_repo_detail_fragment_to_user_list_fragment,
+            data
+        )
     }
 }

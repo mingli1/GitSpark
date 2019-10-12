@@ -12,7 +12,7 @@ import com.gitspark.gitspark.api.service.USER_PER_PAGE
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.adapter.PaginationListener
-import com.gitspark.gitspark.ui.adapter.FollowsAdapter
+import com.gitspark.gitspark.ui.adapter.UsersAdapter
 import kotlinx.android.synthetic.main.fragment_follows.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
@@ -21,8 +21,8 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     private lateinit var paginationListener: PaginationListener
     private lateinit var layoutManager: LinearLayoutManager
 
-    private lateinit var followersAdapter: FollowsAdapter
-    private lateinit var followingAdapter: FollowsAdapter
+    private lateinit var followersAdapter: UsersAdapter
+    private lateinit var followingAdapter: UsersAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_follows, container, false)
@@ -31,9 +31,8 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val isAuthUser = arguments == null
-        followersAdapter = FollowsAdapter(viewModel).apply { authUser = isAuthUser }
-        followingAdapter = FollowsAdapter(viewModel).apply { authUser = isAuthUser }
+        followersAdapter = UsersAdapter(viewModel)
+        followingAdapter = UsersAdapter(viewModel)
 
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = PaginationListener(layoutManager, USER_PER_PAGE, swipe_refresh) {
@@ -106,7 +105,7 @@ class FollowsFragment : TabFragment<FollowsViewModel>(FollowsViewModel::class.ja
         follows_list.addOnScrollListener(paginationListener)
     }
 
-    private fun getAdapter(state: FollowState): FollowsAdapter {
+    private fun getAdapter(state: FollowState): UsersAdapter {
         return when (state) {
             FollowState.Followers -> followersAdapter
             FollowState.Following -> followingAdapter

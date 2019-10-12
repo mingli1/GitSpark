@@ -9,6 +9,7 @@ import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.main.shared.UserListType
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
@@ -23,6 +24,7 @@ class RepoOverviewViewModel @Inject constructor(
     val viewState = MutableLiveData<RepoOverviewViewState>()
     val updatedRepoData = SingleLiveEvent<Repo>()
     val forkButtonAction = SingleLiveEvent<String>()
+    val navigateToUserListAction = SingleLiveEvent<Triple<String, UserListType, String>>()
 
     private lateinit var repo: Repo
     @VisibleForTesting var userWatching = false
@@ -145,6 +147,10 @@ class RepoOverviewViewModel @Inject constructor(
             },
             { alert("Failed to fork repository") }
         )
+    }
+
+    fun onUserListClicked(title: String, type: UserListType) {
+        navigateToUserListAction.value = Triple(title, type, repo.fullName)
     }
 
     private fun requestRepoReadme(owner: String, repoName: String) {

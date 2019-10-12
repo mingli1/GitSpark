@@ -6,9 +6,7 @@ import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.model.User
 import kotlinx.android.synthetic.main.user_view.view.*
 
-class FollowsAdapter(private val navigator: UserProfileNavigator) : PaginationAdapter() {
-
-    var authUser = true
+class UsersAdapter(private val navigator: UserProfileNavigator) : PaginationAdapter() {
 
     override fun bind(item: Pageable, view: View) {
         if (item is User) {
