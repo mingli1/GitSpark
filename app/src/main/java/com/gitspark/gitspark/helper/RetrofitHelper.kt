@@ -6,6 +6,7 @@ import com.gitspark.gitspark.api.interceptor.AuthInterceptor
 import com.gitspark.gitspark.api.interceptor.PageInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -56,14 +57,19 @@ class RetrofitHelper @Inject constructor() {
                 .build()
     }
 
-    private fun getOkHttpClient() =
-            OkHttpClient.Builder()
-                .connectTimeout(TIMEOUT_TIME_M, TimeUnit.MINUTES)
-                .writeTimeout(TIMEOUT_TIME_M, TimeUnit.MINUTES)
-                .readTimeout(TIMEOUT_TIME_M, TimeUnit.MINUTES)
-                .addInterceptor(AuthInterceptor(token))
-                .addInterceptor(PageInterceptor())
-                .build()
+    private fun getOkHttpClient(): OkHttpClient {
+        val okHttp = OkHttpClient.Builder()
+            .connectTimeout(TIMEOUT_TIME_M, TimeUnit.MINUTES)
+            .writeTimeout(TIMEOUT_TIME_M, TimeUnit.MINUTES)
+            .readTimeout(TIMEOUT_TIME_M, TimeUnit.MINUTES)
+            .addInterceptor(AuthInterceptor(token))
+            .addInterceptor(PageInterceptor())
+
+        if (BuildConfig.DEBUG)
+            okHttp.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+
+        return okHttp.build()
+    }
 
     class StringConverterFactory : Converter.Factory() {
 
