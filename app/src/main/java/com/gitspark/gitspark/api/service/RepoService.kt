@@ -90,7 +90,7 @@ interface RepoService {
     fun isWatchedByAuthUser(
         @Path("owner") owner: String,
         @Path("repo") repo: String
-    ): Completable
+    ): Observable<ApiSubscribed>
 
     @PUT("repos/{owner}/{repo}/subscription")
     fun watchRepo(

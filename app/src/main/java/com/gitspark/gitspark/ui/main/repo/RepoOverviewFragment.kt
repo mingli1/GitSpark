@@ -9,10 +9,13 @@ import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProviders
 import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.dialog.ChoiceDialog
+import com.gitspark.gitspark.ui.dialog.ChoiceDialogCallback
 import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import kotlinx.android.synthetic.main.fragment_repo_overview.*
@@ -29,7 +32,7 @@ import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 private const val MAX_TOPICS_SHOWN = 4
 
 class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewViewModel::class.java),
-    ConfirmDialogCallback {
+    ConfirmDialogCallback, ChoiceDialogCallback {
 
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[RepoDetailSharedViewModel::class.java]
@@ -50,13 +53,16 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.updatedRepoData.observe(viewLifecycleOwner) { sharedViewModel.repoData.value = it }
         viewModel.forkButtonAction.observe(viewLifecycleOwner) { showForkConfirmDialog(it) }
+        viewModel.watchButtonAction.observe(viewLifecycleOwner) { showWatchChoiceDialog(it) }
     }
 
     override fun onPositiveClicked() = viewModel.onForkConfirmClicked()
 
     override fun onNegativeClicked() {}
 
-    fun notifyWatchingDataRetrieved(watching: Boolean) = viewModel.setUserWatching(watching)
+    override fun onItemSelected(which: Int) = viewModel.onWatchItemSelected(which)
+
+    fun notifyWatchingDataRetrieved(watchData: ApiSubscribed) = viewModel.setUserWatching(watchData)
 
     fun notifyStarringDataRetrieved(starring: Boolean) = viewModel.setUserStarring(starring)
 
@@ -111,7 +117,12 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
                 else getString(R.string.num_forks_text, numForks)
 
             watch_button.drawable.setColor(context!!.getColor(
-                if (userWatching) R.color.colorPrimaryDark else R.color.colorDrawableDefault))
+                when (userWatching) {
+                    NOT_WATCHING -> R.color.colorDrawableDefault
+                    WATCHING -> R.color.colorPrimaryDark
+                    else -> R.color.colorAccentDark
+                }
+            ))
             star_button.drawable.setColor(context!!.getColor(
                 if (userStarring) R.color.colorPrimaryDark else R.color.colorDrawableDefault))
 
@@ -125,6 +136,13 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         watch_button.setOnClickListener { viewModel.onWatchButtonClicked() }
         star_button.setOnClickListener { viewModel.onStarButtonClicked() }
         fork_button.setOnClickListener { viewModel.onForkButtonClicked() }
+    }
+
+    private fun showWatchChoiceDialog(name: String) {
+        ChoiceDialog.newInstance(
+            getString(R.string.watch_choice_title, name),
+            context!!.resources.getStringArray(R.array.watch_items)
+        ).show(childFragmentManager, null)
     }
 
     private fun showForkConfirmDialog(name: String) {

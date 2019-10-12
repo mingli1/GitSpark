@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.repository
 
 import com.gitspark.gitspark.api.model.ApiAuthRepoRequest
+import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.api.service.RepoService
 import com.gitspark.gitspark.helper.PreferencesHelper
@@ -143,8 +144,12 @@ class RepoRepository @Inject constructor(
     fun isStarredByAuthUser(username: String, repoName: String) =
         getRepoService().isStarredByAuthUser(username, repoName)
 
-    fun isWatchedByAuthUser(username: String, repoName: String) =
-        getRepoService().isWatchedByAuthUser(username, repoName)
+    fun isWatchedByAuthUser(username: String, repoName: String): Observable<RepoResult<ApiSubscribed>> {
+        return getRepoService()
+            .isWatchedByAuthUser(username, repoName)
+            .map { getSuccess(it) }
+            .onErrorReturn { getFailure("User is not watching $repoName") }
+    }
 
     fun watchRepo(username: String, repoName: String, subscribed: Boolean, ignored: Boolean) =
         getRepoService().watchRepo(username, repoName, subscribed, ignored)

@@ -18,18 +18,18 @@ class ChoiceDialog : DialogFragment() {
         return AlertDialog.Builder(context!!)
             .setTitle(arguments?.getString(BUNDLE_TITLE))
             .setCancelable(false)
-            .setItems(arguments?.getInt(BUNDLE_ITEMS) ?: 0) { _, which ->
+            .setItems(arguments?.getStringArray(BUNDLE_ITEMS)) { _, which ->
                 (parentFragment as ChoiceDialogCallback).onItemSelected(which)
             }
             .create()
     }
 
     companion object {
-        fun newInstance(title: String, itemsId: Int) =
+        fun newInstance(title: String, items: Array<String>) =
             ChoiceDialog().apply {
                 arguments = Bundle().apply {
                     putString(BUNDLE_TITLE, title)
-                    putInt(BUNDLE_ITEMS, itemsId)
+                    putStringArray(BUNDLE_ITEMS, items)
                 }
             }
     }

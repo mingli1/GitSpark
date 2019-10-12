@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.main.repo
 
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.model.Branch
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.repository.RepoRepository
@@ -15,7 +16,7 @@ class RepoDetailViewModel @Inject constructor(
 
     val loading = MutableLiveData<Boolean>()
     val branchesData = SingleLiveEvent<List<Branch>>()
-    val watchingData = SingleLiveEvent<Boolean>()
+    val watchingData = SingleLiveEvent<ApiSubscribed>()
     val starringData = SingleLiveEvent<Boolean>()
     private var dataLoaded = false
 
@@ -39,9 +40,12 @@ class RepoDetailViewModel @Inject constructor(
     }
 
     private fun requestRepoActivityData(username: String, repoName: String) {
-        subscribe(repoRepository.isWatchedByAuthUser(username, repoName),
-            { watchingData.value = true },
-            { watchingData.value = false })
+        subscribe(repoRepository.isWatchedByAuthUser(username, repoName)) {
+            when (it) {
+                is RepoResult.Success -> watchingData.value = it.value
+                is RepoResult.Failure -> watchingData.value = ApiSubscribed(subscribed = false, ignored = false)
+            }
+        }
         subscribe(repoRepository.isStarredByAuthUser(username, repoName),
             { starringData.value = true },
             { starringData.value = false })

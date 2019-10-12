@@ -56,6 +56,7 @@
     <string name="dir_back">..</string>
     <string name="fork_confirm_title">Forking %1$s</string>
     <string name="fork_confirm_message">Are you sure you want to fork this repository?</string>
+    <string name="watch_choice_title">Watch %1$s</string>
     <string-array name="watch_items">
         <item>Not watching</item>
         <item>Watching</item>
