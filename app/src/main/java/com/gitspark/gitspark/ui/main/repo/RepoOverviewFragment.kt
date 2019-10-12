@@ -13,8 +13,8 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.ui.base.BaseFragment
-import com.gitspark.gitspark.ui.shared.ConfirmDialog
-import com.gitspark.gitspark.ui.shared.ConfirmDialogCallback
+import com.gitspark.gitspark.ui.dialog.ConfirmDialog
+import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import kotlinx.android.synthetic.main.fragment_repo_overview.*
 import kotlinx.android.synthetic.main.fragment_repo_overview.archived_label
 import kotlinx.android.synthetic.main.fragment_repo_overview.forked_label

@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.shared
+package com.gitspark.gitspark.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
