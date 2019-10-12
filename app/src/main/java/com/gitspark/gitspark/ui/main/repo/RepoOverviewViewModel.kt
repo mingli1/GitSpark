@@ -14,10 +14,6 @@ import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 
-internal const val NOT_WATCHING = 0
-internal const val WATCHING = 1
-internal const val IGNORING = 2
-
 class RepoOverviewViewModel @Inject constructor(
     private val repoRepository: RepoRepository,
     private val colorHelper: LanguageColorHelper
@@ -25,11 +21,10 @@ class RepoOverviewViewModel @Inject constructor(
 
     val viewState = MutableLiveData<RepoOverviewViewState>()
     val updatedRepoData = SingleLiveEvent<Repo>()
-    val watchButtonAction = SingleLiveEvent<String>()
     val forkButtonAction = SingleLiveEvent<String>()
 
     private lateinit var repo: Repo
-    private var userWatching = NOT_WATCHING
+    private var userWatching = false
     private var userStarring = false
 
     fun loadRepo(repo: Repo) {
@@ -82,11 +77,7 @@ class RepoOverviewViewModel @Inject constructor(
     }
 
     fun setUserWatching(watchData: ApiSubscribed) {
-        userWatching = when {
-            watchData.subscribed -> WATCHING
-            watchData.ignored -> IGNORING
-            else -> NOT_WATCHING
-        }
+        userWatching = watchData.subscribed
         viewState.value = viewState.value?.copy(userWatching = userWatching)
             ?: RepoOverviewViewState(userWatching = userWatching)
     }
@@ -103,20 +94,11 @@ class RepoOverviewViewModel @Inject constructor(
     }
 
     fun onWatchButtonClicked() {
-        watchButtonAction.value = repo.fullName
-    }
-
-    fun onWatchItemSelected(which: Int) {
-        if (userWatching == which) return
-        when (which) {
-            NOT_WATCHING ->
-                requestUnwatchRepo(repo.owner.login, repo.repoName)
-            WATCHING ->
-                requestWatchRepo(repo.owner.login, repo.repoName, subscribed = true, ignored = false)
-            else ->
-                requestWatchRepo(repo.owner.login, repo.repoName, subscribed = true, ignored = true)
+        when {
+            userWatching -> requestUnwatchRepo()
+            else -> requestWatchRepo()
         }
-        userWatching = which
+        userWatching = !userWatching
     }
 
     fun onStarButtonClicked() {
@@ -179,29 +161,22 @@ class RepoOverviewViewModel @Inject constructor(
         }
     }
 
-    private fun requestWatchRepo(username: String, repoName: String, subscribed: Boolean, ignored: Boolean) {
-        subscribe(repoRepository.watchRepo(username, repoName, subscribed, ignored),
+    private fun requestWatchRepo() {
+        subscribe(repoRepository.watchRepo(repo.owner.login, repo.repoName, subscribed = true, ignored = false),
             {
-                when {
-                    ignored -> {
-                        viewState.value = viewState.value?.copy(userWatching = IGNORING)
-                    }
-                    subscribed -> {
-                        val newWatchers = (viewState.value?.numWatchers ?: 0) + 1
-                        viewState.value = viewState.value?.copy(numWatchers = newWatchers, userWatching = WATCHING)
-                        updatedRepoData.value = repo.copy(numWatches = newWatchers)
-                    }
-                }
+                val newWatchers = (viewState.value?.numWatchers ?: 0) + 1
+                viewState.value = viewState.value?.copy(numWatchers = newWatchers, userWatching = true)
+                updatedRepoData.value = repo.copy(numWatches = newWatchers)
             },
             { alert("Failed to watch repository") }
         )
     }
 
-    private fun requestUnwatchRepo(username: String, repoName: String) {
-        subscribe(repoRepository.unwatchRepo(username, repoName),
+    private fun requestUnwatchRepo() {
+        subscribe(repoRepository.unwatchRepo(repo.owner.login, repo.repoName),
             {
                 val newWatchers = (viewState.value?.numWatchers ?: 0) - 1
-                viewState.value = viewState.value?.copy(numWatchers = newWatchers, userWatching = NOT_WATCHING)
+                viewState.value = viewState.value?.copy(numWatchers = newWatchers, userWatching = false)
                 updatedRepoData.value = repo.copy(numWatches = newWatchers)
             },
             { alert("Failed to unwatch repository") }

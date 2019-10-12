@@ -16,6 +16,6 @@ data class RepoOverviewViewState(
     val numForks: Int = 0,
     val readmeUrl: String = "",
     val loading: Boolean = false,
-    val userWatching: Int = NOT_WATCHING,
+    val userWatching: Boolean = false,
     val userStarring: Boolean = false
 )
