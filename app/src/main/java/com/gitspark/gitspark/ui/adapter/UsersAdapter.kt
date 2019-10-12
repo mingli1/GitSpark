@@ -4,6 +4,7 @@ import android.view.View
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.model.User
+import com.gitspark.gitspark.ui.nav.UserProfileNavigator
 import kotlinx.android.synthetic.main.user_view.view.*
 
 class UsersAdapter(private val navigator: UserProfileNavigator) : PaginationAdapter() {

@@ -8,6 +8,7 @@ import com.gitspark.gitspark.extension.getExtension
 import com.gitspark.gitspark.extension.inflate
 import com.gitspark.gitspark.model.RepoContent
 import com.gitspark.gitspark.model.TYPE_FILE
+import com.gitspark.gitspark.ui.nav.RepoContentNavigator
 import kotlinx.android.synthetic.main.repo_content_view.view.*
 
 class RepoContentAdapter(

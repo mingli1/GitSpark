@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
-import com.gitspark.gitspark.ui.adapter.UserProfileNavigator
+import com.gitspark.gitspark.ui.nav.UserProfileNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject

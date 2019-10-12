@@ -12,9 +12,9 @@ import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
-import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_CONTENT
-import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_EXTENSION
-import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_NAME
+import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_CONTENT
+import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_EXTENSION
+import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_NAME
 import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_repo_code.*
 

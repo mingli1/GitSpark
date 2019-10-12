@@ -7,7 +7,7 @@ import com.gitspark.gitspark.model.RepoContent
 import com.gitspark.gitspark.model.TYPE_DIRECTORY
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
-import com.gitspark.gitspark.ui.adapter.RepoContentNavigator
+import com.gitspark.gitspark.ui.nav.RepoContentNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import java.util.*

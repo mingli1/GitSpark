@@ -7,7 +7,7 @@ import com.gitspark.gitspark.model.isFirstPage
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
-import com.gitspark.gitspark.ui.adapter.UserProfileNavigator
+import com.gitspark.gitspark.ui.nav.UserProfileNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject

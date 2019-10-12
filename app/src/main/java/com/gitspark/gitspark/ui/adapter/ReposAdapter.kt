@@ -10,6 +10,7 @@ import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.extension.withSuffix
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.model.Repo
+import com.gitspark.gitspark.ui.nav.RepoDetailNavigator
 import kotlinx.android.synthetic.main.repo_view.view.*
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime

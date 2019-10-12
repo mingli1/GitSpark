@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.adapter
+package com.gitspark.gitspark.ui.nav
 
 import com.gitspark.gitspark.model.Repo
 

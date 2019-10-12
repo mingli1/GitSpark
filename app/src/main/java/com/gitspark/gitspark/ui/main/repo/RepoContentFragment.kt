@@ -13,9 +13,9 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.onItemSelected
 import com.gitspark.gitspark.model.Branch
-import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_CONTENT
-import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_EXTENSION
-import com.gitspark.gitspark.ui.adapter.BUNDLE_FILE_NAME
+import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_CONTENT
+import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_EXTENSION
+import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_NAME
 import com.gitspark.gitspark.ui.adapter.RepoContentAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_repo_content.*

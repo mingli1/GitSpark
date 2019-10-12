@@ -14,7 +14,7 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.model.Repo
-import com.gitspark.gitspark.ui.adapter.BUNDLE_REPO
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.ReposAdapter
 import com.gitspark.gitspark.ui.main.repo.RepoDetailSharedViewModel

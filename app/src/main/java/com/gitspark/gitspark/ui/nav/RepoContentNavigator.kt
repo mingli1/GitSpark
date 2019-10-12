@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.adapter
+package com.gitspark.gitspark.ui.nav
 
 const val BUNDLE_FILE_CONTENT = "BUNDLE_FILE_CONTENT"
 const val BUNDLE_FILE_NAME = "BUNDLE_FILE_NAME"
