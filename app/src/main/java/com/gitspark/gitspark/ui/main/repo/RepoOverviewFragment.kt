@@ -13,6 +13,8 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.shared.ConfirmDialog
+import com.gitspark.gitspark.ui.shared.ConfirmDialogCallback
 import kotlinx.android.synthetic.main.fragment_repo_overview.*
 import kotlinx.android.synthetic.main.fragment_repo_overview.archived_label
 import kotlinx.android.synthetic.main.fragment_repo_overview.forked_label
@@ -26,7 +28,8 @@ import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 private const val MAX_TOPICS_SHOWN = 4
 
-class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewViewModel::class.java) {
+class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewViewModel::class.java),
+    ConfirmDialogCallback {
 
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[RepoDetailSharedViewModel::class.java]
@@ -46,7 +49,12 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.updatedRepoData.observe(viewLifecycleOwner) { sharedViewModel.repoData.value = it }
+        viewModel.forkButtonAction.observe(viewLifecycleOwner) { showForkConfirmDialog(it) }
     }
+
+    override fun onPositiveClicked() = viewModel.onForkConfirmClicked()
+
+    override fun onNegativeClicked() {}
 
     fun notifyWatchingDataRetrieved(watching: Boolean) = viewModel.setUserWatching(watching)
 
@@ -117,5 +125,12 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         watch_button.setOnClickListener { viewModel.onWatchButtonClicked() }
         star_button.setOnClickListener { viewModel.onStarButtonClicked() }
         fork_button.setOnClickListener { viewModel.onForkButtonClicked() }
+    }
+
+    private fun showForkConfirmDialog(name: String) {
+        ConfirmDialog.newInstance(
+            getString(R.string.fork_confirm_title, name),
+            getString(R.string.fork_confirm_message)
+        ).show(childFragmentManager, null)
     }
 }

@@ -20,6 +20,8 @@ class RepoOverviewViewModel @Inject constructor(
 
     val viewState = MutableLiveData<RepoOverviewViewState>()
     val updatedRepoData = SingleLiveEvent<Repo>()
+    val forkButtonAction = SingleLiveEvent<String>()
+
     private lateinit var repo: Repo
     private var userWatching = false
     private var userStarring = false
@@ -121,7 +123,18 @@ class RepoOverviewViewModel @Inject constructor(
     }
 
     fun onForkButtonClicked() {
+        forkButtonAction.value = repo.fullName
+    }
 
+    fun onForkConfirmClicked() {
+        subscribe(repoRepository.forkRepo(repo.owner.login, repo.repoName),
+            {
+                val newForks = (viewState.value?.numForks ?: 0) + 1
+                viewState.value = viewState.value?.copy(numForks = newForks)
+                updatedRepoData.value = repo.copy(numForks = newForks)
+            },
+            { alert("Failed to fork repository") }
+        )
     }
 
     private fun requestRepoReadme(owner: String, repoName: String) {
