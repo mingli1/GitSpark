@@ -123,4 +123,10 @@ interface RepoService {
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): Completable
+
+    @GET("repos/{owner}/{repo}/subscribers")
+    fun getWatchers(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Observable<ApiPage<ApiUser>>
 }

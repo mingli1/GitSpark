@@ -6,10 +6,7 @@ import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.api.service.RepoService
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
-import com.gitspark.gitspark.model.Branch
-import com.gitspark.gitspark.model.Page
-import com.gitspark.gitspark.model.Repo
-import com.gitspark.gitspark.model.RepoContent
+import com.gitspark.gitspark.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -165,6 +162,17 @@ class RepoRepository @Inject constructor(
 
     fun forkRepo(username: String, repoName: String) =
         getRepoService().forkRepo(username, repoName)
+
+    fun getWatchers(username: String, repoName: String): Observable<RepoResult<Page<User>>> {
+        return getRepoService()
+            .getWatchers(username, repoName)
+            .map {
+                getSuccess(it.toModel<User>().apply {
+                    value = it.response.map { user -> user.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain watchers for $username/$repoName") }
+    }
 
     private fun getRepoService() =
         retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())

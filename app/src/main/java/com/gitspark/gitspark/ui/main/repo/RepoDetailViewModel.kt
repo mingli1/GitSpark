@@ -17,6 +17,7 @@ class RepoDetailViewModel @Inject constructor(
     val loading = MutableLiveData<Boolean>()
     val branchesData = SingleLiveEvent<List<Branch>>()
     val watchingData = SingleLiveEvent<ApiSubscribed>()
+    val numWatchersData = SingleLiveEvent<Int>()
     val starringData = SingleLiveEvent<Boolean>()
     private var dataLoaded = false
 
@@ -25,6 +26,7 @@ class RepoDetailViewModel @Inject constructor(
             loading.value = true
             requestRepoBranches(repo.owner.login, repo.repoName)
             requestRepoActivityData(repo.owner.login, repo.repoName)
+            requestNumWatchersData(repo.owner.login, repo.repoName)
             dataLoaded = true
         }
     }
@@ -49,5 +51,20 @@ class RepoDetailViewModel @Inject constructor(
         subscribe(repoRepository.isStarredByAuthUser(username, repoName),
             { starringData.value = true },
             { starringData.value = false })
+    }
+
+    private fun requestNumWatchersData(username: String, repoName: String) {
+        subscribe(repoRepository.getWatchers(username, repoName)) {
+            when (it) {
+                is RepoResult.Success -> {
+                    val total = when {
+                        it.value.last == -1 -> it.value.value.size
+                        else -> it.value.last
+                    }
+                    numWatchersData.value = total
+                }
+                is RepoResult.Failure -> alert("Failed to retrieve number of watchers")
+            }
+        }
     }
 }

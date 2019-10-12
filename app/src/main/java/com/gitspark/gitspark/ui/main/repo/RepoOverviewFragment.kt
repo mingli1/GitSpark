@@ -66,6 +66,8 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
 
     fun notifyStarringDataRetrieved(starring: Boolean) = viewModel.setUserStarring(starring)
 
+    fun notifyNumWatchersDataRetrieved(numWatchers: Int) = viewModel.setNumWatching(numWatchers)
+
     private fun updateView(viewState: RepoOverviewViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading

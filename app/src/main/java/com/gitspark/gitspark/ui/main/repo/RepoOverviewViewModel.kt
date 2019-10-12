@@ -97,6 +97,11 @@ class RepoOverviewViewModel @Inject constructor(
             ?: RepoOverviewViewState(userStarring = starring)
     }
 
+    fun setNumWatching(numWatchers: Int) {
+        viewState.value = viewState.value?.copy(numWatchers = numWatchers)
+            ?: RepoOverviewViewState(numWatchers = numWatchers)
+    }
+
     fun onWatchButtonClicked() {
         watchButtonAction.value = repo.fullName
     }
