@@ -54,7 +54,7 @@ class RepoDetailViewModel @Inject constructor(
     }
 
     private fun requestNumWatchersData(username: String, repoName: String) {
-        subscribe(repoRepository.getWatchers(username, repoName)) {
+        subscribe(repoRepository.getWatchers(username, repoName, 1, 1)) {
             when (it) {
                 is RepoResult.Success -> {
                     val total = when {

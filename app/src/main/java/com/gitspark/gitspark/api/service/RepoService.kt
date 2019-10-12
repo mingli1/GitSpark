@@ -127,6 +127,24 @@ interface RepoService {
     @GET("repos/{owner}/{repo}/subscribers")
     fun getWatchers(
         @Path("owner") owner: String,
-        @Path("repo") repo: String
+        @Path("repo") repo: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = USER_PER_PAGE
     ): Observable<ApiPage<ApiUser>>
+
+    @GET("repos/{owner}/{repo}/stargazers")
+    fun getStargazers(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = USER_PER_PAGE
+    ): Observable<ApiPage<ApiUser>>
+
+    @GET("repos/{owner}/{repo}/forks")
+    fun getForks(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = REPO_PER_PAGE
+    ): Observable<ApiPage<ApiRepo>>
 }

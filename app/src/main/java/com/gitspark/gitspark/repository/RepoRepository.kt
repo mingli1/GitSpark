@@ -4,6 +4,7 @@ import com.gitspark.gitspark.api.model.ApiAuthRepoRequest
 import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.api.service.RepoService
+import com.gitspark.gitspark.api.service.USER_PER_PAGE
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.*
@@ -163,15 +164,52 @@ class RepoRepository @Inject constructor(
     fun forkRepo(username: String, repoName: String) =
         getRepoService().forkRepo(username, repoName)
 
-    fun getWatchers(username: String, repoName: String): Observable<RepoResult<Page<User>>> {
+    fun getWatchers(
+        username: String,
+        repoName: String,
+        page: Int = 1,
+        perPage: Int = USER_PER_PAGE
+    ): Observable<RepoResult<Page<User>>> {
         return getRepoService()
-            .getWatchers(username, repoName)
+            .getWatchers(username, repoName, page, perPage)
             .map {
                 getSuccess(it.toModel<User>().apply {
                     value = it.response.map { user -> user.toModel() }
                 })
             }
             .onErrorReturn { getFailure("Failed to obtain watchers for $username/$repoName") }
+    }
+
+    fun getStargazers(
+        username: String,
+        repoName: String,
+        page: Int = 1,
+        perPage: Int = USER_PER_PAGE
+    ): Observable<RepoResult<Page<User>>> {
+        return getRepoService()
+            .getStargazers(username, repoName, page, perPage)
+            .map {
+                getSuccess(it.toModel<User>().apply {
+                    value = it.response.map { user -> user.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain stargazers for $username/$repoName") }
+    }
+
+    fun getForks(
+        username: String,
+        repoName: String,
+        page: Int = 1,
+        perPage: Int = REPO_PER_PAGE
+    ): Observable<RepoResult<Page<Repo>>> {
+        return getRepoService()
+            .getForks(username, repoName, page, perPage)
+            .map {
+                getSuccess(it.toModel<Repo>().apply {
+                    value = it.response.map { repo -> repo.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain forks for $username/$repoName") }
     }
 
     private fun getRepoService() =
