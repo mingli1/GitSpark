@@ -27,8 +27,6 @@ import kotlinx.android.synthetic.main.fragment_repo_overview.topics_container
 import kotlinx.android.synthetic.main.fragment_repo_overview.updated_field
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
-private const val MAX_TOPICS_SHOWN = 4
-
 class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewViewModel::class.java),
     ConfirmDialogCallback {
 
@@ -87,18 +85,16 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
 
             if (topics.isNotEmpty()) {
                 topics_container.removeAllViews()
-                topics.forEachIndexed { index, topic ->
-                    if (index < MAX_TOPICS_SHOWN) {
-                        val topicView = LayoutInflater.from(context).inflate(
-                            R.layout.topics_view,
-                            topics_container,
-                            false
-                        )
-                        ((topicView as CardView).getChildAt(0) as TextView).apply {
-                            text = topic
-                        }
-                        topics_container.addView(topicView)
+                topics.forEach { topic ->
+                    val topicView = LayoutInflater.from(context).inflate(
+                        R.layout.topics_view,
+                        topics_container,
+                        false
+                    )
+                    ((topicView as CardView).getChildAt(0) as TextView).apply {
+                        text = topic
                     }
+                    topics_container.addView(topicView)
                 }
             }
             topics_container.isVisible = topics.isNotEmpty()
