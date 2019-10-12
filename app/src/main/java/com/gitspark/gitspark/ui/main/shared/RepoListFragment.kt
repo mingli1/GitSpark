@@ -9,24 +9,28 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
-import com.gitspark.gitspark.api.service.USER_PER_PAGE
+import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.extension.observe
-import com.gitspark.gitspark.ui.adapter.UsersAdapter
+import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.ui.adapter.PaginationListener
+import com.gitspark.gitspark.ui.adapter.ReposAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
-import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO
+import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_list.*
+import javax.inject.Inject
 
-const val BUNDLE_TITLE = "BUNDLE_TITLE"
-const val BUNDLE_USER_LIST_TYPE = "BUNDLE_USER_LIST_TYPE"
-const val BUNDLE_ARGUMENTS = "BUNDLE_ARGUMENTS"
+const val BUNDLE_REPO_LIST_TYPE = "BUNDLE_REPO_LIST_TYPE"
 
-class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::class.java) {
+class RepoListFragment : BaseFragment<RepoListViewModel>(RepoListViewModel::class.java) {
 
+    @Inject lateinit var colorHelper: LanguageColorHelper
+    @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: PaginationListener
-    private lateinit var usersAdapter: UsersAdapter
+    private lateinit var reposAdapter: ReposAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
@@ -37,7 +41,7 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
             supportActionBar?.run {
                 setDisplayHomeAsUpEnabled(true)
                 setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
-                title = arguments?.getString(BUNDLE_TITLE) ?: "Users"
+                title = arguments?.getString(BUNDLE_TITLE) ?: "Repos"
             }
         }
         return view
@@ -47,24 +51,24 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
         super.onActivityCreated(savedInstanceState)
 
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        paginationListener = PaginationListener(layoutManager, USER_PER_PAGE, null) {
+        paginationListener = PaginationListener(layoutManager, REPO_PER_PAGE, null) {
             viewModel.onScrolledToEnd()
         }
         item_list.setHasFixedSize(true)
         item_list.layoutManager = layoutManager
-        usersAdapter = UsersAdapter(viewModel)
-        if (item_list.adapter == null) item_list.adapter = usersAdapter
+        reposAdapter = ReposAdapter(colorHelper, viewModel)
+        if (item_list.adapter == null) item_list.adapter = reposAdapter
 
         item_list.addOnScrollListener(paginationListener)
 
-        val type = arguments?.getSerializable(BUNDLE_USER_LIST_TYPE) as UserListType? ?: UserListType.None
+        val type = arguments?.getSerializable(BUNDLE_REPO_LIST_TYPE) as RepoListType? ?: RepoListType.None
         val args = arguments?.getString(BUNDLE_ARGUMENTS) ?: ""
         viewModel.onResume(type, args)
     }
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
-        viewModel.navigateToProfileAction.observe(viewLifecycleOwner) { navigateToProfileFragment(it) }
+        viewModel.navigateToRepoDetailAction.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
     }
 
     override fun onDestroyView() {
@@ -77,10 +81,10 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
         viewModel.onDestroy()
     }
 
-    private fun updateView(viewState: UserListViewState) {
+    private fun updateView(viewState: RepoListViewState) {
         with (viewState) {
             if (updateAdapter) {
-                usersAdapter.setItems(users, isLastPage)
+                reposAdapter.setItems(repos, isLastPage)
 
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
@@ -88,8 +92,10 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
         }
     }
 
-    private fun navigateToProfileFragment(username: String) {
-        val data = Bundle().apply { putString(BUNDLE_USERNAME, username) }
-        findNavController().navigate(R.id.action_user_list_fragment_to_profile_fragment, data)
+    private fun navigateToRepoDetailFragment(repo: Repo) {
+        val bundle = Bundle().apply {
+            putString(BUNDLE_REPO, repoJsonAdapter.toJson(repo))
+        }
+        findNavController().navigate(R.id.action_repo_list_fragment_to_repo_detail_fragment, bundle)
     }
 }

@@ -13,6 +13,7 @@ import com.gitspark.gitspark.ui.main.repo.RepoDetailSharedViewModel
 import com.gitspark.gitspark.ui.main.repo.RepoDetailViewModel
 import com.gitspark.gitspark.ui.main.repo.RepoOverviewViewModel
 import com.gitspark.gitspark.ui.main.search.SearchViewModel
+import com.gitspark.gitspark.ui.main.shared.RepoListViewModel
 import com.gitspark.gitspark.ui.main.shared.UserListViewModel
 import dagger.Binds
 import dagger.Module
@@ -88,6 +89,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(UserListViewModel::class)
     internal abstract fun bindUserListViewModel(userListViewModel: UserListViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(RepoListViewModel::class)
+    internal abstract fun bindRepoListViewModel(repoListViewModel: RepoListViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory

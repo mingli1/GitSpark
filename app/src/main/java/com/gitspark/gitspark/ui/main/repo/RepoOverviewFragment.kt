@@ -52,6 +52,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         viewModel.updatedRepoData.observe(viewLifecycleOwner) { sharedViewModel.repoData.value = it }
         viewModel.forkButtonAction.observe(viewLifecycleOwner) { showForkConfirmDialog(it) }
         viewModel.navigateToUserListAction.observe(viewLifecycleOwner) { navigateToUserListFragment(it) }
+        viewModel.navigateToRepoListAction.observe(viewLifecycleOwner) { navigateToRepoListFragment(it) }
     }
 
     override fun onPositiveClicked() = viewModel.onForkConfirmClicked()
@@ -134,7 +135,9 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         stars_field.setOnClickListener {
             viewModel.onUserListClicked(getString(R.string.stargazers_title), UserListType.Stargazers)
         }
-        forks_field.setOnClickListener {  }
+        forks_field.setOnClickListener {
+            viewModel.onRepoListClicked(getString(R.string.forks_title), RepoListType.Forks)
+        }
     }
 
     private fun showForkConfirmDialog(name: String) {
@@ -152,6 +155,18 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         }
         findNavController().navigate(
             R.id.action_repo_detail_fragment_to_user_list_fragment,
+            data
+        )
+    }
+
+    private fun navigateToRepoListFragment(triple: Triple<String, RepoListType, String>) {
+        val data = Bundle().apply {
+            putString(BUNDLE_TITLE, triple.first)
+            putSerializable(BUNDLE_REPO_LIST_TYPE, triple.second)
+            putString(BUNDLE_ARGUMENTS, triple.third)
+        }
+        findNavController().navigate(
+            R.id.action_repo_detail_fragment_to_repo_list_fragment,
             data
         )
     }

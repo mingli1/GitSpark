@@ -59,6 +59,7 @@
     <string name="watch_choice_title">Watch %1$s</string>
     <string name="watchers_title">Watchers</string>
     <string name="stargazers_title">Stargazers</string>
+    <string name="forks_title">Forks</string>
     <string-array name="watch_items">
         <item>Not watching</item>
         <item>Watching</item>
