@@ -54,7 +54,6 @@ class RepoOverviewViewModel @Inject constructor(
                 languageColor = colorHelper.getColor(repoLanguage) ?: -1,
                 updatedText = updatedText,
                 licenseText = license.licenseName ?: "",
-                numWatchers = numWatches,
                 numStars = numStars,
                 numForks = numForks,
                 loading = true
@@ -69,7 +68,6 @@ class RepoOverviewViewModel @Inject constructor(
                 languageColor = colorHelper.getColor(repoLanguage) ?: -1,
                 updatedText = updatedText,
                 licenseText = license.licenseName ?: "",
-                numWatchers = numWatches,
                 numStars = numStars,
                 numForks = numForks,
                 loading = true
