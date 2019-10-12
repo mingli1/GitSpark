@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.repository
 
+import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.Page
@@ -126,8 +127,8 @@ class RepoRepositoryTest {
     @Test
     fun shouldGetIfWatchedByUser() {
         every { repoRepository.isWatchedByAuthUser(any(), any()) } returns
-                Completable.complete()
+                Observable.just(RepoResult.Success(ApiSubscribed(subscribed = true, ignored = false)))
         val observer = repoRepository.isWatchedByAuthUser("username", "repo").test()
-        observer.assertComplete()
+        observer.assertValue(RepoResult.Success(ApiSubscribed(subscribed = true, ignored = false)))
     }
 }

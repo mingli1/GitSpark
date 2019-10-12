@@ -1,9 +1,11 @@
 package com.gitspark.gitspark.ui.main.repo
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.model.Branch
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
+import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import io.mockk.MockKAnnotations
@@ -61,26 +63,44 @@ class RepoDetailViewModelTest {
     @Test
     fun shouldGetRepoActivityDataSuccess() {
         every { repoRepository.isWatchedByAuthUser(any(), any()) } returns
-                Completable.complete()
+                Observable.just(RepoResult.Success(ApiSubscribed(subscribed = true, ignored = false)))
         every { repoRepository.isStarredByAuthUser(any(), any()) } returns
                 Completable.complete()
 
         viewModel.fetchAdditionalRepoData(Repo())
 
-        assertThat(viewModel.watchingData.value).isTrue()
+        assertThat(viewModel.watchingData.value).isEqualTo(ApiSubscribed(subscribed = true, ignored = false))
         assertThat(viewModel.starringData.value).isTrue()
     }
 
     @Test
     fun shouldGetRepoActivityDataFailure() {
         every { repoRepository.isWatchedByAuthUser(any(), any()) } returns
-                Completable.error(Throwable())
+                Observable.just(RepoResult.Failure("failure"))
         every { repoRepository.isStarredByAuthUser(any(), any()) } returns
                 Completable.error(Throwable())
 
         viewModel.fetchAdditionalRepoData(Repo())
 
-        assertThat(viewModel.watchingData.value).isFalse()
+        assertThat(viewModel.watchingData.value).isEqualTo(ApiSubscribed(subscribed = false, ignored = false))
         assertThat(viewModel.starringData.value).isFalse()
+    }
+
+    @Test
+    fun shouldGetNumWatchersDataSuccess() {
+        every { repoRepository.getWatchers(any(), any()) } returns
+            Observable.just(RepoResult.Success(Page(value = listOf(User()))))
+
+        viewModel.fetchAdditionalRepoData(Repo())
+
+        assertThat(viewModel.numWatchersData.value).isEqualTo(0)
+    }
+
+    @Test
+    fun shouldGetNumWatchersDataFailure() {
+        every { repoRepository.getWatchers(any(), any()) } returns
+                Observable.just(RepoResult.Failure("failure"))
+        viewModel.fetchAdditionalRepoData(Repo())
+        assertThat(viewModel.alertAction.value).isEqualTo("Failed to retrieve number of watchers")
     }
 }

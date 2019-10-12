@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.main.repo
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.helper.LanguageColorHelper
@@ -24,8 +25,8 @@ class RepoOverviewViewModel @Inject constructor(
     val forkButtonAction = SingleLiveEvent<String>()
 
     private lateinit var repo: Repo
-    private var userWatching = false
-    private var userStarring = false
+    @VisibleForTesting var userWatching = false
+    @VisibleForTesting var userStarred = false
 
     fun loadRepo(repo: Repo) {
         this.repo = repo
@@ -83,7 +84,7 @@ class RepoOverviewViewModel @Inject constructor(
     }
 
     fun setUserStarring(starring: Boolean) {
-        userStarring = starring
+        userStarred = starring
         viewState.value = viewState.value?.copy(userStarring = starring)
             ?: RepoOverviewViewState(userStarring = starring)
     }
@@ -102,7 +103,7 @@ class RepoOverviewViewModel @Inject constructor(
     }
 
     fun onStarButtonClicked() {
-        if (userStarring) {
+        if (userStarred) {
             subscribe(repoRepository.unstarRepo(repo.owner.login, repo.repoName),
                 {
                     val newStars = (viewState.value?.numStars ?: 0) - 1
@@ -128,7 +129,7 @@ class RepoOverviewViewModel @Inject constructor(
                 { alert("Failed to star repository") }
             )
         }
-        userStarring = !userStarring
+        userStarred = !userStarred
     }
 
     fun onForkButtonClicked() {

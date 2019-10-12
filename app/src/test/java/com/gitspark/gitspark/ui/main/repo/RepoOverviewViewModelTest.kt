@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.main.repo
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.RepoContent
@@ -9,6 +10,7 @@ import com.gitspark.gitspark.repository.RepoResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
@@ -96,7 +98,7 @@ class RepoOverviewViewModelTest {
 
     @Test
     fun shouldSetUserWatching() {
-        viewModel.setUserWatching(true)
+        viewModel.setUserWatching(ApiSubscribed(subscribed = true, ignored = false))
         assertThat(viewState().userWatching).isTrue()
     }
 
@@ -104,6 +106,87 @@ class RepoOverviewViewModelTest {
     fun shouldSetUserStarring() {
         viewModel.setUserStarring(true)
         assertThat(viewState().userStarring).isTrue()
+    }
+
+    @Test
+    fun shouldSetNumWatching() {
+        viewModel.setNumWatching(100)
+        assertThat(viewState().numWatchers).isEqualTo(100)
+    }
+
+    @Test
+    fun shouldShowDialogOnForkButtonClicked() {
+        viewModel.loadRepo(Repo())
+        viewModel.onForkButtonClicked()
+        assertThat(viewModel.forkButtonAction.value).isNotNull()
+    }
+
+    @Test
+    fun shouldUnWatchIfWatching() {
+        viewModel.userWatching = true
+        viewModel.loadRepo(Repo())
+        every { repoRepository.unwatchRepo(any(), any()) } returns
+                Completable.complete()
+
+        viewModel.onWatchButtonClicked()
+
+        assertThat(viewState().numWatchers).isEqualTo(-1)
+        assertThat(viewModel.updatedRepoData.value?.numWatches).isEqualTo(-1)
+        assertThat(viewModel.userWatching).isFalse()
+    }
+
+    @Test
+    fun shouldWatchIfNotWatching() {
+        viewModel.userWatching = false
+        viewModel.loadRepo(Repo())
+        every { repoRepository.watchRepo(any(), any(), any(), any()) } returns
+                Completable.complete()
+
+        viewModel.onWatchButtonClicked()
+
+        assertThat(viewState().numWatchers).isEqualTo(1)
+        assertThat(viewModel.updatedRepoData.value?.numWatches).isEqualTo(1)
+        assertThat(viewModel.userWatching).isTrue()
+    }
+
+    @Test
+    fun shouldUnstarIfStarring() {
+        viewModel.userStarred = true
+        viewModel.loadRepo(Repo())
+        every { repoRepository.unstarRepo(any(), any()) } returns
+                Completable.complete()
+
+        viewModel.onStarButtonClicked()
+
+        assertThat(viewState().numStars).isEqualTo(-1)
+        assertThat(viewModel.updatedRepoData.value?.numStars).isEqualTo(-1)
+        assertThat(viewModel.userStarred).isFalse()
+    }
+
+    @Test
+    fun shouldStarIfNotStarring() {
+        viewModel.userStarred = false
+        viewModel.loadRepo(Repo())
+        every { repoRepository.starRepo(any(), any()) } returns
+                Completable.complete()
+
+        viewModel.onStarButtonClicked()
+
+        assertThat(viewState().numStars).isEqualTo(1)
+        assertThat(viewModel.updatedRepoData.value?.numStars).isEqualTo(1)
+        assertThat(viewModel.userStarred).isTrue()
+    }
+
+    @Test
+    fun shouldForkOnConfirm() {
+        viewModel.loadRepo(Repo())
+        every { repoRepository.forkRepo(any(), any()) } returns
+                Completable.complete()
+
+        viewModel.onForkConfirmClicked()
+
+        assertThat(viewState().numForks).isEqualTo(1)
+        assertThat(viewModel.updatedRepoData.value?.numForks).isEqualTo(1)
     }
 
     private fun viewState() = viewModel.viewState.value!!
