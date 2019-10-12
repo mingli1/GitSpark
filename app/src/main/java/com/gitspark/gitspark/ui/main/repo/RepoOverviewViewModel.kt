@@ -109,7 +109,7 @@ class RepoOverviewViewModel @Inject constructor(
             WATCHING ->
                 requestWatchRepo(repo.owner.login, repo.repoName, subscribed = true, ignored = false)
             else ->
-                requestWatchRepo(repo.owner.login, repo.repoName, subscribed = false, ignored = true)
+                requestWatchRepo(repo.owner.login, repo.repoName, subscribed = true, ignored = true)
         }
         userWatching = which
     }
@@ -178,13 +178,13 @@ class RepoOverviewViewModel @Inject constructor(
         subscribe(repoRepository.watchRepo(username, repoName, subscribed, ignored),
             {
                 when {
+                    ignored -> {
+                        viewState.value = viewState.value?.copy(userWatching = IGNORING)
+                    }
                     subscribed -> {
                         val newWatchers = (viewState.value?.numWatchers ?: 0) + 1
                         viewState.value = viewState.value?.copy(numWatchers = newWatchers, userWatching = WATCHING)
                         updatedRepoData.value = repo.copy(numWatches = newWatchers)
-                    }
-                    ignored -> {
-                        viewState.value = viewState.value?.copy(userWatching = IGNORING)
                     }
                 }
             },
