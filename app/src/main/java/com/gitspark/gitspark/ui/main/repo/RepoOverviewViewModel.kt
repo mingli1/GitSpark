@@ -150,10 +150,19 @@ class RepoOverviewViewModel @Inject constructor(
     }
 
     fun onUserListClicked(title: String, type: UserListType) {
+        when (type) {
+            UserListType.Watchers -> if (viewState.value?.numWatchers == 0) return
+            UserListType.Stargazers -> if (viewState.value?.numStars == 0) return
+            UserListType.None -> return
+        }
         navigateToUserListAction.value = Triple(title, type, repo.fullName)
     }
 
     fun onRepoListClicked(title: String, type: RepoListType) {
+        when (type) {
+            RepoListType.Forks -> if (viewState.value?.numForks == 0) return
+            RepoListType.None -> return
+        }
         navigateToRepoListAction.value = Triple(title, type, repo.fullName)
     }
 
