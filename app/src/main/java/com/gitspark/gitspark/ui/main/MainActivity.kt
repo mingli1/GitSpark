@@ -58,6 +58,9 @@ class MainActivity : AppCompatActivity() {
                     R.id.profile_fragment -> args == null
                     R.id.edit_profile_fragment -> false
                     R.id.repo_detail_fragment -> false
+                    R.id.repo_code_fragment -> false
+                    R.id.user_list_fragment -> false
+                    R.id.repo_list_fragment -> false
                     else -> true
                 }
             }
