@@ -147,4 +147,12 @@ interface RepoService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = REPO_PER_PAGE
     ): Observable<ApiPage<ApiRepo>>
+
+    @GET("repos/{owner}/{repo}/contributors")
+    fun getContributors(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = USER_PER_PAGE
+    ): Observable<ApiPage<ApiUser>>
 }

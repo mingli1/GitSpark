@@ -15,7 +15,8 @@ import javax.inject.Inject
 enum class UserListType {
     None,
     Watchers,
-    Stargazers
+    Stargazers,
+    Contributors
 }
 
 class UserListViewModel @Inject constructor(
@@ -61,6 +62,7 @@ class UserListViewModel @Inject constructor(
             UserListType.None -> return
             UserListType.Watchers -> requestWatchers()
             UserListType.Stargazers -> requestStargazers()
+            UserListType.Contributors -> requestContributors()
         }
     }
 
@@ -74,6 +76,13 @@ class UserListViewModel @Inject constructor(
     private fun requestStargazers() {
         val args = this.args.split("/")
         subscribe(repoRepository.getStargazers(args[0], args[1], page = page)) {
+            onUserDataResult(it)
+        }
+    }
+
+    private fun requestContributors() {
+        val args = this.args.split("/")
+        subscribe(repoRepository.getContributors(args[0], args[1], page = page)) {
             onUserDataResult(it)
         }
     }

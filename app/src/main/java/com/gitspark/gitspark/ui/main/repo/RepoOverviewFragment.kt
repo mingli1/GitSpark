@@ -138,6 +138,9 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         forks_field.setOnClickListener {
             viewModel.onRepoListClicked(getString(R.string.forks_title), RepoListType.Forks)
         }
+        contributors_field.setOnClickListener {
+            viewModel.onUserListClicked(getString(R.string.contributors_button_text), UserListType.Contributors)
+        }
     }
 
     private fun showForkConfirmDialog(name: String) {

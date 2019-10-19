@@ -153,6 +153,7 @@ class RepoOverviewViewModel @Inject constructor(
         when (type) {
             UserListType.Watchers -> if (viewState.value?.numWatchers == 0) return
             UserListType.Stargazers -> if (viewState.value?.numStars == 0) return
+            UserListType.Contributors -> {}
             UserListType.None -> return
         }
         navigateToUserListAction.value = Triple(title, type, repo.fullName)

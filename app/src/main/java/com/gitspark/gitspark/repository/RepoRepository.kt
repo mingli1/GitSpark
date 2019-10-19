@@ -8,7 +8,6 @@ import com.gitspark.gitspark.api.service.USER_PER_PAGE
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.*
-import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -210,6 +209,22 @@ class RepoRepository @Inject constructor(
                 })
             }
             .onErrorReturn { getFailure("Failed to obtain forks for $username/$repoName") }
+    }
+
+    fun getContributors(
+        username: String,
+        repoName: String,
+        page: Int = 1,
+        perPage: Int = USER_PER_PAGE
+    ): Observable<RepoResult<Page<User>>> {
+        return getRepoService()
+            .getContributors(username, repoName, page, perPage)
+            .map {
+                getSuccess(it.toModel<User>().apply {
+                    value = it.response.map { user -> user.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain contributors for $username/$repoName") }
     }
 
     private fun getRepoService() =
