@@ -48,9 +48,9 @@
     <string name="pull_requests_button_text">Pull Requests</string>
     <string name="contributors_button_text">Contributors</string>
     <string name="readme_label_text">README</string>
-    <string name="num_stars_text">%1$d stars</string>
-    <string name="num_watchers_text">%1$d watchers</string>
-    <string name="num_forks_text">%1$d forks</string>
+    <string name="num_stars_text">%1$s stars</string>
+    <string name="num_watchers_text">%1$s watchers</string>
+    <string name="num_forks_text">%1$s forks</string>
     <string name="num_stars_text_single">1 star</string>
     <string name="num_watchers_text_single">1 watcher</string>
     <string name="num_forks_text_single">1 fork</string>

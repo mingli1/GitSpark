@@ -14,6 +14,7 @@ import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setColor
+import com.gitspark.gitspark.extension.withSuffix
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
@@ -105,13 +106,13 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
 
             watching_field.text =
                 if (numWatchers == 1) getString(R.string.num_watchers_text_single)
-                else getString(R.string.num_watchers_text, numWatchers)
+                else getString(R.string.num_watchers_text, withSuffix(numWatchers))
             stars_field.text =
                 if (numStars == 1) getString(R.string.num_stars_text_single)
-                else getString(R.string.num_stars_text, numStars)
+                else getString(R.string.num_stars_text, withSuffix(numStars))
             forks_field.text =
                 if (numForks == 1) getString(R.string.num_forks_text_single)
-                else getString(R.string.num_forks_text, numForks)
+                else getString(R.string.num_forks_text, withSuffix(numForks))
 
             watch_button.drawable.setColor(context!!.getColor(
                 if (userWatching) R.color.colorPrimaryDark else R.color.colorDrawableDefault))
