@@ -29,7 +29,8 @@ data class ApiAuthUser(
     @field:Json(name = "disk_usage") val diskUsage: Int?,
     @field:Json(name = "collaborators") val collaborators: Int?,
     @field:Json(name = "two_factor_authentication") val twoFactorAuth: Boolean?,
-    @field:Json(name = "plan") val plan: ApiGitHubPlan?
+    @field:Json(name = "plan") val plan: ApiGitHubPlan?,
+    @field:Json(name = "contributions") val contributions: Int?
 ) {
     fun toModel() = AuthUser().also {
         it.login = username ?: ""
@@ -55,5 +56,6 @@ data class ApiAuthUser(
         it.diskUsage = diskUsage ?: 0
         it.collaborators = collaborators ?: 0
         it.plan = plan?.toModel() ?: GitHubPlan()
+        it.contributions = contributions ?: 0
     }
 }

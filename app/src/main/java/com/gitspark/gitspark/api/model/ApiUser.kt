@@ -22,7 +22,8 @@ data class ApiUser(
     @field:Json(name = "following") val following: Int?,
     @field:Json(name = "created_at") val createdAt: String?,
     @field:Json(name = "updated_at") val updatedAt: String?,
-    @field:Json(name = "hireable") val hireable: Boolean?
+    @field:Json(name = "hireable") val hireable: Boolean?,
+    @field:Json(name = "contributions") val contributions: Int?
 ) {
 
     fun toModel() = User().also {
@@ -44,5 +45,6 @@ data class ApiUser(
         it.createdAt = createdAt ?: ""
         it.updatedAt = updatedAt ?: ""
         it.hireable = hireable ?: false
+        it.contributions = contributions ?: 0
     }
 }

@@ -24,7 +24,8 @@ open class User(
     var following: Int = 0,
     var createdAt: String = "",
     var updatedAt: String = "",
-    var hireable: Boolean = false
+    var hireable: Boolean = false,
+    var contributions: Int = 0
 ) : Pageable {
 
     override fun getViewType() = VIEW_TYPE_VIEW

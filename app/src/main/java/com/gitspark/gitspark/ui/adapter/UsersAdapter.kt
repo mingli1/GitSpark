@@ -14,6 +14,13 @@ class UsersAdapter(private val navigator: UserProfileNavigator) : PaginationAdap
             with (view) {
                 avatar_image.loadImage(item.avatarUrl)
                 name_field.text = item.login
+
+                if (item.contributions == 1)
+                    content_field.text = context.getString(R.string.contributions_text_single)
+                else if (item.contributions > 1) {
+                    content_field.text = context.getString(R.string.contributions_text, item.contributions)
+                }
+
                 user_card.setOnClickListener { navigator.onUserSelected(item.login) }
             }
         }
