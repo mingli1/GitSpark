@@ -44,7 +44,9 @@
     <string name="watch_button_text">Watch</string>
     <string name="star_button_text">Star</string>
     <string name="fork_button_text">Fork</string>
-    <string name="contributors_button_text">View contributors</string>
+    <string name="issues_button_text">Issues</string>
+    <string name="pull_requests_button_text">Pull Requests</string>
+    <string name="contributors_button_text">Contributors</string>
     <string name="readme_label_text">README</string>
     <string name="num_stars_text">%1$d stars</string>
     <string name="num_watchers_text">%1$d watchers</string>
