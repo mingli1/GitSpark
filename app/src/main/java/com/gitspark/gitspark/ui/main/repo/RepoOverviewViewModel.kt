@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
@@ -12,14 +13,12 @@ import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.main.shared.RepoListType
 import com.gitspark.gitspark.ui.main.shared.UserListType
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneOffset
-import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 
 class RepoOverviewViewModel @Inject constructor(
     private val repoRepository: RepoRepository,
-    private val colorHelper: LanguageColorHelper
+    private val colorHelper: LanguageColorHelper,
+    private val timeHelper: TimeHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<RepoOverviewViewState>()
@@ -38,11 +37,7 @@ class RepoOverviewViewModel @Inject constructor(
             var updatedText = ""
             if (repoPushedAt.isNotEmpty()) {
                 val updatedDate = Instant.parse(repoPushedAt)
-                val dateTime = LocalDateTime.ofInstant(
-                    updatedDate,
-                    ZoneOffset.UTC
-                )
-                updatedText = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss").format(dateTime)
+                updatedText = timeHelper.getRelativeTimeFormat(updatedDate)
             }
 
             viewState.value = viewState.value?.copy(

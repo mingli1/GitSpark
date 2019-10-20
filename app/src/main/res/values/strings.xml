@@ -20,7 +20,7 @@
     <string name="total_contribution_single">1 contribution in the past year</string>
     <string name="total_contribution">%1$d contributions in the past year</string>
     <string name="joined_date">Joined GitHub on %1$s</string>
-    <string name="updated_repo">Updated at %1$s</string>
+    <string name="updated_repo">Updated %1$s</string>
     <string name="private_label">private</string>
     <string name="forked_label">forked</string>
     <string name="archived_label">archived</string>

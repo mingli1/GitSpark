@@ -12,6 +12,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.ReposAdapter
@@ -28,6 +29,7 @@ class RepoListFragment : BaseFragment<RepoListViewModel>(RepoListViewModel::clas
 
     @Inject lateinit var colorHelper: LanguageColorHelper
     @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
+    @Inject lateinit var timeHelper: TimeHelper
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: PaginationListener
     private lateinit var reposAdapter: ReposAdapter
@@ -56,7 +58,7 @@ class RepoListFragment : BaseFragment<RepoListViewModel>(RepoListViewModel::clas
         }
         item_list.setHasFixedSize(true)
         item_list.layoutManager = layoutManager
-        reposAdapter = ReposAdapter(colorHelper, viewModel)
+        reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel)
         if (item_list.adapter == null) item_list.adapter = reposAdapter
 
         item_list.addOnScrollListener(paginationListener)

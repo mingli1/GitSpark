@@ -9,17 +9,17 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.extension.withSuffix
 import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.ui.nav.RepoDetailNavigator
 import kotlinx.android.synthetic.main.repo_view.view.*
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.format.DateTimeFormatter
 
 private const val MAX_TOPICS_SHOWN = 3
 
 class ReposAdapter(
     private val colorHelper: LanguageColorHelper,
+    private val timeHelper: TimeHelper,
     private val navigator: RepoDetailNavigator
 ) : PaginationAdapter() {
 
@@ -31,12 +31,8 @@ class ReposAdapter(
 
                 if (item.repoPushedAt.isNotEmpty()) {
                     val updatedDate = Instant.parse(item.repoPushedAt)
-                    val dateTime = LocalDateTime.ofInstant(
-                        updatedDate,
-                        org.threeten.bp.ZoneOffset.UTC
-                    )
+                    val formatted = timeHelper.getRelativeTimeFormat(updatedDate)
                     updated_field.isVisible = true
-                    val formatted = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss").format(dateTime)
                     updated_field.text = context.getString(R.string.updated_repo, formatted)
                 } else updated_field.isVisible = false
 
