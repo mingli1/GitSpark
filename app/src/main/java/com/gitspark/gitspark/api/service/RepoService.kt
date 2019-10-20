@@ -4,6 +4,7 @@ import com.gitspark.gitspark.api.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import retrofit2.http.*
+import java.util.*
 
 const val REPO_PER_PAGE = 50
 const val BRANCHES_PER_PAGE = 50
@@ -155,4 +156,10 @@ interface RepoService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = USER_PER_PAGE
     ): Observable<ApiPage<ApiUser>>
+
+    @GET("repos/{owner}/{repo}/languages")
+    fun getLanguages(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Observable<SortedMap<String, Int>>
 }

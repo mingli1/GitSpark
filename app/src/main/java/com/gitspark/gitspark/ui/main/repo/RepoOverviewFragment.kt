@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.model.ApiSubscribed
@@ -15,6 +17,8 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.extension.withSuffix
+import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.ui.adapter.LanguageAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
@@ -29,9 +33,14 @@ import kotlinx.android.synthetic.main.fragment_repo_overview.stars_field
 import kotlinx.android.synthetic.main.fragment_repo_overview.topics_container
 import kotlinx.android.synthetic.main.fragment_repo_overview.updated_field
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+import javax.inject.Inject
 
 class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewViewModel::class.java),
     ConfirmDialogCallback {
+
+    @Inject lateinit var colorHelper: LanguageColorHelper
+    private lateinit var languageAdapter: LanguageAdapter
+    private lateinit var layoutManager: LinearLayoutManager
 
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[RepoDetailSharedViewModel::class.java]
@@ -45,6 +54,13 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         super.onActivityCreated(savedInstanceState)
         viewModel.loadRepo((parentFragment as RepoDataCallback).getData())
         readme_view.addStyleSheet(Github())
+
+        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        language_breakdown.setHasFixedSize(true)
+        language_breakdown.layoutManager = layoutManager
+        languageAdapter = LanguageAdapter(colorHelper)
+        if (language_breakdown.adapter == null) language_breakdown.adapter = languageAdapter
+
         setUpListeners()
     }
 

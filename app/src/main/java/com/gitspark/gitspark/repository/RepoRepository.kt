@@ -9,6 +9,7 @@ import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.*
 import io.reactivex.Observable
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -225,6 +226,13 @@ class RepoRepository @Inject constructor(
                 })
             }
             .onErrorReturn { getFailure("Failed to obtain contributors for $username/$repoName") }
+    }
+
+    fun getLanguages(username: String, repoName: String): Observable<RepoResult<SortedMap<String, Int>>> {
+        return getRepoService()
+            .getLanguages(username, repoName)
+            .map { getSuccess(it) }
+            .onErrorReturn { getFailure("Failed to obtain languages for $username/$repoName") }
     }
 
     private fun getRepoService() =
