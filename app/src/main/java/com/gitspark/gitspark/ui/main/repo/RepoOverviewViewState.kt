@@ -20,5 +20,6 @@ data class RepoOverviewViewState(
     val loading: Boolean = false,
     val userWatching: Boolean = false,
     val userStarring: Boolean = false,
+    val langDetailsShown: Boolean = false,
     val languages: SortedMap<String, Int> = sortedMapOf()
 )

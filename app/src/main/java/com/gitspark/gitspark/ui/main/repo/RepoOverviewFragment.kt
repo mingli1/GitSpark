@@ -42,6 +42,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
     @Inject lateinit var colorHelper: LanguageColorHelper
     private lateinit var languageAdapter: LanguageAdapter
     private lateinit var layoutManager: LinearLayoutManager
+    private var rmUrl = ""
 
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[RepoDetailSharedViewModel::class.java]
@@ -99,11 +100,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             forked_label.isVisible = isForked
             archived_label.isVisible = isArchived
 
-            if (languageColor != -1) {
-                language_field.compoundDrawablesRelative[0].setColor(languageColor)
-            }
             language_field.isVisible = repoLanguage.isNotEmpty()
-            language_field.text = repoLanguage
             license_field.isVisible = licenseText.isNotEmpty()
             license_field.text = licenseText
 
@@ -140,9 +137,31 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
 
             readme_label.isVisible = readmeUrl.isNotEmpty()
             readme_view.isVisible = readmeUrl.isNotEmpty()
-            if (readmeUrl.isNotEmpty()) readme_view.loadMarkdownFromUrl(readmeUrl)
+            if (readmeUrl.isNotEmpty() && readmeUrl != rmUrl) {
+                rmUrl = readmeUrl
+                readme_view.loadMarkdownFromUrl(readmeUrl)
+            }
 
             languageAdapter.setContent(languages)
+            language_button.setImageResource(if (langDetailsShown)
+                R.drawable.ic_expand_less else R.drawable.ic_expand_more)
+            language_breakdown.isVisible = langDetailsShown
+
+            if (langDetailsShown) {
+                language_field.text = getString(R.string.lang_breakdown)
+                language_field.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+            } else {
+                language_field.text = repoLanguage
+                language_field.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    resources.getDrawable(R.drawable.ic_circle, null),
+                    null,
+                    null,
+                    null
+                )
+                if (languageColor != -1) {
+                    language_field.compoundDrawablesRelative[0].setColor(languageColor)
+                }
+            }
         }
     }
 
@@ -163,6 +182,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         contributors_field.setOnClickListener {
             viewModel.onUserListClicked(getString(R.string.contributors_button_text), UserListType.Contributors)
         }
+        language_button.setOnClickListener { viewModel.onLanguageButtonClicked() }
     }
 
     private fun showForkConfirmDialog(name: String) {

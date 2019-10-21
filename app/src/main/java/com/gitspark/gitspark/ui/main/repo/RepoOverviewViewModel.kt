@@ -168,6 +168,11 @@ class RepoOverviewViewModel @Inject constructor(
         navigateToRepoListAction.value = Triple(title, type, repo.fullName)
     }
 
+    fun onLanguageButtonClicked() {
+        val langDetailsShown = viewState.value?.langDetailsShown ?: false
+        viewState.value = viewState.value?.copy(langDetailsShown = !langDetailsShown)
+    }
+
     private fun requestRepoReadme(owner: String, repoName: String) {
         subscribe(repoRepository.getReadme(owner, repoName)) {
             when (it) {
