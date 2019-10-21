@@ -45,7 +45,12 @@ class LanguageAdapter(
             with (view) {
                 val bytes = (items[key] ?: 0).toFloat()
                 val percentage = (bytes / totalBytes) * 100f
-                val percentStr = String.format("%.2f%%", percentage)
+                val percentStr = when {
+                    percentage >= 0.01f -> String.format("%.2f%%", percentage)
+                    percentage >= 0.001f -> String.format("%.3f%%", percentage)
+                    percentage >= 0.000f -> String.format("%.4f%%", percentage)
+                    else -> String.format("%f%%", percentage)
+                }
 
                 language_field.text = key
                 breakdown_percent.text = percentStr
