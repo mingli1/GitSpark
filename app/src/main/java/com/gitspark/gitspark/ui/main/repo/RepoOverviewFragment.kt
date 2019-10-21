@@ -33,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_repo_overview.stars_field
 import kotlinx.android.synthetic.main.fragment_repo_overview.topics_container
 import kotlinx.android.synthetic.main.fragment_repo_overview.updated_field
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+import java.util.*
 import javax.inject.Inject
 
 class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewViewModel::class.java),
@@ -81,6 +82,8 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
     fun notifyStarringDataRetrieved(starring: Boolean) = viewModel.setUserStarring(starring)
 
     fun notifyNumWatchersDataRetrieved(numWatchers: Int) = viewModel.setNumWatching(numWatchers)
+
+    fun notifyLanguagesDataRetrieved(lang: SortedMap<String, Int>) = viewModel.setLanguages(lang)
 
     private fun updateView(viewState: RepoOverviewViewState) {
         with (viewState) {
@@ -138,6 +141,8 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             readme_label.isVisible = readmeUrl.isNotEmpty()
             readme_view.isVisible = readmeUrl.isNotEmpty()
             if (readmeUrl.isNotEmpty()) readme_view.loadMarkdownFromUrl(readmeUrl)
+
+            languageAdapter.setContent(languages)
         }
     }
 

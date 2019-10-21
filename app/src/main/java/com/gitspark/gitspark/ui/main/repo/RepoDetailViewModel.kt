@@ -8,6 +8,7 @@ import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import java.util.*
 import javax.inject.Inject
 
 class RepoDetailViewModel @Inject constructor(
@@ -19,6 +20,8 @@ class RepoDetailViewModel @Inject constructor(
     val watchingData = SingleLiveEvent<ApiSubscribed>()
     val numWatchersData = SingleLiveEvent<Int>()
     val starringData = SingleLiveEvent<Boolean>()
+    val languagesData = SingleLiveEvent<SortedMap<String, Int>>()
+
     private var dataLoaded = false
 
     fun fetchAdditionalRepoData(repo: Repo) {
@@ -27,6 +30,7 @@ class RepoDetailViewModel @Inject constructor(
             requestRepoBranches(repo.owner.login, repo.repoName)
             requestRepoActivityData(repo.owner.login, repo.repoName)
             requestNumWatchersData(repo.owner.login, repo.repoName)
+            requestLanguagesData(repo.owner.login, repo.repoName)
             dataLoaded = true
         }
     }
@@ -63,7 +67,16 @@ class RepoDetailViewModel @Inject constructor(
                     }
                     numWatchersData.value = total
                 }
-                is RepoResult.Failure -> alert("Failed to retrieve number of watchers")
+                is RepoResult.Failure -> alert(it.error)
+            }
+        }
+    }
+
+    private fun requestLanguagesData(username: String, repoName: String) {
+        subscribe(repoRepository.getLanguages(username, repoName)) {
+            when (it) {
+                is RepoResult.Success -> languagesData.value = it.value
+                is RepoResult.Failure -> alert(it.error)
             }
         }
     }

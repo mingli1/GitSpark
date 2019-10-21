@@ -1,5 +1,7 @@
 package com.gitspark.gitspark.ui.main.repo
 
+import java.util.*
+
 data class RepoOverviewViewState(
     val repoName: String = "",
     val topics: List<String> = emptyList(),
@@ -17,5 +19,6 @@ data class RepoOverviewViewState(
     val readmeUrl: String = "",
     val loading: Boolean = false,
     val userWatching: Boolean = false,
-    val userStarring: Boolean = false
+    val userStarring: Boolean = false,
+    val languages: SortedMap<String, Int> = sortedMapOf()
 )

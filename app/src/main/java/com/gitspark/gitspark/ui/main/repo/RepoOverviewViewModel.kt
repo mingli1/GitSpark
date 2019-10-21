@@ -13,6 +13,7 @@ import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.main.shared.RepoListType
 import com.gitspark.gitspark.ui.main.shared.UserListType
 import org.threeten.bp.Instant
+import java.util.*
 import javax.inject.Inject
 
 class RepoOverviewViewModel @Inject constructor(
@@ -89,6 +90,11 @@ class RepoOverviewViewModel @Inject constructor(
     fun setNumWatching(numWatchers: Int) {
         viewState.value = viewState.value?.copy(numWatchers = numWatchers)
             ?: RepoOverviewViewState(numWatchers = numWatchers)
+    }
+
+    fun setLanguages(lang: SortedMap<String, Int>) {
+        viewState.value = viewState.value?.copy(languages = lang)
+            ?: RepoOverviewViewState(languages = lang)
     }
 
     fun onWatchButtonClicked() {

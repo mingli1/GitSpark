@@ -14,7 +14,7 @@ class LanguageAdapter(
     private val colorHelper: LanguageColorHelper
 ) : RecyclerView.Adapter<LanguageAdapter.ViewHolder>() {
 
-    private lateinit var items: SortedMap<String, Int>
+    private var items = sortedMapOf<String, Int>()
     private var totalBytes = 0f
 
     override fun getItemCount() = items.size
@@ -32,6 +32,7 @@ class LanguageAdapter(
     }
 
     fun setContent(content: SortedMap<String, Int>) {
+        if (items == content) return
         items = content
         totalBytes = 0f
         items.forEach { totalBytes += it.value }

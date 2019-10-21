@@ -231,7 +231,11 @@ class RepoRepository @Inject constructor(
     fun getLanguages(username: String, repoName: String): Observable<RepoResult<SortedMap<String, Int>>> {
         return getRepoService()
             .getLanguages(username, repoName)
-            .map { getSuccess(it) }
+            .map {
+                getSuccess(it.toSortedMap(kotlin.Comparator { o1, o2 ->
+                    (it[o2] ?: 0) - (it[o1] ?: 0)
+                }))
+            }
             .onErrorReturn { getFailure("Failed to obtain languages for $username/$repoName") }
     }
 

@@ -82,5 +82,6 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
         viewModel.watchingData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyWatchingDataRetrieved(it) }
         viewModel.numWatchersData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyNumWatchersDataRetrieved(it) }
         viewModel.starringData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyStarringDataRetrieved(it) }
+        viewModel.languagesData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyLanguagesDataRetrieved(it) }
     }
 }
