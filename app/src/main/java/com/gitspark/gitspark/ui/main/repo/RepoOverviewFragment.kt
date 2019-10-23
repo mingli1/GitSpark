@@ -78,6 +78,11 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
 
     override fun onNegativeClicked() {}
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        rmUrl = ""
+    }
+
     fun notifyWatchingDataRetrieved(watchData: ApiSubscribed) = viewModel.setUserWatching(watchData)
 
     fun notifyStarringDataRetrieved(starring: Boolean) = viewModel.setUserStarring(starring)
