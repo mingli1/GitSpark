@@ -3,6 +3,7 @@ package com.gitspark.gitspark.ui.main.repo
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.RepoContent
 import com.gitspark.gitspark.repository.RepoRepository
@@ -40,6 +41,7 @@ class RepoOverviewViewModelTest {
     private lateinit var viewModel: RepoOverviewViewModel
     @RelaxedMockK private lateinit var repoRepository: RepoRepository
     @RelaxedMockK private lateinit var colorHelper: LanguageColorHelper
+    @RelaxedMockK private lateinit var timeHelper: TimeHelper
 
     @Before
     fun setup() {
@@ -47,7 +49,7 @@ class RepoOverviewViewModelTest {
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        viewModel = RepoOverviewViewModel(repoRepository, colorHelper)
+        viewModel = RepoOverviewViewModel(repoRepository, colorHelper, timeHelper)
     }
 
     @Test
@@ -65,7 +67,7 @@ class RepoOverviewViewModelTest {
             isForked = true,
             repoLanguage = "Java",
             languageColor = 123,
-            numWatchers = 20,
+            numWatchers = 0,
             numStars = 40,
             numForks = 6,
             loading = true
@@ -187,6 +189,13 @@ class RepoOverviewViewModelTest {
 
         assertThat(viewState().numForks).isEqualTo(1)
         assertThat(viewModel.updatedRepoData.value?.numForks).isEqualTo(1)
+    }
+
+    @Test
+    fun shouldSetLanguages() {
+        val sortedMap = sortedMapOf(Pair("a", 1), Pair("b", 2))
+        viewModel.setLanguages(sortedMap)
+        assertThat(viewState().languages).isEqualTo(sortedMap)
     }
 
     private fun viewState() = viewModel.viewState.value!!

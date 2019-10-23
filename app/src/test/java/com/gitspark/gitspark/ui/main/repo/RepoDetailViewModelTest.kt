@@ -88,7 +88,7 @@ class RepoDetailViewModelTest {
 
     @Test
     fun shouldGetNumWatchersDataSuccess() {
-        every { repoRepository.getWatchers(any(), any()) } returns
+        every { repoRepository.getWatchers(any(), any(), 1, 1) } returns
             Observable.just(RepoResult.Success(Page(value = listOf(User()))))
 
         viewModel.fetchAdditionalRepoData(Repo())
@@ -98,9 +98,26 @@ class RepoDetailViewModelTest {
 
     @Test
     fun shouldGetNumWatchersDataFailure() {
-        every { repoRepository.getWatchers(any(), any()) } returns
+        every { repoRepository.getWatchers(any(), any(), 1, 1) } returns
                 Observable.just(RepoResult.Failure("failure"))
         viewModel.fetchAdditionalRepoData(Repo())
-        assertThat(viewModel.alertAction.value).isEqualTo("Failed to retrieve number of watchers")
+        assertThat(viewModel.alertAction.value).isEqualTo("failure")
+    }
+
+    @Test
+    fun shouldGetLanguagesDataSuccess() {
+        val sortedMap = sortedMapOf(Pair("a", 1), Pair("b", 2))
+        every { repoRepository.getLanguages(any(), any()) } returns
+                Observable.just(RepoResult.Success(sortedMap))
+        viewModel.fetchAdditionalRepoData(Repo())
+        assertThat(viewModel.languagesData.value).isEqualTo(sortedMap)
+    }
+
+    @Test
+    fun shouldGetLanguagesFailure() {
+        every { repoRepository.getLanguages(any(), any()) } returns
+                Observable.just(RepoResult.Failure("failure"))
+        viewModel.fetchAdditionalRepoData(Repo())
+        assertThat(viewModel.alertAction.value).isEqualTo("failure")
     }
 }
