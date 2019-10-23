@@ -54,7 +54,7 @@
     <string name="num_stars_text_single">1 star</string>
     <string name="num_watchers_text_single">1 watcher</string>
     <string name="num_forks_text_single">1 fork</string>
-    <string name="branch_prompt">Branch:</string>
+    <string name="commits_button_text">Commits (%1$d)</string>
     <string name="dir_back">..</string>
     <string name="fork_confirm_title">Forking %1$s</string>
     <string name="fork_confirm_message">Are you sure you want to fork this repository?</string>

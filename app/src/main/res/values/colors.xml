@@ -16,6 +16,7 @@
     <color name="colorDarkGray">#878787</color>
     <color name="colorDarkerGray">#545454</color>
     <color name="colorTopicsBackground">#BFEEFF</color>
+    <color name="colorLightBlue">#DEF6FF</color>
     <color name="colorTopicsText">#212FFF</color>
     <color name="colorYellow">#FFD700</color>
     <color name="colorDrawableDefault">#7F7F7F</color>
