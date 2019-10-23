@@ -2,6 +2,7 @@ package com.gitspark.gitspark.ui.main.repo
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.model.Commit
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.RepoContent
 import com.gitspark.gitspark.model.TYPE_DIRECTORY
@@ -99,6 +100,7 @@ class RepoContentViewModel @Inject constructor(
         pathStack.clear()
 
         fetchDirectory(path = "", branchName = currentBranch)
+        requestCommitData(currentBranch)
     }
 
     fun onDestroyView() {
@@ -120,6 +122,28 @@ class RepoContentViewModel @Inject constructor(
                     }
                     viewState.value = viewState.value?.copy(loading = false)
                 }
+            }
+        }
+    }
+
+    fun requestCommitData(branch: String) {
+        subscribe(repoRepository.getCommits(currRepo.owner.login, currRepo.repoName, branch, 1, 1)) {
+            when (it) {
+                is RepoResult.Success -> {
+                    val total = when {
+                        it.value.last == -1 -> it.value.value.size
+                        else -> it.value.last
+                    }
+                    val commit = it.value.value[0]
+
+                    viewState.value = viewState.value?.copy(
+                        numCommits = total,
+                        commitAvatarUrl = commit.committer.avatarUrl,
+                        commitMessage = commit.commit.message,
+                        commitUsername = commit.committer.login
+                    )
+                }
+                is RepoResult.Failure -> alert(it.error)
             }
         }
     }

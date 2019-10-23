@@ -2,6 +2,7 @@ package com.gitspark.gitspark.repository
 
 import com.gitspark.gitspark.api.model.ApiAuthRepoRequest
 import com.gitspark.gitspark.api.model.ApiSubscribed
+import com.gitspark.gitspark.api.service.COMMITS_PER_PAGE
 import com.gitspark.gitspark.api.service.REPO_PER_PAGE
 import com.gitspark.gitspark.api.service.RepoService
 import com.gitspark.gitspark.api.service.USER_PER_PAGE
@@ -237,6 +238,23 @@ class RepoRepository @Inject constructor(
                 }))
             }
             .onErrorReturn { getFailure("Failed to obtain languages for $username/$repoName") }
+    }
+
+    fun getCommits(
+        username: String,
+        repoName: String,
+        sha: String,
+        page: Int = 1,
+        perPage: Int = COMMITS_PER_PAGE
+    ): Observable<RepoResult<Page<Commit>>> {
+        return getRepoService()
+            .getCommits(username, repoName, sha, page, perPage)
+            .map {
+                getSuccess(it.toModel<Commit>().apply {
+                    value = it.response.map { commit -> commit.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain commits for $username/$repoName") }
     }
 
     private fun getRepoService() =

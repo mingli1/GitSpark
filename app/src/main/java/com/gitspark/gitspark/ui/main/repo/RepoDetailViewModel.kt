@@ -27,10 +27,14 @@ class RepoDetailViewModel @Inject constructor(
     fun fetchAdditionalRepoData(repo: Repo) {
         if (!dataLoaded) {
             loading.value = true
-            requestRepoBranches(repo.owner.login, repo.repoName)
-            requestRepoActivityData(repo.owner.login, repo.repoName)
-            requestNumWatchersData(repo.owner.login, repo.repoName)
-            requestLanguagesData(repo.owner.login, repo.repoName)
+            val l = repo.owner.login
+            val n = repo.repoName
+
+            requestRepoBranches(l, n)
+            requestRepoActivityData(l, n)
+            requestNumWatchersData(l, n)
+            requestLanguagesData(l, n)
+
             dataLoaded = true
         }
     }

@@ -9,5 +9,9 @@ data class RepoContentViewState(
     val updateContent: Boolean = false,
     val branchNames: List<String> = emptyList(),
     val updateBranchSpinner: Boolean = false,
-    val branchPosition: Int = 0
+    val branchPosition: Int = 0,
+    val numCommits: Int = 0,
+    val commitAvatarUrl: String = "",
+    val commitUsername: String = "",
+    val commitMessage: String = ""
 )

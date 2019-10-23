@@ -7,6 +7,7 @@ import retrofit2.http.*
 
 const val REPO_PER_PAGE = 50
 const val BRANCHES_PER_PAGE = 50
+const val COMMITS_PER_PAGE = 75
 
 interface RepoService {
 
@@ -161,4 +162,13 @@ interface RepoService {
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): Observable<Map<String, Int>>
+
+    @GET("repos/{owner}/{repo}/commits")
+    fun getCommits(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("sha") sha: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = COMMITS_PER_PAGE
+    ): Observable<ApiPage<ApiCommit>>
 }

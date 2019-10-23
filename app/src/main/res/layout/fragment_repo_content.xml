@@ -31,6 +31,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"/>
             
             <Button
+                android:id="@+id/commits_button"
                 android:layout_width="wrap_content"
                 android:minWidth="160dp"
                 android:layout_height="0dp"

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.onItemSelected
 import com.gitspark.gitspark.model.Branch
@@ -63,7 +64,10 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
 
         viewModel.branchNames = branchNames
         // fetch for default branch initially
-        if (branches.isNotEmpty()) viewModel.fetchDirectory(branchName = branchNames[0])
+        if (branches.isNotEmpty()) {
+            viewModel.fetchDirectory(branchName = branchNames[0])
+            viewModel.requestCommitData(branchNames[0])
+        }
     }
 
     override fun observeViewModel() {
@@ -78,6 +82,13 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
             loading_indicator.isVisible = loading
             if (updateContent) repoContentAdapter.setContent(contentData)
             path_label.text = path
+
+            commits_button.text = getString(R.string.commits_button_text, numCommits)
+            if (numCommits > 0) {
+                commit_profile_icon.loadImage(commitAvatarUrl)
+                commit_username.text = commitUsername
+                commit_message.text = commitMessage
+            }
 
             if (updateBranchSpinner) createBranchSpinner(branchNames, branchPosition)
         }
