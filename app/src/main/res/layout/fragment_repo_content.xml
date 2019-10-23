@@ -16,15 +16,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Body"
-                android:text="@string/branch_prompt"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="16dp"/>
-            
             <Spinner
                 android:id="@+id/branch_spinner"
                 android:layout_width="160dp"
