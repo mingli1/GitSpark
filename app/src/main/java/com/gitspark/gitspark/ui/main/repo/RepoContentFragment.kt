@@ -83,11 +83,17 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
             if (updateContent) repoContentAdapter.setContent(contentData)
             path_label.text = path
 
+            commit_username.isVisible = commitUsername.isNotEmpty()
+            commit_profile_icon.isVisible = numCommits > 0
+
             commits_button.text = getString(R.string.commits_button_text, numCommits)
             if (numCommits > 0) {
-                commit_profile_icon.loadImage(commitAvatarUrl)
+                if (commitAvatarUrl.isNotEmpty()) commit_profile_icon.loadImage(commitAvatarUrl)
                 commit_username.text = commitUsername
                 commit_message.text = commitMessage
+            }
+            else {
+                commit_message.text = getString(R.string.no_commits_text)
             }
 
             if (updateBranchSpinner) createBranchSpinner(branchNames, branchPosition)
