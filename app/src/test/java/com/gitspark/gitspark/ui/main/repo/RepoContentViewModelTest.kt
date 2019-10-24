@@ -1,9 +1,7 @@
 package com.gitspark.gitspark.ui.main.repo
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.gitspark.gitspark.model.Page
-import com.gitspark.gitspark.model.Repo
-import com.gitspark.gitspark.model.RepoContent
+import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import io.mockk.MockKAnnotations
@@ -135,6 +133,24 @@ class RepoContentViewModelTest {
                 Observable.just(RepoResult.Success("raw"))
         viewModel.onFileSelected("a", "b", "png")
         assertThat(viewModel.navigateToRepoCodeAction.value).isEqualTo(Triple("a", "b", "png"))
+    }
+
+    @Test
+    fun shouldRequestCommitDataSuccess() {
+        viewModel.fetchDirectory()
+        every { repoRepository.getCommits(any(), any(), any(), 1, 1) } returns
+                Observable.just(RepoResult.Success(Page(last = 3, value = listOf(
+                    Commit(committer = User(avatarUrl = "avatar", login = "login"),
+                        commit = CommitDetail(message = "message")
+                    )
+                ))))
+
+        viewModel.requestCommitData("branch")
+
+        assertThat(viewState().numCommits).isEqualTo(3)
+        assertThat(viewState().commitAvatarUrl).isEqualTo("avatar")
+        assertThat(viewState().commitMessage).isEqualTo("message")
+        assertThat(viewState().commitUsername).isEqualTo("login")
     }
 
     private fun viewState() = viewModel.viewState.value!!
