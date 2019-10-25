@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    
+    <TextView
+        android:id="@+id/commit_date_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/BodyLarge"
+        android:textColor="@color/colorBlack"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        tools:text="Commits on Oct 22, 2019"/>
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorWhiteDark"/>
+
+</LinearLayout>

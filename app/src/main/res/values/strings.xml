@@ -71,4 +71,6 @@
     <string name="contributions_text_single">1 contribution</string>
     <string name="contributions_text">%1$d contributions</string>
     <string name="lang_breakdown">Language Breakdown</string>
+    <string name="commits_date_group">Commits on %1$s</string>
+    <string name="committed_date">committed %1$s</string>
 </resources>

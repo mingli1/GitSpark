@@ -43,6 +43,14 @@
         <item name="android:textColor">@color/colorBlack</item>
     </style>
     
+    <style name="Body.Small" parent="Body">
+        <item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="Body.Small.Bold" parent="Body.Small">
+        <item name="android:textStyle">bold</item>
+    </style>
+    
     <style name="BodyLight" parent="Body">
         <item name="android:textColor">@color/colorDarkerGray</item>
     </style>

@@ -9,7 +9,7 @@ import com.gitspark.gitspark.model.Loading
 
 abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHolder>() {
 
-    private val items = arrayListOf<Pageable>()
+    protected val items = arrayListOf<Pageable>()
 
     override fun getItemCount() = items.size
 
@@ -17,7 +17,11 @@ abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHo
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(parent.inflate(
-            if (viewType == VIEW_TYPE_VIEW) getViewHolderId() else R.layout.loading_view
+            when (viewType) {
+                VIEW_TYPE_VIEW -> getViewHolderId()
+                VIEW_TYPE_LOADING -> R.layout.loading_view
+                else -> R.layout.commit_date_view
+            }
         ))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
@@ -27,7 +31,7 @@ abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHo
 
     abstract fun bind(item: Pageable, view: View)
 
-    fun setItems(items: List<Pageable>, isLastPage: Boolean) {
+    open fun setItems(items: List<Pageable>, isLastPage: Boolean) {
         with (this.items) {
             clear()
             addAll(items)
