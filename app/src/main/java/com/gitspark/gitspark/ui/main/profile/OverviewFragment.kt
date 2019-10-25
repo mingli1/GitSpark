@@ -128,10 +128,6 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         edit_profile_button.setOnClickListener { viewModel.onEditProfileButtonClicked() }
     }
 
-    private fun navigateToFollowsFragment(followState: FollowState) {
-        (parentFragment as NavigationListener).navigateToFollowsFragment(followState)
-    }
-
     private fun navigateToEditProfileFragment(user: User) {
         findNavController().navigate(
             R.id.action_profile_fragment_to_edit_profile_fragment,

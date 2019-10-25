@@ -56,10 +56,6 @@ internal abstract class ViewModelModule {
     internal abstract fun bindReposViewModel(reposViewModel: ReposViewModel): ViewModel
 
     @Binds @IntoMap
-    @ViewModelKey(FollowsViewModel::class)
-    internal abstract fun bindFollowsViewModel(followsViewModel: FollowsViewModel): ViewModel
-
-    @Binds @IntoMap
     @ViewModelKey(StarsViewModel::class)
     internal abstract fun bindStarsViewModel(starsViewModel: StarsViewModel): ViewModel
 

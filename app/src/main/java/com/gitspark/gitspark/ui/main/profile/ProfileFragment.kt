@@ -16,12 +16,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 const val BUNDLE_USERNAME = "BUNDLE_USERNAME"
-private const val FOLLOWS_INDEX = 2
 private const val OFFSCREEN_PAGE_LIMIT = 3
-
-interface NavigationListener {
-    fun navigateToFollowsFragment(followState: FollowState)
-}
 
 interface UserDataCallback {
     fun getData(): User?
@@ -30,13 +25,11 @@ interface UserDataCallback {
 
 class ProfileFragment :
     BaseFragment<ProfileViewModel>(ProfileViewModel::class.java),
-    NavigationListener,
     UserDataCallback
 {
 
     private lateinit var overViewFragment: OverviewFragment
     private lateinit var reposFragment: ReposFragment
-    private lateinit var followsFragment: FollowsFragment
     private lateinit var starsFragment: StarsFragment
 
     private var userData: User? = null
@@ -74,11 +67,6 @@ class ProfileFragment :
         viewModel.loadViewAction.observe(viewLifecycleOwner) { setUpFragments() }
     }
 
-    override fun navigateToFollowsFragment(followState: FollowState) {
-        viewpager.setCurrentItem(FOLLOWS_INDEX, true)
-        if (followsFragment.isAdded) followsFragment.onNavigatedTo(followState)
-    }
-
     override fun refreshUserData(username: String) =
         viewModel.requestUserData(username, refresh = true)
 
@@ -87,7 +75,6 @@ class ProfileFragment :
     private fun setUpFragments() {
         overViewFragment = OverviewFragment().apply { arguments = this@ProfileFragment.arguments }
         reposFragment = ReposFragment().apply { arguments = this@ProfileFragment.arguments }
-        followsFragment = FollowsFragment().apply { arguments = this@ProfileFragment.arguments }
         starsFragment = StarsFragment().apply { arguments = this@ProfileFragment.arguments }
 
         setUpTabLayout()
@@ -97,7 +84,6 @@ class ProfileFragment :
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             addFragment(overViewFragment, getString(R.string.overview_title))
             addFragment(reposFragment, getString(R.string.repos_title))
-            addFragment(followsFragment, getString(R.string.follows_title))
             addFragment(starsFragment, getString(R.string.stars_title))
         }
         viewpager.adapter = adapter
