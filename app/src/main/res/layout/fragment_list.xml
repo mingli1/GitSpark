@@ -24,8 +24,6 @@
         android:id="@+id/item_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

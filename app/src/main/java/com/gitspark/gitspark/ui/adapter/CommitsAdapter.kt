@@ -33,7 +33,10 @@ class CommitsAdapter(private val timeHelper: TimeHelper) : PaginationAdapter() {
                         val nextCommit = items[index + 1] as Commit
                         add(currCommit)
 
-                        if (currCommit.getDate() != nextCommit.getDate()) {
+                        val date1 = LocalDateTime.ofInstant(Instant.parse(currCommit.getDate()), ZoneOffset.UTC).toLocalDate()
+                        val date2 = LocalDateTime.ofInstant(Instant.parse(nextCommit.getDate()), ZoneOffset.UTC).toLocalDate()
+
+                        if (date1 != date2) {
                             add(DateGroup(nextCommit.getDate()))
                         }
                     }
