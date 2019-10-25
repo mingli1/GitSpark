@@ -153,5 +153,18 @@ class RepoContentViewModelTest {
         assertThat(viewState().commitUsername).isEqualTo("login")
     }
 
+    @Test
+    fun shouldUpdateViewStateOnEmptyRepo() {
+        viewModel.onEmptyRepo()
+        assertThat(viewState().emptyRepo).isTrue()
+    }
+
+    @Test
+    fun shouldNavigateToCommitListFragment() {
+        viewModel.currRepo = Repo(fullName = "mingli1/GitSpark")
+        viewModel.onCommitsButtonClicked("title")
+        assertThat(viewModel.navigateToCommitsListAction.value).isEqualTo(Pair("title", "mingli1/GitSpark/master"))
+    }
+
     private fun viewState() = viewModel.viewState.value!!
 }
