@@ -20,6 +20,7 @@ class RepoContentViewModel @Inject constructor(
 
     val viewState = MutableLiveData<RepoContentViewState>()
     val navigateToRepoCodeAction = SingleLiveEvent<Triple<String, String, String>>()
+    val navigateToCommitsListAction = SingleLiveEvent<Pair<String, String>>()
 
     lateinit var currRepo: Repo
     lateinit var branchNames: List<String>
@@ -105,6 +106,10 @@ class RepoContentViewModel @Inject constructor(
 
     fun onDestroyView() {
         destroyed = true
+    }
+
+    fun onCommitsButtonClicked(title: String) {
+        navigateToCommitsListAction.value = Pair(title, "${currRepo.fullName}/$currentBranch")
     }
 
     override fun onDirectorySelected(path: String) = fetchDirectory(path, currentBranch)

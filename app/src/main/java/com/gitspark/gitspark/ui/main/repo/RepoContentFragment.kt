@@ -19,6 +19,8 @@ import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_EXTENSION
 import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_NAME
 import com.gitspark.gitspark.ui.adapter.RepoContentAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.main.shared.BUNDLE_ARGUMENTS
+import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import kotlinx.android.synthetic.main.fragment_repo_content.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
@@ -75,6 +77,9 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
         viewModel.navigateToRepoCodeAction.observe(viewLifecycleOwner) {
             navigateToRepoCodeFragment(it)
         }
+        viewModel.navigateToCommitsListAction.observe(viewLifecycleOwner) {
+            navigateToCommitListFragment(it)
+        }
     }
 
     private fun updateViewState(viewState: RepoContentViewState) {
@@ -124,10 +129,24 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
         )
     }
 
+    private fun navigateToCommitListFragment(pair: Pair<String, String>) {
+        val data = Bundle().apply {
+            putString(BUNDLE_TITLE, pair.first)
+            putString(BUNDLE_ARGUMENTS, pair.second)
+        }
+        findNavController().navigate(
+            R.id.action_repo_detail_fragment_to_commit_list_fragment,
+            data
+        )
+    }
+
     private fun setUpListeners() {
         dir_back_button.setOnClickListener { viewModel.onDirectoryBackClicked() }
         branch_spinner.onItemSelected {
             viewModel.onBranchSelected(branch_spinner.getItemAtPosition(it) as String, it)
+        }
+        commits_button.setOnClickListener {
+            viewModel.onCommitsButtonClicked(getString(R.string.commits_list_title))
         }
     }
 }
