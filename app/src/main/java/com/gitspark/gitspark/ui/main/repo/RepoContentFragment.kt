@@ -54,6 +54,11 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
     }
 
     fun notifyBranchDataRetrieved(branches: List<Branch>) {
+        if (branches.isEmpty()) {
+            viewModel.onEmptyRepo()
+            return
+        }
+
         val branchNames = mutableListOf<String>()
         branches.find { it.name == "master" }?.let {
             branchNames.add(it.name)
@@ -66,10 +71,8 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
 
         viewModel.branchNames = branchNames
         // fetch for default branch initially
-        if (branches.isNotEmpty()) {
-            viewModel.fetchDirectory(branchName = branchNames[0])
-            viewModel.requestCommitData(branchNames[0])
-        }
+        viewModel.fetchDirectory(branchName = branchNames[0])
+        viewModel.requestCommitData(branchNames[0])
     }
 
     override fun observeViewModel() {
@@ -84,6 +87,12 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
 
     private fun updateViewState(viewState: RepoContentViewState) {
         with (viewState) {
+            if (emptyRepo) {
+                repo_content.isVisible = false
+                empty_repo_message.isVisible = true
+                return
+            }
+
             loading_indicator.isVisible = loading
             if (updateContent) repoContentAdapter.setContent(contentData)
             path_label.text = path

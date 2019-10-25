@@ -13,5 +13,6 @@ data class RepoContentViewState(
     val numCommits: Int = 0,
     val commitAvatarUrl: String = "",
     val commitUsername: String = "",
-    val commitMessage: String = ""
+    val commitMessage: String = "",
+    val emptyRepo: Boolean = false
 )

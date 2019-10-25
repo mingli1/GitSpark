@@ -6,7 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     
+    <TextView
+        android:id="@+id/empty_repo_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_repo_text"
+        style="@style/BodyLarge"
+        android:visibility="gone"
+        android:padding="16dp"
+        android:gravity="center"/>
+    
     <LinearLayout
+        android:id="@+id/repo_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

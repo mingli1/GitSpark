@@ -44,6 +44,10 @@ class RepoContentViewModel @Inject constructor(
         }
     }
 
+    fun onEmptyRepo() {
+        viewState.value = viewState.value?.copy(emptyRepo = true) ?: RepoContentViewState(emptyRepo = true)
+    }
+
     fun fetchDirectory(path: String = "", branchName: String = "", back: Boolean = false) {
         currentBranch = branchName
 

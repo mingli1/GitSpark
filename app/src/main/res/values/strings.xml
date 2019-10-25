@@ -74,4 +74,5 @@
     <string name="commits_date_group">Commits on %1$s</string>
     <string name="committed_date">committed %1$s</string>
     <string name="commits_list_title">Commits</string>
+    <string name="empty_repo_text">This repository is empty!</string>
 </resources>
