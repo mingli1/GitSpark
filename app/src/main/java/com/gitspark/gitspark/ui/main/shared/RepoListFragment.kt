@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.service.REPO_PER_PAGE
+import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.helper.TimeHelper
@@ -21,6 +22,7 @@ import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_list.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
 const val BUNDLE_REPO_LIST_TYPE = "BUNDLE_REPO_LIST_TYPE"
@@ -91,6 +93,7 @@ class RepoListFragment : BaseFragment<RepoListViewModel>(RepoListViewModel::clas
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
             }
+            loading_indicator.isVisible = loading
         }
     }
 

@@ -34,7 +34,10 @@ class CommitListViewModel @Inject constructor(
     }
 
     private fun updateViewState(reset: Boolean = false) {
-        if (reset) page = 1
+        if (reset) {
+            page = 1
+            viewState.value = viewState.value?.copy(loading = true) ?: CommitListViewState(loading = true)
+        }
         requestCommits()
     }
 
@@ -49,18 +52,20 @@ class CommitListViewModel @Inject constructor(
                     viewState.value = viewState.value?.copy(
                         commits = updatedList,
                         isLastPage = page.isLastPage(it.value.last),
-                        updateAdapter = true
+                        updateAdapter = true,
+                        loading = false
                     ) ?: CommitListViewState(
                         commits = updatedList,
                         isLastPage = page.isLastPage(it.value.last),
-                        updateAdapter = true
+                        updateAdapter = true,
+                        loading = false
                     )
                     if (page < it.value.last) page++
                 }
                 is RepoResult.Failure -> {
                     alert(it.error)
-                    viewState.value = viewState.value?.copy(updateAdapter = false)
-                        ?: CommitListViewState(updateAdapter = false)
+                    viewState.value = viewState.value?.copy(updateAdapter = false, loading = false)
+                        ?: CommitListViewState(updateAdapter = false, loading = false)
                 }
             }
         }

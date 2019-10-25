@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.service.COMMITS_PER_PAGE
+import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.ui.adapter.CommitsAdapter
@@ -16,6 +17,7 @@ import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_list.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
 class CommitListFragment : BaseFragment<CommitListViewModel>(CommitListViewModel::class.java) {
@@ -80,6 +82,7 @@ class CommitListFragment : BaseFragment<CommitListViewModel>(CommitListViewModel
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
             }
+            loading_indicator.isVisible = loading
         }
     }
 }

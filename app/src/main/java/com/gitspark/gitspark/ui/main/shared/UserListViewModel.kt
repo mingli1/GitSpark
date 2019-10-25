@@ -53,7 +53,10 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun updateViewState(reset: Boolean = false) {
-        if (reset) page = 1
+        if (reset) {
+            page = 1
+            viewState.value = viewState.value?.copy(loading = true) ?: UserListViewState(loading = true)
+        }
         requestData()
     }
 
@@ -101,18 +104,20 @@ class UserListViewModel @Inject constructor(
         viewState.value = viewState.value?.copy(
             users = updatedList,
             isLastPage = page.isLastPage(last),
-            updateAdapter = true
+            updateAdapter = true,
+            loading = false
         ) ?: UserListViewState(
             users = updatedList,
             isLastPage = page.isLastPage(last),
-            updateAdapter = true
+            updateAdapter = true,
+            loading = false
         )
         if (page < last) page++
     }
 
     private fun onUserDataFailure(error: String) {
         alert(error)
-        viewState.value = viewState.value?.copy(updateAdapter = false)
-            ?: UserListViewState(updateAdapter = false)
+        viewState.value = viewState.value?.copy(updateAdapter = false, loading = false)
+            ?: UserListViewState(updateAdapter = false, loading = false)
     }
 }

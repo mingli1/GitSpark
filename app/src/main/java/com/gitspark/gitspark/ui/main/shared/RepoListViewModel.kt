@@ -48,7 +48,10 @@ class RepoListViewModel @Inject constructor(
     }
 
     private fun updateViewState(reset: Boolean = false) {
-        if (reset) page = 1
+        if (reset) {
+            page = 1
+            viewState.value = viewState.value?.copy(loading = true) ?: RepoListViewState(loading = true)
+        }
         requestData()
     }
 
@@ -80,18 +83,20 @@ class RepoListViewModel @Inject constructor(
         viewState.value = viewState.value?.copy(
             repos = updatedList,
             isLastPage = page.isLastPage(last),
-            updateAdapter = true
+            updateAdapter = true,
+            loading = false
         ) ?: RepoListViewState(
             repos = updatedList,
             isLastPage = page.isLastPage(last),
-            updateAdapter = true
+            updateAdapter = true,
+            loading = false
         )
         if (page < last) page++
     }
 
     private fun onRepoDataFailure(error: String) {
         alert(error)
-        viewState.value = viewState.value?.copy(updateAdapter = false)
-            ?: RepoListViewState(updateAdapter = false)
+        viewState.value = viewState.value?.copy(updateAdapter = false, loading = false)
+            ?: RepoListViewState(updateAdapter = false, loading = false)
     }
 }
