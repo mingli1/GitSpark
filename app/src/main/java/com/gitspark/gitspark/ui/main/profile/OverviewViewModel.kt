@@ -12,6 +12,7 @@ import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.main.shared.UserListType
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
@@ -27,7 +28,8 @@ class OverviewViewModel @Inject constructor(
     val viewState = MutableLiveData<OverviewViewState>()
     val userDataMediator = MediatorLiveData<AuthUser>()
     val contributionsAction = SingleLiveEvent<SortedMap<String, List<Contribution>>>()
-    val navigateToFollowsAction = SingleLiveEvent<FollowState>()
+    val navigateToFollowersAction = SingleLiveEvent<Triple<UserListType, String, String>>()
+    val navigateToFollowingAction = SingleLiveEvent<Triple<UserListType, String, String>>()
     val refreshAction = SingleLiveAction()
     val navigateToEditProfileAction = SingleLiveEvent<User>()
 
@@ -63,8 +65,20 @@ class OverviewViewModel @Inject constructor(
 
     fun onUserDataRefreshed(user: User) = updateViewStateWith(user)
 
-    fun onFollowsFieldClicked(followState: FollowState) {
-        navigateToFollowsAction.value = followState
+    fun onFollowersFieldClicked() {
+        navigateToFollowersAction.value = Triple(
+            UserListType.Followers,
+            "${currentUserData?.login}'s Followers",
+            currentUserData?.login ?: ""
+        )
+    }
+
+    fun onFollowingFieldClicked() {
+        navigateToFollowingAction.value = Triple(
+            UserListType.Following,
+            "${currentUserData?.login}'s Following",
+            currentUserData?.login ?: ""
+        )
     }
 
     fun onFollowsButtonClicked(isFollowing: Boolean) {

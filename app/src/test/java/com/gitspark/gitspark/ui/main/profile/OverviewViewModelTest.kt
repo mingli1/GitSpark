@@ -117,12 +117,6 @@ class OverviewViewModelTest {
     }
 
     @Test
-    fun shouldNavigateToFollowsTabOnClicked() {
-        viewModel.onFollowsFieldClicked(FollowState.Following)
-        assertThat(viewModel.navigateToFollowsAction.value).isEqualTo(FollowState.Following)
-    }
-
-    @Test
     fun shouldRequestAuthUserWhenUsernameNullOnRefresh() {
         viewModel.viewState.value = OverviewViewState()
 

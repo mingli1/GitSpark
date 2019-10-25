@@ -7,6 +7,8 @@ import com.gitspark.gitspark.model.isFirstPage
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
+import com.gitspark.gitspark.repository.UserRepository
+import com.gitspark.gitspark.repository.UserResult
 import com.gitspark.gitspark.ui.nav.UserProfileNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
@@ -16,11 +18,14 @@ enum class UserListType {
     None,
     Watchers,
     Stargazers,
-    Contributors
+    Contributors,
+    Followers,
+    Following
 }
 
 class UserListViewModel @Inject constructor(
-    private val repoRepository: RepoRepository
+    private val repoRepository: RepoRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel(), UserProfileNavigator {
 
     val viewState = MutableLiveData<UserListViewState>()
@@ -66,6 +71,8 @@ class UserListViewModel @Inject constructor(
             UserListType.Watchers -> requestWatchers()
             UserListType.Stargazers -> requestStargazers()
             UserListType.Contributors -> requestContributors()
+            UserListType.Followers -> requestFollowers()
+            UserListType.Following -> requestFollowing()
         }
     }
 
@@ -87,6 +94,37 @@ class UserListViewModel @Inject constructor(
         val args = this.args.split("/")
         subscribe(repoRepository.getContributors(args[0], args[1], page = page)) {
             onUserDataResult(it)
+        }
+    }
+
+    private fun requestFollowers() {
+        if (args.isEmpty()) {
+            subscribe(userRepository.getAuthUserFollowers(page = page)) {
+                onUserDataResult(it)
+            }
+        } else {
+            subscribe(userRepository.getUserFollowers(args, page)) {
+                onUserDataResult(it)
+            }
+        }
+    }
+
+    private fun requestFollowing() {
+        if (args.isEmpty()) {
+            subscribe(userRepository.getAuthUserFollowing(page = page)) {
+                onUserDataResult(it)
+            }
+        } else {
+            subscribe(userRepository.getUserFollowing(args, page)) {
+                onUserDataResult(it)
+            }
+        }
+    }
+
+    private fun onUserDataResult(it: UserResult<Page<User>>) {
+        when (it) {
+            is UserResult.Success -> onUserDataSuccess(it.value.value, it.value.last)
+            is UserResult.Failure -> onUserDataFailure(it.error)
         }
     }
 

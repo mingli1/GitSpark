@@ -13,6 +13,10 @@ import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.model.Contribution
 import com.gitspark.gitspark.model.User
+import com.gitspark.gitspark.ui.main.shared.BUNDLE_ARGUMENTS
+import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
+import com.gitspark.gitspark.ui.main.shared.BUNDLE_USER_LIST_TYPE
+import com.gitspark.gitspark.ui.main.shared.UserListType
 import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.profile_header.*
@@ -51,7 +55,8 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.userDataMediator.observeOnce(viewLifecycleOwner) { viewModel.onCachedUserDataRetrieved(it) }
         viewModel.contributionsAction.observe(viewLifecycleOwner) { updateContributionsView(it) }
-        viewModel.navigateToFollowsAction.observe(viewLifecycleOwner) { navigateToFollowsFragment(it) }
+        viewModel.navigateToFollowersAction.observe(viewLifecycleOwner) { navigateToUserListFragment(it) }
+        viewModel.navigateToFollowingAction.observe(viewLifecycleOwner) { navigateToUserListFragment(it) }
         viewModel.refreshAction.observe(viewLifecycleOwner) {
             (parentFragment as UserDataCallback).refreshUserData(arguments?.getString(
                 BUNDLE_USERNAME
@@ -115,8 +120,8 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
 
     private fun setUpListeners() {
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
-        followers_field.setOnClickListener { viewModel.onFollowsFieldClicked(FollowState.Followers) }
-        following_field.setOnClickListener { viewModel.onFollowsFieldClicked(FollowState.Following) }
+        followers_field.setOnClickListener { viewModel.onFollowersFieldClicked() }
+        following_field.setOnClickListener { viewModel.onFollowingFieldClicked() }
         follows_button.setOnClickListener {
             viewModel.onFollowsButtonClicked(follows_button.text == getString(R.string.unfollow_button_text))
         }
@@ -131,6 +136,18 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         findNavController().navigate(
             R.id.action_profile_fragment_to_edit_profile_fragment,
             getEditProfileBundle(user)
+        )
+    }
+
+    private fun navigateToUserListFragment(triple: Triple<UserListType, String, String>) {
+        val data = Bundle().apply {
+            putSerializable(BUNDLE_USER_LIST_TYPE, triple.first)
+            putString(BUNDLE_TITLE, triple.second)
+            putString(BUNDLE_ARGUMENTS, triple.third)
+        }
+        findNavController().navigate(
+            R.id.action_profile_fragment_to_user_list_fragment,
+            data
         )
     }
 
