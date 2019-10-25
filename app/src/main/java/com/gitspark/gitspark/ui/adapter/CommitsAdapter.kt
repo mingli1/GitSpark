@@ -61,7 +61,7 @@ class CommitsAdapter(private val timeHelper: TimeHelper) : PaginationAdapter() {
             is Commit -> {
                 with (view) {
                     commit_message.text = item.commit.message
-                    commit_profile_icon.loadImage(item.committer.avatarUrl)
+                    if (item.committer.avatarUrl.isNotEmpty()) commit_profile_icon.loadImage(item.committer.avatarUrl)
                     commit_username.text = item.committer.login
 
                     val commitDate = Instant.parse(item.getDate())

@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.repo_code_fragment -> false
                     R.id.user_list_fragment -> false
                     R.id.repo_list_fragment -> false
+                    R.id.commit_list_fragment -> false
                     else -> true
                 }
             }
