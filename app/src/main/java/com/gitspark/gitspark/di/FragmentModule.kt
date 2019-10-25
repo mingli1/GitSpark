@@ -8,6 +8,7 @@ import com.gitspark.gitspark.ui.main.repo.RepoContentFragment
 import com.gitspark.gitspark.ui.main.repo.RepoDetailFragment
 import com.gitspark.gitspark.ui.main.repo.RepoOverviewFragment
 import com.gitspark.gitspark.ui.main.search.SearchFragment
+import com.gitspark.gitspark.ui.main.shared.CommitListFragment
 import com.gitspark.gitspark.ui.main.shared.RepoListFragment
 import com.gitspark.gitspark.ui.main.shared.UserListFragment
 import dagger.Module
@@ -60,4 +61,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesRepoListFragment(): RepoListFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesCommitListFragment(): CommitListFragment
 }
