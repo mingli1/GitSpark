@@ -26,28 +26,20 @@ class ProfileFeedAdapter(
     override fun setItems(items: List<Pageable>, isLastPage: Boolean) {
         with (this.items) {
             clear()
-            if (items.isNotEmpty()) {
-                val firstEvent = items[0] as Event
-                val title = eventHelper.getTitle(firstEvent)
-                if (title.isNotEmpty()) add(DateGroup(firstEvent.createdAt))
-                else (add(DateGroup("")))
+            val groupedItems = items.groupBy {
+                val event = it as Event
+                LocalDateTime.ofInstant(Instant.parse(event.createdAt), ZoneOffset.UTC).toLocalDate()
             }
-            items.forEachIndexed { index, item ->
-                when (index) {
-                    items.size - 1 -> add(item)
-                    else -> {
-                        val currEvent = items[index] as Event
-                        val nextEvent = items[index + 1] as Event
-                        add(currEvent)
-
-                        val date1 = LocalDateTime.ofInstant(Instant.parse(currEvent.createdAt), ZoneOffset.UTC).toLocalDate()
-                        val date2 = LocalDateTime.ofInstant(Instant.parse(nextEvent.createdAt), ZoneOffset.UTC).toLocalDate()
-                        val title = eventHelper.getTitle(nextEvent)
-
-                        if (date1 != date2) {
-                            if (title.isNotEmpty()) add(DateGroup(nextEvent.createdAt))
-                            else (add(DateGroup("")))
-                        }
+            groupedItems.forEach { pair ->
+                var emptyDate = true
+                pair.value.forEach { event ->
+                    val title = eventHelper.getTitle(event as Event)
+                    emptyDate = emptyDate && title.isEmpty()
+                }
+                if (!emptyDate) {
+                    add(DateGroup((pair.value[0] as Event).createdAt))
+                    pair.value.forEach { event ->
+                        add(event)
                     }
                 }
             }
@@ -59,13 +51,6 @@ class ProfileFeedAdapter(
     override fun bind(item: Pageable, view: View) {
         when (item) {
             is DateGroup -> {
-                if (item.date.isEmpty()) {
-                    view.isVisible = false
-                    val layoutParams = view.layoutParams.apply { height = 0 }
-                    view.layoutParams = layoutParams
-                    return
-                }
-
                 var formattedDateTime = ""
                 if (item.date.isNotEmpty()) {
                     val createdDate = Instant.parse(item.date)

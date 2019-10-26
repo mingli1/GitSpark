@@ -9,6 +9,7 @@ import com.gitspark.gitspark.model.Event
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val CREATE_EVENT = "CreateEvent"
 private const val FORK_EVENT = "ForkEvent"
 private const val ISSUES_EVENT = "IssuesEvent"
 private const val ISSUE_COMMENT_EVENT = "IssueCommentEvent"
@@ -24,6 +25,24 @@ class EventHelper @Inject constructor(private val context: Context) {
     fun getTitle(event: Event): SpannableStringBuilder {
         builder.clear()
         return when (event.type) {
+            CREATE_EVENT -> {
+                when  {
+                    event.payload.ref.isEmpty() && event.payload.refType == "repository" ->
+                        builder.append("Created a repository ")
+                            .color(context.getColor(R.color.colorPrimaryDark)) {
+                                bold { append(event.repo.repoName) }
+                            }
+                    event.payload.refType == "branch" && event.payload.ref != event.payload.masterBranch ->
+                        builder.append("Created branch ")
+                            .color(context.getColor(R.color.colorPrimaryDark)) {
+                                bold { append(event.payload.ref) }
+                            }.append(" in ")
+                            .color(context.getColor(R.color.colorPrimaryDark)) {
+                                bold { append(event.repo.repoName) }
+                            }
+                    else -> builder
+                }
+            }
             FORK_EVENT -> builder.append("Forked ")
                 .color(context.getColor(R.color.colorPrimaryDark)) {
                     bold { append(event.payload.forkee.fullName) }
@@ -59,6 +78,13 @@ class EventHelper @Inject constructor(private val context: Context) {
 
     fun getContent(event: Event): String {
         return when (event.type) {
+            CREATE_EVENT -> {
+                when  {
+                    event.payload.ref.isEmpty() && event.payload.refType == "repository" ->
+                        event.payload.description
+                    else -> ""
+                }
+            }
             ISSUES_EVENT -> {
                 context.getString(R.string.issues_fullname,
                     event.payload.issue.number, event.payload.issue.title)

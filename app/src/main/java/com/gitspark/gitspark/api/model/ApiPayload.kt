@@ -4,8 +4,14 @@ import com.gitspark.gitspark.model.*
 import com.squareup.moshi.Json
 
 data class ApiPayload(
+    // shared
     @field:Json(name = "action") val action: String?,
     @field:Json(name = "repository") val repository: ApiRepo?,
+    @field:Json(name = "ref") val ref: String?,
+    // CreateEvent
+    @field:Json(name = "ref_type") val refType: String?,
+    @field:Json(name = "master_branch") val masterBranch: String?,
+    @field:Json(name = "description") val description: String?,
     // ForkEvent
     @field:Json(name = "forkee") val forkee: ApiRepo?,
     // IssuesEvent
@@ -16,7 +22,6 @@ data class ApiPayload(
     @field:Json(name = "push_id") val pushId: Long?,
     @field:Json(name = "size") val numCommits: Int?,
     @field:Json(name = "distinct_size") val numDistinctCommits: Int?,
-    @field:Json(name = "ref") val ref: String?,
     @field:Json(name = "head") val head: String?,
     @field:Json(name = "before") val before: String?,
     @field:Json(name = "commits") val commits: List<ApiEventCommit>?
@@ -33,7 +38,10 @@ data class ApiPayload(
         commits = commits?.map { it.toModel() } ?: emptyList(),
         comment = comment?.toModel() ?: IssueComment(),
         forkee = forkee?.toModel() ?: Repo(),
-        repo = repository?.toModel() ?: Repo()
+        repo = repository?.toModel() ?: Repo(),
+        refType = refType ?: "",
+        masterBranch = masterBranch ?: "",
+        description = description ?: ""
     )
 }
 
