@@ -28,7 +28,9 @@ class ProfileFeedAdapter(
             clear()
             if (items.isNotEmpty()) {
                 val firstEvent = items[0] as Event
-                add(DateGroup(firstEvent.createdAt))
+                val title = eventHelper.getTitle(firstEvent)
+                if (title.isNotEmpty()) add(DateGroup(firstEvent.createdAt))
+                else (add(DateGroup("")))
             }
             items.forEachIndexed { index, item ->
                 when (index) {
@@ -40,9 +42,11 @@ class ProfileFeedAdapter(
 
                         val date1 = LocalDateTime.ofInstant(Instant.parse(currEvent.createdAt), ZoneOffset.UTC).toLocalDate()
                         val date2 = LocalDateTime.ofInstant(Instant.parse(nextEvent.createdAt), ZoneOffset.UTC).toLocalDate()
+                        val title = eventHelper.getTitle(nextEvent)
 
                         if (date1 != date2) {
-                            add(DateGroup(nextEvent.createdAt))
+                            if (title.isNotEmpty()) add(DateGroup(nextEvent.createdAt))
+                            else (add(DateGroup("")))
                         }
                     }
                 }
@@ -55,6 +59,13 @@ class ProfileFeedAdapter(
     override fun bind(item: Pageable, view: View) {
         when (item) {
             is DateGroup -> {
+                if (item.date.isEmpty()) {
+                    view.isVisible = false
+                    val layoutParams = view.layoutParams.apply { height = 0 }
+                    view.layoutParams = layoutParams
+                    return
+                }
+
                 var formattedDateTime = ""
                 if (item.date.isNotEmpty()) {
                     val createdDate = Instant.parse(item.date)
@@ -65,7 +76,15 @@ class ProfileFeedAdapter(
             }
             is Event -> {
                 with (view) {
-                    action_description.text = eventHelper.getTitle(item)
+                    val title = eventHelper.getTitle(item)
+                    if (title.isEmpty()) {
+                        isVisible = false
+                        val lp = layoutParams.apply { height = 0 }
+                        layoutParams = lp
+                        return
+                    }
+
+                    action_description.text = title
                     val content = eventHelper.getContent(item)
                     content_field.isVisible = content.isNotEmpty()
                     content_field.text = content
