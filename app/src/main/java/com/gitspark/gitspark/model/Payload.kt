@@ -4,6 +4,8 @@ data class Payload(
     val action: String = "",
     // IssuesEvent
     val issue: Issue = Issue(),
+    // IssueCommentEvent
+    val comment: IssueComment = IssueComment(),
     // PushEvent
     val pushId: Long = 0,
     val numCommits: Int = 0,

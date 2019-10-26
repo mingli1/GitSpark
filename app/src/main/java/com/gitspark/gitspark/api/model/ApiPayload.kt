@@ -2,6 +2,7 @@ package com.gitspark.gitspark.api.model
 
 import com.gitspark.gitspark.model.EventCommit
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.model.IssueComment
 import com.gitspark.gitspark.model.Payload
 import com.squareup.moshi.Json
 
@@ -9,6 +10,8 @@ data class ApiPayload(
     @field:Json(name = "action") val action: String?,
     // IssuesEvent
     @field:Json(name = "issue") val issue: ApiIssue?,
+    // IssueCommentEvent
+    @field:Json(name = "comment") val comment: ApiIssueComment?,
     // PushEvent
     @field:Json(name = "push_id") val pushId: Long?,
     @field:Json(name = "size") val numCommits: Int?,
@@ -27,7 +30,8 @@ data class ApiPayload(
         ref = ref ?: "",
         head = head ?: "",
         before = before ?: "",
-        commits = commits?.map { it.toModel() } ?: emptyList()
+        commits = commits?.map { it.toModel() } ?: emptyList(),
+        comment = comment?.toModel() ?: IssueComment()
     )
 }
 

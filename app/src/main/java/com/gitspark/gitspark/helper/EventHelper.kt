@@ -7,6 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val ISSUES_EVENT = "IssuesEvent"
+private const val ISSUE_COMMENT_EVENT = "IssueCommentEvent"
 private const val PUSH_EVENT = "PushEvent"
 
 @Singleton
@@ -16,6 +17,8 @@ class EventHelper @Inject constructor(private val context: Context) {
         return when (event.type) {
             ISSUES_EVENT -> context.getString(R.string.issuesevent_desc,
                 event.payload.action.capitalize(), event.repo.repoName)
+            ISSUE_COMMENT_EVENT -> context.getString(R.string.issuecomment_desc,
+                event.payload.action.capitalize(), event.payload.issue.number, event.repo.repoName)
             PUSH_EVENT -> context.getString(R.string.pushevent_desc,
                 getBranchFromRef(event), event.repo.repoName)
             else -> ""
@@ -28,6 +31,7 @@ class EventHelper @Inject constructor(private val context: Context) {
                 context.getString(R.string.issues_fullname,
                     event.payload.issue.number, event.payload.issue.title)
             }
+            ISSUE_COMMENT_EVENT -> event.payload.comment.body
             PUSH_EVENT -> {
                 val newCommitsText = if (event.payload.numCommits > 1)
                     context.getString(R.string.pushevent_commit_count, event.payload.numCommits)
