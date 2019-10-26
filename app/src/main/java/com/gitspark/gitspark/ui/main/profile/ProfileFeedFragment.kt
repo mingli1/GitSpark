@@ -4,16 +4,82 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
-import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.helper.EventHelper
+import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.ui.adapter.PaginationListener
+import com.gitspark.gitspark.ui.adapter.ProfileFeedAdapter
+import kotlinx.android.synthetic.main.fragment_profile_feed.*
+import kotlinx.android.synthetic.main.fragment_profile_feed.swipe_refresh
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+import javax.inject.Inject
 
-class ProfileFeedFragment : BaseFragment<ProfileFeedViewModel>(ProfileFeedViewModel::class.java) {
+class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewModel::class.java) {
+
+    @Inject lateinit var timeHelper: TimeHelper
+    @Inject lateinit var eventHelper: EventHelper
+
+    private lateinit var profileFeedAdapter: ProfileFeedAdapter
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var paginationListener: PaginationListener
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_profile_feed, container, false)
     }
 
-    override fun observeViewModel() {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
+        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        paginationListener = PaginationListener(layoutManager, 30, swipe_refresh) {
+            viewModel.onScrolledToEnd()
+        }
+
+        feed_list.setHasFixedSize(true)
+        feed_list.layoutManager = layoutManager
+        profileFeedAdapter = ProfileFeedAdapter(timeHelper, eventHelper)
+        if (feed_list.adapter == null) feed_list.adapter = profileFeedAdapter
+
+        setupListeners()
+    }
+
+    override fun viewModelOnResume() = viewModel.onResume(arguments?.getString(BUNDLE_USERNAME))
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        feed_list.adapter = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
+    }
+
+    override fun observeViewModel() {
+        viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.userMediator.observe(viewLifecycleOwner) { viewModel.onUserDataRetrieved(it) }
+    }
+
+    private fun updateView(viewState: ProfileFeedViewState) {
+        with (viewState) {
+            loading_indicator.isVisible = loading && !refreshing
+            swipe_refresh.setRefreshing(refreshing)
+
+            if (updateAdapter) {
+                profileFeedAdapter.setItems(events, isLastPage)
+
+                paginationListener.isLastPage = isLastPage
+                paginationListener.loading = false
+            }
+        }
+    }
+
+    private fun setupListeners() {
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
+        feed_list.addOnScrollListener(paginationListener)
     }
 }

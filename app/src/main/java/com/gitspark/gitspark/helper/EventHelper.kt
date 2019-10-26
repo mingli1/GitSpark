@@ -27,7 +27,9 @@ class EventHelper @Inject constructor(private val context: Context) {
                     context.getString(R.string.pushevent_commit_single)
 
                 var commitMessages = ""
-                event.payload.commits.forEach { commitMessages += "- ${it.message}\n" }
+                event.payload.commits.forEachIndexed { index, eventCommit ->
+                    commitMessages += "- ${eventCommit.message}${if (index == event.payload.commits.size - 1) "" else "\n"}"
+                }
                 "$newCommitsText\n$commitMessages"
             }
             else -> ""

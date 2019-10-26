@@ -9,6 +9,7 @@ import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.DateGroup
 import com.gitspark.gitspark.model.Event
 import com.gitspark.gitspark.model.Loading
+import kotlinx.android.synthetic.main.date_group_view.view.*
 import kotlinx.android.synthetic.main.profile_feed_view.view.*
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
@@ -60,13 +61,14 @@ class ProfileFeedAdapter(
                     val dateTime = LocalDateTime.ofInstant(createdDate, ZoneOffset.UTC)
                     formattedDateTime = DateTimeFormatter.ofPattern("MMM dd, yyyy").format(dateTime)
                 }
-                view.date_field.text = view.context.getString(R.string.feed_date_group, formattedDateTime)
+                view.date_group.text = view.context.getString(R.string.feed_date_group, formattedDateTime)
             }
             is Event -> {
                 with (view) {
                     action_description.text = eventHelper.getTitle(item)
-                    if (eventHelper.getContent(item).isNotEmpty()) content_field.text = eventHelper.getContent(item)
-                    else content_field.isVisible = false
+                    val content = eventHelper.getContent(item)
+                    content_field.isVisible = content.isNotEmpty()
+                    content_field.text = content
 
                     if (item.actor.avatarUrl.isNotEmpty()) profile_icon.loadImage(item.actor.avatarUrl)
                     username_field.text = item.actor.login

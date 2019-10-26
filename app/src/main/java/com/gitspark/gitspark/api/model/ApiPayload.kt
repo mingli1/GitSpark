@@ -6,7 +6,7 @@ import com.squareup.moshi.Json
 
 data class ApiPayload(
     // PushEvent
-    @field:Json(name = "push_id") val pushId: Int?,
+    @field:Json(name = "push_id") val pushId: Long?,
     @field:Json(name = "size") val numCommits: Int?,
     @field:Json(name = "distinct_size") val numDistinctCommits: Int?,
     @field:Json(name = "ref") val ref: String?,

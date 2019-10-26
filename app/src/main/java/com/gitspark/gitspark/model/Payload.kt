@@ -2,7 +2,7 @@ package com.gitspark.gitspark.model
 
 data class Payload(
     // PushEvent
-    val pushId: Int = 0,
+    val pushId: Long = 0,
     val numCommits: Int = 0,
     val numDistinctCommits: Int = 0,
     val ref: String = "",

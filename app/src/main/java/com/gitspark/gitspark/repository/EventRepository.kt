@@ -15,9 +15,9 @@ class EventRepository @Inject constructor(
     private val retrofitHelper: RetrofitHelper
 ) {
 
-    fun getEvents(username: String): Observable<EventResult<Page<Event>>> {
+    fun getEvents(username: String, page: Int): Observable<EventResult<Page<Event>>> {
         return getEventService()
-            .getEvents(username)
+            .getEvents(username, page)
             .map {
                 getSuccess(it.toModel<Event>().apply {
                     value = it.response.map { event -> event.toModel() }

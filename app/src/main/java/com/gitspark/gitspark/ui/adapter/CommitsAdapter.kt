@@ -56,7 +56,7 @@ class CommitsAdapter(private val timeHelper: TimeHelper) : PaginationAdapter() {
                     val dateTime = LocalDateTime.ofInstant(createdDate, ZoneOffset.UTC)
                     formattedDateTime = DateTimeFormatter.ofPattern("MMM dd, yyyy").format(dateTime)
                 }
-                view.commit_date_group.text = view.context.getString(R.string.commits_date_group, formattedDateTime)
+                view.date_group.text = view.context.getString(R.string.commits_date_group, formattedDateTime)
             }
             is Commit -> {
                 with (view) {
