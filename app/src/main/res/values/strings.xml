@@ -10,6 +10,7 @@
     <string name="nav_pr">Pull Requests</string>
     <string name="nav_issues">Issues</string>
     <string name="overview_title">Overview</string>
+    <string name="profile_feed_title">Activity</string>
     <string name="code_title">Code</string>
     <string name="repos_title">Repos</string>
     <string name="stars_title">Stars</string>

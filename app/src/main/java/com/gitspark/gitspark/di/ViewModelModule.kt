@@ -52,6 +52,10 @@ internal abstract class ViewModelModule {
     internal abstract fun bindOverviewViewModel(overviewViewModel: OverviewViewModel): ViewModel
 
     @Binds @IntoMap
+    @ViewModelKey(ProfileFeedViewModel::class)
+    internal abstract fun bindProfileFeedViewModel(profileFeedViewModel: ProfileFeedViewModel): ViewModel
+
+    @Binds @IntoMap
     @ViewModelKey(ReposViewModel::class)
     internal abstract fun bindReposViewModel(reposViewModel: ReposViewModel): ViewModel
 

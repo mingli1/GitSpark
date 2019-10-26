@@ -29,6 +29,7 @@ class ProfileFragment :
 {
 
     private lateinit var overViewFragment: OverviewFragment
+    private lateinit var profileFeedFragment: ProfileFeedFragment
     private lateinit var reposFragment: ReposFragment
     private lateinit var starsFragment: StarsFragment
 
@@ -74,6 +75,7 @@ class ProfileFragment :
 
     private fun setUpFragments() {
         overViewFragment = OverviewFragment().apply { arguments = this@ProfileFragment.arguments }
+        profileFeedFragment = ProfileFeedFragment().apply { arguments = this@ProfileFragment.arguments }
         reposFragment = ReposFragment().apply { arguments = this@ProfileFragment.arguments }
         starsFragment = StarsFragment().apply { arguments = this@ProfileFragment.arguments }
 
@@ -83,6 +85,7 @@ class ProfileFragment :
     private fun setUpTabLayout() {
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             addFragment(overViewFragment, getString(R.string.overview_title))
+            addFragment(profileFeedFragment, getString(R.string.profile_feed_title))
             addFragment(reposFragment, getString(R.string.repos_title))
             addFragment(starsFragment, getString(R.string.stars_title))
         }
