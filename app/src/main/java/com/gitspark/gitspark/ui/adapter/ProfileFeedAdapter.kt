@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.adapter
 
 import android.view.View
+import android.view.ViewGroup
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
@@ -62,11 +63,14 @@ class ProfileFeedAdapter(
             is Event -> {
                 with (view) {
                     val title = eventHelper.getTitle(item)
+                    isVisible = title.isNotEmpty()
                     if (title.isEmpty()) {
-                        isVisible = false
                         val lp = layoutParams.apply { height = 0 }
                         layoutParams = lp
                         return
+                    } else {
+                        val lp = layoutParams.apply { height = ViewGroup.LayoutParams.WRAP_CONTENT }
+                        layoutParams = lp
                     }
 
                     action_description.text = title
