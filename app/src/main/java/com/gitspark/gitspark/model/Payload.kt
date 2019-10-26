@@ -8,5 +8,11 @@ data class Payload(
     val ref: String = "",
     val head: String = "",
     val before: String = "",
-    val commits: List<Commit> = emptyList()
+    val commits: List<EventCommit> = emptyList()
+)
+
+data class EventCommit(
+    val sha: String = "",
+    val message: String = "",
+    val distinct: Boolean = false
 )

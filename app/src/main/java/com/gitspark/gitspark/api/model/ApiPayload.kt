@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.api.model
 
+import com.gitspark.gitspark.model.EventCommit
 import com.gitspark.gitspark.model.Payload
 import com.squareup.moshi.Json
 
@@ -11,7 +12,7 @@ data class ApiPayload(
     @field:Json(name = "ref") val ref: String?,
     @field:Json(name = "head") val head: String?,
     @field:Json(name = "before") val before: String?,
-    @field:Json(name = "commits") val commits: List<ApiCommit>?
+    @field:Json(name = "commits") val commits: List<ApiEventCommit>?
 ) {
     fun toModel() = Payload(
         pushId = pushId ?: 0,
@@ -21,5 +22,17 @@ data class ApiPayload(
         head = head ?: "",
         before = before ?: "",
         commits = commits?.map { it.toModel() } ?: emptyList()
+    )
+}
+
+data class ApiEventCommit(
+    @field:Json(name = "sha") val sha: String?,
+    @field:Json(name = "message") val message: String?,
+    @field:Json(name = "distinct") val distinct: Boolean?
+) {
+    fun toModel() = EventCommit(
+        sha = sha ?: "",
+        message = message ?: "",
+        distinct = distinct ?: false
     )
 }

@@ -71,8 +71,13 @@
     <string name="contributions_text_single">1 contribution</string>
     <string name="contributions_text">%1$d contributions</string>
     <string name="lang_breakdown">Language Breakdown</string>
+    <string name="feed_date_group">Activity on %1$s</string>
     <string name="commits_date_group">Commits on %1$s</string>
     <string name="committed_date">committed %1$s</string>
     <string name="commits_list_title">Commits</string>
     <string name="empty_repo_text">This repository is empty!</string>
+    <!-- event strings -->
+    <string name="pushevent_desc">Pushed changes to %1$s of %2$s</string>
+    <string name="pushevent_commit_count">%1$d new commits:</string>
+    <string name="pushevent_commit_single">1 new commit:</string>
 </resources>
