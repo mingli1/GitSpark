@@ -2,6 +2,9 @@ package com.gitspark.gitspark.model
 
 data class Payload(
     val action: String = "",
+    val repo: Repo = Repo(),
+    // ForkEvent
+    val forkee: Repo = Repo(),
     // IssuesEvent
     val issue: Issue = Issue(),
     // IssueCommentEvent

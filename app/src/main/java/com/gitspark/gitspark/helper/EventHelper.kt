@@ -9,9 +9,12 @@ import com.gitspark.gitspark.model.Event
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val FORK_EVENT = "ForkEvent"
 private const val ISSUES_EVENT = "IssuesEvent"
 private const val ISSUE_COMMENT_EVENT = "IssueCommentEvent"
+private const val PUBLIC_EVENT = "PublicEvent"
 private const val PUSH_EVENT = "PushEvent"
+private const val WATCH_EVENT = "WatchEvent"
 
 @Singleton
 class EventHelper @Inject constructor(private val context: Context) {
@@ -21,6 +24,13 @@ class EventHelper @Inject constructor(private val context: Context) {
     fun getTitle(event: Event): SpannableStringBuilder {
         builder.clear()
         return when (event.type) {
+            FORK_EVENT -> builder.append("Forked ")
+                .color(context.getColor(R.color.colorPrimaryDark)) {
+                    bold { append(event.payload.forkee.fullName) }
+                }.append(" from ")
+                .color(context.getColor(R.color.colorPrimaryDark)) {
+                    bold { append(event.repo.repoName) }
+                }
             ISSUES_EVENT -> builder.append(event.payload.action.capitalize()).append(" issue in ")
                 .color(context.getColor(R.color.colorPrimaryDark)) {
                     bold { append(event.repo.repoName) }
@@ -32,6 +42,14 @@ class EventHelper @Inject constructor(private val context: Context) {
                 }
             PUSH_EVENT -> builder.append("Pushed changes ").append("to ")
                 .append(getBranchFromRef(event)).append(" of ")
+                .color(context.getColor(R.color.colorPrimaryDark)) {
+                    bold { append(event.repo.repoName) }
+                }
+            PUBLIC_EVENT -> builder.append("Made ")
+                .color(context.getColor(R.color.colorPrimaryDark)) {
+                    bold { append(event.payload.repo.fullName) }
+                }.append(" public")
+            WATCH_EVENT -> builder.append("Starred ")
                 .color(context.getColor(R.color.colorPrimaryDark)) {
                     bold { append(event.repo.repoName) }
                 }

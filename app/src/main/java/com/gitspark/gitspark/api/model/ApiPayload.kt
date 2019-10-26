@@ -1,13 +1,13 @@
 package com.gitspark.gitspark.api.model
 
-import com.gitspark.gitspark.model.EventCommit
-import com.gitspark.gitspark.model.Issue
-import com.gitspark.gitspark.model.IssueComment
-import com.gitspark.gitspark.model.Payload
+import com.gitspark.gitspark.model.*
 import com.squareup.moshi.Json
 
 data class ApiPayload(
     @field:Json(name = "action") val action: String?,
+    @field:Json(name = "repository") val repository: ApiRepo?,
+    // ForkEvent
+    @field:Json(name = "forkee") val forkee: ApiRepo?,
     // IssuesEvent
     @field:Json(name = "issue") val issue: ApiIssue?,
     // IssueCommentEvent
@@ -31,7 +31,9 @@ data class ApiPayload(
         head = head ?: "",
         before = before ?: "",
         commits = commits?.map { it.toModel() } ?: emptyList(),
-        comment = comment?.toModel() ?: IssueComment()
+        comment = comment?.toModel() ?: IssueComment(),
+        forkee = forkee?.toModel() ?: Repo(),
+        repo = repository?.toModel() ?: Repo()
     )
 }
 
