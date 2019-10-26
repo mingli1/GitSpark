@@ -77,10 +77,7 @@
     <string name="commits_list_title">Commits</string>
     <string name="empty_repo_text">This repository is empty!</string>
     <!-- event strings -->
-    <string name="pushevent_desc">Pushed changes to %1$s of %2$s</string>
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>
-    <string name="issuesevent_desc">%1$s issue in %2$s</string>
     <string name="issues_fullname">#%1$d %2$s</string>
-    <string name="issuecomment_desc">%1$s comment in Issue #%2$d of %3$s</string>
 </resources>

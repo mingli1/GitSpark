@@ -1,6 +1,9 @@
 package com.gitspark.gitspark.helper
 
 import android.content.Context
+import android.text.SpannableStringBuilder
+import androidx.core.text.bold
+import androidx.core.text.color
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.model.Event
 import javax.inject.Inject
@@ -13,15 +16,26 @@ private const val PUSH_EVENT = "PushEvent"
 @Singleton
 class EventHelper @Inject constructor(private val context: Context) {
 
-    fun getTitle(event: Event): String {
+    private val builder = SpannableStringBuilder()
+
+    fun getTitle(event: Event): SpannableStringBuilder {
+        builder.clear()
         return when (event.type) {
-            ISSUES_EVENT -> context.getString(R.string.issuesevent_desc,
-                event.payload.action.capitalize(), event.repo.repoName)
-            ISSUE_COMMENT_EVENT -> context.getString(R.string.issuecomment_desc,
-                event.payload.action.capitalize(), event.payload.issue.number, event.repo.repoName)
-            PUSH_EVENT -> context.getString(R.string.pushevent_desc,
-                getBranchFromRef(event), event.repo.repoName)
-            else -> ""
+            ISSUES_EVENT -> builder.append(event.payload.action.capitalize()).append(" issue in ")
+                .color(context.getColor(R.color.colorPrimaryDark)) {
+                    bold { append(event.repo.repoName) }
+                }
+            ISSUE_COMMENT_EVENT -> builder.append(event.payload.action.capitalize())
+                .append(" comment in Issue #").append(event.payload.issue.number.toString())
+                .append(" of ").color(context.getColor(R.color.colorPrimaryDark)) {
+                    bold { append(event.repo.repoName) }
+                }
+            PUSH_EVENT -> builder.append("Pushed changes ").append("to ")
+                .append(getBranchFromRef(event)).append(" of ")
+                .color(context.getColor(R.color.colorPrimaryDark)) {
+                    bold { append(event.repo.repoName) }
+                }
+            else -> builder
         }
     }
 
