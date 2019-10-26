@@ -9,6 +9,7 @@ import com.gitspark.gitspark.model.Event
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val COMMIT_COMMENT_EVENT = "CommitCommentEvent"
 private const val CREATE_EVENT = "CreateEvent"
 private const val FORK_EVENT = "ForkEvent"
 private const val ISSUES_EVENT = "IssuesEvent"
@@ -25,6 +26,14 @@ class EventHelper @Inject constructor(private val context: Context) {
     fun getTitle(event: Event): SpannableStringBuilder {
         builder.clear()
         return when (event.type) {
+            COMMIT_COMMENT_EVENT -> builder.append("Commented on commit ")
+                .color(context.getColor(R.color.colorPrimaryDark)) {
+                    bold { append(event.payload.comment.commitId.take(7)) }
+                }.append(" of ")
+                .color(context.getColor(R.color.colorPrimaryDark)) {
+                    bold { append(event.repo.repoName) }
+                }
+
             CREATE_EVENT -> {
                 when  {
                     event.payload.ref.isEmpty() && event.payload.refType == "repository" ->
@@ -78,6 +87,7 @@ class EventHelper @Inject constructor(private val context: Context) {
 
     fun getContent(event: Event): String {
         return when (event.type) {
+            COMMIT_COMMENT_EVENT -> event.payload.comment.body
             CREATE_EVENT -> {
                 when  {
                     event.payload.ref.isEmpty() && event.payload.refType == "repository" ->
