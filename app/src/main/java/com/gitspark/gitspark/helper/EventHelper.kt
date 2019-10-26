@@ -6,6 +6,7 @@ import com.gitspark.gitspark.model.Event
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val ISSUES_EVENT = "IssuesEvent"
 private const val PUSH_EVENT = "PushEvent"
 
 @Singleton
@@ -13,13 +14,20 @@ class EventHelper @Inject constructor(private val context: Context) {
 
     fun getTitle(event: Event): String {
         return when (event.type) {
-            PUSH_EVENT -> context.getString(R.string.pushevent_desc, getBranchFromRef(event), event.repo.repoName)
+            ISSUES_EVENT -> context.getString(R.string.issuesevent_desc,
+                event.payload.action.capitalize(), event.repo.repoName)
+            PUSH_EVENT -> context.getString(R.string.pushevent_desc,
+                getBranchFromRef(event), event.repo.repoName)
             else -> ""
         }
     }
 
     fun getContent(event: Event): String {
         return when (event.type) {
+            ISSUES_EVENT -> {
+                context.getString(R.string.issues_fullname,
+                    event.payload.issue.number, event.payload.issue.title)
+            }
             PUSH_EVENT -> {
                 val newCommitsText = if (event.payload.numCommits > 1)
                     context.getString(R.string.pushevent_commit_count, event.payload.numCommits)

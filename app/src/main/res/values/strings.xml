@@ -80,4 +80,6 @@
     <string name="pushevent_desc">Pushed changes to %1$s of %2$s</string>
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>
+    <string name="issuesevent_desc">%1$s issue in %2$s</string>
+    <string name="issues_fullname">#%1$d %2$s</string>
 </resources>

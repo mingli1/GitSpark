@@ -1,6 +1,9 @@
 package com.gitspark.gitspark.model
 
 data class Payload(
+    val action: String = "",
+    // IssuesEvent
+    val issue: Issue = Issue(),
     // PushEvent
     val pushId: Long = 0,
     val numCommits: Int = 0,
