@@ -20,7 +20,7 @@ abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHo
             when (viewType) {
                 VIEW_TYPE_VIEW -> getViewHolderId()
                 VIEW_TYPE_LOADING -> R.layout.loading_view
-                else -> R.layout.commit_date_view
+                else -> R.layout.date_group_view
             }
         ))
 

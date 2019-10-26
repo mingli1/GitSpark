@@ -7,7 +7,7 @@ import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Commit
 import com.gitspark.gitspark.model.DateGroup
 import com.gitspark.gitspark.model.Loading
-import kotlinx.android.synthetic.main.commit_date_view.view.*
+import kotlinx.android.synthetic.main.date_group_view.view.*
 import kotlinx.android.synthetic.main.commit_view.view.*
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
