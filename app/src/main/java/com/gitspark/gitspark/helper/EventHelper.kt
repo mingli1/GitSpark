@@ -63,10 +63,18 @@ class EventHelper @Inject constructor(private val context: Context) {
                 .color(context.getColor(R.color.colorPrimaryDark)) {
                     bold { append(event.repo.repoName) }
                 }
-            ISSUE_COMMENT_EVENT -> builder.append(event.payload.action.capitalize())
-                .append(" comment in Issue #").append(event.payload.issue.number.toString())
-                .append(" of ").color(context.getColor(R.color.colorPrimaryDark)) {
-                    bold { append(event.repo.repoName) }
+            ISSUE_COMMENT_EVENT ->
+                when {
+                    event.payload.action == "created" -> builder.append("Commented on Issue #")
+                        .append(event.payload.issue.number.toString())
+                        .append(" of ").color(context.getColor(R.color.colorPrimaryDark)) {
+                            bold { append(event.repo.repoName) }
+                        }
+                    else -> builder.append(event.payload.action.capitalize())
+                        .append(" comment in Issue #").append(event.payload.issue.number.toString())
+                        .append(" of ").color(context.getColor(R.color.colorPrimaryDark)) {
+                            bold { append(event.repo.repoName) }
+                        }
                 }
             PUSH_EVENT -> builder.append("Pushed changes ").append("to ")
                 .append(getBranchFromRef(event)).append(" of ")

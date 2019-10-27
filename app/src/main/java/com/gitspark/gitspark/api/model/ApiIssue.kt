@@ -19,7 +19,6 @@ data class ApiIssue(
     // todo milestone?
     @field:Json(name = "locked") val locked: Boolean?,
     @field:Json(name = "comments") val numComments: Int?,
-    // todo pull request
     @field:Json(name = "created_at") val createdAt: String?,
     @field:Json(name = "updated_at") val updatedAt: String?,
     @field:Json(name = "repository") val repo: ApiRepo?
