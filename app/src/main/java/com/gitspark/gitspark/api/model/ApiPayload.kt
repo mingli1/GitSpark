@@ -18,6 +18,9 @@ data class ApiPayload(
     @field:Json(name = "issue") val issue: ApiIssue?,
     // IssueCommentEvent
     @field:Json(name = "comment") val comment: ApiIssueComment?,
+    // PullRequestEvent
+    @field:Json(name = "number") val number: Int?,
+    @field:Json(name = "pull_request") val pullRequest: ApiPullRequest?,
     // PushEvent
     @field:Json(name = "push_id") val pushId: Long?,
     @field:Json(name = "size") val numCommits: Int?,
@@ -41,7 +44,9 @@ data class ApiPayload(
         repo = repository?.toModel() ?: Repo(),
         refType = refType ?: "",
         masterBranch = masterBranch ?: "",
-        description = description ?: ""
+        description = description ?: "",
+        pullRequest = pullRequest?.toModel() ?: PullRequest(),
+        number = number ?: 0
     )
 }
 

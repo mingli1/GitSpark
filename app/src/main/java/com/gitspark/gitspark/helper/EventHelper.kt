@@ -15,6 +15,8 @@ private const val FORK_EVENT = "ForkEvent"
 private const val ISSUES_EVENT = "IssuesEvent"
 private const val ISSUE_COMMENT_EVENT = "IssueCommentEvent"
 private const val PUBLIC_EVENT = "PublicEvent"
+private const val PULL_REQUEST_EVENT = "PullRequestEvent"
+private const val PULL_REQUEST_REVIEW_COMMENT_EVENT = "PullRequestReviewCommentEvent"
 private const val PUSH_EVENT = "PushEvent"
 private const val WATCH_EVENT = "WatchEvent"
 
@@ -59,7 +61,7 @@ class EventHelper @Inject constructor(private val context: Context) {
                 .color(context.getColor(R.color.colorPrimaryDark)) {
                     bold { append(event.repo.repoName) }
                 }
-            ISSUES_EVENT -> builder.append(event.payload.action.capitalize()).append(" issue in ")
+            ISSUES_EVENT -> builder.append(event.payload.action.capitalize()).append(" an issue in ")
                 .color(context.getColor(R.color.colorPrimaryDark)) {
                     bold { append(event.repo.repoName) }
                 }
@@ -76,6 +78,21 @@ class EventHelper @Inject constructor(private val context: Context) {
                             bold { append(event.repo.repoName) }
                         }
                 }
+            PULL_REQUEST_EVENT -> builder.append(event.payload.action.capitalize())
+                .append(" a pull request in ")
+                .color(context.getColor(R.color.colorPrimaryDark)) {
+                    bold { append(event.repo.repoName) }
+                }
+            PULL_REQUEST_REVIEW_COMMENT_EVENT -> {
+                when {
+                    event.payload.action == "created" || event.payload.action == "edited" ->
+                        builder.append("Reviewed Pull Request #").append(event.payload.pullRequest.number.toString())
+                            .append(" in ").color(context.getColor(R.color.colorPrimaryDark)) {
+                                bold { append(event.repo.repoName) }
+                            }
+                    else -> builder
+                }
+            }
             PUSH_EVENT -> builder.append("Pushed changes ").append("to ")
                 .append(getBranchFromRef(event)).append(" of ")
                 .color(context.getColor(R.color.colorPrimaryDark)) {
@@ -108,6 +125,9 @@ class EventHelper @Inject constructor(private val context: Context) {
                     event.payload.issue.number, event.payload.issue.title)
             }
             ISSUE_COMMENT_EVENT -> event.payload.comment.body
+            PULL_REQUEST_EVENT -> context.getString(R.string.issues_fullname,
+                event.payload.number, event.payload.pullRequest.title)
+            PULL_REQUEST_REVIEW_COMMENT_EVENT -> event.payload.comment.body
             PUSH_EVENT -> {
                 val newCommitsText = if (event.payload.numCommits > 1)
                     context.getString(R.string.pushevent_commit_count, event.payload.numCommits)

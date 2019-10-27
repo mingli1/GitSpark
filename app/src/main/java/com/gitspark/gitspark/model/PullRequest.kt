@@ -19,7 +19,19 @@ data class PullRequest(
     val requestReviewers: List<User> = emptyList(),
     val head: PRBranch = PRBranch(),
     val base: PRBranch = PRBranch(),
-    val draft: Boolean = false
+    val draft: Boolean = false,
+    val merged: Boolean = false,
+    val mergeable: Boolean = false,
+    val rebaseable: Boolean = false,
+    val mergeableState: String = "",
+    val mergedBy: User = User(),
+    val numComments: Int = 0,
+    val numReviewComments: Int = 0,
+    val maintainerCanModify: Boolean = false,
+    val numCommits: Int = 0,
+    val numAdditions: Int = 0,
+    val numDeletions: Int = 0,
+    val numFilesChanged: Int = 0
 )
 
 data class PRBranch(

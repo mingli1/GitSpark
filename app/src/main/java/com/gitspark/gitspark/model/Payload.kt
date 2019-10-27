@@ -15,6 +15,9 @@ data class Payload(
     val issue: Issue = Issue(),
     // IssueCommentEvent
     val comment: IssueComment = IssueComment(),
+    // PullRequestEvent
+    val number: Int = 0,
+    val pullRequest: PullRequest = PullRequest(),
     // PushEvent
     val pushId: Long = 0,
     val numCommits: Int = 0,
