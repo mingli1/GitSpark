@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:focusable="true"
     android:clickable="true"
-    android:background="?attr/selectableItemBackground">
+    android:background="@color/colorWhite"
+    android:foreground="?attr/selectableItemBackground">
     
     <TextView
         android:id="@+id/commit_message"
