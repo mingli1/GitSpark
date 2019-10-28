@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
+import androidx.viewpager.widget.ViewPager
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.model.User
@@ -57,6 +58,14 @@ class ProfileFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                tab_layout_bar.setExpanded(true, true)
+            }
+            override fun onPageSelected(position: Int) {}
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
 
         arguments?.let {
             viewModel.requestUserData(it.getString(BUNDLE_USERNAME) ?: "")
