@@ -1,6 +1,6 @@
 package com.gitspark.gitspark.di
 
-import com.gitspark.gitspark.ui.main.feed.FeedFragment
+import com.gitspark.gitspark.ui.main.home.HomeFragment
 import com.gitspark.gitspark.ui.main.issues.IssuesFragment
 import com.gitspark.gitspark.ui.main.pr.PullRequestsFragment
 import com.gitspark.gitspark.ui.main.profile.*
@@ -18,7 +18,7 @@ import dagger.android.ContributesAndroidInjector
 internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
-    internal abstract fun contributesFeedFragment(): FeedFragment
+    internal abstract fun contributesHomeFragment(): HomeFragment
 
     @ContributesAndroidInjector
     internal abstract fun contributesProfileFragment(): ProfileFragment

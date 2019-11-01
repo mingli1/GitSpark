@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUpNavController() {
         navController = bottom_navigation_view.setupWithNavController(
             navGraphIds = listOf(
-                R.navigation.feed_navigation,
+                R.navigation.home_navigation,
                 R.navigation.profile_navigation,
                 R.navigation.search_navigation,
                 R.navigation.pr_navigation,

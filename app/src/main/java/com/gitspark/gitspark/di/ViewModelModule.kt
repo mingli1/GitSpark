@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.gitspark.gitspark.ui.base.ViewModelFactory
 import com.gitspark.gitspark.ui.login.LoginViewModel
-import com.gitspark.gitspark.ui.main.feed.FeedViewModel
+import com.gitspark.gitspark.ui.main.home.HomeViewModel
 import com.gitspark.gitspark.ui.main.issues.IssuesViewModel
 import com.gitspark.gitspark.ui.main.pr.PullRequestsViewModel
 import com.gitspark.gitspark.ui.main.profile.*
@@ -28,8 +28,8 @@ internal abstract class ViewModelModule {
     internal abstract fun bindLoginViewModel(loginViewModel: LoginViewModel): ViewModel
 
     @Binds @IntoMap
-    @ViewModelKey(FeedViewModel::class)
-    internal abstract fun bindFeedViewModel(feedViewModel: FeedViewModel): ViewModel
+    @ViewModelKey(HomeViewModel::class)
+    internal abstract fun bindHomeViewModel(homeViewModel: HomeViewModel): ViewModel
 
     @Binds @IntoMap
     @ViewModelKey(ProfileViewModel::class)
