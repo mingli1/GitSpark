@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_repos.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
-private const val LABEL = "Starred Repositories"
+private const val LABEL = "Starred"
 
 class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
 
