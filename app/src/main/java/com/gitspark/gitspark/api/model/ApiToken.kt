@@ -4,7 +4,7 @@ import com.gitspark.gitspark.model.Token
 import com.squareup.moshi.Json
 
 data class ApiToken(
-    @field:Json(name = "id") val tokenId: Int?,
+    @field:Json(name = "id") val tokenId: Long?,
     @field:Json(name = "url") val url: String?,
     @field:Json(name = "scopes") val scopes: List<String>?,
     @field:Json(name = "token") val token: String?,

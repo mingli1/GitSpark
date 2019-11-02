@@ -8,7 +8,7 @@ import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 @Entity
 open class User(
     var login: String = "",
-    @PrimaryKey var userId: Int = 0,
+    @PrimaryKey var userId: Long = 0,
     var avatarUrl: String = "",
     var type: String = "",
     var siteAdmin: Boolean = false,

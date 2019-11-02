@@ -21,5 +21,5 @@ interface LoginService {
     fun getAuthorizations(): Observable<ApiPage<ApiToken>>
 
     @DELETE("authorizations/{authId}")
-    fun deleteAuthorization(@Path("authId") authId: Int): Completable
+    fun deleteAuthorization(@Path("authId") authId: Long): Completable
 }

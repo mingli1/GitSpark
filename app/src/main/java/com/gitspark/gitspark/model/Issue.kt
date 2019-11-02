@@ -1,7 +1,7 @@
 package com.gitspark.gitspark.model
 
 data class Issue(
-    val id: Int = 0,
+    val id: Long = 0,
     val number: Int = 0,
     val state: String = "",
     val title: String = "",

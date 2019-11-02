@@ -7,7 +7,7 @@ import com.gitspark.gitspark.model.User
 import com.squareup.moshi.Json
 
 data class ApiIssue(
-    @field:Json(name = "id") val id: Int?,
+    @field:Json(name = "id") val id: Long?,
     @field:Json(name = "number") val number: Int?,
     @field:Json(name = "state") val state: String?,
     @field:Json(name = "title") val title: String?,

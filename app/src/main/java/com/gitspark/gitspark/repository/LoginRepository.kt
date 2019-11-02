@@ -45,7 +45,7 @@ class LoginRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain authorizations.") }
     }
 
-    fun deleteAuthorization(basicToken: String, authId: Int): Completable {
+    fun deleteAuthorization(basicToken: String, authId: Long): Completable {
         return getLoginService(basicToken)
             .deleteAuthorization(authId)
     }

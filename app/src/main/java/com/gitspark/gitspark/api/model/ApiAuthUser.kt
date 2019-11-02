@@ -6,7 +6,7 @@ import com.squareup.moshi.Json
 
 data class ApiAuthUser(
     @field:Json(name = "login") val username: String?,
-    @field:Json(name = "id") val userId: Int?,
+    @field:Json(name = "id") val userId: Long?,
     @field:Json(name = "avatar_url") val avatarUrl: String?,
     @field:Json(name = "url") val url: String?,
     @field:Json(name = "type") val type: String?,

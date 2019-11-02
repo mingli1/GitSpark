@@ -6,7 +6,7 @@ import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 
 data class Repo(
-    val repoId: Int = 0,
+    val repoId: Long = 0,
     val repoName: String = "",
     val fullName: String = "",
     val owner: User = User(),
