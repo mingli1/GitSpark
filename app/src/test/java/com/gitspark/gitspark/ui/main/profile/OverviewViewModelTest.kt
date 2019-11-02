@@ -2,6 +2,7 @@ package com.gitspark.gitspark.ui.main.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.gitspark.gitspark.helper.ContributionsHelper
+import com.gitspark.gitspark.helper.PinnedReposHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.GitHubPlan
 import com.gitspark.gitspark.model.User
@@ -30,11 +31,12 @@ class OverviewViewModelTest {
     private lateinit var viewModel: OverviewViewModel
     @RelaxedMockK private lateinit var userRepository: UserRepository
     @RelaxedMockK private lateinit var contributionsHelper: ContributionsHelper
+    @RelaxedMockK private lateinit var pinnedReposHelper: PinnedReposHelper
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        viewModel = OverviewViewModel(userRepository, contributionsHelper)
+        viewModel = OverviewViewModel(userRepository, contributionsHelper, pinnedReposHelper)
 
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
