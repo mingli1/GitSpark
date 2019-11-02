@@ -192,6 +192,14 @@ class OverviewViewModelTest {
         assertThat(viewModel.navigateToEditProfileAction.value).isEqualTo(user)
     }
 
+    @Test
+    fun shouldHandlePinnedButtonClicked() {
+        viewModel.viewState.value = OverviewViewState()
+        assertThat(viewState().pinnedReposShown).isFalse()
+        viewModel.onPinnedReposButtonClicked()
+        assertThat(viewState().pinnedReposShown).isTrue()
+    }
+
     private fun getAuthUser() = AuthUser().apply {
         name = "Steven"
         login = "orz39"
