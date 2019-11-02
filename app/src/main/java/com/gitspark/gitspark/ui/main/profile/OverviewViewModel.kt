@@ -41,23 +41,31 @@ class OverviewViewModel @Inject constructor(
     @VisibleForTesting var currentUserData: User? = null
     @VisibleForTesting var username: String? = null
 
+    private var resumed = false
+
     fun onResume(username: String? = null, user: User? = null) {
-        if (username == null) {
-            val userData = userRepository.getCurrentUserData()
-            userDataMediator.addSource(userData) { userDataMediator.value = it }
+        if (!resumed) {
+            if (username == null) {
+                val userData = userRepository.getCurrentUserData()
+                userDataMediator.addSource(userData) { userDataMediator.value = it }
+            } else {
+                this.username = username
+                viewState.value = OverviewViewState(loading = true)
+                checkIfFollowing(username)
+                user?.let { updateViewStateWith(it) }
+            }
+            resumed = true
         }
-        else {
-            this.username = username
-            viewState.value = OverviewViewState(loading = true)
-            checkIfFollowing(username)
-            user?.let { updateViewStateWith(it) }
-        }
+    }
+
+    fun onDestroy() {
+        resumed = false
     }
 
     fun onCachedUserDataRetrieved(user: AuthUser) {
         val expired = userRepository.isUserCacheExpired(user.timestamp)
         if (expired) {
-            viewState.value = OverviewViewState(loading = true)
+            viewState.value = viewState.value?.copy(loading = true) ?: OverviewViewState(loading = true)
             requestAuthUser(user)
         }
         else updateViewStateWith(user)
@@ -160,7 +168,23 @@ class OverviewViewModel @Inject constructor(
                 formattedDateTime = DateTimeFormatter.ofPattern("MMM dd, yyyy").format(dateTime)
             }
 
-            viewState.value = OverviewViewState(
+            viewState.value = viewState.value?.copy(
+                nameText = name,
+                usernameText = login,
+                avatarUrl = avatarUrl,
+                bioText = bio,
+                locationText = location,
+                emailText = email,
+                urlText = blogUrl,
+                companyText = company,
+                numFollowers = followers,
+                numFollowing = following,
+                loading = true,
+                refreshing = false,
+                planName = if (this is AuthUser) plan.planName else "",
+                createdDate = formattedDateTime,
+                authUser = username == null
+            ) ?: OverviewViewState(
                 nameText = name,
                 usernameText = login,
                 avatarUrl = avatarUrl,
