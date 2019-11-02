@@ -120,4 +120,27 @@ class RepoDetailViewModelTest {
         viewModel.fetchAdditionalRepoData(Repo())
         assertThat(viewModel.alertAction.value).isEqualTo("failure")
     }
+
+    @Test
+    fun shouldFetchRepoData() {
+        val repo = Repo()
+        every { repoRepository.getRepo(any(), any()) } returns
+                Observable.just(RepoResult.Success(repo))
+
+        viewModel.fetchRepoData("", "")
+
+        assertThat(viewModel.repoData).isEqualTo(repo)
+        assertThat(viewModel.repoDataRetrieved.value).isEqualTo(repo)
+    }
+
+    @Test
+    fun shouldExitFragmentOnRepoDataFailure() {
+        every { repoRepository.getRepo(any(), any()) } returns
+                Observable.just(RepoResult.Failure("failure"))
+
+        viewModel.fetchRepoData("", "")
+
+        assertThat(viewModel.alertAction.value).isEqualTo("failure")
+        assertThat(viewModel.exitFragment.value).isNotNull
+    }
 }

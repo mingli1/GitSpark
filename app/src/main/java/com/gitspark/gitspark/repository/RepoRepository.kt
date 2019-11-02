@@ -20,6 +20,13 @@ class RepoRepository @Inject constructor(
     private val prefsHelper: PreferencesHelper
 ) {
 
+    fun getRepo(username: String, repoName: String): Observable<RepoResult<Repo>> {
+        return getRepoService()
+            .getRepo(username, repoName)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed to get repository.") }
+    }
+
     fun getAuthRepos(
         request: ApiAuthRepoRequest = ApiAuthRepoRequest(),
         page: Int

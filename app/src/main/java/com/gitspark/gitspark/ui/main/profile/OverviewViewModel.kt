@@ -34,6 +34,7 @@ class OverviewViewModel @Inject constructor(
     val contributionsAction = SingleLiveEvent<SortedMap<String, List<Contribution>>>()
     val navigateToFollowersAction = SingleLiveEvent<Triple<UserListType, String, String>>()
     val navigateToFollowingAction = SingleLiveEvent<Triple<UserListType, String, String>>()
+    val navigateToRepoDetailAction = SingleLiveEvent<String>()
     val refreshAction = SingleLiveAction()
     val navigateToEditProfileAction = SingleLiveEvent<User>()
 
@@ -100,7 +101,7 @@ class OverviewViewModel @Inject constructor(
     }
 
     override fun onRepoSelected(repo: Repo) {
-        // todo: implement navigation for pinned repos
+        navigateToRepoDetailAction.value = repo.fullName
     }
 
     private fun checkIfFollowing(username: String) {

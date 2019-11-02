@@ -11,6 +11,9 @@ const val COMMITS_PER_PAGE = 75
 
 interface RepoService {
 
+    @GET("repos/{owner}/{repo}")
+    fun getRepo(@Path("owner") owner: String, @Path("repo") repo: String): Observable<ApiRepo>
+
     @GET("user/repos")
     @Headers("Accept: application/vnd.github.mercy-preview+json")
     fun getAuthRepos(

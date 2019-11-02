@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
@@ -14,6 +15,7 @@ import com.gitspark.gitspark.ui.nav.BUNDLE_REPO
 import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
 import com.squareup.moshi.JsonAdapter
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -28,6 +30,7 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
 
     @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
     private lateinit var repoData: Repo
+    private var repoFullName: String? = null
     private lateinit var repoOverviewFragment: RepoOverviewFragment
     private lateinit var repoContentFragment: RepoContentFragment
 
@@ -38,6 +41,9 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.getString(BUNDLE_REPO_FULLNAME)?.let {
+            repoFullName = it
+        }
         arguments?.getString(BUNDLE_REPO)?.let {
             repoData = repoJsonAdapter.fromJson(it) ?: Repo()
         }
@@ -47,14 +53,8 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
         val view = inflater.inflate(R.layout.fragment_repo_detail, container, false)
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
 
-        with (activity as MainActivity) {
-            setSupportActionBar(toolbar)
-            supportActionBar?.run {
-                setDisplayHomeAsUpEnabled(true)
-                setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
-                title = repoData.fullName
-            }
-        }
+        (activity as MainActivity).setSupportActionBar(toolbar)
+        if (repoFullName == null) setToolbarTitle()
 
         return view
     }
@@ -62,6 +62,43 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        viewModel.repoData?.let { repoData = it }
+
+        if (repoFullName == null) {
+            setUpFragments()
+        }
+        else {
+            val args = repoFullName!!.split("/")
+            viewModel.fetchRepoData(args[0], args[1])
+        }
+    }
+
+    override fun getData() = repoData
+
+    override fun observeViewModel() {
+        viewModel.loading.observe(viewLifecycleOwner) { loading_indicator.isVisible = it }
+        viewModel.repoDataRetrieved.observe(viewLifecycleOwner) {
+            repoData = it
+            setToolbarTitle()
+            setUpFragments()
+        }
+        viewModel.exitFragment.observe(viewLifecycleOwner) { findNavController().navigateUp() }
+        viewModel.branchesData.observe(viewLifecycleOwner) { repoContentFragment.notifyBranchDataRetrieved(it) }
+        viewModel.watchingData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyWatchingDataRetrieved(it) }
+        viewModel.numWatchersData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyNumWatchersDataRetrieved(it) }
+        viewModel.starringData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyStarringDataRetrieved(it) }
+        viewModel.languagesData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyLanguagesDataRetrieved(it) }
+    }
+
+    private fun setToolbarTitle() {
+        (activity as MainActivity).supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
+            title = repoData.fullName
+        }
+    }
+
+    private fun setUpFragments() {
         repoOverviewFragment = RepoOverviewFragment()
         repoContentFragment = RepoContentFragment()
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
@@ -72,16 +109,5 @@ class RepoDetailFragment : BaseFragment<RepoDetailViewModel>(RepoDetailViewModel
         tabs.setupWithViewPager(viewpager)
 
         viewModel.fetchAdditionalRepoData(repoData)
-    }
-
-    override fun getData() = repoData
-
-    override fun observeViewModel() {
-        viewModel.loading.observe(viewLifecycleOwner) { loading_indicator.isVisible = it }
-        viewModel.branchesData.observe(viewLifecycleOwner) { repoContentFragment.notifyBranchDataRetrieved(it) }
-        viewModel.watchingData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyWatchingDataRetrieved(it) }
-        viewModel.numWatchersData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyNumWatchersDataRetrieved(it) }
-        viewModel.starringData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyStarringDataRetrieved(it) }
-        viewModel.languagesData.observe(viewLifecycleOwner) { repoOverviewFragment.notifyLanguagesDataRetrieved(it) }
     }
 }

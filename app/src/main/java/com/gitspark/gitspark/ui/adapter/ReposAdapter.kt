@@ -13,6 +13,13 @@ import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.ui.nav.RepoDetailNavigator
 import kotlinx.android.synthetic.main.repo_view.view.*
+import kotlinx.android.synthetic.main.repo_view.view.description_field
+import kotlinx.android.synthetic.main.repo_view.view.forks_field
+import kotlinx.android.synthetic.main.repo_view.view.full_name_field
+import kotlinx.android.synthetic.main.repo_view.view.language_field
+import kotlinx.android.synthetic.main.repo_view.view.repo_card
+import kotlinx.android.synthetic.main.repo_view.view.stars_field
+import kotlinx.android.synthetic.main.simple_repo_view.view.*
 import org.threeten.bp.Instant
 
 private const val MAX_TOPICS_SHOWN = 3
@@ -41,6 +48,7 @@ class ReposAdapter(
                     colorHelper.getColor(item.repoLanguage)?.let {
                         language_field.compoundDrawablesRelative[0].setColor(it)
                     }
+                    repo_card.setOnClickListener { navigator.onRepoSelected(item) }
                     return
                 }
 

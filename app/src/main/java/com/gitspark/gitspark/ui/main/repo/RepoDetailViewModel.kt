@@ -7,6 +7,7 @@ import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import java.util.*
 import javax.inject.Inject
@@ -16,13 +17,39 @@ class RepoDetailViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val loading = MutableLiveData<Boolean>()
+    val repoDataRetrieved = SingleLiveEvent<Repo>()
+    val exitFragment = SingleLiveAction()
     val branchesData = SingleLiveEvent<List<Branch>>()
     val watchingData = SingleLiveEvent<ApiSubscribed>()
     val numWatchersData = SingleLiveEvent<Int>()
     val starringData = SingleLiveEvent<Boolean>()
     val languagesData = SingleLiveEvent<SortedMap<String, Int>>()
 
+    var repoData: Repo? = null
+    private var repoDataLoaded = false
     private var dataLoaded = false
+
+    fun fetchRepoData(username: String, repoName: String) {
+        if (!repoDataLoaded) {
+            loading.value = true
+
+            subscribe(repoRepository.getRepo(username, repoName)) {
+                when (it) {
+                    is RepoResult.Success -> {
+                        repoData = it.value
+                        repoDataRetrieved.value = it.value
+                    }
+                    is RepoResult.Failure -> {
+                        alert(it.error)
+                        exitFragment.call()
+                    }
+                }
+            }
+
+            repoDataLoaded = true
+        }
+        else repoDataRetrieved.value = repoData
+    }
 
     fun fetchAdditionalRepoData(repo: Repo) {
         if (!dataLoaded) {

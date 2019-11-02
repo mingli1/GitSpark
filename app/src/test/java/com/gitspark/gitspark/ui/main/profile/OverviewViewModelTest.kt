@@ -5,6 +5,7 @@ import com.gitspark.gitspark.helper.ContributionsHelper
 import com.gitspark.gitspark.helper.PinnedReposHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.GitHubPlan
+import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
@@ -198,6 +199,12 @@ class OverviewViewModelTest {
         assertThat(viewState().pinnedReposShown).isFalse()
         viewModel.onPinnedReposButtonClicked()
         assertThat(viewState().pinnedReposShown).isTrue()
+    }
+
+    @Test
+    fun shouldNavigateToRepoDetail() {
+        viewModel.onRepoSelected(Repo(fullName = "mingli1/GitSpark"))
+        assertThat(viewModel.navigateToRepoDetailAction.value).isEqualTo("mingli1/GitSpark")
     }
 
     private fun getAuthUser() = AuthUser().apply {

@@ -22,6 +22,7 @@ import com.gitspark.gitspark.ui.main.shared.BUNDLE_ARGUMENTS
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_USER_LIST_TYPE
 import com.gitspark.gitspark.ui.main.shared.UserListType
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
 import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.profile_header.*
@@ -88,6 +89,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         }
         viewModel.navigateToEditProfileAction.observe(viewLifecycleOwner) { navigateToEditProfileFragment(it) }
         sharedViewModel.userData.observe(viewLifecycleOwner) { viewModel.onUserDataRefreshed(it) }
+        viewModel.navigateToRepoDetailAction.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
     }
 
     fun notifyUserDataRefreshed() =
@@ -175,6 +177,14 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         }
         findNavController().navigate(
             R.id.action_profile_fragment_to_user_list_fragment,
+            data
+        )
+    }
+
+    private fun navigateToRepoDetailFragment(args: String) {
+        val data = Bundle().apply { putString(BUNDLE_REPO_FULLNAME, args) }
+        findNavController().navigate(
+            R.id.action_profile_fragment_to_repo_detail_fragment,
             data
         )
     }
