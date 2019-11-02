@@ -80,6 +80,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
 
     override fun onDestroyView() {
         super.onDestroyView()
+        language_breakdown.adapter = null
         rmUrl = ""
     }
 

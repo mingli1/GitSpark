@@ -6,13 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.observeOnce
+import com.gitspark.gitspark.helper.LanguageColorHelper
+import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Contribution
 import com.gitspark.gitspark.model.User
+import com.gitspark.gitspark.ui.adapter.ReposAdapter
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_ARGUMENTS
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_USER_LIST_TYPE
@@ -21,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.profile_header.*
 import java.util.*
+import javax.inject.Inject
 
 const val BUNDLE_NAME = "BUNDLE_NAME"
 const val BUNDLE_EMAIL = "BUNDLE_EMAIL"
@@ -36,13 +42,31 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         ViewModelProviders.of(activity!!, viewModelFactory)[ProfileSharedViewModel::class.java]
     }
 
+    @Inject lateinit var colorHelper: LanguageColorHelper
+    @Inject lateinit var timeHelper: TimeHelper
+    private lateinit var reposAdapter: ReposAdapter
+    private lateinit var layoutManager: LinearLayoutManager
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_overview, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel, simple = true)
+
+        layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        pinned_repos.setHasFixedSize(true)
+        pinned_repos.layoutManager = layoutManager
+        if (pinned_repos.adapter == null) pinned_repos.adapter = reposAdapter
+
         setUpListeners()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        pinned_repos.adapter = null
     }
 
     override fun viewModelOnResume() =
@@ -111,6 +135,13 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
 
             loading_indicator.isVisible = loading
             swipe_refresh.setRefreshing(refreshing)
+
+            reposAdapter.setItems(pinnedRepos, true)
+            pinned_button.setImageResource(if (pinnedReposShown)
+                R.drawable.ic_expand_less else R.drawable.ic_expand_more)
+            pinned_repos.isVisible = pinnedReposShown
+            pinned_field.text = if (pinnedReposHeader.isEmpty()) getString(R.string.pinned_repositories_default)
+                else getString(R.string.num_repos_text, pinnedReposHeader, pinnedRepos.size)
         }
     }
 
@@ -126,6 +157,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
             viewModel.onFollowsButtonClicked(follows_button.text == getString(R.string.unfollow_button_text))
         }
         edit_profile_button.setOnClickListener { viewModel.onEditProfileButtonClicked() }
+        pinned_button.setOnClickListener { viewModel.onPinnedReposButtonClicked() }
     }
 
     private fun navigateToEditProfileFragment(user: User) {

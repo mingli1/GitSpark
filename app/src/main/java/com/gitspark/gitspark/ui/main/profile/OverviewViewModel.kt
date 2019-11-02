@@ -1,6 +1,5 @@
 package com.gitspark.gitspark.ui.main.profile
 
-import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +7,7 @@ import com.gitspark.gitspark.helper.ContributionsHelper
 import com.gitspark.gitspark.helper.PinnedReposHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.Contribution
+import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.repository.UserResult
@@ -15,6 +15,7 @@ import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.main.shared.UserListType
+import com.gitspark.gitspark.ui.nav.RepoDetailNavigator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
@@ -26,7 +27,7 @@ class OverviewViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val contributionsHelper: ContributionsHelper,
     private val pinnedReposHelper: PinnedReposHelper
-) : BaseViewModel() {
+) : BaseViewModel(), RepoDetailNavigator {
 
     val viewState = MutableLiveData<OverviewViewState>()
     val userDataMediator = MediatorLiveData<AuthUser>()
@@ -91,6 +92,15 @@ class OverviewViewModel @Inject constructor(
 
     fun onEditProfileButtonClicked() {
         currentUserData?.let { navigateToEditProfileAction.value = it }
+    }
+
+    fun onPinnedReposButtonClicked() {
+        val pinnedReposShown = viewState.value?.pinnedReposShown ?: false
+        viewState.value = viewState.value?.copy(pinnedReposShown = !pinnedReposShown)
+    }
+
+    override fun onRepoSelected(repo: Repo) {
+        // todo: implement navigation for pinned repos
     }
 
     private fun checkIfFollowing(username: String) {
@@ -187,10 +197,15 @@ class OverviewViewModel @Inject constructor(
         subscribe(userRepository.getPinnedReposDom(user.login)) {
             when (it) {
                 is UserResult.Success -> {
-                    pinnedReposHelper.parse(it.value)
+                    val pair = pinnedReposHelper.parse(it.value)
+                    viewState.value = viewState.value?.copy(
+                        pinnedReposHeader = pair.first,
+                        pinnedRepos = pair.second
+                    )
                 }
                 is UserResult.Failure -> {
                     alert(it.error)
+                    viewState.value = viewState.value?.copy(loading = false)
                 }
             }
         }

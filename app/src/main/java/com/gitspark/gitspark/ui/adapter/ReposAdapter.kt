@@ -20,12 +20,30 @@ private const val MAX_TOPICS_SHOWN = 3
 class ReposAdapter(
     private val colorHelper: LanguageColorHelper,
     private val timeHelper: TimeHelper,
-    private val navigator: RepoDetailNavigator
+    private val navigator: RepoDetailNavigator,
+    private val simple: Boolean = false
 ) : PaginationAdapter() {
 
     override fun bind(item: Pageable, view: View) {
         if (item is Repo) {
             with (view) {
+                if (simple) {
+                    full_name_field.text = item.fullName
+                    description_field.text = item.repoDescription
+
+                    stars_field.isVisible = item.repoPushedAt != "0"
+                    stars_field.text = item.repoPushedAt
+                    forks_field.isVisible = item.repoCreatedAt != "0"
+                    forks_field.text = item.repoCreatedAt
+
+                    language_field.isVisible = item.repoLanguage.isNotEmpty()
+                    language_field.text = item.repoLanguage
+                    colorHelper.getColor(item.repoLanguage)?.let {
+                        language_field.compoundDrawablesRelative[0].setColor(it)
+                    }
+                    return
+                }
+
                 full_name_field.text = item.fullName
                 description_field.text = item.repoDescription
 
@@ -69,5 +87,5 @@ class ReposAdapter(
         }
     }
 
-    override fun getViewHolderId() = R.layout.repo_view
+    override fun getViewHolderId() = if (simple) R.layout.simple_repo_view else R.layout.repo_view
 }

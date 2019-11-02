@@ -1,5 +1,7 @@
 package com.gitspark.gitspark.ui.main.profile
 
+import com.gitspark.gitspark.model.Repo
+
 data class OverviewViewState(
     val nameText: String = "",
     val usernameText: String = "",
@@ -17,5 +19,8 @@ data class OverviewViewState(
     val createdDate: String = "",
     val refreshing: Boolean = false,
     val authUser: Boolean = true,
-    val isFollowing: Boolean = false
+    val isFollowing: Boolean = false,
+    val pinnedReposHeader: String = "",
+    val pinnedRepos: List<Repo> = emptyList(),
+    val pinnedReposShown: Boolean = false
 )

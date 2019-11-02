@@ -28,8 +28,8 @@ class PinnedReposHelper @Inject constructor() {
         var repoFullName = ""
         var repoDesc = ""
         var repoLang = ""
-        var repoStars = 0
-        var repoForks = 0
+        var repoStars = "0"
+        var repoForks = "0"
         var count = 0
 
         while (scanner.hasNextLine()) {
@@ -42,14 +42,14 @@ class PinnedReposHelper @Inject constructor() {
                             fullName = repoFullName,
                             repoDescription = repoDesc,
                             repoLanguage = repoLang,
-                            numStars = repoStars,
-                            numForks = repoForks
+                            repoPushedAt = repoStars,
+                            repoCreatedAt = repoForks
                         ))
                     }
                     repoDesc = ""
                     repoLang = ""
-                    repoStars = 0
-                    repoForks = 0
+                    repoStars = "0"
+                    repoForks = "0"
 
                     val start = line.indexOf(HREF) + HREF.length
                     val end = line.indexOf(QUOTE, start)
@@ -65,15 +65,24 @@ class PinnedReposHelper @Inject constructor() {
                 }
                 line.contains(REPO_STARS) -> {
                     scanner.nextLine()
-                    repoStars = scanner.nextLine().trim().toInt()
+                    repoStars = scanner.nextLine().trim()
                 }
                 line.contains(REPO_FORKS) -> {
                     scanner.nextLine()
-                    repoForks = scanner.nextLine().trim().toInt()
+                    repoForks = scanner.nextLine().trim()
                 }
             }
         }
         scanner.close()
+        if (count > repos.size) {
+            repos.add(Repo(
+                fullName = repoFullName,
+                repoDescription = repoDesc,
+                repoLanguage = repoLang,
+                repoPushedAt = repoStars,
+                repoCreatedAt = repoForks
+            ))
+        }
 
         return Pair(header, repos)
     }
