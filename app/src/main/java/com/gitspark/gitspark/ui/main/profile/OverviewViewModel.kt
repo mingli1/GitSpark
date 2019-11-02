@@ -1,9 +1,11 @@
 package com.gitspark.gitspark.ui.main.profile
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.ContributionsHelper
+import com.gitspark.gitspark.helper.PinnedReposHelper
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.Contribution
 import com.gitspark.gitspark.model.User
@@ -22,7 +24,8 @@ import javax.inject.Inject
 
 class OverviewViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val contributionsHelper: ContributionsHelper
+    private val contributionsHelper: ContributionsHelper,
+    private val pinnedReposHelper: PinnedReposHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<OverviewViewState>()
@@ -177,6 +180,17 @@ class OverviewViewModel @Inject constructor(
                 is UserResult.Failure -> {
                     alert(it.error)
                     viewState.value = viewState.value?.copy(loading = false)
+                }
+            }
+        }
+
+        subscribe(userRepository.getPinnedReposDom(user.login)) {
+            when (it) {
+                is UserResult.Success -> {
+                    pinnedReposHelper.parse(it.value)
+                }
+                is UserResult.Failure -> {
+                    alert(it.error)
                 }
             }
         }

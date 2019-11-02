@@ -17,6 +17,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val USER_CACHE_DURATION_M = 30L
+private const val PINNED_REPOS_URL = "https://github.com/%s"
 private const val CONTRIBUTIONS_URL = "https://github.com/users/%s/contributions"
 
 @Singleton
@@ -110,6 +111,14 @@ class UserRepository @Inject constructor(
             .getContributionsSvg(String.format(CONTRIBUTIONS_URL, username))
             .map { getSuccess(it) }
             .onErrorReturn { getFailure("Failed to obtain contributions data.") }
+    }
+
+    fun getPinnedReposDom(username: String): Observable<UserResult<String>> {
+        return retrofitHelper.getRetrofit(lenient = true)
+            .create(UserService::class.java)
+            .getPinnedReposDom(String.format(PINNED_REPOS_URL, username))
+            .map { getSuccess(it) }
+            .onErrorReturn { getFailure("Failed to obtain pinned repos data.") }
     }
 
     fun updateUser(edit: ApiEditProfileRequest): Observable<UserResult<AuthUser>> {

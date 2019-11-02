@@ -20,6 +20,9 @@ interface UserService {
     @GET
     fun getContributionsSvg(@Url url: String): Observable<String>
 
+    @GET
+    fun getPinnedReposDom(@Url url: String): Observable<String>
+
     @GET("user/followers")
     fun getAuthUserFollowers(
         @Query("page") page: Int,
