@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -43,5 +45,17 @@ class MainActivity : AppCompatActivity() {
             containerId = R.id.nav_host_container,
             intent = intent
         )
+        addDestinationListener()
+    }
+
+    private fun addDestinationListener() {
+        navController?.observe(this) {
+            it.addOnDestinationChangedListener { _, dest, _ ->
+                bottom_navigation_view.isVisible = when (dest.id) {
+                    R.id.edit_profile_fragment -> false
+                    else -> true
+                }
+            }
+        }
     }
 }
