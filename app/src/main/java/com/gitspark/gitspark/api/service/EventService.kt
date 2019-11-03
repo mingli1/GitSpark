@@ -14,4 +14,10 @@ interface EventService {
         @Path("username") username: String,
         @Query("page") page: Int
     ): Observable<ApiPage<ApiEvent>>
+
+    @GET("users/{username}/received_events")
+    fun getReceivedEvents(
+        @Path("username") username: String,
+        @Query("page") page: Int
+    ): Observable<ApiPage<ApiEvent>>
 }
