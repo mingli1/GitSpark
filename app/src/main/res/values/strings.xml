@@ -77,6 +77,8 @@
     <string name="commits_list_title">Commits</string>
     <string name="empty_repo_text">This repository is empty!</string>
     <string name="pinned_repositories_default">Popular repositories</string>
+    <string name="recent_activity">Recent activity</string>
+    <string name="all_activity">All activity</string>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>
