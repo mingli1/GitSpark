@@ -26,4 +26,3 @@ GITHUB_CLIENT_SECRET="your client secret"
 * [MockK](https://mockk.io/) for mocking in unit tests
 * [AssertJ](https://joel-costigliola.github.io/assertj/) for better assertions in unit tests
 * [MarkdownView](https://github.com/tiagohm/MarkdownView) for displaying markdown files
-* [PullRefreshLayout](https://github.com/baoyongzhang/android-PullRefreshLayout) for nicer pull refresh animations

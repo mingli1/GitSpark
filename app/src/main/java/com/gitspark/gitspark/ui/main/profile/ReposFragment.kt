@@ -55,6 +55,8 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
         reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel)
         if (repos_list.adapter == null) repos_list.adapter = reposAdapter
 
+        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+
         setupListeners()
     }
 
@@ -85,8 +87,8 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
 
     private fun updateView(viewState: ReposViewState) {
         with (viewState) {
-            loading_indicator.isVisible = loading
-            swipe_refresh.setRefreshing(refreshing)
+            loading_indicator.isVisible = loading && !refreshing
+            swipe_refresh.isRefreshing = refreshing
             num_repos_field.text = getString(R.string.num_repos_text, LABEL, totalRepos)
 
             if (updateAdapter) {

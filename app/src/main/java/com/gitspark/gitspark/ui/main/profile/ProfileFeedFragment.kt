@@ -44,6 +44,8 @@ class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewMod
         profileFeedAdapter = ProfileFeedAdapter(timeHelper, eventHelper)
         if (feed_list.adapter == null) feed_list.adapter = profileFeedAdapter
 
+        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+
         setupListeners()
     }
 
@@ -66,7 +68,7 @@ class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewMod
     private fun updateView(viewState: ProfileFeedViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading && !refreshing
-            swipe_refresh.setRefreshing(refreshing)
+            swipe_refresh.isRefreshing = refreshing
 
             if (updateAdapter) {
                 profileFeedAdapter.setItems(events, isLastPage)

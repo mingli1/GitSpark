@@ -56,6 +56,8 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
         reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel)
         if (repos_list.adapter == null) repos_list.adapter = reposAdapter
 
+        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+
         setupListeners()
     }
 
@@ -81,8 +83,8 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
 
     private fun updateView(viewState: StarsViewState) {
         with (viewState) {
-            loading_indicator.isVisible = loading
-            swipe_refresh.setRefreshing(refreshing)
+            loading_indicator.isVisible = loading && !refreshing
+            swipe_refresh.isRefreshing = refreshing
             num_repos_field.text = getString(R.string.num_repos_text, LABEL, totalStarred)
 
             if (updateAdapter) {

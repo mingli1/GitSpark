@@ -62,6 +62,8 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         pinned_repos.layoutManager = layoutManager
         if (pinned_repos.adapter == null) pinned_repos.adapter = reposAdapter
 
+        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+
         setUpListeners()
     }
 
@@ -140,8 +142,8 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
                 else getString(R.string.total_contribution, totalContributions)
             created_at_field.text = getString(R.string.joined_date, createdDate)
 
-            loading_indicator.isVisible = loading
-            swipe_refresh.setRefreshing(refreshing)
+            loading_indicator.isVisible = loading && !refreshing
+            swipe_refresh.isRefreshing = refreshing
 
             reposAdapter.setItems(pinnedRepos, true)
             pinned_button.setImageResource(if (pinnedReposShown)

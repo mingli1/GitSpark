@@ -2,14 +2,14 @@ package com.gitspark.gitspark.ui.adapter
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.baoyz.widget.PullRefreshLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 private const val DIRECTION_UP = -1
 
 class PaginationListener(
     private val layoutManager: LinearLayoutManager,
     private val pageSize: Int,
-    private val refreshLayout: PullRefreshLayout? = null,
+    private val refreshLayout: SwipeRefreshLayout? = null,
     private val onUpdate: () -> Unit
 ) : RecyclerView.OnScrollListener() {
 
