@@ -61,7 +61,6 @@ class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewMod
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
-        viewModel.userMediator.observe(viewLifecycleOwner) { viewModel.onUserDataRetrieved(it) }
     }
 
     private fun updateView(viewState: ProfileFeedViewState) {

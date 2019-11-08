@@ -1,10 +1,10 @@
 package com.gitspark.gitspark.ui.main.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.repository.EventRepository
 import com.gitspark.gitspark.repository.EventResult
-import com.gitspark.gitspark.repository.UserRepository
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
@@ -23,8 +23,8 @@ class ProfileFeedViewModelTest {
     @Rule @JvmField val liveDataRule = InstantTaskExecutorRule()
 
     private lateinit var viewModel: ProfileFeedViewModel
-    @RelaxedMockK private lateinit var userRepository: UserRepository
     @RelaxedMockK private lateinit var eventRepository: EventRepository
+    @RelaxedMockK private lateinit var prefsHelper: PreferencesHelper
 
     @Before
     fun setup() {
@@ -32,13 +32,13 @@ class ProfileFeedViewModelTest {
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        viewModel = ProfileFeedViewModel(userRepository, eventRepository)
+        viewModel = ProfileFeedViewModel(eventRepository, prefsHelper)
     }
 
     @Test
     fun shouldGetCachedUserDataOnResume() {
         viewModel.onResume(null)
-        verify { userRepository.getCurrentUserData() }
+        verify { prefsHelper.getAuthUsername() }
     }
 
     @Test
