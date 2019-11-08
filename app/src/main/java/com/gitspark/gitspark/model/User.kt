@@ -5,6 +5,8 @@ import androidx.room.PrimaryKey
 import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 
+const val PREFERENCES_LOGIN = "PREFERENCES_LOGIN"
+
 @Entity
 open class User(
     var login: String = "",

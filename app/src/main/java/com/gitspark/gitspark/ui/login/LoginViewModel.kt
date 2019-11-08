@@ -3,6 +3,7 @@ package com.gitspark.gitspark.ui.login
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
+import com.gitspark.gitspark.model.PREFERENCES_LOGIN
 import com.gitspark.gitspark.model.Token
 import com.gitspark.gitspark.repository.*
 import com.gitspark.gitspark.ui.base.BaseViewModel
@@ -55,8 +56,10 @@ class LoginViewModel @Inject constructor(
     fun onSuccessfulLogin() {
         subscribe(userRepository.getAuthUser()) {
             val userCompletable = when (it) {
-                is UserResult.Success ->
+                is UserResult.Success -> {
+                    prefsHelper.saveString(PREFERENCES_LOGIN, it.value.login)
                     userRepository.cacheUserData(it.value)
+                }
                 is UserResult.Failure ->
                     Completable.error(Throwable(message = it.error))
             }

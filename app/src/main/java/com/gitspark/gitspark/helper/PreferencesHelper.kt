@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.helper
 
 import android.content.SharedPreferences
+import com.gitspark.gitspark.model.PREFERENCES_LOGIN
 import com.gitspark.gitspark.model.PREFERENCES_TOKEN
 import com.gitspark.gitspark.model.Token
 import javax.inject.Inject
@@ -33,5 +34,9 @@ class PreferencesHelper @Inject constructor(
 
     fun getCachedToken() = checkNotNull(getString(PREFERENCES_TOKEN)) {
         "No token cached. Check that access token exists before calling this method."
+    }
+
+    fun getAuthUsername() = checkNotNull(getString(PREFERENCES_LOGIN)) {
+        "No username cached. This method was called before a successful login."
     }
 }

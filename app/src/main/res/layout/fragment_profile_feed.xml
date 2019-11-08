@@ -12,10 +12,10 @@
         android:layout_height="match_parent"
         app:refreshType="smartisan">
     
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/feed_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/feed_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     
     </com.baoyz.widget.PullRefreshLayout>
     
