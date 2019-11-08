@@ -6,5 +6,6 @@ data class CommitListViewState(
     val commits: ArrayList<Commit> = arrayListOf(),
     val updateAdapter: Boolean = false,
     val isLastPage: Boolean = false,
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val refreshing: Boolean = false
 )

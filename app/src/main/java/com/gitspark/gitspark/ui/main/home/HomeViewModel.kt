@@ -28,6 +28,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onRefresh() = updateViewState(reset = true, refresh = true)
+
     fun onDestroy() {
         started = false
     }

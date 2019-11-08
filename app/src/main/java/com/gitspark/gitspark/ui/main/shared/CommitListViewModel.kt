@@ -27,17 +27,25 @@ class CommitListViewModel @Inject constructor(
         }
     }
 
+    fun onRefresh() = updateViewState(reset = true, refresh = true)
+
     fun onScrolledToEnd() = updateViewState()
 
     fun onDestroy() {
         resumed = false
     }
 
-    private fun updateViewState(reset: Boolean = false) {
-        if (reset) {
-            page = 1
-            viewState.value = viewState.value?.copy(loading = true) ?: CommitListViewState(loading = true)
-        }
+    private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
+        viewState.value = viewState.value?.copy(
+            loading = reset,
+            refreshing = refresh,
+            updateAdapter = false
+        ) ?: CommitListViewState(
+            loading = reset,
+            refreshing = refresh,
+            updateAdapter = false
+        )
+        if (reset) page = 1
         requestCommits()
     }
 
@@ -53,19 +61,21 @@ class CommitListViewModel @Inject constructor(
                         commits = updatedList,
                         isLastPage = page.isLastPage(it.value.last),
                         updateAdapter = true,
-                        loading = false
+                        loading = false,
+                        refreshing = false
                     ) ?: CommitListViewState(
                         commits = updatedList,
                         isLastPage = page.isLastPage(it.value.last),
                         updateAdapter = true,
-                        loading = false
+                        loading = false,
+                        refreshing = false
                     )
                     if (page < it.value.last) page++
                 }
                 is RepoResult.Failure -> {
                     alert(it.error)
-                    viewState.value = viewState.value?.copy(updateAdapter = false, loading = false)
-                        ?: CommitListViewState(updateAdapter = false, loading = false)
+                    viewState.value = viewState.value?.copy(updateAdapter = false, loading = false, refreshing = false)
+                        ?: CommitListViewState(updateAdapter = false, loading = false, refreshing = false)
                 }
             }
         }

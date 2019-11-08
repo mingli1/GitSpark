@@ -58,6 +58,9 @@ class CommitListFragment : BaseFragment<CommitListViewModel>(CommitListViewModel
 
         val args = arguments?.getString(BUNDLE_ARGUMENTS) ?: ""
         viewModel.onResume(args)
+
+        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
     }
 
     override fun observeViewModel() {
@@ -82,7 +85,8 @@ class CommitListFragment : BaseFragment<CommitListViewModel>(CommitListViewModel
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
             }
-            loading_indicator.isVisible = loading
+            loading_indicator.isVisible = loading && !refreshing
+            swipe_refresh.isRefreshing = refreshing
         }
     }
 }

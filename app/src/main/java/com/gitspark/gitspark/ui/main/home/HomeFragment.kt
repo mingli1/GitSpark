@@ -56,6 +56,8 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
             if (adapter == null) adapter = aaAdapter
         }
 
+        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+
         viewModel.onStart()
         setupListeners()
     }
@@ -76,12 +78,14 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
     }
 
     private fun setupListeners() {
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
     }
 
     private fun updateView(viewState: HomeViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading && !refreshing
+            swipe_refresh.isRefreshing = refreshing
 
             raAdapter.setItems(recentEvents, true)
             if (updateAdapter) {

@@ -23,62 +23,69 @@
         
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/recent_activity_label"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/BodyLarge"
-                android:textStyle="bold"
-                android:layout_marginTop="12dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/recent_activity"/>
+                android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorWhiteDark"/>
+                <TextView
+                    android:id="@+id/recent_activity_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/BodyLarge"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/recent_activity"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recent_events"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorWhiteDark"/>
 
-            <TextView
-                android:id="@+id/all_activity_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/BodyLarge"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/all_activity"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recent_events"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorWhiteDark"/>
+                <TextView
+                    android:id="@+id/all_activity_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/BodyLarge"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/all_activity"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/all_events"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorWhiteDark"/>
 
-        </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/all_events"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
-    </androidx.core.widget.NestedScrollView>
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include layout="@layout/full_screen_progress_spinner"/>
     
