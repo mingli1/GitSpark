@@ -15,6 +15,17 @@ class EventRepository @Inject constructor(
     private val retrofitHelper: RetrofitHelper
 ) {
 
+    fun getPublicEvents(page: Int): Observable<EventResult<Page<Event>>> {
+        return getEventService()
+            .getPublicEvents(page)
+            .map {
+                getSuccess(it.toModel<Event>().apply {
+                    value = it.response.map { event -> event.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain public events") }
+    }
+
     fun getEvents(username: String, page: Int): Observable<EventResult<Page<Event>>> {
         return getEventService()
             .getEvents(username, page)

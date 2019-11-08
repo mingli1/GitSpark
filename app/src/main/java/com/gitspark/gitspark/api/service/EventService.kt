@@ -9,6 +9,9 @@ import retrofit2.http.Query
 
 interface EventService {
 
+    @GET("events")
+    fun getPublicEvents(@Query("page") page: Int): Observable<ApiPage<ApiEvent>>
+
     @GET("users/{username}/events")
     fun getEvents(
         @Path("username") username: String,
