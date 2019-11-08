@@ -28,7 +28,7 @@ class EventHelper @Inject constructor(private val context: Context) {
     fun getTitle(event: Event, received: Boolean = false): SpannableStringBuilder {
         builder.clear()
         if (received) {
-            builder.color(R.color.colorBlack) {
+            builder.color(context.getColor(R.color.colorBlack)) {
                 bold { append(event.actor.login) }
             }.append(" ")
         }

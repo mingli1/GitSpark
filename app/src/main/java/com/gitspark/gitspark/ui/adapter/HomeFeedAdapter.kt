@@ -8,7 +8,12 @@ import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.helper.EventHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Event
+import kotlinx.android.synthetic.main.profile_feed_view.view.*
 import kotlinx.android.synthetic.main.received_feed_view.view.*
+import kotlinx.android.synthetic.main.received_feed_view.view.action_description
+import kotlinx.android.synthetic.main.received_feed_view.view.content_field
+import kotlinx.android.synthetic.main.received_feed_view.view.date_field
+import kotlinx.android.synthetic.main.received_feed_view.view.profile_icon
 import org.threeten.bp.Instant
 
 class HomeFeedAdapter(
@@ -43,6 +48,8 @@ class HomeFeedAdapter(
                 val createdDate = Instant.parse(item.createdAt)
                 val formatted = timeHelper.getRelativeTimeFormat(createdDate)
                 date_field.text = formatted
+
+                if (recent) username_field.text = item.actor.login
             }
         }
     }

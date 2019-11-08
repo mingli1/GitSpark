@@ -23,43 +23,61 @@
         
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        
-        <TextView
-            android:id="@+id/recent_activity_label"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/BodyLarge"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/recent_activity"/>
-        
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recent_events"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    
-        <TextView
-            android:id="@+id/all_activity_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/BodyLarge"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/all_activity"/>
-    
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/all_events"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/recent_activity_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/BodyLarge"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/recent_activity"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorWhiteDark"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recent_events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/all_activity_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/BodyLarge"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/all_activity"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorWhiteDark"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/all_events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <include layout="@layout/full_screen_progress_spinner"/>
     
