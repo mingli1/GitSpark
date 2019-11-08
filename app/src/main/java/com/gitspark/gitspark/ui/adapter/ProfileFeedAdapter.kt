@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.adapter
 
+import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.ViewGroup
 import com.gitspark.gitspark.R
@@ -22,11 +23,14 @@ class ProfileFeedAdapter(
     private val eventHelper: EventHelper
 ) : PaginationAdapter() {
 
+    private val spannableCache = mutableMapOf<String, SpannableStringBuilder>()
+
     override fun getViewHolderId() = R.layout.profile_feed_view
 
     override fun setItems(items: List<Pageable>, isLastPage: Boolean) {
         with (this.items) {
             clear()
+            spannableCache.clear()
             val groupedItems = items.groupBy {
                 val event = it as Event
                 LocalDateTime.ofInstant(Instant.parse(event.createdAt), ZoneOffset.UTC).toLocalDate()
@@ -35,6 +39,7 @@ class ProfileFeedAdapter(
                 var emptyDate = true
                 pair.value.forEach { event ->
                     val title = eventHelper.getTitle(event as Event)
+                    if (title.isNotEmpty()) spannableCache[event.id] = title
                     emptyDate = emptyDate && title.isEmpty()
                 }
                 if (!emptyDate) {
@@ -62,9 +67,9 @@ class ProfileFeedAdapter(
             }
             is Event -> {
                 with (view) {
-                    val title = eventHelper.getTitle(item)
-                    isVisible = title.isNotEmpty()
-                    if (title.isEmpty()) {
+                    val title = spannableCache[item.id]
+                    isVisible = title?.isNotEmpty() ?: false
+                    if (title.isNullOrEmpty()) {
                         val lp = layoutParams.apply { height = 0 }
                         layoutParams = lp
                         return
@@ -74,6 +79,7 @@ class ProfileFeedAdapter(
                     }
 
                     action_description.text = title
+
                     val content = eventHelper.getContent(item)
                     content_field.isVisible = content.isNotEmpty()
                     content_field.text = content

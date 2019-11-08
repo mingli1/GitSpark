@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
@@ -30,6 +31,9 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
     private lateinit var raAdapter: HomeFeedAdapter
     private lateinit var aaAdapter: HomeFeedAdapter
     private lateinit var paginationListener: PaginationListener
+
+    private var loadingItems = false
+    private var lastPage = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -79,7 +83,15 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
     }
 
     private fun setupListeners() {
-        all_events.addOnScrollListener(paginationListener)
+        nested_scroll_view.setOnScrollChangeListener { v: NestedScrollView?, _, scrollY: Int, _, oldScrollY: Int ->
+            if (v?.getChildAt(v.childCount - 1) != null) {
+                if ((scrollY >= (v.getChildAt(v.childCount - 1)).measuredHeight - v.measuredHeight) &&
+                        scrollY > oldScrollY && !loadingItems && !lastPage) {
+                    viewModel.onScrolledToEnd()
+                    loadingItems = true
+                }
+            }
+        }
     }
 
     private fun updateView(viewState: HomeViewState) {
@@ -90,8 +102,8 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
             if (updateAdapter) {
                 aaAdapter.setItems(allEvents, isLastPage)
 
-                paginationListener.isLastPage = isLastPage
-                paginationListener.loading = false
+                lastPage = isLastPage
+                loadingItems = false
             }
         }
     }

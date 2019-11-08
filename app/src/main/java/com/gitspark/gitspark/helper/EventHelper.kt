@@ -23,10 +23,8 @@ private const val WATCH_EVENT = "WatchEvent"
 @Singleton
 class EventHelper @Inject constructor(private val context: Context) {
 
-    private val builder = SpannableStringBuilder()
-
     fun getTitle(event: Event, received: Boolean = false): SpannableStringBuilder {
-        builder.clear()
+        val builder = SpannableStringBuilder()
         if (received) {
             builder.color(context.getColor(R.color.colorBlack)) {
                 bold { append(event.actor.login) }

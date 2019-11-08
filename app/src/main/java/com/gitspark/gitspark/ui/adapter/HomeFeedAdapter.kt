@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.adapter
 
+import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.ViewGroup
 import com.gitspark.gitspark.R
@@ -8,8 +9,8 @@ import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.helper.EventHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Event
+import com.gitspark.gitspark.model.Loading
 import kotlinx.android.synthetic.main.profile_feed_view.view.*
-import kotlinx.android.synthetic.main.received_feed_view.view.*
 import kotlinx.android.synthetic.main.received_feed_view.view.action_description
 import kotlinx.android.synthetic.main.received_feed_view.view.content_field
 import kotlinx.android.synthetic.main.received_feed_view.view.date_field
@@ -22,14 +23,32 @@ class HomeFeedAdapter(
     private val recent: Boolean = false
 ) : PaginationAdapter() {
 
+    private val spannableCache = mutableMapOf<String, SpannableStringBuilder>()
+
+    override fun setItems(items: List<Pageable>, isLastPage: Boolean) {
+        with (this.items) {
+            clear()
+            spannableCache.clear()
+
+            items.forEach { event ->
+                val title = eventHelper.getTitle(event as Event, !recent)
+                if (title.isNotEmpty() && !title.endsWith(" ")) spannableCache[event.id] = title
+            }
+
+            addAll(items)
+            if (!isLastPage) add(Loading)
+        }
+        notifyDataSetChanged()
+    }
+
     override fun getViewHolderId() = if (recent) R.layout.profile_feed_view else R.layout.received_feed_view
 
     override fun bind(item: Pageable, view: View) {
         if (item is Event) {
             with (view) {
-                val title = eventHelper.getTitle(item)
-                isVisible = title.isNotEmpty()
-                if (title.isEmpty()) {
+                val title = spannableCache[item.id]
+                isVisible = title?.isNotEmpty() ?: false
+                if (title.isNullOrEmpty()) {
                     val lp = layoutParams.apply { height = 0 }
                     layoutParams = lp
                     return
@@ -38,7 +57,7 @@ class HomeFeedAdapter(
                     layoutParams = lp
                 }
 
-                action_description.text = eventHelper.getTitle(item, !recent)
+                action_description.text = title
 
                 val content = eventHelper.getContent(item)
                 content_field.isVisible = content.isNotEmpty()

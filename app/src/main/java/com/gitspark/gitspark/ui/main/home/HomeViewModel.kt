@@ -32,11 +32,12 @@ class HomeViewModel @Inject constructor(
         started = false
     }
 
-    fun onScrolledToEnd() = updateViewState()
+    fun onScrolledToEnd() = updateViewState(scrolled = true)
 
     private fun updateViewState(
         reset: Boolean = false,
-        refresh: Boolean = false
+        refresh: Boolean = false,
+        scrolled: Boolean = false
     ) {
         viewState.value = viewState.value?.copy(
             loading = reset,
@@ -48,7 +49,7 @@ class HomeViewModel @Inject constructor(
             updateAdapter = false
         )
         if (reset) page = 1
-        requestRecentEvents()
+        if (!scrolled || reset || refresh) requestRecentEvents()
         requestAllEvents()
     }
 
