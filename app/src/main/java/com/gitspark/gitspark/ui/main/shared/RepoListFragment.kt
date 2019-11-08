@@ -68,6 +68,9 @@ class RepoListFragment : BaseFragment<RepoListViewModel>(RepoListViewModel::clas
         val type = arguments?.getSerializable(BUNDLE_REPO_LIST_TYPE) as RepoListType? ?: RepoListType.None
         val args = arguments?.getString(BUNDLE_ARGUMENTS) ?: ""
         viewModel.onResume(type, args)
+
+        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
     }
 
     override fun observeViewModel() {
@@ -93,7 +96,8 @@ class RepoListFragment : BaseFragment<RepoListViewModel>(RepoListViewModel::clas
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
             }
-            loading_indicator.isVisible = loading
+            loading_indicator.isVisible = loading && !refreshing
+            swipe_refresh.isRefreshing = refreshing
         }
     }
 

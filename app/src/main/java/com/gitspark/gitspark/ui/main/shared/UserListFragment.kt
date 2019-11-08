@@ -62,6 +62,9 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
         val type = arguments?.getSerializable(BUNDLE_USER_LIST_TYPE) as UserListType? ?: UserListType.None
         val args = arguments?.getString(BUNDLE_ARGUMENTS) ?: ""
         viewModel.onResume(type, args)
+
+        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
     }
 
     override fun observeViewModel() {
@@ -87,7 +90,8 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
             }
-            loading_indicator.isVisible = loading
+            loading_indicator.isVisible = loading && !refreshing
+            swipe_refresh.isRefreshing = refreshing
         }
     }
 

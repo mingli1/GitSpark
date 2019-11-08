@@ -37,6 +37,8 @@ class RepoListViewModel @Inject constructor(
         }
     }
 
+    fun onRefresh() = updateViewState(reset = true, refresh = true)
+
     fun onScrolledToEnd() = updateViewState()
 
     fun onDestroy() {
@@ -47,11 +49,17 @@ class RepoListViewModel @Inject constructor(
         navigateToRepoDetailAction.value = repo
     }
 
-    private fun updateViewState(reset: Boolean = false) {
-        if (reset) {
-            page = 1
-            viewState.value = viewState.value?.copy(loading = true) ?: RepoListViewState(loading = true)
-        }
+    private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
+        viewState.value = viewState.value?.copy(
+            loading = reset,
+            refreshing = refresh,
+            updateAdapter = false
+        ) ?: RepoListViewState(
+            loading = reset,
+            refreshing = refresh,
+            updateAdapter = false
+        )
+        if (reset) page = 1
         requestData()
     }
 
@@ -84,19 +92,21 @@ class RepoListViewModel @Inject constructor(
             repos = updatedList,
             isLastPage = page.isLastPage(last),
             updateAdapter = true,
-            loading = false
+            loading = false,
+            refreshing = false
         ) ?: RepoListViewState(
             repos = updatedList,
             isLastPage = page.isLastPage(last),
             updateAdapter = true,
-            loading = false
+            loading = false,
+            refreshing = false
         )
         if (page < last) page++
     }
 
     private fun onRepoDataFailure(error: String) {
         alert(error)
-        viewState.value = viewState.value?.copy(updateAdapter = false, loading = false)
-            ?: RepoListViewState(updateAdapter = false, loading = false)
+        viewState.value = viewState.value?.copy(updateAdapter = false, loading = false, refreshing = false)
+            ?: RepoListViewState(updateAdapter = false, loading = false, refreshing = false)
     }
 }

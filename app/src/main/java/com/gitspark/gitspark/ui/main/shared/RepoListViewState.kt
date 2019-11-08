@@ -6,5 +6,6 @@ data class RepoListViewState(
     val repos: ArrayList<Repo> = arrayListOf(),
     val updateAdapter: Boolean = false,
     val isLastPage: Boolean = false,
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val refreshing: Boolean = false
 )

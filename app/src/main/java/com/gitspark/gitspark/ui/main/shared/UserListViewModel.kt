@@ -47,6 +47,8 @@ class UserListViewModel @Inject constructor(
         }
     }
 
+    fun onRefresh() = updateViewState(reset = true, refresh = true)
+
     fun onScrolledToEnd() = updateViewState()
 
     fun onDestroy() {
@@ -57,11 +59,17 @@ class UserListViewModel @Inject constructor(
         navigateToProfileAction.value = username
     }
 
-    private fun updateViewState(reset: Boolean = false) {
-        if (reset) {
-            page = 1
-            viewState.value = viewState.value?.copy(loading = true) ?: UserListViewState(loading = true)
-        }
+    private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
+        viewState.value = viewState.value?.copy(
+            loading = reset,
+            refreshing = refresh,
+            updateAdapter = false
+        ) ?: UserListViewState(
+            loading = reset,
+            refreshing = refresh,
+            updateAdapter = false
+        )
+        if (reset) page = 1
         requestData()
     }
 
@@ -143,19 +151,21 @@ class UserListViewModel @Inject constructor(
             users = updatedList,
             isLastPage = page.isLastPage(last),
             updateAdapter = true,
-            loading = false
+            loading = false,
+            refreshing = false
         ) ?: UserListViewState(
             users = updatedList,
             isLastPage = page.isLastPage(last),
             updateAdapter = true,
-            loading = false
+            loading = false,
+            refreshing = false
         )
         if (page < last) page++
     }
 
     private fun onUserDataFailure(error: String) {
         alert(error)
-        viewState.value = viewState.value?.copy(updateAdapter = false, loading = false)
-            ?: UserListViewState(updateAdapter = false, loading = false)
+        viewState.value = viewState.value?.copy(updateAdapter = false, loading = false, refreshing = false)
+            ?: UserListViewState(updateAdapter = false, loading = false, refreshing = false)
     }
 }
