@@ -87,7 +87,13 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
             loading_indicator.isVisible = loading && !refreshing
             swipe_refresh.isRefreshing = refreshing
 
+            recent_activity_label.isVisible = recentEvents.isNotEmpty()
+            recent_events.isVisible = recentEvents.isNotEmpty()
+            ra_divider.isVisible = recentEvents.isNotEmpty()
             raAdapter.setItems(recentEvents, true)
+
+            aa_empty_text.isVisible = allEvents.isEmpty()
+            all_events.isVisible = allEvents.isNotEmpty()
             if (updateAdapter) {
                 aaAdapter.setItems(allEvents, isLastPage)
 

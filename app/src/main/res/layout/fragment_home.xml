@@ -51,6 +51,7 @@
                     android:text="@string/recent_activity"/>
 
                 <View
+                    android:id="@+id/ra_divider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/colorWhiteDark"/>
@@ -75,6 +76,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/colorWhiteDark"/>
+                
+                <TextView
+                    android:id="@+id/aa_empty_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/BodyLight"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/empty_all_activity"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/all_events"
