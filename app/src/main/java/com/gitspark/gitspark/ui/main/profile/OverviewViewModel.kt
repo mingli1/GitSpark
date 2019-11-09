@@ -41,25 +41,16 @@ class OverviewViewModel @Inject constructor(
     @VisibleForTesting var currentUserData: User? = null
     @VisibleForTesting var username: String? = null
 
-    private var resumed = false
-
     fun onResume(username: String? = null, user: User? = null) {
-        if (!resumed) {
-            if (username == null) {
-                val userData = userRepository.getCurrentUserData()
-                userDataMediator.addSource(userData) { userDataMediator.value = it }
-            } else {
-                this.username = username
-                viewState.value = OverviewViewState(loading = true)
-                checkIfFollowing(username)
-                user?.let { updateViewStateWith(it) }
-            }
-            resumed = true
+        if (username == null) {
+            val userData = userRepository.getCurrentUserData()
+            userDataMediator.addSource(userData) { userDataMediator.value = it }
+        } else {
+            this.username = username
+            viewState.value = OverviewViewState(loading = true)
+            checkIfFollowing(username)
+            user?.let { updateViewStateWith(it) }
         }
-    }
-
-    fun onDestroy() {
-        resumed = false
     }
 
     fun onCachedUserDataRetrieved(user: AuthUser) {

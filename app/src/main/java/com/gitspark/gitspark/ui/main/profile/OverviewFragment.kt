@@ -72,11 +72,6 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         pinned_repos.adapter = null
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.onDestroy()
-    }
-
     override fun viewModelOnResume() =
         viewModel.onResume(
             arguments?.getString(BUNDLE_USERNAME),
