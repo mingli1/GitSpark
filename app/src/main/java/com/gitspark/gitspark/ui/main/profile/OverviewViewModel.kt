@@ -47,7 +47,7 @@ class OverviewViewModel @Inject constructor(
             userDataMediator.addSource(userData) { userDataMediator.value = it }
         } else {
             this.username = username
-            viewState.value = OverviewViewState(loading = true)
+            viewState.value = viewState.value?.copy(loading = true) ?: OverviewViewState(loading = true)
             checkIfFollowing(username)
             user?.let { updateViewStateWith(it) }
         }

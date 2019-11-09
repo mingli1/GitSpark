@@ -32,10 +32,6 @@ internal abstract class ViewModelModule {
     internal abstract fun bindHomeViewModel(homeViewModel: HomeViewModel): ViewModel
 
     @Binds @IntoMap
-    @ViewModelKey(ProfileViewModel::class)
-    internal abstract fun bindProfileViewModel(profileViewModel: ProfileViewModel): ViewModel
-
-    @Binds @IntoMap
     @ViewModelKey(SearchViewModel::class)
     internal abstract fun bindSearchViewModel(searchViewModel: SearchViewModel): ViewModel
 
@@ -98,6 +94,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(CommitListViewModel::class)
     internal abstract fun bindCommitListViewModel(commitListViewModel: CommitListViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(UserSharedViewModel::class)
+    internal abstract fun bindUserSharedViewModel(userSharedViewModel: UserSharedViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory

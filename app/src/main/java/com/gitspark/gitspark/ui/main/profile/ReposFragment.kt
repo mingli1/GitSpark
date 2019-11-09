@@ -63,7 +63,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
     override fun viewModelOnResume() =
         viewModel.onResume(
             arguments?.getString(BUNDLE_USERNAME),
-            (parentFragment as UserDataCallback).getData()
+            (parentFragment as ProfileFragment).userData
         )
 
     override fun observeViewModel() {

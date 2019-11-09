@@ -43,6 +43,10 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         ViewModelProviders.of(activity!!, viewModelFactory)[ProfileSharedViewModel::class.java]
     }
 
+    private val userSharedViewModel by lazy {
+        ViewModelProviders.of(activity!!, viewModelFactory)[UserSharedViewModel::class.java]
+    }
+
     @Inject lateinit var colorHelper: LanguageColorHelper
     @Inject lateinit var timeHelper: TimeHelper
     private lateinit var reposAdapter: ReposAdapter
@@ -75,7 +79,7 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
     override fun viewModelOnResume() =
         viewModel.onResume(
             arguments?.getString(BUNDLE_USERNAME),
-            (parentFragment as UserDataCallback).getData()
+            (parentFragment as ProfileFragment).userData
         )
 
     override fun observeViewModel() {
@@ -85,17 +89,15 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         viewModel.navigateToFollowersAction.observe(viewLifecycleOwner) { navigateToUserListFragment(it) }
         viewModel.navigateToFollowingAction.observe(viewLifecycleOwner) { navigateToUserListFragment(it) }
         viewModel.refreshAction.observe(viewLifecycleOwner) {
-            (parentFragment as UserDataCallback).refreshUserData(arguments?.getString(
-                BUNDLE_USERNAME
-            )!!)
+            userSharedViewModel.updateUserData(arguments?.getString(BUNDLE_USERNAME)!!)
         }
         viewModel.navigateToEditProfileAction.observe(viewLifecycleOwner) { navigateToEditProfileFragment(it) }
         sharedViewModel.userData.observe(viewLifecycleOwner) { viewModel.onUserDataRefreshed(it) }
         viewModel.navigateToRepoDetailAction.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
+        userSharedViewModel.userData.observe(viewLifecycleOwner) {
+            if (arguments?.getString(BUNDLE_USERNAME) != null) viewModel.onUserDataRefreshed(it)
+        }
     }
-
-    fun notifyUserDataRefreshed() =
-        viewModel.onUserDataRefreshed((parentFragment as UserDataCallback).getData()!!)
 
     private fun updateView(viewState: OverviewViewState) {
         with (viewState) {
