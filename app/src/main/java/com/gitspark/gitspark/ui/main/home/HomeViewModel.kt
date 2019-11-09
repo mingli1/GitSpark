@@ -9,7 +9,7 @@ import com.gitspark.gitspark.repository.EventResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
-private const val NUM_RECENT_EVENTS = 3
+internal const val NUM_RECENT_EVENTS = 2
 
 class HomeViewModel @Inject constructor(
     private val eventRepository: EventRepository,
@@ -58,10 +58,7 @@ class HomeViewModel @Inject constructor(
     private fun requestRecentEvents() {
         subscribe(eventRepository.getEvents(prefsHelper.getAuthUsername(), 1)) {
             when (it) {
-                is EventResult.Success -> {
-                    val recentEvents = it.value.value.take(NUM_RECENT_EVENTS)
-                    viewState.value = viewState.value?.copy(recentEvents = recentEvents)
-                }
+                is EventResult.Success -> viewState.value = viewState.value?.copy(recentEvents = it.value.value)
                 is EventResult.Failure -> alert(it.error)
             }
         }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
@@ -80,6 +81,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
     private fun setupListeners() {
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
+        see_more_ra.setOnClickListener { findNavController() }
     }
 
     private fun updateView(viewState: HomeViewState) {
@@ -90,7 +92,9 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
             recent_activity_label.isVisible = recentEvents.isNotEmpty()
             recent_events.isVisible = recentEvents.isNotEmpty()
             ra_divider.isVisible = recentEvents.isNotEmpty()
-            raAdapter.setItems(recentEvents, true)
+            see_more_ra.isVisible = recentEvents.size > NUM_RECENT_EVENTS
+            see_more_divider.isVisible = recentEvents.size > NUM_RECENT_EVENTS
+            raAdapter.setItems(recentEvents.take(NUM_RECENT_EVENTS), true)
 
             aa_empty_text.isVisible = allEvents.isEmpty()
             all_events.isVisible = allEvents.isNotEmpty()
