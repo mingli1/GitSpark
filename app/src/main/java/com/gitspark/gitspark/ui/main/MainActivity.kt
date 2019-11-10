@@ -8,10 +8,12 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setupWithNavController
+import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    val navigateToProfileFeedAction = SingleLiveAction()
     private var navController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -82,6 +82,10 @@ class ProfileFragment : Fragment() {
                 userData = user
             }
         } ?: setUpFragments()
+
+        (activity as MainActivity).navigateToProfileFeedAction.observe(viewLifecycleOwner) {
+            viewpager.currentItem = 1
+        }
     }
 
     private fun setUpFragments() {

@@ -16,6 +16,8 @@ import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.ui.adapter.HomeFeedAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.main.MainActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
@@ -81,7 +83,12 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
     private fun setupListeners() {
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
-        see_more_ra.setOnClickListener { findNavController() }
+        see_more_ra.setOnClickListener {
+            with (activity as MainActivity) {
+                bottom_navigation_view.selectedItemId = R.id.profile
+                navigateToProfileFeedAction.call()
+            }
+        }
     }
 
     private fun updateView(viewState: HomeViewState) {
