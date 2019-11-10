@@ -62,7 +62,9 @@ class ReposAdapter(
                     updated_field.text = context.getString(R.string.updated_repo, formatted)
                 } else updated_field.isVisible = false
 
+                stars_field.isVisible = item.numStars != 0
                 stars_field.text = withSuffix(item.numStars)
+                forks_field.isVisible = item.numForks != 0
                 forks_field.text = withSuffix(item.numForks)
                 private_label.isVisible = item.isPrivate
                 forked_label.isVisible = item.isForked
