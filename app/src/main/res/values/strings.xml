@@ -76,7 +76,7 @@
     <string name="committed_date">committed %1$s</string>
     <string name="commits_list_title">Commits</string>
     <string name="empty_repo_text">This repository is empty!</string>
-    <string name="pinned_repositories_default">Popular repositories</string>
+    <string name="pinned_repositories_default">Loading...</string>
     <string name="recent_activity">Recent activity</string>
     <string name="all_activity">All activity</string>
     <string name="empty_all_activity">You don\'t appear to have any events from the users you follow and the repositories you watch.</string>

@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val POPULAR_OR_PINNED_HEADER = "f4 mb-2 text-normal"
-private const val REPO_FULL_NAME = "text-bold flex-auto min-width-0"
+private const val REPO_FULL_NAME = "text-bold flex-auto"
 private const val REPO_DESC = "pinned-item-desc text-gray text-small"
 private const val REPO_LANG = "itemprop=\"programmingLanguage\">"
 private const val REPO_STARS = "stargazers\" class=\"pinned-item-meta muted-link"
