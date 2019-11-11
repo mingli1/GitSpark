@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.main.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -18,6 +19,9 @@ import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.ui.adapter.HomeFeedAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.dialog.ConfirmDialog
+import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
+import com.gitspark.gitspark.ui.login.LoginActivity
 import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -25,7 +29,7 @@ import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.home_drawer_header.view.*
 import javax.inject.Inject
 
-class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
+class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), ConfirmDialogCallback {
 
     @Inject lateinit var timeHelper: TimeHelper
     @Inject lateinit var eventHelper: EventHelper
@@ -113,7 +117,13 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.userMediator.observe(viewLifecycleOwner) { viewModel.onUserDataLoaded(it) }
+        viewModel.logoutConfirmationAction.observe(viewLifecycleOwner) { showLogoutConfirmationDialog() }
+        viewModel.navigateToLoginAction.observe(viewLifecycleOwner) { navigateToLoginActivity() }
     }
+
+    override fun onPositiveClicked() = viewModel.onLogoutConfirmed()
+
+    override fun onNegativeClicked() {}
 
     private fun setupListeners() {
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
@@ -165,8 +175,22 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
 
     @SuppressLint("RtlHardcoded")
     private fun onMenuItemSelected(item: MenuItem) {
+        drawer_layout.closeDrawer(Gravity.LEFT)
         when (item.itemId) {
-            R.id.home -> drawer_layout.closeDrawer(Gravity.LEFT)
+            R.id.logout -> viewModel.onLogoutClicked()
         }
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        ConfirmDialog.newInstance(
+            getString(R.string.logout_label),
+            getString(R.string.logout_confirmation)
+        ).show(childFragmentManager, null)
+    }
+
+    private fun navigateToLoginActivity() {
+        val intent = Intent(context, LoginActivity::class.java)
+        startActivity(intent)
+        activity!!.finish()
     }
 }

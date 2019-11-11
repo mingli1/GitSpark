@@ -39,4 +39,8 @@ class PreferencesHelper @Inject constructor(
     fun getAuthUsername() = checkNotNull(getString(PREFERENCES_LOGIN)) {
         "No username cached. This method was called before a successful login."
     }
+
+    fun onSignOut() {
+        sharedPreferences.edit().clear().apply()
+    }
 }

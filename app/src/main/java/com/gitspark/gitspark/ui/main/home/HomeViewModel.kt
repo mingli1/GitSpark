@@ -10,6 +10,7 @@ import com.gitspark.gitspark.repository.EventRepository
 import com.gitspark.gitspark.repository.EventResult
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import javax.inject.Inject
 
 internal const val NUM_RECENT_EVENTS = 2
@@ -22,6 +23,8 @@ class HomeViewModel @Inject constructor(
 
     val viewState = MutableLiveData<HomeViewState>()
     val userMediator = MediatorLiveData<AuthUser>()
+    val logoutConfirmationAction = SingleLiveAction()
+    val navigateToLoginAction = SingleLiveAction()
 
     private var started = false
     private var page = 1
@@ -47,6 +50,13 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onScrolledToEnd() = updateViewState(scrolled = true)
+
+    fun onLogoutClicked() = logoutConfirmationAction.call()
+
+    fun onLogoutConfirmed() {
+        prefsHelper.onSignOut()
+        navigateToLoginAction.call()
+    }
 
     private fun updateViewState(
         reset: Boolean = false,
