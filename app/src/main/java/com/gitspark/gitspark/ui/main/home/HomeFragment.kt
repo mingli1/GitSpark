@@ -13,6 +13,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.helper.EventHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
@@ -116,7 +117,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
-        viewModel.userMediator.observe(viewLifecycleOwner) { viewModel.onUserDataLoaded(it) }
+        viewModel.userMediator.observeOnce(viewLifecycleOwner) { viewModel.onUserDataLoaded(it) }
         viewModel.logoutConfirmationAction.observe(viewLifecycleOwner) { showLogoutConfirmationDialog() }
         viewModel.navigateToLoginAction.observe(viewLifecycleOwner) { navigateToLoginActivity() }
     }

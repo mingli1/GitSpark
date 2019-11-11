@@ -144,6 +144,12 @@ class UserRepository @Inject constructor(
 
     fun getCurrentUserData(): LiveData<AuthUser> = authUserDao.getAuthUser()
 
+    fun clearUserData(): Completable{
+        return Completable.fromAction {
+            authUserDao.clear()
+        }
+    }
+
     private fun getUserService() =
         retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(UserService::class.java)

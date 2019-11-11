@@ -54,8 +54,13 @@ class HomeViewModel @Inject constructor(
     fun onLogoutClicked() = logoutConfirmationAction.call()
 
     fun onLogoutConfirmed() {
-        prefsHelper.onSignOut()
-        navigateToLoginAction.call()
+        subscribe(userRepository.clearUserData(),
+            {
+                prefsHelper.onSignOut()
+                navigateToLoginAction.call()
+            },
+            { alert("Failed to sign out.") }
+        )
     }
 
     private fun updateViewState(
