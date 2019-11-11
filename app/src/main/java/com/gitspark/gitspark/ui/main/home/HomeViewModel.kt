@@ -1,11 +1,14 @@
 package com.gitspark.gitspark.ui.main.home
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
+import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.model.isFirstPage
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.EventRepository
 import com.gitspark.gitspark.repository.EventResult
+import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
@@ -13,15 +16,24 @@ internal const val NUM_RECENT_EVENTS = 2
 
 class HomeViewModel @Inject constructor(
     private val eventRepository: EventRepository,
+    private val userRepository: UserRepository,
     private val prefsHelper: PreferencesHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<HomeViewState>()
+    val userMediator = MediatorLiveData<AuthUser>()
 
     private var started = false
     private var page = 1
+    private var user: AuthUser? = null
 
     fun onStart() {
+        val userData = userRepository.getCurrentUserData()
+        userMediator.addSource(userData) { userMediator.value = it }
+    }
+
+    fun onUserDataLoaded(user: AuthUser) {
+        this.user = user
         if (!started) {
             updateViewState(reset = true)
             started = true
@@ -44,11 +56,17 @@ class HomeViewModel @Inject constructor(
         viewState.value = viewState.value?.copy(
             loading = reset,
             refreshing = refresh,
-            updateAdapter = false
+            updateAdapter = false,
+            fullName = user?.name ?: "",
+            username = user?.login ?: "",
+            avatarUrl = user?.avatarUrl ?: ""
         ) ?: HomeViewState(
             loading = reset,
             refreshing = refresh,
-            updateAdapter = false
+            updateAdapter = false,
+            fullName = user?.name ?: "",
+            username = user?.login ?: "",
+            avatarUrl = user?.avatarUrl ?: ""
         )
         if (reset) page = 1
         if (!scrolled || reset || refresh) requestRecentEvents()

@@ -8,5 +8,8 @@ data class HomeViewState(
     val loading: Boolean = false,
     val refreshing: Boolean = false,
     val updateAdapter: Boolean = false,
-    val isLastPage: Boolean = false
+    val isLastPage: Boolean = false,
+    val fullName: String = "",
+    val username: String = "",
+    val avatarUrl: String = ""
 )

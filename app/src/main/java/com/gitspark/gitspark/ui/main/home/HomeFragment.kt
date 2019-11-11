@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.EventHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
@@ -22,6 +23,7 @@ import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+import kotlinx.android.synthetic.main.home_drawer_header.view.*
 import javax.inject.Inject
 
 class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
@@ -111,6 +113,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.userMediator.observe(viewLifecycleOwner) { viewModel.onUserDataLoaded(it) }
     }
 
     private fun setupListeners() {
@@ -143,6 +146,14 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
 
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
+            }
+
+            if (nav_view.headerCount > 0) {
+                nav_view.getHeaderView(0).run {
+                    full_name_field.text = fullName
+                    username_field.text = username
+                    if (avatarUrl.isNotEmpty()) profile_icon.loadImage(avatarUrl)
+                }
             }
         }
     }
