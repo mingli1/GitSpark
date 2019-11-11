@@ -81,6 +81,8 @@
     <string name="all_activity">All activity</string>
     <string name="empty_all_activity">You don\'t appear to have any events from the users you follow and the repositories you watch.</string>
     <string name="see_more_button_text">See more</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>

@@ -2,8 +2,11 @@ package com.gitspark.gitspark.ui.main.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
@@ -33,12 +36,38 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
     private lateinit var aaAdapter: HomeFeedAdapter
     private lateinit var paginationListener: NestedPaginationListener
 
+    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        setHasOptionsMenu(true)
+
+        with (activity as MainActivity) {
+            setSupportActionBar(toolbar)
+            supportActionBar?.run {
+                setDisplayHomeAsUpEnabled(true)
+            }
+        }
+
+        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        actionBarDrawerToggle = ActionBarDrawerToggle(
+            activity,
+            drawer_layout,
+            R.string.drawer_open,
+            R.string.drawer_close
+        ).apply {
+            isDrawerIndicatorEnabled = true
+            drawerArrowDrawable.color = context!!.getColor(R.color.colorWhite)
+        }
+
+        drawer_layout.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
 
         raLayoutManager = LinearLayoutManager(context, VERTICAL, false)
         aaLayoutManager = LinearLayoutManager(context, VERTICAL, false)
@@ -62,6 +91,11 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
 
         viewModel.onStart()
         setupListeners()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) return true
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {
