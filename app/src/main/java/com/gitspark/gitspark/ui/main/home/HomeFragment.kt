@@ -1,10 +1,8 @@
 package com.gitspark.gitspark.ui.main.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -126,6 +124,10 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
                 navigateToProfileFeedAction.call()
             }
         }
+        nav_view.setNavigationItemSelectedListener {
+            onMenuItemSelected(it)
+            true
+        }
     }
 
     private fun updateView(viewState: HomeViewState) {
@@ -158,6 +160,13 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
             }
 
             version_label.text = getString(R.string.version_label, BuildConfig.BUILD_TYPE, BuildConfig.VERSION_NAME)
+        }
+    }
+
+    @SuppressLint("RtlHardcoded")
+    private fun onMenuItemSelected(item: MenuItem) {
+        when (item.itemId) {
+            R.id.home -> drawer_layout.closeDrawer(Gravity.LEFT)
         }
     }
 }
