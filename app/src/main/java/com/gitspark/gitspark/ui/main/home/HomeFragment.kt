@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
+import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
@@ -155,6 +156,8 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java) {
                     if (avatarUrl.isNotEmpty()) profile_icon.loadImage(avatarUrl)
                 }
             }
+
+            version_label.text = getString(R.string.version_label, BuildConfig.BUILD_TYPE, BuildConfig.VERSION_NAME)
         }
     }
 }
