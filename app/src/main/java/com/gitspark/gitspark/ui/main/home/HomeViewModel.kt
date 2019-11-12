@@ -11,6 +11,8 @@ import com.gitspark.gitspark.repository.EventResult
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.nav.UserProfileNavigator
 import javax.inject.Inject
 
 internal const val NUM_RECENT_EVENTS = 2
@@ -19,12 +21,13 @@ class HomeViewModel @Inject constructor(
     private val eventRepository: EventRepository,
     private val userRepository: UserRepository,
     private val prefsHelper: PreferencesHelper
-) : BaseViewModel() {
+) : BaseViewModel(), UserProfileNavigator {
 
     val viewState = MutableLiveData<HomeViewState>()
     val userMediator = MediatorLiveData<AuthUser>()
     val logoutConfirmationAction = SingleLiveAction()
     val navigateToLoginAction = SingleLiveAction()
+    val navigateToUserProfile = SingleLiveEvent<String>()
 
     private var started = false
     private var page = 1
@@ -61,6 +64,10 @@ class HomeViewModel @Inject constructor(
             },
             { alert("Failed to sign out.") }
         )
+    }
+
+    override fun onUserSelected(username: String) {
+        navigateToUserProfile.value = username
     }
 
     private fun updateViewState(

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.BuildConfig
@@ -24,6 +25,7 @@ import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.login.LoginActivity
 import com.gitspark.gitspark.ui.main.MainActivity
+import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -79,8 +81,8 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         aaLayoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
 
-        raAdapter = HomeFeedAdapter(timeHelper, eventHelper, recent = true)
-        aaAdapter = HomeFeedAdapter(timeHelper, eventHelper)
+        raAdapter = HomeFeedAdapter(timeHelper, eventHelper, viewModel, recent = true)
+        aaAdapter = HomeFeedAdapter(timeHelper, eventHelper, viewModel)
 
         recent_events.run {
             setHasFixedSize(true)
@@ -120,6 +122,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         viewModel.userMediator.observeOnce(viewLifecycleOwner) { viewModel.onUserDataLoaded(it) }
         viewModel.logoutConfirmationAction.observe(viewLifecycleOwner) { showLogoutConfirmationDialog() }
         viewModel.navigateToLoginAction.observe(viewLifecycleOwner) { navigateToLoginActivity() }
+        viewModel.navigateToUserProfile.observe(viewLifecycleOwner) { navigateToUserProfile(it) }
     }
 
     override fun onPositiveClicked() = viewModel.onLogoutConfirmed()
@@ -193,5 +196,10 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         val intent = Intent(context, LoginActivity::class.java)
         startActivity(intent)
         activity!!.finish()
+    }
+
+    private fun navigateToUserProfile(username: String) {
+        val data = Bundle().apply { putString(BUNDLE_USERNAME, username) }
+        findNavController().navigate(R.id.action_home_fragment_to_profile, data)
     }
 }
