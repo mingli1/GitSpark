@@ -81,8 +81,8 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         aaLayoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
 
-        raAdapter = HomeFeedAdapter(timeHelper, eventHelper, viewModel, recent = true)
-        aaAdapter = HomeFeedAdapter(timeHelper, eventHelper, viewModel)
+        raAdapter = HomeFeedAdapter(timeHelper, eventHelper, viewModel, prefsHelper, recent = true)
+        aaAdapter = HomeFeedAdapter(timeHelper, eventHelper, viewModel, prefsHelper)
 
         recent_events.run {
             setHasFixedSize(true)

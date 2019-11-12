@@ -3,11 +3,15 @@ package com.gitspark.gitspark.ui.adapter
 import android.view.View
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.loadImage
+import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.nav.UserProfileNavigator
 import kotlinx.android.synthetic.main.user_view.view.*
 
-class UsersAdapter(private val navigator: UserProfileNavigator) : PaginationAdapter() {
+class UsersAdapter(
+    private val navigator: UserProfileNavigator,
+    private val prefsHelper: PreferencesHelper
+) : PaginationAdapter() {
 
     override fun bind(item: Pageable, view: View) {
         if (item is User) {
@@ -21,7 +25,9 @@ class UsersAdapter(private val navigator: UserProfileNavigator) : PaginationAdap
                     content_field.text = context.getString(R.string.contributions_text, item.contributions)
                 }
 
-                user_card.setOnClickListener { navigator.onUserSelected(item.login) }
+                user_card.setOnClickListener {
+                    if (item.login != prefsHelper.getAuthUsername()) navigator.onUserSelected(item.login)
+                }
             }
         }
     }

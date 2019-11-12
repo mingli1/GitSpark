@@ -12,6 +12,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.service.USER_PER_PAGE
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.ui.adapter.UsersAdapter
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
@@ -19,12 +20,15 @@ import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+import javax.inject.Inject
 
 const val BUNDLE_TITLE = "BUNDLE_TITLE"
 const val BUNDLE_USER_LIST_TYPE = "BUNDLE_USER_LIST_TYPE"
 const val BUNDLE_ARGUMENTS = "BUNDLE_ARGUMENTS"
 
 class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::class.java) {
+
+    @Inject lateinit var prefsHelper: PreferencesHelper
 
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: PaginationListener
@@ -54,7 +58,7 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
         }
         item_list.setHasFixedSize(true)
         item_list.layoutManager = layoutManager
-        usersAdapter = UsersAdapter(viewModel)
+        usersAdapter = UsersAdapter(viewModel, prefsHelper)
         if (item_list.adapter == null) item_list.adapter = usersAdapter
 
         item_list.addOnScrollListener(paginationListener)

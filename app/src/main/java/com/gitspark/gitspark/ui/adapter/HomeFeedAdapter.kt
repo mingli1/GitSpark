@@ -7,6 +7,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.helper.EventHelper
+import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Event
 import com.gitspark.gitspark.model.Loading
@@ -22,6 +23,7 @@ class HomeFeedAdapter(
     private val timeHelper: TimeHelper,
     private val eventHelper: EventHelper,
     private val userNavigator: UserProfileNavigator,
+    private val prefsHelper: PreferencesHelper,
     private val recent: Boolean = false
 ) : PaginationAdapter() {
 
@@ -71,7 +73,9 @@ class HomeFeedAdapter(
                 date_field.text = formatted
 
                 if (recent) username_field.text = item.actor.login
-                else profile_icon.setOnClickListener { userNavigator.onUserSelected(item.actor.login) }
+                else profile_icon.setOnClickListener {
+                    if (item.actor.login != prefsHelper.getAuthUsername()) userNavigator.onUserSelected(item.actor.login)
+                }
             }
         }
     }
