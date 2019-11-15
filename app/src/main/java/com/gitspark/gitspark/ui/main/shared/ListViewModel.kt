@@ -43,7 +43,7 @@ abstract class ListViewModel<S> : BaseViewModel(), ScrollingViewModel {
 
     protected fun start() {
         if (!started) {
-            updateViewState()
+            updateViewState(reset = true)
             started = true
         }
     }
