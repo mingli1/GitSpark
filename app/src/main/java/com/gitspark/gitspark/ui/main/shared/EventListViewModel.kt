@@ -1,33 +1,38 @@
 package com.gitspark.gitspark.ui.main.shared
 
 import androidx.lifecycle.MutableLiveData
-import com.gitspark.gitspark.model.*
-import com.gitspark.gitspark.repository.RepoRepository
-import com.gitspark.gitspark.repository.RepoResult
+import com.gitspark.gitspark.model.Event
+import com.gitspark.gitspark.model.Page
+import com.gitspark.gitspark.model.isFirstPage
+import com.gitspark.gitspark.model.isLastPage
+import com.gitspark.gitspark.repository.EventRepository
+import com.gitspark.gitspark.repository.EventResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
-import com.gitspark.gitspark.ui.nav.RepoDetailNavigator
+import com.gitspark.gitspark.ui.nav.UserProfileNavigator
 import javax.inject.Inject
 
-enum class RepoListType {
+enum class EventListType {
     None,
-    Forks
+    PublicEvents,
+    RepoEvents
 }
 
-class RepoListViewModel @Inject constructor(
-    private val repoRepository: RepoRepository
-) : BaseViewModel(), RepoDetailNavigator {
+class EventListViewModel @Inject constructor(
+    private val eventRepository: EventRepository
+) : BaseViewModel(), UserProfileNavigator {
 
-    val viewState = MutableLiveData<ListViewState<Repo>>()
-    val navigateToRepoDetailAction = SingleLiveEvent<Repo>()
+    val viewState = MutableLiveData<ListViewState<Event>>()
+    val navigateToProfileAction = SingleLiveEvent<String>()
+
     private var resumed = false
     private var page = 1
 
-    private var type = RepoListType.None
+    private var type = EventListType.None
     private var args = ""
 
-    fun onResume(type: RepoListType, args: String) {
-        if (type == RepoListType.None|| args.isEmpty()) return
+    fun onResume(type: EventListType, args: String) {
+        if (type == EventListType.None) return
         this.type = type
         this.args = args
 
@@ -45,8 +50,8 @@ class RepoListViewModel @Inject constructor(
         resumed = false
     }
 
-    override fun onRepoSelected(repo: Repo) {
-        navigateToRepoDetailAction.value = repo
+    override fun onUserSelected(username: String) {
+        navigateToProfileAction.value = username
     }
 
     private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
@@ -65,28 +70,28 @@ class RepoListViewModel @Inject constructor(
 
     private fun requestData() {
         when (type) {
-            RepoListType.None-> return
-            RepoListType.Forks -> requestForks()
+            EventListType.None -> return
+            EventListType.PublicEvents -> requestPublicEvents()
+            EventListType.RepoEvents -> return
         }
     }
 
-    private fun requestForks() {
-        val args = this.args.split("/")
-        subscribe(repoRepository.getForks(args[0], args[1], page = page)) {
-            onRepoDataResult(it)
+    private fun requestPublicEvents() {
+        subscribe(eventRepository.getPublicEvents(page = page)) {
+            onEventResult(it)
         }
     }
 
-    private fun onRepoDataResult(it: RepoResult<Page<Repo>>) {
+    private fun onEventResult(it: EventResult<Page<Event>>) {
         when (it) {
-            is RepoResult.Success -> onRepoDataSuccess(it.value.value, it.value.last)
-            is RepoResult.Failure -> onRepoDataFailure(it.error)
+            is EventResult.Success -> onEventSuccess(it.value.value, it.value.last)
+            is EventResult.Failure -> onEventFailure(it.error)
         }
     }
 
-    private fun onRepoDataSuccess(reposToAdd: List<Repo>, last: Int) {
+    private fun onEventSuccess(eventsToAdd: List<Event>, last: Int) {
         val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.list ?: arrayListOf()
-        updatedList.addAll(reposToAdd)
+        updatedList.addAll(eventsToAdd)
 
         viewState.value = viewState.value?.copy(
             list = updatedList,
@@ -104,7 +109,7 @@ class RepoListViewModel @Inject constructor(
         if (page < last) page++
     }
 
-    private fun onRepoDataFailure(error: String) {
+    private fun onEventFailure(error: String) {
         alert(error)
         viewState.value = viewState.value?.copy(updateAdapter = false, loading = false, refreshing = false)
             ?: ListViewState(updateAdapter = false, loading = false, refreshing = false)

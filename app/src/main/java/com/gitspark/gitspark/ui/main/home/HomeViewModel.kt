@@ -12,6 +12,7 @@ import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.main.shared.EventListType
 import com.gitspark.gitspark.ui.nav.UserProfileNavigator
 import javax.inject.Inject
 
@@ -28,6 +29,7 @@ class HomeViewModel @Inject constructor(
     val logoutConfirmationAction = SingleLiveAction()
     val navigateToLoginAction = SingleLiveAction()
     val navigateToUserProfile = SingleLiveEvent<String>()
+    val navigateToEventList = SingleLiveEvent<EventListType>()
 
     private var started = false
     private var page = 1
@@ -64,6 +66,10 @@ class HomeViewModel @Inject constructor(
             },
             { alert("Failed to sign out.") }
         )
+    }
+
+    fun onPublicEventsClicked() {
+        navigateToEventList.value = EventListType.PublicEvents
     }
 
     override fun onUserSelected(username: String) {

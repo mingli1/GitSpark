@@ -12,6 +12,7 @@ import com.gitspark.gitspark.api.service.COMMITS_PER_PAGE
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.model.Commit
 import com.gitspark.gitspark.ui.adapter.CommitsAdapter
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
@@ -77,10 +78,10 @@ class CommitListFragment : BaseFragment<CommitListViewModel>(CommitListViewModel
         viewModel.onDestroy()
     }
 
-    private fun updateView(viewState: CommitListViewState) {
+    private fun updateView(viewState: ListViewState<Commit>) {
         with (viewState) {
             if (updateAdapter) {
-                commitsAdapter.setItems(commits, isLastPage)
+                commitsAdapter.setItems(list, isLastPage)
 
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false

@@ -26,6 +26,8 @@ import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.login.LoginActivity
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
+import com.gitspark.gitspark.ui.main.shared.BUNDLE_EVENT_LIST_TYPE
+import com.gitspark.gitspark.ui.main.shared.EventListType
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -123,6 +125,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         viewModel.logoutConfirmationAction.observe(viewLifecycleOwner) { showLogoutConfirmationDialog() }
         viewModel.navigateToLoginAction.observe(viewLifecycleOwner) { navigateToLoginActivity() }
         viewModel.navigateToUserProfile.observe(viewLifecycleOwner) { navigateToUserProfile(it) }
+        viewModel.navigateToEventList.observe(viewLifecycleOwner) { navigateToEventList(it) }
     }
 
     override fun onPositiveClicked() = viewModel.onLogoutConfirmed()
@@ -182,6 +185,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         drawer_layout.closeDrawer(Gravity.LEFT)
         when (item.itemId) {
             R.id.logout -> viewModel.onLogoutClicked()
+            R.id.public_events -> viewModel.onPublicEventsClicked()
         }
     }
 
@@ -201,5 +205,10 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
     private fun navigateToUserProfile(username: String) {
         val data = Bundle().apply { putString(BUNDLE_USERNAME, username) }
         findNavController().navigate(R.id.action_home_fragment_to_profile, data)
+    }
+
+    private fun navigateToEventList(type: EventListType) {
+        val data = Bundle().apply { putSerializable(BUNDLE_EVENT_LIST_TYPE, type) }
+        findNavController().navigate(R.id.action_home_fragment_to_event_list, data)
     }
 }

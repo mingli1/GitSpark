@@ -9,12 +9,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
-import com.gitspark.gitspark.api.service.USER_PER_PAGE
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.helper.EventHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
-import com.gitspark.gitspark.model.User
-import com.gitspark.gitspark.ui.adapter.UsersAdapter
+import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.model.Event
+import com.gitspark.gitspark.ui.adapter.HomeFeedAdapter
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
@@ -23,17 +24,17 @@ import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
-const val BUNDLE_TITLE = "BUNDLE_TITLE"
-const val BUNDLE_USER_LIST_TYPE = "BUNDLE_USER_LIST_TYPE"
-const val BUNDLE_ARGUMENTS = "BUNDLE_ARGUMENTS"
+const val BUNDLE_EVENT_LIST_TYPE = "BUNDLE_EVENT_LIST_TYPE"
 
-class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::class.java) {
+class EventListFragment : BaseFragment<EventListViewModel>(EventListViewModel::class.java) {
 
+    @Inject lateinit var timeHelper: TimeHelper
+    @Inject lateinit var eventHelper: EventHelper
     @Inject lateinit var prefsHelper: PreferencesHelper
 
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: PaginationListener
-    private lateinit var usersAdapter: UsersAdapter
+    private lateinit var homeFeedAdapter: HomeFeedAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
@@ -44,7 +45,7 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
             supportActionBar?.run {
                 setDisplayHomeAsUpEnabled(true)
                 setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
-                title = arguments?.getString(BUNDLE_TITLE) ?: "Users"
+                title = arguments?.getString(BUNDLE_TITLE) ?: "Public activity"
             }
         }
         return view
@@ -54,17 +55,17 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
         super.onActivityCreated(savedInstanceState)
 
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        paginationListener = PaginationListener(layoutManager, USER_PER_PAGE, null) {
+        paginationListener = PaginationListener(layoutManager, 30, null) {
             viewModel.onScrolledToEnd()
         }
         item_list.setHasFixedSize(true)
         item_list.layoutManager = layoutManager
-        usersAdapter = UsersAdapter(viewModel, prefsHelper)
-        if (item_list.adapter == null) item_list.adapter = usersAdapter
+        homeFeedAdapter = HomeFeedAdapter(timeHelper, eventHelper, viewModel, prefsHelper)
+        if (item_list.adapter == null) item_list.adapter = homeFeedAdapter
 
         item_list.addOnScrollListener(paginationListener)
 
-        val type = arguments?.getSerializable(BUNDLE_USER_LIST_TYPE) as UserListType? ?: UserListType.None
+        val type = arguments?.getSerializable(BUNDLE_EVENT_LIST_TYPE) as EventListType? ?: EventListType.None
         val args = arguments?.getString(BUNDLE_ARGUMENTS) ?: ""
         viewModel.onResume(type, args)
 
@@ -87,10 +88,10 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
         viewModel.onDestroy()
     }
 
-    private fun updateView(viewState: ListViewState<User>) {
+    private fun updateView(viewState: ListViewState<Event>) {
         with (viewState) {
             if (updateAdapter) {
-                usersAdapter.setItems(list, isLastPage)
+                homeFeedAdapter.setItems(list, isLastPage)
 
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
@@ -102,6 +103,6 @@ class UserListFragment : BaseFragment<UserListViewModel>(UserListViewModel::clas
 
     private fun navigateToProfileFragment(username: String) {
         val data = Bundle().apply { putString(BUNDLE_USERNAME, username) }
-        findNavController().navigate(R.id.action_user_list_fragment_to_profile_fragment, data)
+        findNavController().navigate(R.id.action_event_list_to_profile, data)
     }
 }

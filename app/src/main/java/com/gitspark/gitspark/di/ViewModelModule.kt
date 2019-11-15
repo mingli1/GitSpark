@@ -14,6 +14,7 @@ import com.gitspark.gitspark.ui.main.repo.RepoDetailViewModel
 import com.gitspark.gitspark.ui.main.repo.RepoOverviewViewModel
 import com.gitspark.gitspark.ui.main.search.SearchViewModel
 import com.gitspark.gitspark.ui.main.shared.CommitListViewModel
+import com.gitspark.gitspark.ui.main.shared.EventListViewModel
 import com.gitspark.gitspark.ui.main.shared.RepoListViewModel
 import com.gitspark.gitspark.ui.main.shared.UserListViewModel
 import dagger.Binds
@@ -94,6 +95,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(CommitListViewModel::class)
     internal abstract fun bindCommitListViewModel(commitListViewModel: CommitListViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(EventListViewModel::class)
+    internal abstract fun bindEventListViewModel(eventListViewModel: EventListViewModel): ViewModel
 
     @Binds @IntoMap
     @ViewModelKey(UserSharedViewModel::class)

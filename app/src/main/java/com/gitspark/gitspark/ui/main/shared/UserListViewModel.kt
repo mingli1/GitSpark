@@ -28,7 +28,7 @@ class UserListViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : BaseViewModel(), UserProfileNavigator {
 
-    val viewState = MutableLiveData<UserListViewState>()
+    val viewState = MutableLiveData<ListViewState<User>>()
     val navigateToProfileAction = SingleLiveEvent<String>()
     private var resumed = false
     private var page = 1
@@ -64,7 +64,7 @@ class UserListViewModel @Inject constructor(
             loading = reset,
             refreshing = refresh,
             updateAdapter = false
-        ) ?: UserListViewState(
+        ) ?: ListViewState(
             loading = reset,
             refreshing = refresh,
             updateAdapter = false
@@ -144,17 +144,17 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun onUserDataSuccess(usersToAdd: List<User>, last: Int) {
-        val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.users ?: arrayListOf()
+        val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.list ?: arrayListOf()
         updatedList.addAll(usersToAdd)
 
         viewState.value = viewState.value?.copy(
-            users = updatedList,
+            list = updatedList,
             isLastPage = page.isLastPage(last),
             updateAdapter = true,
             loading = false,
             refreshing = false
-        ) ?: UserListViewState(
-            users = updatedList,
+        ) ?: ListViewState(
+            list = updatedList,
             isLastPage = page.isLastPage(last),
             updateAdapter = true,
             loading = false,
@@ -166,6 +166,6 @@ class UserListViewModel @Inject constructor(
     private fun onUserDataFailure(error: String) {
         alert(error)
         viewState.value = viewState.value?.copy(updateAdapter = false, loading = false, refreshing = false)
-            ?: UserListViewState(updateAdapter = false, loading = false, refreshing = false)
+            ?: ListViewState(updateAdapter = false, loading = false, refreshing = false)
     }
 }

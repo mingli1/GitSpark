@@ -88,10 +88,10 @@ class RepoListFragment : BaseFragment<RepoListViewModel>(RepoListViewModel::clas
         viewModel.onDestroy()
     }
 
-    private fun updateView(viewState: RepoListViewState) {
+    private fun updateView(viewState: ListViewState<Repo>) {
         with (viewState) {
             if (updateAdapter) {
-                reposAdapter.setItems(repos, isLastPage)
+                reposAdapter.setItems(list, isLastPage)
 
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
