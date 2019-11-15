@@ -70,6 +70,7 @@ class OverviewViewModel @Inject constructor(
     fun onUserDataRefreshed(user: User) = updateViewStateWith(user)
 
     fun onFollowersFieldClicked() {
+        if (currentUserData?.followers ?: 0 <= 0) return
         navigateToFollowersAction.value = Triple(
             UserListType.Followers,
             "${currentUserData?.login}'s Followers",
@@ -78,6 +79,7 @@ class OverviewViewModel @Inject constructor(
     }
 
     fun onFollowingFieldClicked() {
+        if (currentUserData?.following ?: 0 <= 0) return
         navigateToFollowingAction.value = Triple(
             UserListType.Following,
             "${currentUserData?.login}'s Following",

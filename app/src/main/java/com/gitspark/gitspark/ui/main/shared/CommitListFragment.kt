@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.main.shared
 
 import android.os.Bundle
+import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.service.COMMITS_PER_PAGE
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Commit
@@ -26,6 +27,7 @@ class CommitListFragment : ListFragment<Commit, CommitListViewModel>(CommitListV
     override fun updateView(viewState: ListViewState<Commit>) {
         super.updateView(viewState)
         with (viewState) {
+            empty_text.text = getString(R.string.commit_empty_text)
             if (updateAdapter) commitsAdapter.setItems(list, isLastPage)
         }
     }

@@ -87,6 +87,9 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
             swipe_refresh.isRefreshing = refreshing
             num_repos_field.text = getString(R.string.num_repos_text, LABEL, totalStarred)
 
+            empty_text.isVisible = repos.isEmpty()
+            empty_text.text = getString(R.string.repos_empty_text)
+
             if (updateAdapter) {
                 reposAdapter.setItems(repos, isLastPage)
 

@@ -39,7 +39,9 @@ class EventListFragment : ListFragment<Event, EventListViewModel>(EventListViewM
     }
 
     override fun updateView(viewState: ListViewState<Event>) {
+        super.updateView(viewState)
         with (viewState) {
+            empty_text.text = getString(R.string.event_empty_text)
             if (updateAdapter) homeFeedAdapter.setItems(list, isLastPage)
         }
     }

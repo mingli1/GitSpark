@@ -71,6 +71,7 @@ abstract class ListFragment<T, S : ListViewModel<T>>(clazz: Class<S>, private va
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false
             }
+            empty_text.isVisible = list.isEmpty()
             loading_indicator.isVisible = loading && !refreshing
             swipe_refresh.isRefreshing = refreshing
         }

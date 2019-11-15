@@ -92,6 +92,12 @@
     <string name="version_label">GitSpark %1$s build v%2$s</string>
     <string name="public_events_title">Public activity</string>
     <string name="repo_events_title">Repository activity</string>
+    <string name="commit_empty_text">There are no commits in this repository.</string>
+    <string name="event_empty_text">There were no events found at this time.</string>
+    <string name="repo_empty_text">There were no repositories found at this time.</string>
+    <string name="user_empty_text">There were no users found at this time.</string>
+    <string name="profile_feed_empty_text">There was no recent activity found.</string>
+    <string name="repos_empty_text">There were no repositories found.</string>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>

@@ -23,7 +23,7 @@ class RepoContentViewModel @Inject constructor(
     val navigateToCommitsListAction = SingleLiveEvent<Pair<String, String>>()
 
     lateinit var currRepo: Repo
-    lateinit var branchNames: List<String>
+    var branchNames: List<String> = emptyList()
 
     @VisibleForTesting val directoryCache = mutableMapOf<String, List<RepoContent>>()
     @VisibleForTesting val pathStack = Stack<String>()

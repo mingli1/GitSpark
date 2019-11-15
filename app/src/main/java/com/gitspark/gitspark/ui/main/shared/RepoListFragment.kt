@@ -42,6 +42,7 @@ class RepoListFragment : ListFragment<Repo, RepoListViewModel>(RepoListViewModel
     override fun updateView(viewState: ListViewState<Repo>) {
         super.updateView(viewState)
         with (viewState) {
+            empty_text.text = getString(R.string.repo_empty_text)
             if (updateAdapter) reposAdapter.setItems(list, isLastPage)
         }
     }

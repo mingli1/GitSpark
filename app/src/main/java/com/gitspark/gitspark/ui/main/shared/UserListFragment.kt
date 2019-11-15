@@ -40,6 +40,7 @@ class UserListFragment : ListFragment<User, UserListViewModel>(UserListViewModel
     override fun updateView(viewState: ListViewState<User>) {
         super.updateView(viewState)
         with (viewState) {
+            empty_text.text = getString(R.string.user_empty_text)
             if (updateAdapter) usersAdapter.setItems(list, isLastPage)
         }
     }

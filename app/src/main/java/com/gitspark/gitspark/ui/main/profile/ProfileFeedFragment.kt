@@ -70,6 +70,9 @@ class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewMod
             loading_indicator.isVisible = loading && !refreshing
             swipe_refresh.isRefreshing = refreshing
 
+            empty_text.isVisible = events.isEmpty()
+            empty_text.text = getString(R.string.profile_feed_empty_text)
+
             if (updateAdapter) {
                 profileFeedAdapter.setItems(events, isLastPage)
 
