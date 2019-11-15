@@ -83,6 +83,7 @@
     <string name="see_more_button_text">See more</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="public_events">Public events</string>
     <string name="notifcations_label">Notifications</string>
     <string name="settings_label">Settings</string>
     <string name="about_label">About</string>
