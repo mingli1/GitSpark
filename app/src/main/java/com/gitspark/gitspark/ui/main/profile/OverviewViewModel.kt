@@ -172,7 +172,7 @@ class OverviewViewModel @Inject constructor(
                 companyText = company,
                 numFollowers = followers,
                 numFollowing = following,
-                loading = true,
+                loading = false,
                 refreshing = false,
                 planName = if (this is AuthUser) plan.planName else "",
                 createdDate = formattedDateTime,
