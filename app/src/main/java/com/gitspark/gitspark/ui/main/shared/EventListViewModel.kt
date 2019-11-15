@@ -36,14 +36,17 @@ class EventListViewModel @Inject constructor(
         when (type) {
             EventListType.None -> return
             EventListType.PublicEvents -> requestPublicEvents()
-            EventListType.RepoEvents -> return
+            EventListType.RepoEvents -> requestRepoEvents()
         }
     }
 
     private fun requestPublicEvents() {
-        subscribe(eventRepository.getPublicEvents(page = page)) {
-            onEventResult(it)
-        }
+        subscribe(eventRepository.getPublicEvents(page = page)) { onEventResult(it) }
+    }
+
+    private fun requestRepoEvents() {
+        val args = this.args.split("/")
+        subscribe(eventRepository.getRepoEvents(args[0], args[1], page = page)) { onEventResult(it) }
     }
 
     private fun onEventResult(it: EventResult<Page<Event>>) {

@@ -48,6 +48,17 @@ class EventRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain received events for $username") }
     }
 
+    fun getRepoEvents(username: String, repoName: String, page: Int): Observable<EventResult<Page<Event>>> {
+        return getEventService()
+            .getRepoEvents(username, repoName, page)
+            .map {
+                getSuccess(it.toModel<Event>().apply {
+                    value = it.response.map { event -> event.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain repo events for $username/$repoName") }
+    }
+
     private fun getEventService() =
         retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(EventService::class.java)

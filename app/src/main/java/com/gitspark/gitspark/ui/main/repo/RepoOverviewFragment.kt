@@ -72,6 +72,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         viewModel.forkButtonAction.observe(viewLifecycleOwner) { showForkConfirmDialog(it) }
         viewModel.navigateToUserListAction.observe(viewLifecycleOwner) { navigateToUserListFragment(it) }
         viewModel.navigateToRepoListAction.observe(viewLifecycleOwner) { navigateToRepoListFragment(it) }
+        viewModel.navigateToEventListAction.observe(viewLifecycleOwner) { navigateToEventListFragment(it) }
     }
 
     override fun onPositiveClicked() = viewModel.onForkConfirmClicked()
@@ -188,6 +189,9 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         contributors_field.setOnClickListener {
             viewModel.onUserListClicked(getString(R.string.contributors_button_text), UserListType.Contributors)
         }
+        activity_field.setOnClickListener {
+            viewModel.onActivityButtonClicked(getString(R.string.repo_events_title))
+        }
         language_button.setOnClickListener { viewModel.onLanguageButtonClicked() }
     }
 
@@ -218,6 +222,18 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         }
         findNavController().navigate(
             R.id.action_repo_detail_fragment_to_repo_list_fragment,
+            data
+        )
+    }
+
+    private fun navigateToEventListFragment(triple: Triple<String, EventListType, String>) {
+        val data = Bundle().apply {
+            putString(BUNDLE_TITLE, triple.first)
+            putSerializable(BUNDLE_EVENT_LIST_TYPE, triple.second)
+            putString(BUNDLE_ARGUMENTS, triple.third)
+        }
+        findNavController().navigate(
+            R.id.action_repo_detail_fragment_to_event_list_fragment,
             data
         )
     }

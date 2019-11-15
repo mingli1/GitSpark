@@ -10,6 +10,7 @@ import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.main.shared.EventListType
 import com.gitspark.gitspark.ui.main.shared.RepoListType
 import com.gitspark.gitspark.ui.main.shared.UserListType
 import org.threeten.bp.Instant
@@ -27,6 +28,7 @@ class RepoOverviewViewModel @Inject constructor(
     val forkButtonAction = SingleLiveEvent<String>()
     val navigateToUserListAction = SingleLiveEvent<Triple<String, UserListType, String>>()
     val navigateToRepoListAction = SingleLiveEvent<Triple<String, RepoListType, String>>()
+    val navigateToEventListAction = SingleLiveEvent<Triple<String, EventListType, String>>()
 
     private lateinit var repo: Repo
     @VisibleForTesting var userWatching = false
@@ -171,6 +173,10 @@ class RepoOverviewViewModel @Inject constructor(
     fun onLanguageButtonClicked() {
         val langDetailsShown = viewState.value?.langDetailsShown ?: false
         viewState.value = viewState.value?.copy(langDetailsShown = !langDetailsShown)
+    }
+
+    fun onActivityButtonClicked(title: String) {
+        navigateToEventListAction.value = Triple(title, EventListType.RepoEvents, repo.fullName)
     }
 
     private fun requestRepoReadme(owner: String, repoName: String) {

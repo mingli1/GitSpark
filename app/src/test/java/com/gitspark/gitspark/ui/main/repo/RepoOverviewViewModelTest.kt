@@ -8,6 +8,7 @@ import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.RepoContent
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
+import com.gitspark.gitspark.ui.main.shared.EventListType
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
@@ -196,6 +197,13 @@ class RepoOverviewViewModelTest {
         val sortedMap = sortedMapOf(Pair("a", 1), Pair("b", 2))
         viewModel.setLanguages(sortedMap)
         assertThat(viewState().languages).isEqualTo(sortedMap)
+    }
+
+    @Test
+    fun shouldNavigateToEventList() {
+        viewModel.loadRepo(Repo(fullName = "full/Name"))
+        viewModel.onActivityButtonClicked("title")
+        assertThat(viewModel.navigateToEventListAction.value).isEqualTo(Triple("title", EventListType.RepoEvents, "full/Name"))
     }
 
     private fun viewState() = viewModel.viewState.value!!

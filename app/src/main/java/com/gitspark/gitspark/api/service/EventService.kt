@@ -23,4 +23,11 @@ interface EventService {
         @Path("username") username: String,
         @Query("page") page: Int
     ): Observable<ApiPage<ApiEvent>>
+
+    @GET("repos/{owner}/{repo}/events")
+    fun getRepoEvents(
+        @Path("owner") username: String,
+        @Path("repo") repoName: String,
+        @Query("page") page: Int
+    ): Observable<ApiPage<ApiEvent>>
 }

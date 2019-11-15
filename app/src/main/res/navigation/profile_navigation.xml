@@ -108,6 +108,14 @@
             app:exitAnim="@anim/fragment_close_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_repo_detail_fragment_to_event_list_fragment"
+            app:destination="@id/event_list_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
         
     </fragment>
     
@@ -150,5 +158,20 @@
         android:id="@+id/commit_list_fragment"
         android:name="com.gitspark.gitspark.ui.main.shared.CommitListFragment"
         android:label="CommitListFragment"/>
+
+    <fragment
+        android:id="@+id/event_list_fragment"
+        android:name="com.gitspark.gitspark.ui.main.shared.EventListFragment"
+        android:label="EventListFragment">
+
+        <action
+            android:id="@+id/action_event_list_to_profile"
+            app:destination="@id/profile_fragment2"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+    </fragment>
 
 </navigation>
