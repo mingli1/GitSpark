@@ -14,7 +14,8 @@ data class Issue(
     val numComments: Int = 0,
     val createdAt: String = "",
     val updatedAt: String = "",
-    val repo: Repo = Repo()
+    val repo: Repo = Repo(),
+    val pullRequest: PullRequest = PullRequest()
 )
 
 data class Label(

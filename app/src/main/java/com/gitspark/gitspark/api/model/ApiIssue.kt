@@ -1,9 +1,6 @@
 package com.gitspark.gitspark.api.model
 
-import com.gitspark.gitspark.model.Issue
-import com.gitspark.gitspark.model.Label
-import com.gitspark.gitspark.model.Repo
-import com.gitspark.gitspark.model.User
+import com.gitspark.gitspark.model.*
 import com.squareup.moshi.Json
 
 data class ApiIssue(
@@ -21,7 +18,8 @@ data class ApiIssue(
     @field:Json(name = "comments") val numComments: Int?,
     @field:Json(name = "created_at") val createdAt: String?,
     @field:Json(name = "updated_at") val updatedAt: String?,
-    @field:Json(name = "repository") val repo: ApiRepo?
+    @field:Json(name = "repository") val repo: ApiRepo?,
+    @field:Json(name = "pull_request") val pullRequest: ApiPullRequest?
 ) {
     fun toModel() = Issue(
         id = id ?: 0,
@@ -37,7 +35,8 @@ data class ApiIssue(
         numComments = numComments ?: 0,
         createdAt = createdAt ?: "",
         updatedAt = updatedAt ?: "",
-        repo = repo?.toModel() ?: Repo()
+        repo = repo?.toModel() ?: Repo(),
+        pullRequest = pullRequest?.toModel() ?: PullRequest()
     )
 }
 

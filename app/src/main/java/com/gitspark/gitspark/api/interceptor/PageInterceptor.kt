@@ -23,7 +23,7 @@ class PageInterceptor : Interceptor {
                     return response.newBuilder().body(
                         ResponseBody.create(
                             body.contentType(),
-                            "{$attrs\"response\":${body.string()}}"
+                            "{$attrs\"items\":${body.string()}}"
                         )
                     ).build()
                 }
@@ -33,11 +33,11 @@ class PageInterceptor : Interceptor {
                     val attrs = getAttrs(it)
                     if (attrs.isNotEmpty()) {
                         response.body()?.let { body ->
-                            val bodyStr = body.string()
+                            val bodyStr = body.string().substring(1)
                             return response.newBuilder().body(
                                 ResponseBody.create(
                                     body.contentType(),
-                                    "{$attrs\"response\":$bodyStr}"
+                                    "{$attrs$bodyStr"
                                 )
                             ).build()
                         }
