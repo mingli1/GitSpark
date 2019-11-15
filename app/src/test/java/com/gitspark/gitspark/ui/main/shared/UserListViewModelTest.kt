@@ -35,19 +35,19 @@ class UserListViewModelTest {
 
     @Test
     fun shouldRequestWatchers() {
-        viewModel.onResume(UserListType.Watchers, ARGS)
+        viewModel.onStart(UserListType.Watchers, ARGS)
         verify { repoRepository.getWatchers(any(), any(), any()) }
     }
 
     @Test
     fun shouldRequestStargazers() {
-        viewModel.onResume(UserListType.Stargazers, ARGS)
+        viewModel.onStart(UserListType.Stargazers, ARGS)
         verify { repoRepository.getStargazers(any(), any(), any()) }
     }
 
     @Test
     fun shouldRequestContributors() {
-        viewModel.onResume(UserListType.Contributors, ARGS)
+        viewModel.onStart(UserListType.Contributors, ARGS)
         verify { repoRepository.getContributors(any(), any(), any()) }
     }
 
@@ -59,13 +59,13 @@ class UserListViewModelTest {
 
     @Test
     fun shouldRequestFollowers() {
-        viewModel.onResume(UserListType.Followers, ARGS)
+        viewModel.onStart(UserListType.Followers, ARGS)
         verify { userRepository.getUserFollowers(any(), any()) }
     }
 
     @Test
     fun shouldRequestFollowing() {
-        viewModel.onResume(UserListType.Following, ARGS)
+        viewModel.onStart(UserListType.Following, ARGS)
         verify { userRepository.getUserFollowing(any(), any()) }
     }
 }

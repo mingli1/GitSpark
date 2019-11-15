@@ -90,6 +90,7 @@
     <string name="logout_label">Sign out</string>
     <string name="logout_confirmation">Are you sure you want to sign out?</string>
     <string name="version_label">GitSpark %1$s build v%2$s</string>
+    <string name="public_events_title">Public activity</string>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>

@@ -32,7 +32,7 @@ class EventListViewModelTest {
 
     @Test
     fun shouldRequestWatchers() {
-        viewModel.onResume(EventListType.PublicEvents, "")
+        viewModel.onStart(EventListType.PublicEvents, "")
         verify { eventRepository.getPublicEvents(any()) }
     }
 

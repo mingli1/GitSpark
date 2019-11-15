@@ -27,6 +27,7 @@ import com.gitspark.gitspark.ui.login.LoginActivity
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_EVENT_LIST_TYPE
+import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.main.shared.EventListType
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -208,7 +209,10 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
     }
 
     private fun navigateToEventList(type: EventListType) {
-        val data = Bundle().apply { putSerializable(BUNDLE_EVENT_LIST_TYPE, type) }
+        val data = Bundle().apply {
+            putString(BUNDLE_TITLE, getString(R.string.public_events_title))
+            putSerializable(BUNDLE_EVENT_LIST_TYPE, type)
+        }
         findNavController().navigate(R.id.action_home_fragment_to_event_list, data)
     }
 }

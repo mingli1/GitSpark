@@ -32,7 +32,7 @@ class RepoListViewModelTest {
 
     @Test
     fun shouldRequestForks() {
-        viewModel.onResume(RepoListType.Forks, "mingli1/Repo")
+        viewModel.onStart(RepoListType.Forks, "mingli1/Repo")
         verify { repoRepository.getForks(any(), any(), any()) }
     }
 

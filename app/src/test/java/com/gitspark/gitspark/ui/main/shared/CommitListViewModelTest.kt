@@ -30,7 +30,7 @@ class CommitListViewModelTest {
 
     @Test
     fun shouldRequestCommits() {
-        viewModel.onResume("arg1/arg2/arg3")
+        viewModel.onStart("arg1/arg2/arg3")
         verify { repoRepository.getCommits(any(), any(), any(), any()) }
     }
 }

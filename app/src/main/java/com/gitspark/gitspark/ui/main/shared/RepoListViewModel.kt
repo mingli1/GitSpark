@@ -1,10 +1,8 @@
 package com.gitspark.gitspark.ui.main.shared
 
-import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
-import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.nav.RepoDetailNavigator
 import javax.inject.Inject
@@ -16,54 +14,23 @@ enum class RepoListType {
 
 class RepoListViewModel @Inject constructor(
     private val repoRepository: RepoRepository
-) : BaseViewModel(), RepoDetailNavigator {
+) : ListViewModel<Repo>(), RepoDetailNavigator {
 
-    val viewState = MutableLiveData<ListViewState<Repo>>()
     val navigateToRepoDetailAction = SingleLiveEvent<Repo>()
-    private var resumed = false
-    private var page = 1
-
     private var type = RepoListType.None
-    private var args = ""
 
-    fun onResume(type: RepoListType, args: String) {
+    fun onStart(type: RepoListType, args: String) {
         if (type == RepoListType.None|| args.isEmpty()) return
         this.type = type
         this.args = args
-
-        if (!resumed) {
-            updateViewState(reset = true)
-            resumed = true
-        }
-    }
-
-    fun onRefresh() = updateViewState(reset = true, refresh = true)
-
-    fun onScrolledToEnd() = updateViewState()
-
-    fun onDestroy() {
-        resumed = false
+        start()
     }
 
     override fun onRepoSelected(repo: Repo) {
         navigateToRepoDetailAction.value = repo
     }
 
-    private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
-        viewState.value = viewState.value?.copy(
-            loading = reset,
-            refreshing = refresh,
-            updateAdapter = false
-        ) ?: ListViewState(
-            loading = reset,
-            refreshing = refresh,
-            updateAdapter = false
-        )
-        if (reset) page = 1
-        requestData()
-    }
-
-    private fun requestData() {
+    override fun requestData() {
         when (type) {
             RepoListType.None-> return
             RepoListType.Forks -> requestForks()
@@ -79,34 +46,8 @@ class RepoListViewModel @Inject constructor(
 
     private fun onRepoDataResult(it: RepoResult<Page<Repo>>) {
         when (it) {
-            is RepoResult.Success -> onRepoDataSuccess(it.value.value, it.value.last)
-            is RepoResult.Failure -> onRepoDataFailure(it.error)
+            is RepoResult.Success -> onDataSuccess(it.value.value, it.value.last)
+            is RepoResult.Failure -> onDataFailure(it.error)
         }
-    }
-
-    private fun onRepoDataSuccess(reposToAdd: List<Repo>, last: Int) {
-        val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.list ?: arrayListOf()
-        updatedList.addAll(reposToAdd)
-
-        viewState.value = viewState.value?.copy(
-            list = updatedList,
-            isLastPage = page.isLastPage(last),
-            updateAdapter = true,
-            loading = false,
-            refreshing = false
-        ) ?: ListViewState(
-            list = updatedList,
-            isLastPage = page.isLastPage(last),
-            updateAdapter = true,
-            loading = false,
-            refreshing = false
-        )
-        if (page < last) page++
-    }
-
-    private fun onRepoDataFailure(error: String) {
-        alert(error)
-        viewState.value = viewState.value?.copy(updateAdapter = false, loading = false, refreshing = false)
-            ?: ListViewState(updateAdapter = false, loading = false, refreshing = false)
     }
 }
