@@ -6,8 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.ui.adapter.ImageSpinnerAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
+import kotlinx.android.synthetic.main.fragment_search_filter.*
+
+private val SEARCH_TYPE_DRAWABLES = arrayOf(
+    R.drawable.ic_repo,
+    R.drawable.ic_person,
+    R.drawable.ic_code,
+    R.drawable.ic_commit,
+    R.drawable.ic_issue,
+    R.drawable.ic_pull_request
+)
 
 class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterViewModel::class.java) {
 
@@ -24,6 +35,17 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         }
 
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        val spinnerAdapter= ImageSpinnerAdapter(
+            context!!,
+            SEARCH_TYPE_DRAWABLES,
+            resources.getStringArray(R.array.search_types)
+        )
+        search_spinner.adapter = spinnerAdapter
     }
 
     override fun observeViewModel() {

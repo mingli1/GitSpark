@@ -63,11 +63,6 @@
     <string name="watchers_title">Watchers</string>
     <string name="stargazers_title">Stargazers</string>
     <string name="forks_title">Forks</string>
-    <string-array name="watch_items">
-        <item>Not watching</item>
-        <item>Watching</item>
-        <item>Ignoring</item>
-    </string-array>
     <string name="contributions_text_single">1 contribution</string>
     <string name="contributions_text">%1$d contributions</string>
     <string name="lang_breakdown">Language Breakdown</string>
@@ -102,6 +97,15 @@
     <string name="recent_searches_header">Recent searches</string>
     <string name="recent_searches_text">Your recent searches will appear here.</string>
     <string name="search_bar_hint">Search …</string>
+    <string name="search_for_label">Search for</string>
+    <string-array name="search_types">
+        <item>Repositories</item>
+        <item>Users</item>
+        <item>Code</item>
+        <item>Commits</item>
+        <item>Issues</item>
+        <item>Pull Requests</item>
+    </string-array>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>
