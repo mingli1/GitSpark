@@ -12,6 +12,7 @@ import com.gitspark.gitspark.ui.main.repo.RepoContentViewModel
 import com.gitspark.gitspark.ui.main.repo.RepoDetailSharedViewModel
 import com.gitspark.gitspark.ui.main.repo.RepoDetailViewModel
 import com.gitspark.gitspark.ui.main.repo.RepoOverviewViewModel
+import com.gitspark.gitspark.ui.main.search.SearchFilterViewModel
 import com.gitspark.gitspark.ui.main.search.SearchViewModel
 import com.gitspark.gitspark.ui.main.shared.CommitListViewModel
 import com.gitspark.gitspark.ui.main.shared.EventListViewModel
@@ -103,6 +104,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(UserSharedViewModel::class)
     internal abstract fun bindUserSharedViewModel(userSharedViewModel: UserSharedViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(SearchFilterViewModel::class)
+    internal abstract fun bindSearchFilterViewModel(searchFilterViewModel: SearchFilterViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory

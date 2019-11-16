@@ -7,6 +7,7 @@ import com.gitspark.gitspark.ui.main.profile.*
 import com.gitspark.gitspark.ui.main.repo.RepoContentFragment
 import com.gitspark.gitspark.ui.main.repo.RepoDetailFragment
 import com.gitspark.gitspark.ui.main.repo.RepoOverviewFragment
+import com.gitspark.gitspark.ui.main.search.SearchFilterFragment
 import com.gitspark.gitspark.ui.main.search.SearchFragment
 import com.gitspark.gitspark.ui.main.shared.CommitListFragment
 import com.gitspark.gitspark.ui.main.shared.EventListFragment
@@ -68,4 +69,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesEventListFragment(): EventListFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesSearchFilterFragment(): SearchFilterFragment
 }

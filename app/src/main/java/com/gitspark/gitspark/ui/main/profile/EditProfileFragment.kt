@@ -32,7 +32,7 @@ class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewMo
             setSupportActionBar(toolbar)
             supportActionBar?.run {
                 setDisplayHomeAsUpEnabled(true)
-                setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
+                setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
             }
         }
 

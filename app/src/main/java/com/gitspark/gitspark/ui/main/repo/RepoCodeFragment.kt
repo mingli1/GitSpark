@@ -28,7 +28,7 @@ class RepoCodeFragment : Fragment() {
             setSupportActionBar(toolbar)
             supportActionBar?.run {
                 setDisplayHomeAsUpEnabled(true)
-                setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
+                setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
                 title = arguments?.getString(BUNDLE_FILE_NAME) ?: "File"
             }
         }

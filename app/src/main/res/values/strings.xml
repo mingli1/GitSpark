@@ -98,6 +98,10 @@
     <string name="user_empty_text">There were no users found at this time.</string>
     <string name="profile_feed_empty_text">There was no recent activity found.</string>
     <string name="repos_empty_text">There were no repositories found.</string>
+    <string name="search_title_text">Search for repositories, users, issues, …</string>
+    <string name="recent_searches_header">Recent searches</string>
+    <string name="recent_searches_text">Your recent searches will appear here.</string>
+    <string name="search_bar_hint">Search …</string>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>
