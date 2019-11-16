@@ -11,6 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorWhiteDark"/>
     
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
@@ -18,7 +23,7 @@
         android:layout_height="50dp"
         app:menu="@menu/bottom_menu"
         app:labelVisibilityMode="unlabeled"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorWhite"
         app:itemIconTint="@color/bottom_nav_color"/>
 
 </LinearLayout>
