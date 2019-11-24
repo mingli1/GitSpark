@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -194,7 +195,8 @@
             android:layout_marginTop="28dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/user_full_name_label"/>
+            app:layout_constraintTop_toBottomOf="@id/user_full_name_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/location_edit"
@@ -214,7 +216,8 @@
             app:layout_constraintStart_toEndOf="@id/location_label"
             app:layout_constraintTop_toTopOf="@id/location_label"
             app:layout_constraintBottom_toBottomOf="@id/location_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/num_followers_label"
@@ -225,7 +228,8 @@
             android:layout_marginTop="28dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/location_label"/>
+            app:layout_constraintTop_toBottomOf="@id/location_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/followers_edit"
@@ -245,7 +249,8 @@
             app:layout_constraintStart_toEndOf="@id/num_followers_label"
             app:layout_constraintTop_toTopOf="@id/num_followers_label"
             app:layout_constraintBottom_toBottomOf="@id/num_followers_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/num_repos_label"
@@ -256,7 +261,8 @@
             android:layout_marginTop="28dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/num_followers_label"/>
+            app:layout_constraintTop_toBottomOf="@id/num_followers_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/num_repos_edit"
@@ -276,7 +282,8 @@
             app:layout_constraintStart_toEndOf="@id/num_repos_label"
             app:layout_constraintTop_toTopOf="@id/num_repos_label"
             app:layout_constraintBottom_toBottomOf="@id/num_repos_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
 
         <TextView
@@ -288,7 +295,8 @@
             android:layout_marginTop="26dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/num_repos_label"/>
+            app:layout_constraintTop_toBottomOf="@id/num_repos_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/created_on_edit"
@@ -308,7 +316,8 @@
             app:layout_constraintStart_toEndOf="@id/created_on_label"
             app:layout_constraintTop_toTopOf="@id/created_on_label"
             app:layout_constraintBottom_toBottomOf="@id/created_on_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/language_label"
@@ -319,7 +328,8 @@
             android:layout_marginTop="26dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/created_on_label"/>
+            app:layout_constraintTop_toBottomOf="@id/created_on_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/language_edit"
@@ -339,7 +349,8 @@
             app:layout_constraintStart_toEndOf="@id/language_label"
             app:layout_constraintTop_toTopOf="@id/language_label"
             app:layout_constraintBottom_toBottomOf="@id/language_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/num_stars_label"
@@ -350,7 +361,8 @@
             android:layout_marginTop="26dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/language_label"/>
+            app:layout_constraintTop_toBottomOf="@id/language_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/stars_edit"
@@ -370,7 +382,8 @@
             app:layout_constraintStart_toEndOf="@id/num_stars_label"
             app:layout_constraintTop_toTopOf="@id/num_stars_label"
             app:layout_constraintBottom_toBottomOf="@id/num_stars_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/num_forks_label"
@@ -381,7 +394,8 @@
             android:layout_marginTop="26dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/num_stars_label"/>
+            app:layout_constraintTop_toBottomOf="@id/num_stars_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/forks_edit"
@@ -401,7 +415,8 @@
             app:layout_constraintStart_toEndOf="@id/num_forks_label"
             app:layout_constraintTop_toTopOf="@id/num_forks_label"
             app:layout_constraintBottom_toBottomOf="@id/num_forks_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/updated_on_label"
@@ -412,7 +427,8 @@
             android:layout_marginTop="26dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/num_forks_label"/>
+            app:layout_constraintTop_toBottomOf="@id/num_forks_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/updated_on_edit"
@@ -432,7 +448,8 @@
             app:layout_constraintStart_toEndOf="@id/updated_on_label"
             app:layout_constraintTop_toTopOf="@id/updated_on_label"
             app:layout_constraintBottom_toBottomOf="@id/updated_on_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/file_extension_label"
@@ -443,7 +460,8 @@
             android:layout_marginTop="26dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/updated_on_label"/>
+            app:layout_constraintTop_toBottomOf="@id/updated_on_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/file_extension_edit"
@@ -463,7 +481,8 @@
             app:layout_constraintStart_toEndOf="@id/file_extension_label"
             app:layout_constraintTop_toTopOf="@id/file_extension_label"
             app:layout_constraintBottom_toBottomOf="@id/file_extension_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/file_size_label"
@@ -474,7 +493,8 @@
             android:layout_marginTop="26dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/file_extension_label"/>
+            app:layout_constraintTop_toBottomOf="@id/file_extension_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/file_size_edit"
@@ -494,7 +514,8 @@
             app:layout_constraintStart_toEndOf="@id/file_size_label"
             app:layout_constraintTop_toTopOf="@id/file_size_label"
             app:layout_constraintBottom_toBottomOf="@id/file_size_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/commit_message_label"
@@ -505,7 +526,8 @@
             android:layout_marginTop="26dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/file_size_label"/>
+            app:layout_constraintTop_toBottomOf="@id/file_size_label"
+            tools:visibility="gone"/>
 
         <EditText
             android:id="@+id/commit_message_edit"
@@ -525,7 +547,8 @@
             app:layout_constraintStart_toEndOf="@id/commit_message_label"
             app:layout_constraintTop_toTopOf="@id/commit_message_label"
             app:layout_constraintBottom_toBottomOf="@id/commit_message_label"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/repo_label"
@@ -559,6 +582,7 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <CheckBox
+            android:id="@+id/forked_checkbox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/show_forked_repos"
@@ -570,6 +594,82 @@
             style="@style/Body"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/repo_label"/>
+
+        <CheckBox
+            android:id="@+id/open_checkbox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/open"
+            android:layout_marginTop="24dp"
+            android:checked="true"
+            android:layout_marginStart="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            style="@style/Body"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/forked_checkbox"/>
+
+        <TextView
+            android:id="@+id/num_comments_label"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            style="@style/Body"
+            android:text="@string/num_comments"
+            android:layout_marginTop="26dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/open_checkbox"/>
+
+        <EditText
+            android:id="@+id/num_comments_edit"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:background="@drawable/rounded_edittext"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="6dp"
+            android:textSize="16sp"
+            android:hint="@string/num_comments_hint"
+            android:selectAllOnFocus="true"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintStart_toEndOf="@id/num_comments_label"
+            app:layout_constraintTop_toTopOf="@id/num_comments_label"
+            app:layout_constraintBottom_toBottomOf="@id/num_comments_label"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/labels_label"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            style="@style/Body"
+            android:text="@string/labels"
+            android:layout_marginTop="26dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/num_comments_label"/>
+
+        <EditText
+            android:id="@+id/labels_edit"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:background="@drawable/rounded_edittext"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="6dp"
+            android:textSize="16sp"
+            android:hint="@string/labels_hint"
+            android:selectAllOnFocus="true"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintStart_toEndOf="@id/labels_label"
+            app:layout_constraintTop_toTopOf="@id/labels_label"
+            app:layout_constraintBottom_toBottomOf="@id/labels_label"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <Button
             android:id="@+id/search_filter_button"
