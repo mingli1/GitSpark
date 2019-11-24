@@ -266,6 +266,7 @@
         android:layout_height="56dp"
         style="@style/AppTheme.RoundedCornerMaterialButton"
         android:text="@string/edit_profile_button"
+        android:textSize="20sp"
         android:layout_margin="16dp"
         android:layout_gravity="bottom"
         android:textAllCaps="false"/>

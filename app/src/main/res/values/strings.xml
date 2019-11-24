@@ -106,6 +106,38 @@
         <item>Issues</item>
         <item>Pull Requests</item>
     </string-array>
+    <string name="advanced_options">Advanced options</string>
+    <string name="from_this_user">From this user:</string>
+    <string name="from_this_user_hint">Enter a username</string>
+    <string name="created_on">Created on:</string>
+    <string name="created_on_hint">>YYYY-MM-DD, YYYY-MM-DD</string>
+    <string name="language">Language:</string>
+    <string name="language_hint">Java, C++, Kotlin, JavaScript</string>
+    <string name="num_stars">Number of stars:</string>
+    <string name="stars_hint">0..10, >50, 100</string>
+    <string name="num_forks">Number of forks:</string>
+    <string name="forks_hint">10..50, 200, &lt;10</string>
+    <string name="show_forked_repos">Show forked repositories</string>
+    <string name="updated_on">Updated on:</string>
+    <string name="updated_on_hint">YYYY-MM-DD, &lt;YYYY-MM-DD</string>
+    <string name="clear_button_text">Clear fields</string>
+    <string name="search_button_text">Search</string>
+    <string name="full_name">Full name:</string>
+    <string name="full_name_hint">Joe Smith</string>
+    <string name="location">Location:</string>
+    <string name="location_hint">Boston, MA</string>
+    <string name="num_followers">Number of followers:</string>
+    <string name="num_followers_hint">10..50, 200, &lt;10</string>
+    <string name="num_repos">Number of repositories:</string>
+    <string name="num_repos_hint">0..10, >50, 100</string>
+    <string name="file_extension">File extension:</string>
+    <string name="file_extension_hint">.py, .java, .kt, .js</string>
+    <string name="file_size">File size (KB):</string>
+    <string name="file_size_hint">&gt;10, 50..1000, >200</string>
+    <string name="commit_message">Commit message keyword:</string>
+    <string name="commit_message_hint">fixed bug, typo, added change</string>
+    <string name="repo">Repository:</string>
+    <string name="repo_hint">mingli1/GitSpark</string>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>
