@@ -117,7 +117,7 @@
     <string name="stars_hint">0..10, >50, 100</string>
     <string name="num_forks">Number of forks:</string>
     <string name="forks_hint">10..50, 200, &lt;10</string>
-    <string name="show_forked_repos">Show forked repositories</string>
+    <string name="show_forked_repos">Include forked repositories</string>
     <string name="updated_on">Updated on:</string>
     <string name="updated_on_hint">YYYY-MM-DD, &lt;YYYY-MM-DD</string>
     <string name="clear_button_text">Clear fields</string>
