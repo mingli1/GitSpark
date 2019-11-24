@@ -6,12 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import com.gitspark.gitspark.R
-import com.gitspark.gitspark.extension.isVisible
-import com.gitspark.gitspark.extension.observe
-import com.gitspark.gitspark.extension.onItemSelected
+import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.ui.adapter.ImageSpinnerAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
+import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search_filter.*
 
 private val SEARCH_TYPE_DRAWABLES = arrayOf(
@@ -55,6 +54,8 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.clearAction.observe(viewLifecycleOwner) { clearFields() }
+        viewModel.clearMainQueryAction.observe(viewLifecycleOwner) { main_search_edit.clear() }
     }
 
     private fun updateView(viewState: SearchFilterViewState) {
@@ -100,6 +101,59 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
     }
 
     private fun setUpListeners() {
-        search_spinner.onItemSelected { viewModel.onSearchTypeSelected(it) }
+        search_spinner.onItemSelected {
+            resetAllFields()
+            viewModel.onSearchTypeSelected(it)
+        }
+        clear_button.setOnClickListener { viewModel.onClearFieldsButtonClicked() }
+        search_bar_clear_button.setOnClickListener { viewModel.onMainQueryClearButtonClicked() }
+        search_button.setOnClickListener {
+            viewModel.onSearch(
+                mainQuery = main_search_edit.getStringTrimmed(),
+                createdOn = created_on_edit.getStringTrimmed(),
+                language = language_edit.getStringTrimmed(),
+                fromThisUser = from_this_user_edit.getStringTrimmed(),
+                fullName = full_name_edit.getStringTrimmed(),
+                location = location_edit.getStringTrimmed(),
+                numFollowers = followers_edit.getStringTrimmed(),
+                numRepos = num_repos_edit.getStringTrimmed(),
+                numStars = stars_edit.getStringTrimmed(),
+                numForks = forks_edit.getStringTrimmed(),
+                updatedOn = updated_on_edit.getStringTrimmed(),
+                fileExtension = file_extension_edit.getStringTrimmed(),
+                fileSize = file_size_edit.getStringTrimmed(),
+                commitMessage = commit_message_edit.getStringTrimmed(),
+                repoFullName = full_name_edit.getStringTrimmed(),
+                includeForked = forked_checkbox.isChecked,
+                isOpen = open_checkbox.isChecked,
+                numComments = num_comments_edit.getStringTrimmed(),
+                labels = labels_edit.getStringTrimmed()
+            )
+        }
+    }
+
+    private fun clearFields() {
+        created_on_edit.clear()
+        language_edit.clear()
+        resetAllFields()
+    }
+
+    private fun resetAllFields() {
+        from_this_user_edit.clear()
+        full_name_edit.clear()
+        location_edit.clear()
+        followers_edit.clear()
+        num_repos_edit.clear()
+        stars_edit.clear()
+        forks_edit.clear()
+        updated_on_edit.clear()
+        file_extension_edit.clear()
+        file_size_edit.clear()
+        commit_message_edit.clear()
+        repo_edit.clear()
+        forked_checkbox.isChecked = true
+        open_checkbox.isChecked = true
+        num_comments_edit.clear()
+        labels_edit.clear()
     }
 }

@@ -43,6 +43,10 @@ fun EditText.afterTextChanged(cb: (String) -> Unit) {
 
 fun EditText.getString(): String = text?.toString() ?: ""
 
+fun EditText.getStringTrimmed(): String = getString().trim()
+
+fun EditText.clear() = setText("")
+
 fun ImageView.loadImage(url: String) =
     Picasso.get()
         .load(url)
