@@ -59,6 +59,9 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
 
     private fun updateView(viewState: SearchFilterViewState) {
         with (viewState) {
+            created_on_label.isVisible = currSearch != CODE
+            created_on_edit.isVisible = currSearch != CODE
+
             from_this_user_label.isVisible = currSearch != USERS
             from_this_user_edit.isVisible = currSearch != USERS
 
@@ -76,16 +79,14 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
             num_forks_label.isVisible = currSearch == REPOS
             forks_edit.isVisible = currSearch == REPOS
 
-            updated_on_label.isVisible = currSearch != USERS && currSearch != COMMITS
-            updated_on_edit.isVisible = currSearch != USERS && currSearch != COMMITS
+            updated_on_label.isVisible = currSearch != USERS && currSearch != COMMITS && currSearch != CODE
+            updated_on_edit.isVisible = currSearch != USERS && currSearch != COMMITS && currSearch != CODE
 
             file_extension_label.isVisible = currSearch == CODE
             file_extension_edit.isVisible = currSearch == CODE
             file_size_label.isVisible = currSearch == CODE
             file_size_edit.isVisible = currSearch == CODE
 
-            commit_message_label.isVisible = currSearch == COMMITS
-            commit_message_edit.isVisible = currSearch == COMMITS
             repo_label.isVisible = currSearch == COMMITS
             repo_edit.isVisible = currSearch == COMMITS
 
@@ -130,7 +131,6 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
                 updatedOn = updated_on_edit.getStringTrimmed(),
                 fileExtension = file_extension_edit.getStringTrimmed(),
                 fileSize = file_size_edit.getStringTrimmed(),
-                commitMessage = commit_message_edit.getStringTrimmed(),
                 repoFullName = full_name_edit.getStringTrimmed(),
                 includeForked = forked_checkbox.isChecked,
                 isOpen = open_checkbox.isChecked,
@@ -157,7 +157,6 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         updated_on_edit.clear()
         file_extension_edit.clear()
         file_size_edit.clear()
-        commit_message_edit.clear()
         repo_edit.clear()
         forked_checkbox.isChecked = true
         open_checkbox.isChecked = true

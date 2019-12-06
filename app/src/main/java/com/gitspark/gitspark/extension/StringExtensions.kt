@@ -38,3 +38,9 @@ fun String.getExtension(): String {
     if (i < 0) return ""
     return substring(i + 1).toLowerCase()
 }
+
+fun concatWithPlus(vararg strs: String): String {
+    var ret = ""
+    strs.forEach { if (it.isNotEmpty()) ret += "$it+" }
+    return ret.substring(0, ret.length - 1)
+}
