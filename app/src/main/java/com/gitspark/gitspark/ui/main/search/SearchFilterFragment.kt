@@ -10,7 +10,6 @@ import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.ui.adapter.ImageSpinnerAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
-import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search_filter.*
 
 private val SEARCH_TYPE_DRAWABLES = arrayOf(
@@ -97,6 +96,15 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
             num_comments_edit.isVisible = currSearch == ISSUES || currSearch == PULL_REQUESTS
             labels_label.isVisible = currSearch == ISSUES || currSearch == PULL_REQUESTS
             labels_edit.isVisible = currSearch == ISSUES || currSearch == PULL_REQUESTS
+
+            main_search_edit.hint = getString(when (currSearch) {
+                REPOS -> R.string.repo_search_hint
+                USERS -> R.string.user_search_hint
+                CODE -> R.string.code_search_hint
+                COMMITS -> R.string.commit_search_hint
+                ISSUES -> R.string.issues_search_hint
+                else -> R.string.pr_search_hint
+            })
         }
     }
 
@@ -107,7 +115,7 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         }
         clear_button.setOnClickListener { viewModel.onClearFieldsButtonClicked() }
         search_bar_clear_button.setOnClickListener { viewModel.onMainQueryClearButtonClicked() }
-        search_button.setOnClickListener {
+        search_filter_button.setOnClickListener {
             viewModel.onSearch(
                 mainQuery = main_search_edit.getStringTrimmed(),
                 createdOn = created_on_edit.getStringTrimmed(),

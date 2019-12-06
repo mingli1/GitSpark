@@ -143,6 +143,12 @@
     <string name="num_comments_hint">&gt;10, 50..1000, >200</string>
     <string name="labels">Labels:</string>
     <string name="labels_hint">bug, feature, techdebt</string>
+    <string name="repo_search_hint">Repository keywords</string>
+    <string name="user_search_hint">Enter a username</string>
+    <string name="code_search_hint">Code keywords</string>
+    <string name="commit_search_hint">Commit message keywords</string>
+    <string name="issues_search_hint">Issue keywords</string>
+    <string name="pr_search_hint">Pull request keywords</string>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>
