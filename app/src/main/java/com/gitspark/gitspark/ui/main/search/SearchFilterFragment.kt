@@ -5,12 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
+import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.ui.adapter.ImageSpinnerAdapter
+import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_search_filter.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 private val SEARCH_TYPE_DRAWABLES = arrayOf(
     R.drawable.ic_repo,
@@ -22,6 +27,10 @@ private val SEARCH_TYPE_DRAWABLES = arrayOf(
 )
 
 class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterViewModel::class.java) {
+
+    private val sharedViewModel by lazy {
+        ViewModelProviders.of(activity!!, viewModelFactory)[SearchSharedViewModel::class.java]
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_search_filter, container, false)
@@ -55,10 +64,13 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.clearAction.observe(viewLifecycleOwner) { clearFields() }
         viewModel.clearMainQueryAction.observe(viewLifecycleOwner) { main_search_edit.clear() }
+        viewModel.searchAction.observe(viewLifecycleOwner) { onSearchSuccess(it) }
     }
 
     private fun updateView(viewState: SearchFilterViewState) {
         with (viewState) {
+            loading_indicator.isVisible = loading
+
             created_on_label.isVisible = currSearch != CODE
             created_on_edit.isVisible = currSearch != CODE
 
@@ -162,5 +174,10 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         open_checkbox.isChecked = true
         num_comments_edit.clear()
         labels_edit.clear()
+    }
+
+    private fun onSearchSuccess(results: Page<Pageable>) {
+        sharedViewModel.searchResults.value = results
+        findNavController().navigateUp()
     }
 }

@@ -1,5 +1,8 @@
 package com.gitspark.gitspark.model
 
+import com.gitspark.gitspark.ui.adapter.Pageable
+import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
+
 data class Issue(
     val id: Long = 0,
     val number: Int = 0,
@@ -16,7 +19,10 @@ data class Issue(
     val updatedAt: String = "",
     val repo: Repo = Repo(),
     val pullRequest: PullRequest = PullRequest()
-)
+) : Pageable {
+
+    override fun getViewType() = VIEW_TYPE_VIEW
+}
 
 data class Label(
     val name: String = "",

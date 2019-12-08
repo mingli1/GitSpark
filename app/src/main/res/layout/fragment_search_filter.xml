@@ -663,4 +663,6 @@
 
     </ScrollView>
 
+    <include layout="@layout/full_screen_progress_spinner"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
