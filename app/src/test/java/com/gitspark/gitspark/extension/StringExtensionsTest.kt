@@ -48,4 +48,10 @@ class StringExtensionsTest {
         assertThat("something".getExtension()).isEqualTo("")
         assertThat(".travis.yml".getExtension()).isEqualTo("yml")
     }
+
+    @Test
+    fun shouldConcatWithPlus() {
+        assertThat(concatWithPlus("3", "", "5", "1")).isEqualTo("3+5+1")
+        assertThat(concatWithPlus("hello")).isEqualTo("hello")
+    }
 }

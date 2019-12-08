@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.extension.concatWithPlus
 import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Repo
+import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.repository.SearchRepository
 import com.gitspark.gitspark.repository.SearchResult
 import com.gitspark.gitspark.ui.adapter.Pageable
@@ -12,12 +13,12 @@ import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
-internal const val REPOS = 0
-internal const val USERS = 1
-internal const val CODE = 2
-internal const val COMMITS = 3
-internal const val ISSUES = 4
-internal const val PULL_REQUESTS = 5
+const val REPOS = 0
+const val USERS = 1
+const val CODE = 2
+const val COMMITS = 3
+const val ISSUES = 4
+const val PULL_REQUESTS = 5
 
 class SearchFilterViewModel @Inject constructor(
     private val searchRepository: SearchRepository
@@ -26,7 +27,7 @@ class SearchFilterViewModel @Inject constructor(
     val viewState = MutableLiveData<SearchFilterViewState>()
     val clearAction = SingleLiveAction()
     val clearMainQueryAction = SingleLiveAction()
-    val searchAction = SingleLiveEvent<Page<Pageable>>()
+    val searchAction = SingleLiveEvent<Pair<SearchCriteria, Page<Pageable>>>()
 
     fun onSearchTypeSelected(type: Int) {
         viewState.value = viewState.value?.copy(currSearch = type) ?: SearchFilterViewState(currSearch = type)
@@ -74,7 +75,11 @@ class SearchFilterViewModel @Inject constructor(
                 val stars = if (numStars.isNotEmpty()) "stars:$numStars" else ""
                 val forks = if (numForks.isNotEmpty()) "forks:$numForks" else ""
                 val q = concatWithPlus(mainQuery, user, created, pushed, lang, stars, forks, fork)
-                subscribe(searchRepository.searchRepos(q)) { onSearchResult(it) }
+                subscribe(searchRepository.searchRepos(q)) {
+                    onSearchResult(SearchCriteria(REPOS, q.replace("+", " "), mainQuery, createdOn, language,
+                        fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
+                        fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels), it)
+                }
             }
             USERS -> {
                 val fname = if (fullName.isNotEmpty()) "fullname:$fullName" else ""
@@ -106,10 +111,10 @@ class SearchFilterViewModel @Inject constructor(
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <T> onSearchResult(result: SearchResult<T>) {
+    private fun <T> onSearchResult(sc: SearchCriteria, result: SearchResult<T>) {
         when (result) {
             is SearchResult.Success -> {
-                searchAction.value = result.value as Page<Pageable>
+                searchAction.value = Pair(sc, result.value as Page<Pageable>)
             }
             is SearchResult.Failure -> alert(result.error)
         }

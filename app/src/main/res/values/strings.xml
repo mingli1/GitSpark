@@ -148,6 +148,12 @@
     <string name="commit_search_hint">Commit message keywords</string>
     <string name="issues_search_hint">Issue keywords</string>
     <string name="pr_search_hint">Pull request keywords</string>
+    <string name="repo_search_result">Repositories found (%1$d)</string>
+    <string name="user_search_result">Users found (%1$d)</string>
+    <string name="code_search_result">Code found (%1$d)</string>
+    <string name="commit_search_result">Commits found (%1$d)</string>
+    <string name="issue_search_result">Issues found (%1$d)</string>
+    <string name="pr_search_result">Pull Requests found (%1$d)</string>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>

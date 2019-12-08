@@ -7,7 +7,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.model.Page
+import com.gitspark.gitspark.model.SearchCriteria
+import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_search.*
 
@@ -28,6 +32,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
 
     override fun observeViewModel() {
         viewModel.navigateToSearchFilter.observe(viewLifecycleOwner) { navigateToSearchFilterFragment() }
+        sharedViewModel.searchResults.observe(viewLifecycleOwner) { onSearchResultsObtained(it) }
     }
 
     private fun setUpListeners() {
@@ -36,5 +41,18 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
 
     private fun navigateToSearchFilterFragment() {
         findNavController().navigate(R.id.action_search_to_search_filter)
+    }
+
+    private fun onSearchResultsObtained(data: Pair<SearchCriteria, Page<Pageable>>) {
+        search_button.text = data.first.q
+        searches_header.text = when (data.first.type) {
+            REPOS -> getString(R.string.repo_search_result, data.second.totalCount)
+            USERS -> getString(R.string.user_search_result, data.second.totalCount)
+            COMMITS -> getString(R.string.commit_search_result, data.second.totalCount)
+            CODE -> getString(R.string.code_search_result, data.second.totalCount)
+            ISSUES -> getString(R.string.issue_search_result, data.second.totalCount)
+            else -> getString(R.string.pr_search_result, data.second.totalCount)
+        }
+        recent_searches_message.isVisible = false
     }
 }

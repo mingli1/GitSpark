@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.model.Page
+import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.ui.adapter.ImageSpinnerAdapter
 import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.base.BaseFragment
@@ -176,7 +177,7 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         labels_edit.clear()
     }
 
-    private fun onSearchSuccess(results: Page<Pageable>) {
+    private fun onSearchSuccess(results: Pair<SearchCriteria, Page<Pageable>>) {
         sharedViewModel.searchResults.value = results
         findNavController().navigateUp()
     }
