@@ -72,6 +72,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
     private fun setUpListeners() {
         search_button.setOnClickListener { viewModel.onSearchButtonClicked() }
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
+        search_results_clear_button.setOnClickListener { viewModel.onClearResultsButtonClicked() }
     }
 
     private fun navigateToSearchFilterFragment() {
@@ -92,6 +93,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
                     else -> getString(R.string.pr_search_result, resultsCount)
                 }
             recent_searches_message.isVisible = currSearch == null
+            search_results_clear_button.isVisible = currSearch != null
 
             if (updateAdapter) {
                 val adapter = when (currSearch?.type) {

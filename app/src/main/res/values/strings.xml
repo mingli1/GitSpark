@@ -122,6 +122,7 @@
     <string name="updated_on">Updated on:</string>
     <string name="updated_on_hint">YYYY-MM-DD, &lt;YYYY-MM-DD</string>
     <string name="clear_button_text">Clear fields</string>
+    <string name="clear">Clear</string>
     <string name="search_button_text">Search</string>
     <string name="full_name">Full name:</string>
     <string name="full_name_hint">Joe Smith</string>

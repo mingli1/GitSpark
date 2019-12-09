@@ -41,6 +41,16 @@ class SearchViewModel @Inject constructor(
 
     fun onScrolledToEnd() = requestSearch()
 
+    fun onClearResultsButtonClicked() {
+        currSearch = null
+        page = 1
+        viewState.value = viewState.value?.copy(
+            currSearch = null,
+            searchResults = arrayListOf(),
+            resultsCount = 0
+        )
+    }
+
     override fun onRepoSelected(repo: Repo) {
 
     }
