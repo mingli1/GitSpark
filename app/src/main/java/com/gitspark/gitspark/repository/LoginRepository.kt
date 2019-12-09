@@ -6,12 +6,12 @@ import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.api.model.ApiAuthRequest
 import com.gitspark.gitspark.api.model.ApiBadCredentials
 import com.gitspark.gitspark.api.model.DEFAULT_AUTH
-import com.gitspark.gitspark.model.Page
 import com.gitspark.gitspark.model.Token
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Observable
 import retrofit2.HttpException
+import java.net.UnknownHostException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,17 +34,6 @@ class LoginRepository @Inject constructor(
             }
     }
 
-    fun getAuthorizations(basicToken: String): Observable<LoginResult<Page<Token>>> {
-        return getLoginService(basicToken)
-            .getAuthorizations()
-            .map {
-                getSuccess(it.toModel<Token>().apply {
-                    value = it.response.map { token -> token.toModel() }
-                })
-            }
-            .onErrorReturn { getFailure("Failed to obtain authorizations.") }
-    }
-
     fun deleteAuthorization(basicToken: String, authId: Long): Completable {
         return getLoginService(basicToken)
             .deleteAuthorization(authId)
@@ -55,7 +44,8 @@ class LoginRepository @Inject constructor(
     }
 
     private fun getHttpExceptionString(throwable: Throwable): String? {
-        return (throwable as HttpException).response()?.errorBody()?.string()
+        if (throwable !is HttpException) return null
+        return throwable.response()?.errorBody()?.string()
     }
 
     private fun <T> getSuccess(value: T): LoginResult<T> = LoginResult.Success(value)
