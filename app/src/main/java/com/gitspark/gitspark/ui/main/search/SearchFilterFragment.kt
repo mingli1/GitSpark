@@ -15,8 +15,10 @@ import com.gitspark.gitspark.ui.adapter.ImageSpinnerAdapter
 import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
+import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_search_filter.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+import javax.inject.Inject
 
 private val SEARCH_TYPE_DRAWABLES = arrayOf(
     R.drawable.ic_repo,
@@ -29,6 +31,9 @@ private val SEARCH_TYPE_DRAWABLES = arrayOf(
 
 class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterViewModel::class.java) {
 
+    @Inject lateinit var scJsonAdapter: JsonAdapter<SearchCriteria>
+
+    private var setInitial = false
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[SearchSharedViewModel::class.java]
     }
@@ -58,6 +63,7 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         )
         search_spinner.adapter = spinnerAdapter
 
+        setInitialState()
         setUpListeners()
     }
 
@@ -124,7 +130,8 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
 
     private fun setUpListeners() {
         search_spinner.onItemSelected {
-            resetAllFields()
+            if (!setInitial) resetAllFields()
+            setInitial = false
             viewModel.onSearchTypeSelected(it)
         }
         clear_button.setOnClickListener { viewModel.onClearFieldsButtonClicked() }
@@ -175,6 +182,34 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         open_checkbox.isChecked = true
         num_comments_edit.clear()
         labels_edit.clear()
+    }
+
+    private fun setInitialState() {
+        arguments?.let { args ->
+            search_spinner.onItemSelectedListener = null
+            setInitial = true
+            scJsonAdapter.fromJson(args.getString(BUNDLE_SEARCH_CRITERIA) ?: "")?.let {
+                search_spinner.setSelection(it.type)
+                main_search_edit.setText(it.mainQuery)
+                created_on_edit.setText(it.createdOn)
+                language_edit.setText(it.language)
+                from_this_user_edit.setText(it.fromThisUser)
+                full_name_edit.setText(it.fullName)
+                location_edit.setText(it.location)
+                followers_edit.setText(it.numFollowers)
+                num_repos_edit.setText(it.numRepos)
+                stars_edit.setText(it.numStars)
+                forks_edit.setText(it.numForks)
+                updated_on_edit.setText(it.updatedOn)
+                file_extension_edit.setText(it.fileExtension)
+                file_size_edit.setText(it.fileSize)
+                repo_edit.setText(it.repoFullName)
+                forked_checkbox.isChecked = it.includeForked
+                open_checkbox.isChecked = it.isOpen
+                num_comments_edit.setText(it.numComments)
+                labels_edit.setText(it.labels)
+            }
+        }
     }
 
     private fun onSearchSuccess(results: Pair<SearchCriteria, Page<Pageable>>) {

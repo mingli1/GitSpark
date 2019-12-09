@@ -14,16 +14,21 @@ import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.ui.adapter.*
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
+
+internal const val BUNDLE_SEARCH_CRITERIA = "BUNDLE_SEARCH_CRITERIA"
 
 class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java) {
 
     @Inject lateinit var colorHelper: LanguageColorHelper
     @Inject lateinit var timeHelper: TimeHelper
     @Inject lateinit var preferencesHelper: PreferencesHelper
+    @Inject lateinit var scJsonAdapter: JsonAdapter<SearchCriteria>
 
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[SearchSharedViewModel::class.java]
@@ -65,7 +70,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
-        viewModel.navigateToSearchFilter.observe(viewLifecycleOwner) { navigateToSearchFilterFragment() }
+        viewModel.navigateToSearchFilter.observe(viewLifecycleOwner) { navigateToSearchFilterFragment(it) }
         sharedViewModel.searchResults.observe(viewLifecycleOwner) { viewModel.onSearchResultsObtained(it) }
     }
 
@@ -75,8 +80,13 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         search_results_clear_button.setOnClickListener { viewModel.onClearResultsButtonClicked() }
     }
 
-    private fun navigateToSearchFilterFragment() {
-        findNavController().navigate(R.id.action_search_to_search_filter)
+    private fun navigateToSearchFilterFragment(searchCriteria: SearchCriteria?) {
+        if (searchCriteria == null) {
+            findNavController().navigate(R.id.action_search_to_search_filter)
+        } else {
+            val bundle = Bundle().apply { putString(BUNDLE_SEARCH_CRITERIA, scJsonAdapter.toJson(searchCriteria)) }
+            findNavController().navigate(R.id.action_search_to_search_filter, bundle)
+        }
     }
 
     private fun updateView(viewState: SearchViewState) {

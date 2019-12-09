@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.model.Repo
+import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.room.Database
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -42,4 +43,8 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideRepoJsonAdapter(moshi: Moshi): JsonAdapter<Repo> = moshi.adapter(Repo::class.java)
+
+    @Provides
+    @Singleton
+    fun provideSearchCriteriaJsonAdapter(moshi: Moshi): JsonAdapter<SearchCriteria> = moshi.adapter(SearchCriteria::class.java)
 }

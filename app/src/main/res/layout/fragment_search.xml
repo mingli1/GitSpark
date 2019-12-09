@@ -31,6 +31,8 @@
                 style="@style/BodyLight"
                 android:textAllCaps="false"
                 android:text="@string/search_title_text"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:background="@drawable/rounded_bg"
                 android:clickable="true"
                 android:focusable="true"

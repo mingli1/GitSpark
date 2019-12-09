@@ -7,6 +7,7 @@ import com.gitspark.gitspark.repository.SearchResult
 import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.nav.RepoDetailNavigator
 import com.gitspark.gitspark.ui.nav.UserProfileNavigator
 import javax.inject.Inject
@@ -16,11 +17,13 @@ class SearchViewModel @Inject constructor(
 ) : BaseViewModel(), RepoDetailNavigator, UserProfileNavigator {
 
     val viewState = MutableLiveData<SearchViewState>()
-    val navigateToSearchFilter = SingleLiveAction()
+    val navigateToSearchFilter = SingleLiveEvent<SearchCriteria?>()
     private var currSearch: SearchCriteria? = null
     private var page = 1
 
-    fun onSearchButtonClicked() = navigateToSearchFilter.call()
+    fun onSearchButtonClicked() {
+        navigateToSearchFilter.value = currSearch
+    }
 
     fun onSearchResultsObtained(data: Pair<SearchCriteria, Page<Pageable>>) {
         currSearch = data.first
@@ -30,11 +33,13 @@ class SearchViewModel @Inject constructor(
             currSearch = data.first,
             searchResults = data.second.value as ArrayList<Pageable>,
             resultsCount = data.second.totalCount,
+            isLastPage = data.second.last == -1,
             updateAdapter = true
         ) ?: SearchViewState(
             currSearch = data.first,
             searchResults = data.second.value as ArrayList<Pageable>,
             resultsCount = data.second.totalCount,
+            isLastPage = data.second.last == -1,
             updateAdapter = true
         )
     }
@@ -47,7 +52,8 @@ class SearchViewModel @Inject constructor(
         viewState.value = viewState.value?.copy(
             currSearch = null,
             searchResults = arrayListOf(),
-            resultsCount = 0
+            resultsCount = 0,
+            updateAdapter = false
         )
     }
 
