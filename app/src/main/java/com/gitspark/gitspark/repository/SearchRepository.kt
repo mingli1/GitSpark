@@ -1,9 +1,13 @@
 package com.gitspark.gitspark.repository
 
+import androidx.lifecycle.LiveData
 import com.gitspark.gitspark.api.service.SearchService
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
+import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.*
+import com.gitspark.gitspark.room.dao.SearchCriteriaDao
+import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -11,7 +15,9 @@ import javax.inject.Singleton
 @Singleton
 class SearchRepository @Inject constructor(
     private val prefsHelper: PreferencesHelper,
-    private val retrofitHelper: RetrofitHelper
+    private val retrofitHelper: RetrofitHelper,
+    private val searchCriteriaDao: SearchCriteriaDao,
+    private val timeHelper: TimeHelper
 ) {
 
     fun searchRepos(
@@ -93,6 +99,16 @@ class SearchRepository @Inject constructor(
             }
             .onErrorReturn { getFailure("Failed to obtain issue search results for query $query") }
     }
+
+    fun cacheSearch(sc: SearchCriteria): Completable {
+        return Completable.fromAction {
+            sc.timestamp = timeHelper.nowAsString()
+            searchCriteriaDao.insertSearchCriteria(sc)
+            searchCriteriaDao.limitSearches()
+        }
+    }
+
+    fun getRecentSearches(): LiveData<List<SearchCriteria>> = searchCriteriaDao.getRecentSearches()
 
     private fun getSearchService() =
         retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())

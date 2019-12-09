@@ -1,26 +1,30 @@
 package com.gitspark.gitspark.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.gitspark.gitspark.ui.main.search.REPOS
 
+@Entity
 data class SearchCriteria(
-    val type: Int = REPOS,
-    val q: String = "",
-    val mainQuery: String = "",
-    val createdOn: String = "",
-    val language: String = "",
-    val fromThisUser: String = "",
-    val fullName: String = "",
-    val location: String = "",
-    val numFollowers: String = "",
-    val numRepos: String = "",
-    val numStars: String = "",
-    val numForks: String = "",
-    val updatedOn: String = "",
-    val fileExtension: String = "",
-    val fileSize: String = "",
-    val repoFullName: String = "",
-    val includeForked: Boolean = true,
-    val isOpen: Boolean = true,
-    val numComments: String = "",
-    val labels: String = ""
+    var type: Int = REPOS,
+    @PrimaryKey var q: String = "",
+    var mainQuery: String = "",
+    var createdOn: String = "",
+    var language: String = "",
+    var fromThisUser: String = "",
+    var fullName: String = "",
+    var location: String = "",
+    var numFollowers: String = "",
+    var numRepos: String = "",
+    var numStars: String = "",
+    var numForks: String = "",
+    var updatedOn: String = "",
+    var fileExtension: String = "",
+    var fileSize: String = "",
+    var repoFullName: String = "",
+    var includeForked: Boolean = true,
+    var isOpen: Boolean = true,
+    var numComments: String = "",
+    var labels: String = "",
+    var timestamp: String = ""
 )
