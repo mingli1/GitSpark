@@ -189,6 +189,8 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
             search_spinner.onItemSelectedListener = null
             setInitial = true
             scJsonAdapter.fromJson(args.getString(BUNDLE_SEARCH_CRITERIA) ?: "")?.let {
+                viewModel.existingSearchCriteria = it
+
                 search_spinner.setSelection(it.type)
                 main_search_edit.setText(it.mainQuery)
                 created_on_edit.setText(it.createdOn)
