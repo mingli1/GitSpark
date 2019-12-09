@@ -1,9 +1,6 @@
 package com.gitspark.gitspark.api.model
 
-import com.gitspark.gitspark.model.Commit
-import com.gitspark.gitspark.model.CommitDetail
-import com.gitspark.gitspark.model.CommitUser
-import com.gitspark.gitspark.model.User
+import com.gitspark.gitspark.model.*
 import com.squareup.moshi.Json
 
 data class ApiCommit(
@@ -11,14 +8,16 @@ data class ApiCommit(
     @field:Json(name = "sha") val sha: String?,
     @field:Json(name = "commit") val commit: ApiCommitDetail?,
     @field:Json(name = "author") val author: ApiUser?,
-    @field:Json(name = "committer") val committer: ApiUser?
+    @field:Json(name = "committer") val committer: ApiUser?,
+    @field:Json(name = "repository") val repo: ApiRepo?
 ) {
     fun toModel() = Commit(
         url = url ?: "",
         sha = sha ?: "",
         commit = commit?.toModel() ?: CommitDetail(),
         author = author?.toModel() ?: User(),
-        committer = committer?.toModel() ?: User()
+        committer = committer?.toModel() ?: User(),
+        repo = repo?.toModel() ?: Repo()
     )
 }
 

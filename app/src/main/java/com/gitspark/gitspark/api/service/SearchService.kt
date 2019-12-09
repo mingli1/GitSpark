@@ -3,6 +3,7 @@ package com.gitspark.gitspark.api.service
 import com.gitspark.gitspark.api.model.*
 import io.reactivex.Observable
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.Query
 
 interface SearchService {
@@ -32,6 +33,7 @@ interface SearchService {
     ): Observable<ApiPage<ApiFile>>
 
     @GET("search/commits")
+    @Headers("Accept: application/vnd.github.cloak-preview")
     fun searchCommits(
         @Query(value = "q", encoded = true) query: String,
         @Query("page") page: Int,

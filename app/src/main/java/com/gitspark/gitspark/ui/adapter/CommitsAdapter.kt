@@ -13,12 +13,20 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.DateTimeParseException
 
-class CommitsAdapter(private val timeHelper: TimeHelper) : PaginationAdapter() {
+class CommitsAdapter(
+    private val timeHelper: TimeHelper,
+    private val simple: Boolean = false
+) : PaginationAdapter() {
 
     override fun getViewHolderId() = R.layout.commit_view
 
     override fun setItems(items: List<Pageable>, isLastPage: Boolean) {
+        if (simple) {
+            super.setItems(items, isLastPage)
+            return
+        }
         with (this.items) {
             clear()
             if (items.isNotEmpty()) {
@@ -64,9 +72,15 @@ class CommitsAdapter(private val timeHelper: TimeHelper) : PaginationAdapter() {
                     if (item.committer.avatarUrl.isNotEmpty()) commit_profile_icon.loadImage(item.committer.avatarUrl)
                     commit_username.text = item.committer.login
 
-                    val commitDate = Instant.parse(item.getDate())
-                    val formatted = timeHelper.getRelativeTimeFormat(commitDate)
-                    commit_date.text = context.getString(R.string.committed_date, formatted)
+                    if (simple) {
+                        commit_date.text = context.getString(R.string.committed_in, item.repo.fullName)
+                    } else {
+                        try {
+                            val commitDate = Instant.parse(item.getDate())
+                            val formatted = timeHelper.getRelativeTimeFormat(commitDate)
+                            commit_date.text = context.getString(R.string.committed_date, formatted)
+                        } catch (e: DateTimeParseException) {}
+                    }
                 }
             }
         }

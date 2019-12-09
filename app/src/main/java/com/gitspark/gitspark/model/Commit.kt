@@ -8,7 +8,8 @@ data class Commit(
     val sha: String = "",
     val commit: CommitDetail = CommitDetail(),
     val author: User = User(),
-    val committer: User = User()
+    val committer: User = User(),
+    val repo: Repo = Repo()
 ) : Pageable {
 
     override fun getViewType() = VIEW_TYPE_VIEW

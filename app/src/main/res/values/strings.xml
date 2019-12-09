@@ -69,6 +69,7 @@
     <string name="feed_date_group">Activity on %1$s</string>
     <string name="commits_date_group">Commits on %1$s</string>
     <string name="committed_date">committed %1$s</string>
+    <string name="committed_in">committed in %1$s</string>
     <string name="commits_list_title">Commits</string>
     <string name="empty_repo_text">This repository is empty!</string>
     <string name="pinned_repositories_default">Loading...</string>

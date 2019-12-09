@@ -14,12 +14,7 @@ import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
-import com.gitspark.gitspark.model.Page
-import com.gitspark.gitspark.model.SearchCriteria
-import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
-import com.gitspark.gitspark.ui.adapter.Pageable
-import com.gitspark.gitspark.ui.adapter.ReposAdapter
-import com.gitspark.gitspark.ui.adapter.UsersAdapter
+import com.gitspark.gitspark.ui.adapter.*
 import com.gitspark.gitspark.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
@@ -38,6 +33,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var reposAdapter: ReposAdapter
     private lateinit var usersAdapter: UsersAdapter
+    private lateinit var filesAdapter: FilesAdapter
+    private lateinit var commitsAdapter: CommitsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
@@ -50,6 +47,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
         reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel)
         usersAdapter = UsersAdapter(viewModel, preferencesHelper)
+        filesAdapter = FilesAdapter()
+        commitsAdapter = CommitsAdapter(timeHelper, true)
 
         search_results.run {
             setHasFixedSize(true)
@@ -98,6 +97,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
                 val adapter = when (currSearch?.type) {
                     REPOS -> reposAdapter
                     USERS -> usersAdapter
+                    CODE -> filesAdapter
+                    COMMITS -> commitsAdapter
                     else -> null
                 }
                 search_results.adapter = adapter

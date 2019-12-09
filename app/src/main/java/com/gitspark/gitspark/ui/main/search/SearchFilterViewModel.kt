@@ -97,12 +97,22 @@ class SearchFilterViewModel @Inject constructor(
                 val extension = if (fileExtension.isNotEmpty()) "extension:$fileExtension" else ""
                 val size = if (fileSize.isNotEmpty()) "size:$fileSize" else ""
                 val q = concatWithPlus(mainQuery, user, lang, extension, size, fork)
+                subscribe(searchRepository.searchCode(q, 1)) {
+                    onSearchResult(SearchCriteria(CODE, q.replace("+", " "), mainQuery, createdOn, language,
+                        fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
+                        fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels), it)
+                }
             }
             COMMITS -> {
                 val committer = if (fromThisUser.isNotEmpty()) "committer:$fromThisUser" else ""
                 val committerDate = if (createdOn.isNotEmpty()) "committer-date:$createdOn" else ""
                 val repo = if (repoFullName.isNotEmpty()) "repo:$repoFullName" else ""
                 val q = concatWithPlus(mainQuery, committer, committerDate, lang, repo)
+                subscribe(searchRepository.searchCommits(q, 1)) {
+                    onSearchResult(SearchCriteria(COMMITS, q.replace("+", " "), mainQuery, createdOn, language,
+                        fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
+                        fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels), it)
+                }
             }
             ISSUES -> {
                 val type = "type:issue"
