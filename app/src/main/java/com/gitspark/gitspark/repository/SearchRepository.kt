@@ -16,11 +16,12 @@ class SearchRepository @Inject constructor(
 
     fun searchRepos(
         query: String,
+        page: Int,
         sort: String = "best_match",
         order: String = "desc"
     ): Observable<SearchResult<Page<Repo>>> {
         return getSearchService()
-            .searchRepos(query, sort, order)
+            .searchRepos(query, page, sort, order)
             .map {
                 getSuccess(it.toModel<Repo>().apply {
                     value = it.response.map { repo -> repo.toModel() }
@@ -31,11 +32,12 @@ class SearchRepository @Inject constructor(
 
     fun searchUsers(
         query: String,
+        page: Int,
         sort: String = "best_match",
         order: String = "desc"
     ): Observable<SearchResult<Page<User>>> {
         return getSearchService()
-            .searchUsers(query, sort, order)
+            .searchUsers(query, page, sort, order)
             .map {
                 getSuccess(it.toModel<User>().apply {
                     value = it.response.map { user -> user.toModel() }
@@ -46,11 +48,12 @@ class SearchRepository @Inject constructor(
 
     fun searchCode(
         query: String,
+        page: Int,
         sort: String = "best_match",
         order: String = "desc"
     ): Observable<SearchResult<Page<File>>> {
         return getSearchService()
-            .searchCode(query, sort, order)
+            .searchCode(query, page, sort, order)
             .map {
                 getSuccess(it.toModel<File>().apply {
                     value = it.response.map { file-> file.toModel() }
@@ -61,11 +64,12 @@ class SearchRepository @Inject constructor(
 
     fun searchCommits(
         query: String,
+        page: Int,
         sort: String = "best_match",
         order: String = "desc"
     ): Observable<SearchResult<Page<Commit>>> {
         return getSearchService()
-            .searchCommits(query, sort, order)
+            .searchCommits(query, page, sort, order)
             .map {
                 getSuccess(it.toModel<Commit>().apply {
                     value = it.response.map { commit -> commit.toModel() }
@@ -76,11 +80,12 @@ class SearchRepository @Inject constructor(
 
     fun searchIssues(
         query: String,
+        page: Int,
         sort: String = "best_match",
         order: String = "desc"
     ): Observable<SearchResult<Page<Issue>>> {
         return getSearchService()
-            .searchIssues(query, sort, order)
+            .searchIssues(query, page, sort, order)
             .map {
                 getSuccess(it.toModel<Issue>().apply {
                     value = it.response.map { issue -> issue.toModel() }

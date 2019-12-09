@@ -10,6 +10,7 @@ interface SearchService {
     @GET("search/repositories")
     fun searchRepos(
         @Query(value = "q", encoded = true) query: String,
+        @Query("page") page: Int,
         @Query("sort") sort: String = "best_match",
         @Query("order") order: String = "desc"
     ): Observable<ApiPage<ApiRepo>>
@@ -17,6 +18,7 @@ interface SearchService {
     @GET("search/users")
     fun searchUsers(
         @Query(value = "q", encoded = true) query: String,
+        @Query("page") page: Int,
         @Query("sort") sort: String = "best_match",
         @Query("order") order: String = "desc"
     ): Observable<ApiPage<ApiUser>>
@@ -24,6 +26,7 @@ interface SearchService {
     @GET("search/code")
     fun searchCode(
         @Query(value = "q", encoded = true) query: String,
+        @Query("page") page: Int,
         @Query("sort") sort: String = "best_match",
         @Query("order") order: String = "desc"
     ): Observable<ApiPage<ApiFile>>
@@ -31,6 +34,7 @@ interface SearchService {
     @GET("search/commits")
     fun searchCommits(
         @Query(value = "q", encoded = true) query: String,
+        @Query("page") page: Int,
         @Query("sort") sort: String = "best_match",
         @Query("order") order: String = "desc"
     ): Observable<ApiPage<ApiCommit>>
@@ -38,6 +42,7 @@ interface SearchService {
     @GET("search/issues")
     fun searchIssues(
         @Query(value = "q", encoded = true) query: String,
+        @Query("page") page: Int,
         @Query("sort") sort: String = "best_match",
         @Query("order") order: String = "desc"
     ): Observable<ApiPage<ApiIssue>>

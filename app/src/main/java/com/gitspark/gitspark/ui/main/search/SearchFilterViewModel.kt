@@ -75,7 +75,7 @@ class SearchFilterViewModel @Inject constructor(
                 val stars = if (numStars.isNotEmpty()) "stars:$numStars" else ""
                 val forks = if (numForks.isNotEmpty()) "forks:$numForks" else ""
                 val q = concatWithPlus(mainQuery, user, created, pushed, lang, stars, forks, fork)
-                subscribe(searchRepository.searchRepos(q)) {
+                subscribe(searchRepository.searchRepos(q, 1)) {
                     onSearchResult(SearchCriteria(REPOS, q.replace("+", " "), mainQuery, createdOn, language,
                         fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
                         fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels), it)
@@ -87,6 +87,11 @@ class SearchFilterViewModel @Inject constructor(
                 val followers = if (numFollowers.isNotEmpty()) "followers:$numFollowers" else ""
                 val repos = if (numRepos.isNotEmpty()) "repos:$numRepos" else ""
                 val q = concatWithPlus(mainQuery, fname, loc, followers, repos, created, lang)
+                subscribe(searchRepository.searchUsers(q, 1)) {
+                    onSearchResult(SearchCriteria(USERS, q.replace("+", " "), mainQuery, createdOn, language,
+                        fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
+                        fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels), it)
+                }
             }
             CODE -> {
                 val extension = if (fileExtension.isNotEmpty()) "extension:$fileExtension" else ""
