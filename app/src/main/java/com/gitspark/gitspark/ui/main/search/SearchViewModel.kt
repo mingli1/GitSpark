@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.main.search
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.SearchRepository
@@ -17,9 +18,20 @@ class SearchViewModel @Inject constructor(
 ) : BaseViewModel(), RepoDetailNavigator, UserProfileNavigator {
 
     val viewState = MutableLiveData<SearchViewState>()
+    val recentSearchesMediator = MediatorLiveData<List<SearchCriteria>>()
     val navigateToSearchFilter = SingleLiveEvent<SearchCriteria?>()
     private var currSearch: SearchCriteria? = null
     private var page = 1
+
+    fun retrieveRecentSearches() {
+        val rs = searchRepository.getRecentSearches()
+        recentSearchesMediator.addSource(rs) { recentSearchesMediator.value = it }
+    }
+
+    fun onRecentSearchesRetrieved(rs: List<SearchCriteria>) {
+        viewState.value = viewState.value?.copy(recentSearches = rs, updateAdapter = false)
+            ?: SearchViewState(recentSearches = rs)
+    }
 
     fun onSearchButtonClicked() {
         navigateToSearchFilter.value = currSearch
@@ -28,6 +40,11 @@ class SearchViewModel @Inject constructor(
     fun onSearchResultsObtained(data: Pair<SearchCriteria, Page<Pageable>>) {
         currSearch = data.first
         if (page < data.second.last) page++
+
+        subscribe(searchRepository.cacheSearch(data.first),
+            { retrieveRecentSearches() },
+            { alert("${it.message}") }
+        )
 
         viewState.value = viewState.value?.copy(
             currSearch = data.first,
@@ -53,7 +70,7 @@ class SearchViewModel @Inject constructor(
             currSearch = null,
             searchResults = arrayListOf(),
             resultsCount = 0,
-            updateAdapter = false
+            updateAdapter = true
         )
     }
 

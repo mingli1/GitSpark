@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
@@ -34,6 +35,9 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         ViewModelProviders.of(activity!!, viewModelFactory)[SearchSharedViewModel::class.java]
     }
 
+    private lateinit var recentLayoutManager: LinearLayoutManager
+    private lateinit var searchesAdapter: SearchAdapter
+
     private lateinit var resultsLayoutManager: LinearLayoutManager
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var reposAdapter: ReposAdapter
@@ -48,6 +52,9 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        recentLayoutManager = LinearLayoutManager(context, VERTICAL, false)
+        searchesAdapter = SearchAdapter(timeHelper)
+
         resultsLayoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
         reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel)
@@ -55,22 +62,31 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         filesAdapter = FilesAdapter()
         commitsAdapter = CommitsAdapter(timeHelper, true)
 
+        recent_searches.run {
+            setHasFixedSize(true)
+            layoutManager = recentLayoutManager
+            if (adapter == null) adapter = searchesAdapter
+        }
+
         search_results.run {
             setHasFixedSize(true)
             layoutManager = resultsLayoutManager
         }
 
+        viewModel.retrieveRecentSearches()
         setUpListeners()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         search_results.adapter = null
+        recent_searches.adapter = null
     }
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.navigateToSearchFilter.observe(viewLifecycleOwner) { navigateToSearchFilterFragment(it) }
+        viewModel.recentSearchesMediator.observe(viewLifecycleOwner) { viewModel.onRecentSearchesRetrieved(it) }
         sharedViewModel.searchResults.observe(viewLifecycleOwner) { viewModel.onSearchResultsObtained(it) }
     }
 
@@ -102,7 +118,9 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
                     ISSUES -> getString(R.string.issue_search_result, resultsCount)
                     else -> getString(R.string.pr_search_result, resultsCount)
                 }
-            recent_searches_message.isVisible = currSearch == null
+            recent_searches.isVisible = currSearch == null
+            searchesAdapter.setItems(recentSearches, true)
+            recent_searches_message.isVisible = currSearch == null && recentSearches.isEmpty()
             search_results_clear_button.isVisible = currSearch != null
 
             if (updateAdapter) {

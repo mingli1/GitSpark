@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="4dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/colorWhiteDark">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/search_type"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
+            android:tint="@color/colorPrimary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:src="@drawable/ic_commit"/>
+
+        <TextView
+            android:id="@+id/main_query_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/BodyLarge"
+            android:textColor="@color/colorBlack"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/search_type"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="fixed bug"/>
+
+        <TextView
+            android:id="@+id/q_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/BodyLight"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/search_type"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/main_query_field"
+            tools:text="fixed bug user:mingli1 fork:true"/>
+
+        <TextView
+            android:id="@+id/search_date_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Body.Small"
+            android:textColor="@color/colorDarkerGray"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintStart_toEndOf="@id/search_type"
+            app:layout_constraintTop_toBottomOf="@id/q_field"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="searched 3 days ago"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

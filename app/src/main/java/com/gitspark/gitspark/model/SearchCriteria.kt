@@ -2,6 +2,8 @@ package com.gitspark.gitspark.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.gitspark.gitspark.ui.adapter.Pageable
+import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 import com.gitspark.gitspark.ui.main.search.REPOS
 
 @Entity
@@ -27,4 +29,7 @@ data class SearchCriteria(
     var numComments: String = "",
     var labels: String = "",
     var timestamp: String = ""
-)
+) : Pageable {
+
+    override fun getViewType() = VIEW_TYPE_VIEW
+}

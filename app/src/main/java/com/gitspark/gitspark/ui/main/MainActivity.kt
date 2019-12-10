@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             it.addOnDestinationChangedListener { _, dest, _ ->
                 bottom_navigation_view.isVisible = when (dest.id) {
                     R.id.edit_profile_fragment -> false
+                    R.id.search_filter_fragment -> false
                     else -> true
                 }
             }

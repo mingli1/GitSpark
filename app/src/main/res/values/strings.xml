@@ -156,6 +156,7 @@
     <string name="commit_search_result">Commits found (%1$d)</string>
     <string name="issue_search_result">Issues found (%1$d)</string>
     <string name="pr_search_result">Pull Requests found (%1$d)</string>
+    <string name="search_date">searched %1$s</string>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>

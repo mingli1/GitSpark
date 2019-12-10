@@ -104,6 +104,7 @@ class SearchRepository @Inject constructor(
         return Completable.fromAction {
             sc.timestamp = timeHelper.nowAsString()
             searchCriteriaDao.insertSearchCriteria(sc)
+        }.andThen {
             searchCriteriaDao.limitSearches()
         }
     }

@@ -42,6 +42,10 @@ class ApplicationModule {
 
     @Provides
     @Singleton
+    fun provideSearchCriteriaDao(database: Database) = database.searchCriteriaDao()
+
+    @Provides
+    @Singleton
     fun provideRepoJsonAdapter(moshi: Moshi): JsonAdapter<Repo> = moshi.adapter(Repo::class.java)
 
     @Provides
