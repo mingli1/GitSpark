@@ -20,6 +20,7 @@ import com.gitspark.gitspark.ui.adapter.*
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
 internal const val BUNDLE_SEARCH_CRITERIA = "BUNDLE_SEARCH_CRITERIA"
@@ -53,7 +54,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         super.onActivityCreated(savedInstanceState)
 
         recentLayoutManager = LinearLayoutManager(context, VERTICAL, false)
-        searchesAdapter = SearchAdapter(timeHelper)
+        searchesAdapter = SearchAdapter(timeHelper, viewModel)
 
         resultsLayoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
@@ -107,6 +108,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
 
     private fun updateView(viewState: SearchViewState) {
         with (viewState) {
+            loading_indicator.isVisible = loading
+
             search_results.isVisible = currSearch != null
             search_button.text = currSearch?.q ?: getString(R.string.search_title_text)
             searches_header.text = if (currSearch == null) getString(R.string.recent_searches_header) else

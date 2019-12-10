@@ -5,9 +5,13 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.ui.main.search.*
+import com.gitspark.gitspark.ui.nav.RecentSearchNavigator
 import kotlinx.android.synthetic.main.search_view.view.*
 
-class SearchAdapter(private val timeHelper: TimeHelper) : PaginationAdapter() {
+class SearchAdapter(
+    private val timeHelper: TimeHelper,
+    private val navigator: RecentSearchNavigator
+) : PaginationAdapter() {
 
     override fun getViewHolderId() = R.layout.search_view
 
@@ -28,6 +32,8 @@ class SearchAdapter(private val timeHelper: TimeHelper) : PaginationAdapter() {
                 val searchDate = timeHelper.parse(item.timestamp).toInstant()
                 val formatted = timeHelper.getRelativeTimeFormat(searchDate)
                 search_date_field.text = context.getString(R.string.search_date, formatted)
+
+                search_view.setOnClickListener { navigator.onRecentSearchClicked(item) }
             }
         }
     }

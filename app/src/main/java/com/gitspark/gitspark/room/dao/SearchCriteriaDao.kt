@@ -19,7 +19,7 @@ interface SearchCriteriaDao {
     @Query(
         """
         DELETE FROM searchcriteria WHERE q NOT IN
-        (SELECT q FROM searchcriteria ORDER BY datetime(timestamp) DESC LIMIT 5)
+        (SELECT q FROM searchcriteria ORDER BY datetime(timestamp) DESC LIMIT 10)
         """
     )
     fun limitSearches()

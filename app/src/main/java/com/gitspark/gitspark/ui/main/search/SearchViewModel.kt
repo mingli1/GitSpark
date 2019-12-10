@@ -2,6 +2,7 @@ package com.gitspark.gitspark.ui.main.search
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.SearchRepository
 import com.gitspark.gitspark.repository.SearchResult
@@ -9,13 +10,15 @@ import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.nav.RecentSearchNavigator
 import com.gitspark.gitspark.ui.nav.RepoDetailNavigator
 import com.gitspark.gitspark.ui.nav.UserProfileNavigator
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
-    private val searchRepository: SearchRepository
-) : BaseViewModel(), RepoDetailNavigator, UserProfileNavigator {
+    private val searchRepository: SearchRepository,
+    private val timeHelper: TimeHelper
+) : BaseViewModel(), RepoDetailNavigator, UserProfileNavigator, RecentSearchNavigator {
 
     val viewState = MutableLiveData<SearchViewState>()
     val recentSearchesMediator = MediatorLiveData<List<SearchCriteria>>()
@@ -82,6 +85,21 @@ class SearchViewModel @Inject constructor(
 
     }
 
+    override fun onRecentSearchClicked(sc: SearchCriteria) {
+        currSearch = sc
+        page = 1
+
+        viewState.value = viewState.value?.copy(loading = true)
+
+        sc.timestamp = timeHelper.nowAsString()
+        subscribe(searchRepository.cacheSearch(sc),
+            { retrieveRecentSearches() },
+            { alert("${it.message}") }
+        )
+
+        requestSearch()
+    }
+
     private fun requestSearch() {
         currSearch?.let { currSearch ->
             when (currSearch.type) {
@@ -102,15 +120,18 @@ class SearchViewModel @Inject constructor(
                 updatedList.addAll((result.value as Page<Pageable>).value)
 
                 viewState.value = viewState.value?.copy(
+                    currSearch = currSearch,
                     searchResults = updatedList,
                     isLastPage = page.isLastPage(result.value.last),
-                    updateAdapter = true
+                    updateAdapter = true,
+                    resultsCount = result.value.totalCount,
+                    loading = false
                 )
                 if (page < result.value.last) page++
             }
             is SearchResult.Failure -> {
                 alert(result.error)
-                viewState.value = viewState.value?.copy(updateAdapter = false)
+                viewState.value = viewState.value?.copy(updateAdapter = false, loading = false)
             }
         }
     }

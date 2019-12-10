@@ -9,5 +9,6 @@ data class SearchViewState(
     val searchResults: ArrayList<Pageable> = arrayListOf(),
     val resultsCount: Int = 0,
     val updateAdapter: Boolean = false,
-    val isLastPage: Boolean = false
+    val isLastPage: Boolean = false,
+    val loading: Boolean = false
 )
