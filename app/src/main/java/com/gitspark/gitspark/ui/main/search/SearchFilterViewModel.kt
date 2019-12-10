@@ -3,7 +3,6 @@ package com.gitspark.gitspark.ui.main.search
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.extension.concatWithPlus
 import com.gitspark.gitspark.model.Page
-import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.repository.SearchRepository
 import com.gitspark.gitspark.repository.SearchResult
@@ -142,12 +141,32 @@ class SearchFilterViewModel @Inject constructor(
             ISSUES -> {
                 val type = "type:issue"
                 val q = concatWithPlus(mainQuery, type, author, created, updated, lang, comments, state, label)
-                if (hasExistingSearch(q)) return
+                if (!hasExistingSearch(q)) {
+                    subscribe(searchRepository.searchIssues(q, 1)) {
+                        onSearchResult(
+                            SearchCriteria(
+                                ISSUES, q.replace("+", " "), mainQuery, createdOn, language,
+                                fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
+                                fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels
+                            ), it
+                        )
+                    }
+                }
             }
             PULL_REQUESTS -> {
                 val type = "type:pr"
                 val q = concatWithPlus(mainQuery, type, author, created, updated, lang, comments, state, label)
-                if (hasExistingSearch(q)) return
+                if (!hasExistingSearch(q)) {
+                    subscribe(searchRepository.searchIssues(q, 1)) {
+                        onSearchResult(
+                            SearchCriteria(
+                                PULL_REQUESTS, q.replace("+", " "), mainQuery, createdOn, language,
+                                fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
+                                fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels
+                            ), it
+                        )
+                    }
+                }
             }
         }
     }

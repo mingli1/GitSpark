@@ -44,6 +44,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
     private lateinit var usersAdapter: UsersAdapter
     private lateinit var filesAdapter: FilesAdapter
     private lateinit var commitsAdapter: CommitsAdapter
+    private lateinit var issuesAdapter: IssuesAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
@@ -61,6 +62,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         usersAdapter = UsersAdapter(viewModel, preferencesHelper)
         filesAdapter = FilesAdapter()
         commitsAdapter = CommitsAdapter(timeHelper, true)
+        issuesAdapter = IssuesAdapter(timeHelper)
 
         recent_searches.run {
             setHasFixedSize(true)
@@ -131,10 +133,10 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
                     USERS -> usersAdapter
                     CODE -> filesAdapter
                     COMMITS -> commitsAdapter
-                    else -> null
+                    else -> issuesAdapter
                 }
                 search_results.adapter = adapter
-                adapter?.setItems(searchResults, isLastPage)
+                adapter.setItems(searchResults, isLastPage)
 
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false

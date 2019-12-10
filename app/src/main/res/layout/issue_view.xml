@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@color/colorWhite"
+    android:foreground="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:src="@drawable/ic_issue"/>
+
+    <TextView
+        android:id="@+id/title_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/BodyLarge"
+        android:textColor="@color/colorBlack"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:maxLines="3"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="ContributionsView disappears sometimes when navigating between bottom nav"/>
+
+    <TextView
+        android:id="@+id/content_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/Body.Small"
+        android:textColor="@color/colorDarkerGray"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintEnd_toStartOf="@id/comments_field"
+        app:layout_constraintTop_toBottomOf="@id/title_field"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="#22 opened 6 hours ago by mingli1"/>
+
+    <TextView
+        android:id="@+id/comments_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Body"
+        android:textColor="@color/colorDarkerGray"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:drawableStart="@drawable/ic_feed"
+        android:drawablePadding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_field"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="37"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorWhiteDark"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

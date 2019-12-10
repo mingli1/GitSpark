@@ -1,7 +1,10 @@
 package com.gitspark.gitspark.ui.adapter
 
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.marginRight
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.ui.main.search.*
@@ -26,8 +29,12 @@ class SearchAdapter(
                     ISSUES -> R.drawable.ic_issue
                     else -> R.drawable.ic_pull_request
                 })
-                main_query_field.text = item.mainQuery
-                q_field.text = item.q
+                if (item.mainQuery.isEmpty()) {
+                    main_query_field.text = item.q
+                } else {
+                    main_query_field.text = item.mainQuery
+                    q_field.text = item.q
+                }
 
                 val searchDate = timeHelper.parse(item.timestamp).toInstant()
                 val formatted = timeHelper.getRelativeTimeFormat(searchDate)

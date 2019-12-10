@@ -8,7 +8,6 @@ import com.gitspark.gitspark.repository.SearchRepository
 import com.gitspark.gitspark.repository.SearchResult
 import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.base.BaseViewModel
-import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.nav.RecentSearchNavigator
 import com.gitspark.gitspark.ui.nav.RepoDetailNavigator

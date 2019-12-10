@@ -5,6 +5,8 @@ import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 
 data class Issue(
     val id: Long = 0,
+    val url: String = "",
+    val htmlUrl: String = "",
     val number: Int = 0,
     val state: String = "",
     val title: String = "",
@@ -17,6 +19,7 @@ data class Issue(
     val numComments: Int = 0,
     val createdAt: String = "",
     val updatedAt: String = "",
+    val closedAt: String = "",
     val repo: Repo = Repo(),
     val pullRequest: PullRequest = PullRequest()
 ) : Pageable {
