@@ -34,6 +34,7 @@ class SearchAdapter(
                 search_date_field.text = context.getString(R.string.search_date, formatted)
 
                 search_view.setOnClickListener { navigator.onRecentSearchClicked(item) }
+                remove_button.setOnClickListener { navigator.onRemoveSearchClicked(item.q) }
             }
         }
     }

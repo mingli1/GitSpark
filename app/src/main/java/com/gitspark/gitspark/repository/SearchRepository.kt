@@ -109,6 +109,12 @@ class SearchRepository @Inject constructor(
         }
     }
 
+    fun deleteSearch(q: String): Completable {
+        return Completable.fromAction {
+            searchCriteriaDao.deleteSearch(q)
+        }
+    }
+
     fun getRecentSearches(): LiveData<List<SearchCriteria>> = searchCriteriaDao.getRecentSearches()
 
     private fun getSearchService() =

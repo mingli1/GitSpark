@@ -24,6 +24,9 @@ interface SearchCriteriaDao {
     )
     fun limitSearches()
 
+    @Query("DELETE FROM searchcriteria WHERE q = :q")
+    fun deleteSearch(q: String)
+
     @Query("DELETE FROM searchcriteria")
     fun clear()
 }

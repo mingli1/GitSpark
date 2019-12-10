@@ -5,4 +5,6 @@ import com.gitspark.gitspark.model.SearchCriteria
 interface RecentSearchNavigator {
 
     fun onRecentSearchClicked(sc: SearchCriteria)
+
+    fun onRemoveSearchClicked(q: String)
 }

@@ -100,6 +100,13 @@ class SearchViewModel @Inject constructor(
         requestSearch()
     }
 
+    override fun onRemoveSearchClicked(q: String) {
+        subscribe(searchRepository.deleteSearch(q),
+            { retrieveRecentSearches() },
+            { alert("${it.message}") }
+        )
+    }
+
     private fun requestSearch() {
         currSearch?.let { currSearch ->
             when (currSearch.type) {

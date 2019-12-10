@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
-import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
