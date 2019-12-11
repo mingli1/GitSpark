@@ -9,10 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gitspark.gitspark.R
-import com.gitspark.gitspark.extension.isVisible
-import com.gitspark.gitspark.extension.loadImage
-import com.gitspark.gitspark.extension.observe
-import com.gitspark.gitspark.extension.observeOnce
+import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Contribution
@@ -131,12 +128,12 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
             company_field.isVisible = companyText.isNotEmpty()
             company_field.text = companyText
 
-            following_field.text = getString(R.string.following_text, numFollowing)
-            followers_field.text = getString(R.string.followers_text, numFollowers)
+            following_field.text = getString(R.string.following_text, numFollowing.formatLarge())
+            followers_field.text = getString(R.string.followers_text, numFollowers.formatLarge())
 
             total_contributions_field.text =
                 if (totalContributions == 1) getString(R.string.total_contribution_single)
-                else getString(R.string.total_contribution, totalContributions)
+                else getString(R.string.total_contribution, totalContributions.formatLarge())
             created_at_field.text = getString(R.string.joined_date, createdDate)
 
             loading_indicator.isVisible = loading && !refreshing

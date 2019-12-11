@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.formatLarge
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.LanguageColorHelper
@@ -129,12 +130,12 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
             search_button.text = currSearch?.q ?: getString(R.string.search_title_text)
             searches_header.text = if (currSearch == null) getString(R.string.recent_searches_header) else
                 when (currSearch.type) {
-                    REPOS -> getString(R.string.repo_search_result, resultsCount)
-                    USERS -> getString(R.string.user_search_result, resultsCount)
-                    COMMITS -> getString(R.string.commit_search_result, resultsCount)
-                    CODE -> getString(R.string.code_search_result, resultsCount)
-                    ISSUES -> getString(R.string.issue_search_result, resultsCount)
-                    else -> getString(R.string.pr_search_result, resultsCount)
+                    REPOS -> getString(R.string.repo_search_result, resultsCount.formatLarge())
+                    USERS -> getString(R.string.user_search_result, resultsCount.formatLarge())
+                    COMMITS -> getString(R.string.commit_search_result, resultsCount.formatLarge())
+                    CODE -> getString(R.string.code_search_result, resultsCount.formatLarge())
+                    ISSUES -> getString(R.string.issue_search_result, resultsCount.formatLarge())
+                    else -> getString(R.string.pr_search_result, resultsCount.formatLarge())
                 }
             recent_searches.isVisible = currSearch == null
             searchesAdapter.setItems(recentSearches, true)

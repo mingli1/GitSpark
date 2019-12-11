@@ -44,3 +44,7 @@ fun concatWithPlus(vararg strs: String): String {
     strs.forEach { if (it.isNotEmpty()) ret += "$it+" }
     return ret.substring(0, ret.length - 1)
 }
+
+fun Int.formatLarge(): String {
+    return String.format("%,d", this)
+}

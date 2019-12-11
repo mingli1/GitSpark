@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.service.REPO_PER_PAGE
+import com.gitspark.gitspark.extension.formatLarge
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.LanguageColorHelper
@@ -85,7 +86,7 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
         with (viewState) {
             loading_indicator.isVisible = loading && !refreshing
             swipe_refresh.isRefreshing = refreshing
-            num_repos_field.text = getString(R.string.num_repos_text, LABEL, totalStarred)
+            num_repos_field.text = getString(R.string.num_repos_text, LABEL, totalStarred.formatLarge())
 
             empty_text.isVisible = repos.isEmpty()
             empty_text.text = getString(R.string.repos_empty_text)

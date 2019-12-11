@@ -54,4 +54,11 @@ class StringExtensionsTest {
         assertThat(concatWithPlus("3", "", "5", "1")).isEqualTo("3+5+1")
         assertThat(concatWithPlus("hello")).isEqualTo("hello")
     }
+
+    @Test
+    fun shouldFormatLargeNumber() {
+        assertThat(13000.formatLarge()).isEqualTo("13,000")
+        assertThat(200.formatLarge()).isEqualTo("200")
+        assertThat(1234000.formatLarge()).isEqualTo("1,234,000")
+    }
 }
