@@ -12,6 +12,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.formatLarge
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.helper.ColorHelper
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
@@ -32,8 +33,9 @@ internal const val BUNDLE_SEARCH_CRITERIA = "BUNDLE_SEARCH_CRITERIA"
 
 class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java) {
 
-    @Inject lateinit var colorHelper: LanguageColorHelper
+    @Inject lateinit var langColorHelper: LanguageColorHelper
     @Inject lateinit var timeHelper: TimeHelper
+    @Inject lateinit var colorHelper: ColorHelper
     @Inject lateinit var preferencesHelper: PreferencesHelper
     @Inject lateinit var scJsonAdapter: JsonAdapter<SearchCriteria>
     @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
@@ -65,11 +67,11 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
 
         resultsLayoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
-        reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel)
+        reposAdapter = ReposAdapter(langColorHelper, timeHelper, viewModel)
         usersAdapter = UsersAdapter(viewModel, preferencesHelper)
         filesAdapter = FilesAdapter()
         commitsAdapter = CommitsAdapter(timeHelper, true)
-        issuesAdapter = IssuesAdapter(timeHelper)
+        issuesAdapter = IssuesAdapter(timeHelper, colorHelper)
 
         recent_searches.run {
             setHasFixedSize(true)
