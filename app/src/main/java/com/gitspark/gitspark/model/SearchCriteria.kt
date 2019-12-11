@@ -8,6 +8,8 @@ import com.gitspark.gitspark.ui.main.search.REPOS
 
 @Entity
 data class SearchCriteria(
+    var sort: String = "best-match",
+    var order: String = "desc",
     var type: Int = REPOS,
     @PrimaryKey var q: String = "",
     var mainQuery: String = "",

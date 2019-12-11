@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -37,6 +38,7 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[SearchSharedViewModel::class.java]
     }
+    private lateinit var sortAdapter: ArrayAdapter<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_search_filter, container, false)
@@ -62,6 +64,10 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
             resources.getStringArray(R.array.search_types)
         )
         search_spinner.adapter = spinnerAdapter
+
+        sortAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item)
+        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        sort_spinner.adapter = sortAdapter
 
         setInitialState()
         setUpListeners()
@@ -130,7 +136,10 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
 
     private fun setUpListeners() {
         search_spinner.onItemSelected {
-            if (!setInitial) resetAllFields()
+            if (!setInitial) {
+                resetAllFields()
+                setSortSpinnerItems(it)
+            }
             setInitial = false
             viewModel.onSearchTypeSelected(it)
         }
@@ -138,6 +147,8 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         search_bar_clear_button.setOnClickListener { viewModel.onMainQueryClearButtonClicked() }
         search_filter_button.setOnClickListener {
             viewModel.onSearch(
+                sort = sort_spinner.selectedItem.toString(),
+                order = order_spinner.selectedItem.toString(),
                 mainQuery = main_search_edit.getStringTrimmed(),
                 createdOn = created_on_edit.getStringTrimmed(),
                 language = language_edit.getStringTrimmed(),
@@ -182,6 +193,8 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         open_checkbox.isChecked = true
         num_comments_edit.clear()
         labels_edit.clear()
+        sort_spinner.setSelection(0)
+        order_spinner.setSelection(0)
     }
 
     private fun setInitialState() {
@@ -191,7 +204,10 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
             scJsonAdapter.fromJson(args.getString(BUNDLE_SEARCH_CRITERIA) ?: "")?.let {
                 viewModel.existingSearchCriteria = it
 
+                setSortSpinnerItems(it.type)
                 search_spinner.setSelection(it.type)
+                sort_spinner.setSelection(sortAdapter.getPosition(it.sort))
+                order_spinner.setSelection(if (it.order == "desc") 0 else 1)
                 main_search_edit.setText(it.mainQuery)
                 created_on_edit.setText(it.createdOn)
                 language_edit.setText(it.language)
@@ -211,6 +227,17 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
                 num_comments_edit.setText(it.numComments)
                 labels_edit.setText(it.labels)
             }
+        }
+    }
+
+    private fun setSortSpinnerItems(type: Int) {
+        sortAdapter.clear()
+        when (type) {
+            REPOS -> sortAdapter.addAll(resources.getStringArray(R.array.repo_sort).toList())
+            USERS -> sortAdapter.addAll(resources.getStringArray(R.array.user_sort).toList())
+            COMMITS -> sortAdapter.addAll(resources.getStringArray(R.array.commit_sort).toList())
+            CODE -> sortAdapter.addAll(resources.getStringArray(R.array.code_sort).toList())
+            else -> sortAdapter.addAll(resources.getStringArray(R.array.issue_sort).toList())
         }
     }
 

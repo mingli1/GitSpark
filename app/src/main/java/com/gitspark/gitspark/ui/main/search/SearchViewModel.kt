@@ -109,11 +109,11 @@ class SearchViewModel @Inject constructor(
     private fun requestSearch() {
         currSearch?.let { currSearch ->
             when (currSearch.type) {
-                REPOS -> subscribe(searchRepository.searchRepos(currSearch.q, page)) { onSearchResult(it) }
-                USERS -> subscribe(searchRepository.searchUsers(currSearch.q, page)) { onSearchResult(it) }
-                CODE -> subscribe(searchRepository.searchCode(currSearch.q, page)) { onSearchResult(it) }
-                COMMITS -> subscribe(searchRepository.searchCommits(currSearch.q, page)) { onSearchResult(it) }
-                else -> subscribe(searchRepository.searchIssues(currSearch.q, page)) { onSearchResult(it) }
+                REPOS -> subscribe(searchRepository.searchRepos(currSearch.q, page, currSearch.sort, currSearch.order)) { onSearchResult(it) }
+                USERS -> subscribe(searchRepository.searchUsers(currSearch.q, page, currSearch.sort, currSearch.order)) { onSearchResult(it) }
+                CODE -> subscribe(searchRepository.searchCode(currSearch.q, page, currSearch.sort, currSearch.order)) { onSearchResult(it) }
+                COMMITS -> subscribe(searchRepository.searchCommits(currSearch.q, page, currSearch.sort, currSearch.order)) { onSearchResult(it) }
+                else -> subscribe(searchRepository.searchIssues(currSearch.q, page, currSearch.sort, currSearch.order)) { onSearchResult(it) }
             }
         }
     }

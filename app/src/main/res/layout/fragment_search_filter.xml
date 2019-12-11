@@ -131,6 +131,49 @@
                 app:layout_constraintTop_toBottomOf="@id/divider0"/>
 
             <TextView
+                android:id="@+id/sort_label"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                style="@style/Body"
+                android:text="@string/sort"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/advanced_options_label"/>
+
+            <Spinner
+                android:id="@+id/sort_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:dropDownWidth="wrap_content"
+                android:overlapAnchor="false"
+                android:background="@drawable/spinner_background"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toEndOf="@id/sort_label"
+                app:layout_constraintTop_toTopOf="@id/sort_label"
+                app:layout_constraintBottom_toBottomOf="@id/sort_label"
+                app:layout_constraintEnd_toStartOf="@id/order_spinner"
+                app:layout_constraintHorizontal_weight="6"/>
+
+            <Spinner
+                android:id="@+id/order_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:dropDownWidth="wrap_content"
+                android:overlapAnchor="false"
+                android:background="@drawable/spinner_background"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:entries="@array/search_order"
+                app:layout_constraintStart_toEndOf="@id/sort_spinner"
+                app:layout_constraintTop_toTopOf="@id/sort_label"
+                app:layout_constraintBottom_toBottomOf="@id/sort_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="4"/>
+
+            <TextView
                 android:id="@+id/from_this_user_label"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
@@ -139,7 +182,7 @@
                 android:layout_marginTop="28dp"
                 android:layout_marginStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/advanced_options_label"/>
+                app:layout_constraintTop_toBottomOf="@id/sort_label"/>
 
             <EditText
                 android:id="@+id/from_this_user_edit"

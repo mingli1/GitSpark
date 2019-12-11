@@ -158,6 +158,47 @@
     <string name="pr_search_result">Pull Requests found (%1$d)</string>
     <string name="search_date">searched %1$s</string>
     <string name="issue_desc">#%1$d %2$s %3$s by %4$s</string>
+    <string name="sort">Sort by:</string>
+    <string-array name="search_order">
+        <item>desc</item>
+        <item>asc</item>
+    </string-array>
+    <string-array name="repo_sort">
+        <item>best-match</item>
+        <item>stars</item>
+        <item>forks</item>
+        <item>help-wanted-issues</item>
+        <item>updated</item>
+    </string-array>
+    <string-array name="user_sort">
+        <item>best-match</item>
+        <item>followers</item>
+        <item>repositories</item>
+        <item>joined</item>
+    </string-array>
+    <string-array name="commit_sort">
+        <item>best-match</item>
+        <item>author-date</item>
+        <item>committer-date</item>
+    </string-array>
+    <string-array name="code_sort">
+        <item>best-match</item>
+        <item>indexed</item>
+    </string-array>
+    <string-array name="issue_sort">
+        <item>best-match</item>
+        <item>comments</item>
+        <item>reactions</item>
+        <item>reactions-+1</item>
+        <item>reactions--1</item>
+        <item>reactions-smile</item>
+        <item>reactions-thinking_face</item>
+        <item>reactions-heart</item>
+        <item>reactions-tada</item>
+        <item>interactions</item>
+        <item>created</item>
+        <item>updated</item>
+    </string-array>
     <!-- event strings -->
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>
