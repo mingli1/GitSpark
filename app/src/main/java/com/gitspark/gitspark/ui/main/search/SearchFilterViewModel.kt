@@ -54,8 +54,8 @@ class SearchFilterViewModel @Inject constructor(
         fileExtension: String,
         fileSize: String,
         repoFullName: String,
-        includeForked: Boolean,
-        isOpen: Boolean,
+        fork: String,
+        state: String,
         numComments: String,
         labels: String
     ) {
@@ -66,24 +66,24 @@ class SearchFilterViewModel @Inject constructor(
         val user = if (fromThisUser.isNotEmpty()) "user:$fromThisUser" else ""
         val pushed = if (updatedOn.isNotEmpty()) "pushed:$updatedOn" else ""
         val updated = if (updatedOn.isNotEmpty()) "updated:$updatedOn" else ""
-        val fork = "fork:$includeForked"
+        val qfork = "fork:$fork"
         val author = if (fromThisUser.isNotEmpty()) "author:$fromThisUser" else ""
         val comments = if (numComments.isNotEmpty()) "comments:$numComments" else ""
-        val state = if (isOpen) "state:open" else "state:closed"
+        val qstate = if (state.isEmpty()) "" else  "state:$state"
         val label = if (labels.isNotEmpty()) "label:$labels" else ""
 
         when (viewState.value?.currSearch ?: REPOS) {
             REPOS -> {
                 val stars = if (numStars.isNotEmpty()) "stars:$numStars" else ""
                 val forks = if (numForks.isNotEmpty()) "forks:$numForks" else ""
-                val q = concatWithPlus(mainQuery, user, created, pushed, lang, stars, forks, fork)
+                val q = concatWithPlus(mainQuery, user, created, pushed, lang, stars, forks, qfork)
                 if (!hasExistingSearch(q, sort, order)) {
                     subscribe(searchRepository.searchRepos(q, 1, sort, order)) {
                         onSearchResult(
                             SearchCriteria(sort, order,
                                 REPOS, q.replace("+", " "), mainQuery, createdOn, language,
                                 fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
-                                fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels
+                                fileExtension, fileSize, repoFullName, fork, state, numComments, labels
                             ), it
                         )
                     }
@@ -101,7 +101,7 @@ class SearchFilterViewModel @Inject constructor(
                             SearchCriteria(sort, order,
                                 USERS, q.replace("+", " "), mainQuery, createdOn, language,
                                 fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
-                                fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels
+                                fileExtension, fileSize, repoFullName, fork, state, numComments, labels
                             ), it
                         )
                     }
@@ -110,14 +110,14 @@ class SearchFilterViewModel @Inject constructor(
             CODE -> {
                 val extension = if (fileExtension.isNotEmpty()) "extension:$fileExtension" else ""
                 val size = if (fileSize.isNotEmpty()) "size:$fileSize" else ""
-                val q = concatWithPlus(mainQuery, user, lang, extension, size, fork)
+                val q = concatWithPlus(mainQuery, user, lang, extension, size, qfork)
                 if (!hasExistingSearch(q, sort, order)) {
                     subscribe(searchRepository.searchCode(q, 1, sort, order)) {
                         onSearchResult(
                             SearchCriteria(sort, order,
                                 CODE, q.replace("+", " "), mainQuery, createdOn, language,
                                 fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
-                                fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels
+                                fileExtension, fileSize, repoFullName, fork, state, numComments, labels
                             ), it
                         )
                     }
@@ -134,7 +134,7 @@ class SearchFilterViewModel @Inject constructor(
                             SearchCriteria(sort, order,
                                 COMMITS, q.replace("+", " "), mainQuery, createdOn, language,
                                 fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
-                                fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels
+                                fileExtension, fileSize, repoFullName, fork, state, numComments, labels
                             ), it
                         )
                     }
@@ -142,14 +142,14 @@ class SearchFilterViewModel @Inject constructor(
             }
             ISSUES -> {
                 val type = "type:issue"
-                val q = concatWithPlus(mainQuery, type, author, created, updated, lang, comments, state, label)
+                val q = concatWithPlus(mainQuery, type, author, created, updated, lang, comments, qstate, label)
                 if (!hasExistingSearch(q, sort, order)) {
                     subscribe(searchRepository.searchIssues(q, 1, sort, order)) {
                         onSearchResult(
                             SearchCriteria(sort, order,
                                 ISSUES, q.replace("+", " "), mainQuery, createdOn, language,
                                 fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
-                                fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels
+                                fileExtension, fileSize, repoFullName, fork, state, numComments, labels
                             ), it
                         )
                     }
@@ -157,14 +157,14 @@ class SearchFilterViewModel @Inject constructor(
             }
             PULL_REQUESTS -> {
                 val type = "type:pr"
-                val q = concatWithPlus(mainQuery, type, author, created, updated, lang, comments, state, label)
+                val q = concatWithPlus(mainQuery, type, author, created, updated, lang, comments, qstate, label)
                 if (!hasExistingSearch(q, sort, order)) {
                     subscribe(searchRepository.searchIssues(q, 1, sort, order)) {
                         onSearchResult(
                             SearchCriteria(sort, order,
                                 PULL_REQUESTS, q.replace("+", " "), mainQuery, createdOn, language,
                                 fromThisUser, fullName, location, numFollowers, numRepos, numStars, numForks, updatedOn,
-                                fileExtension, fileSize, repoFullName, includeForked, isOpen, numComments, labels
+                                fileExtension, fileSize, repoFullName, fork, state, numComments, labels
                             ), it
                         )
                     }

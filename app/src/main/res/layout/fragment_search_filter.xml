@@ -597,33 +597,59 @@
                 app:layout_constraintBottom_toBottomOf="@id/repo_label"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <CheckBox
-                android:id="@+id/forked_checkbox"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/forked_label"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="@string/show_forked_repos"
-                android:layout_marginTop="24dp"
-                android:checked="true"
-                android:layout_marginStart="12dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
                 style="@style/Body"
+                android:text="@string/show_forked_repos"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/repo_label"/>
 
-            <CheckBox
-                android:id="@+id/open_checkbox"
+            <Spinner
+                android:id="@+id/forked_spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/open"
-                android:layout_marginTop="24dp"
-                android:checked="true"
-                android:layout_marginStart="12dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                android:dropDownWidth="wrap_content"
+                android:overlapAnchor="false"
+                android:background="@drawable/spinner_background"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="64dp"
+                android:entries="@array/include_forks"
+                app:layout_constraintStart_toEndOf="@id/forked_label"
+                app:layout_constraintTop_toTopOf="@id/forked_label"
+                app:layout_constraintBottom_toBottomOf="@id/forked_label"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:id="@+id/state_label"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
                 style="@style/Body"
+                android:text="@string/state"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/forked_checkbox"/>
+                app:layout_constraintTop_toBottomOf="@id/forked_label"/>
+
+            <Spinner
+                android:id="@+id/state_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:dropDownWidth="wrap_content"
+                android:overlapAnchor="false"
+                android:background="@drawable/spinner_background"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="64dp"
+                android:entries="@array/state_options"
+                app:layout_constraintStart_toEndOf="@id/state_label"
+                app:layout_constraintTop_toTopOf="@id/state_label"
+                app:layout_constraintBottom_toBottomOf="@id/state_label"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <TextView
                 android:id="@+id/num_comments_label"
@@ -634,7 +660,7 @@
                 android:layout_marginTop="26dp"
                 android:layout_marginStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/open_checkbox"/>
+                app:layout_constraintTop_toBottomOf="@id/state_label"/>
 
             <EditText
                 android:id="@+id/num_comments_edit"

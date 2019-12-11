@@ -115,8 +115,10 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
             repo_label.isVisible = currSearch == COMMITS
             repo_edit.isVisible = currSearch == COMMITS
 
-            forked_checkbox.isVisible = currSearch == REPOS || currSearch == CODE
-            open_checkbox.isVisible = currSearch == ISSUES || currSearch == PULL_REQUESTS
+            forked_label.isVisible = currSearch == REPOS || currSearch == CODE
+            forked_spinner.isVisible = currSearch == REPOS || currSearch == CODE
+            state_label.isVisible = currSearch == ISSUES || currSearch == PULL_REQUESTS
+            state_spinner.isVisible = currSearch == ISSUES || currSearch == PULL_REQUESTS
 
             num_comments_label.isVisible = currSearch == ISSUES || currSearch == PULL_REQUESTS
             num_comments_edit.isVisible = currSearch == ISSUES || currSearch == PULL_REQUESTS
@@ -163,8 +165,16 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
                 fileExtension = file_extension_edit.getStringTrimmed(),
                 fileSize = file_size_edit.getStringTrimmed(),
                 repoFullName = full_name_edit.getStringTrimmed(),
-                includeForked = forked_checkbox.isChecked,
-                isOpen = open_checkbox.isChecked,
+                fork = when (forked_spinner.selectedItem.toString()) {
+                    "open and closed" -> "true"
+                    "forked only" -> "only"
+                    else -> "false"
+                },
+                state = when (state_spinner.selectedItem.toString()) {
+                    "open and closed" -> ""
+                    "open only" -> "open"
+                    else -> "closed"
+                },
                 numComments = num_comments_edit.getStringTrimmed(),
                 labels = labels_edit.getStringTrimmed()
             )
@@ -189,8 +199,8 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
         file_extension_edit.clear()
         file_size_edit.clear()
         repo_edit.clear()
-        forked_checkbox.isChecked = true
-        open_checkbox.isChecked = true
+        forked_spinner.setSelection(0)
+        state_spinner.setSelection(0)
         num_comments_edit.clear()
         labels_edit.clear()
         sort_spinner.setSelection(0)
@@ -222,8 +232,16 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
                 file_extension_edit.setText(it.fileExtension)
                 file_size_edit.setText(it.fileSize)
                 repo_edit.setText(it.repoFullName)
-                forked_checkbox.isChecked = it.includeForked
-                open_checkbox.isChecked = it.isOpen
+                forked_spinner.setSelection(when (it.fork) {
+                    "true" -> 0
+                    "only" -> 1
+                    else -> 2
+                })
+                state_spinner.setSelection(when (it.state) {
+                    "" -> 0
+                    "open" -> 1
+                    else -> 2
+                })
                 num_comments_edit.setText(it.numComments)
                 labels_edit.setText(it.labels)
             }

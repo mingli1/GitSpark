@@ -26,8 +26,8 @@ data class SearchCriteria(
     var fileExtension: String = "",
     var fileSize: String = "",
     var repoFullName: String = "",
-    var includeForked: Boolean = true,
-    var isOpen: Boolean = true,
+    var fork: String = "true",
+    var state: String = "",
     var numComments: String = "",
     var labels: String = "",
     var timestamp: String = ""
