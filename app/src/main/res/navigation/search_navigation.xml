@@ -4,7 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/search"
     app:startDestination="@id/search_fragment">
-    
+
+    <include app:graph="@navigation/profile_navigation"/>
+    <include app:graph="@navigation/repo_navigation"/>
+
     <fragment
         android:id="@+id/search_fragment"
         android:name="com.gitspark.gitspark.ui.main.search.SearchFragment"
@@ -13,6 +16,22 @@
         <action
             android:id="@+id/action_search_to_search_filter"
             app:destination="@id/search_filter_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_search_to_profile"
+            app:destination="@id/profile"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_search_to_repo_detail"
+            app:destination="@id/repo"
             app:enterAnim="@anim/fragment_close_enter"
             app:exitAnim="@anim/fragment_close_exit"
             app:popEnterAnim="@anim/fragment_close_enter"

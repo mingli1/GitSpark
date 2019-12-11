@@ -166,7 +166,7 @@ class SearchFilterFragment : BaseFragment<SearchFilterViewModel>(SearchFilterVie
                 fileSize = file_size_edit.getStringTrimmed(),
                 repoFullName = full_name_edit.getStringTrimmed(),
                 fork = when (forked_spinner.selectedItem.toString()) {
-                    "open and closed" -> "true"
+                    "forked and not forked" -> "true"
                     "forked only" -> "only"
                     else -> "false"
                 },

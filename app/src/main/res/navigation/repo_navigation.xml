@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/repo"
+    app:startDestination="@id/repo_detail_fragment">
+
+    <fragment
+        android:id="@+id/profile_fragment"
+        android:name="com.gitspark.gitspark.ui.main.profile.ProfileFragment"
+        android:label="ProfileFragment">
+
+        <action
+            android:id="@+id/action_profile_fragment_to_edit_profile_fragment"
+            app:destination="@id/edit_profile_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_profile_fragment_to_repo_detail_fragment"
+            app:destination="@id/repo_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_profile_fragment_to_user_list_fragment"
+            app:destination="@id/user_list_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/profile_fragment2"
+        android:name="com.gitspark.gitspark.ui.main.profile.ProfileFragment"
+        android:label="ProfileFragment2">
+
+        <action
+            android:id="@+id/action_profile_fragment_to_edit_profile_fragment"
+            app:destination="@id/edit_profile_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_profile_fragment_to_repo_detail_fragment"
+            app:destination="@id/repo_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_profile_fragment_to_user_list_fragment"
+            app:destination="@id/user_list_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/edit_profile_fragment"
+        android:name="com.gitspark.gitspark.ui.main.profile.EditProfileFragment"
+        android:label="EditProfileFragment"/>
+
+    <fragment
+        android:id="@+id/repo_detail_fragment"
+        android:name="com.gitspark.gitspark.ui.main.repo.RepoDetailFragment"
+        android:label="RepoDetailFragment">
+
+        <action
+            android:id="@+id/action_repo_detail_fragment_to_repo_code_fragment"
+            app:destination="@id/repo_code_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_repo_detail_fragment_to_user_list_fragment"
+            app:destination="@id/user_list_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_repo_detail_fragment_to_repo_list_fragment"
+            app:destination="@id/repo_list_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_repo_detail_fragment_to_commit_list_fragment"
+            app:destination="@id/commit_list_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_repo_detail_fragment_to_event_list_fragment"
+            app:destination="@id/event_list_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/repo_code_fragment"
+        android:name="com.gitspark.gitspark.ui.main.repo.RepoCodeFragment"
+        android:label="RepoCodeFragment"/>
+
+    <fragment
+        android:id="@+id/user_list_fragment"
+        android:name="com.gitspark.gitspark.ui.main.shared.UserListFragment"
+        android:label="UserListFragment">
+
+        <action
+            android:id="@+id/action_user_list_fragment_to_profile_fragment"
+            app:destination="@id/profile_fragment2"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/repo_list_fragment"
+        android:name="com.gitspark.gitspark.ui.main.shared.RepoListFragment"
+        android:label="RepoListFragment">
+
+        <action
+            android:id="@+id/action_repo_list_fragment_to_repo_detail_fragment"
+            app:destination="@id/repo_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/commit_list_fragment"
+        android:name="com.gitspark.gitspark.ui.main.shared.CommitListFragment"
+        android:label="CommitListFragment"/>
+
+    <fragment
+        android:id="@+id/event_list_fragment"
+        android:name="com.gitspark.gitspark.ui.main.shared.EventListFragment"
+        android:label="EventListFragment">
+
+        <action
+            android:id="@+id/action_event_list_to_profile"
+            app:destination="@id/profile_fragment2"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+    </fragment>
+
+</navigation>

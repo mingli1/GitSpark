@@ -14,9 +14,12 @@ import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.ui.adapter.*
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -30,6 +33,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
     @Inject lateinit var timeHelper: TimeHelper
     @Inject lateinit var preferencesHelper: PreferencesHelper
     @Inject lateinit var scJsonAdapter: JsonAdapter<SearchCriteria>
+    @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
 
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[SearchSharedViewModel::class.java]
@@ -90,6 +94,9 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         viewModel.navigateToSearchFilter.observe(viewLifecycleOwner) { navigateToSearchFilterFragment(it) }
         viewModel.recentSearchesMediator.observe(viewLifecycleOwner) { viewModel.onRecentSearchesRetrieved(it) }
         sharedViewModel.searchResults.observe(viewLifecycleOwner) { viewModel.onSearchResultsObtained(it) }
+
+        viewModel.navigateToUserProfile.observe(viewLifecycleOwner) { navigateToUserProfile(it) }
+        viewModel.navigateToRepoDetail.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
     }
 
     private fun setUpListeners() {
@@ -142,5 +149,15 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
                 paginationListener.loading = false
             }
         }
+    }
+
+    private fun navigateToUserProfile(username: String) {
+        val data = Bundle().apply { putString(BUNDLE_USERNAME, username) }
+        findNavController().navigate(R.id.action_search_to_profile, data)
+    }
+
+    private fun navigateToRepoDetailFragment(repo: Repo) {
+        val data = Bundle().apply { putString(BUNDLE_REPO, repoJsonAdapter.toJson(repo)) }
+        findNavController().navigate(R.id.action_search_to_repo_detail, data)
     }
 }

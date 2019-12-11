@@ -22,6 +22,8 @@ class SearchViewModel @Inject constructor(
     val viewState = MutableLiveData<SearchViewState>()
     val recentSearchesMediator = MediatorLiveData<List<SearchCriteria>>()
     val navigateToSearchFilter = SingleLiveEvent<SearchCriteria?>()
+    val navigateToUserProfile = SingleLiveEvent<String>()
+    val navigateToRepoDetail = SingleLiveEvent<Repo>()
     private var currSearch: SearchCriteria? = null
     private var page = 1
 
@@ -77,11 +79,11 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun onRepoSelected(repo: Repo) {
-
+        navigateToRepoDetail.value = repo
     }
 
     override fun onUserSelected(username: String) {
-
+        navigateToUserProfile.value = username
     }
 
     override fun onRecentSearchClicked(sc: SearchCriteria) {
