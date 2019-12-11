@@ -31,7 +31,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onRecentSearchesRetrieved(rs: List<SearchCriteria>) {
-        viewState.value = viewState.value?.copy(recentSearches = rs, updateAdapter = false)
+        viewState.value = viewState.value?.copy(recentSearches = rs, updateAdapter = true)
             ?: SearchViewState(recentSearches = rs)
     }
 

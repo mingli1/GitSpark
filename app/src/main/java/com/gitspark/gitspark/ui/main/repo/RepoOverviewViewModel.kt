@@ -40,7 +40,6 @@ class RepoOverviewViewModel @Inject constructor(
             var updatedText = ""
             if (repoPushedAt.isNotEmpty()) {
                 val updatedDate = Instant.parse(repoPushedAt)
-                println(repoPushedAt)
                 updatedText = timeHelper.getRelativeTimeFormat(updatedDate)
             }
 
