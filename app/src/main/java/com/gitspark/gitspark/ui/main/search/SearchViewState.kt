@@ -10,5 +10,6 @@ data class SearchViewState(
     val resultsCount: Int = 0,
     val updateAdapter: Boolean = false,
     val isLastPage: Boolean = false,
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val refreshing: Boolean = false
 )

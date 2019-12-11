@@ -22,6 +22,8 @@ import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_search.nested_scroll_view
+import kotlinx.android.synthetic.main.fragment_search.swipe_refresh
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
@@ -79,6 +81,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
             layoutManager = resultsLayoutManager
         }
 
+        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+
         viewModel.retrieveRecentSearches()
         setUpListeners()
     }
@@ -100,6 +104,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
     }
 
     private fun setUpListeners() {
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
         search_button.setOnClickListener { viewModel.onSearchButtonClicked() }
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
         search_results_clear_button.setOnClickListener { viewModel.onClearResultsButtonClicked() }
@@ -116,7 +121,9 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
 
     private fun updateView(viewState: SearchViewState) {
         with (viewState) {
-            loading_indicator.isVisible = loading
+            loading_indicator.isVisible = loading && !refreshing
+            swipe_refresh.isRefreshing = refreshing
+            swipe_refresh.isEnabled = currSearch != null
 
             search_results.isVisible = currSearch != null
             search_button.text = currSearch?.q ?: getString(R.string.search_title_text)

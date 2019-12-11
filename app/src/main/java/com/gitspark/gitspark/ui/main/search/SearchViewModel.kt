@@ -78,6 +78,12 @@ class SearchViewModel @Inject constructor(
         )
     }
 
+    fun onRefresh() {
+        page = 1
+        viewState.value = viewState.value?.copy(loading = true, refreshing = true)
+        requestSearch()
+    }
+
     override fun onRepoSelected(repo: Repo) {
         navigateToRepoDetail.value = repo
     }
@@ -133,13 +139,14 @@ class SearchViewModel @Inject constructor(
                     isLastPage = page.isLastPage(result.value.last),
                     updateAdapter = true,
                     resultsCount = result.value.totalCount,
-                    loading = false
+                    loading = false,
+                    refreshing = false
                 )
                 if (page < result.value.last) page++
             }
             is SearchResult.Failure -> {
                 alert(result.error)
-                viewState.value = viewState.value?.copy(updateAdapter = false, loading = false)
+                viewState.value = viewState.value?.copy(updateAdapter = false, loading = false, refreshing = false)
             }
         }
     }
