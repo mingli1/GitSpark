@@ -31,6 +31,7 @@
     <string name="num_repos_text">%1$s (%2$s)</string>
     <string name="user_profile_title">Profile (%1$s)</string>
     <string name="edit_profile_title">Edit Profile</string>
+    <string name="issues_title">Issues</string>
     <string name="name_label">Name</string>
     <string name="name_disclaimer">A name displayed alongside your username (usually your full name). You may remove it at any time.</string>
     <string name="bio_label">Bio</string>

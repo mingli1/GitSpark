@@ -32,9 +32,6 @@ internal abstract class FragmentModule {
     internal abstract fun contributesPullRequestsFragment(): PullRequestsFragment
 
     @ContributesAndroidInjector
-    internal abstract fun contributesIssuesFragment(): IssuesFragment
-
-    @ContributesAndroidInjector
     internal abstract fun contributesOverviewFragment(): OverviewFragment
 
     @ContributesAndroidInjector
@@ -72,4 +69,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesSearchFilterFragment(): SearchFilterFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesIssuesListFragment(): SearchFilterFragment
 }

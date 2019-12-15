@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.gitspark.gitspark.ui.base.ViewModelFactory
 import com.gitspark.gitspark.ui.login.LoginViewModel
 import com.gitspark.gitspark.ui.main.home.HomeViewModel
-import com.gitspark.gitspark.ui.main.issues.IssuesViewModel
 import com.gitspark.gitspark.ui.main.pr.PullRequestsViewModel
 import com.gitspark.gitspark.ui.main.profile.*
 import com.gitspark.gitspark.ui.main.repo.RepoContentViewModel
@@ -15,10 +14,7 @@ import com.gitspark.gitspark.ui.main.repo.RepoOverviewViewModel
 import com.gitspark.gitspark.ui.main.search.SearchFilterViewModel
 import com.gitspark.gitspark.ui.main.search.SearchSharedViewModel
 import com.gitspark.gitspark.ui.main.search.SearchViewModel
-import com.gitspark.gitspark.ui.main.shared.CommitListViewModel
-import com.gitspark.gitspark.ui.main.shared.EventListViewModel
-import com.gitspark.gitspark.ui.main.shared.RepoListViewModel
-import com.gitspark.gitspark.ui.main.shared.UserListViewModel
+import com.gitspark.gitspark.ui.main.shared.*
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -41,10 +37,6 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(PullRequestsViewModel::class)
     internal abstract fun bindPullRequestsViewModel(pullRequestsViewModel: PullRequestsViewModel): ViewModel
-
-    @Binds @IntoMap
-    @ViewModelKey(IssuesViewModel::class)
-    internal abstract fun bindIssuesViewModel(issuesViewModel: IssuesViewModel): ViewModel
 
     @Binds @IntoMap
     @ViewModelKey(OverviewViewModel::class)
@@ -113,6 +105,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(SearchSharedViewModel::class)
     internal abstract fun bindSearchSharedViewModel(searchSharedViewModel: SearchSharedViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(IssuesListViewModel::class)
+    internal abstract fun bindIssuesListViewModel(issuesListViewModel: IssuesListViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
