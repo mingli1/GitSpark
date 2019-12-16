@@ -9,10 +9,7 @@ import com.gitspark.gitspark.ui.main.repo.RepoDetailFragment
 import com.gitspark.gitspark.ui.main.repo.RepoOverviewFragment
 import com.gitspark.gitspark.ui.main.search.SearchFilterFragment
 import com.gitspark.gitspark.ui.main.search.SearchFragment
-import com.gitspark.gitspark.ui.main.shared.CommitListFragment
-import com.gitspark.gitspark.ui.main.shared.EventListFragment
-import com.gitspark.gitspark.ui.main.shared.RepoListFragment
-import com.gitspark.gitspark.ui.main.shared.UserListFragment
+import com.gitspark.gitspark.ui.main.shared.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -71,5 +68,5 @@ internal abstract class FragmentModule {
     internal abstract fun contributesSearchFilterFragment(): SearchFilterFragment
 
     @ContributesAndroidInjector
-    internal abstract fun contributesIssuesListFragment(): SearchFilterFragment
+    internal abstract fun contributesIssuesListFragment(): IssuesListFragment
 }

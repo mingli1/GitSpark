@@ -30,59 +30,73 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal">
+            android:layout_height="wrap_content">
     
-            <TextView
-                android:id="@+id/open_field"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="16dp"
-                android:padding="16dp"
-                android:gravity="center"
-                android:background="?attr/selectableItemBackground"
-                android:focusable="true"
-                android:clickable="true"
-                style="@style/BodyLarge"
-                android:textSize="19sp"
-                android:drawableStart="@drawable/ic_issue"
-                android:drawablePadding="12dp"
-                android:layout_weight="1"
-                tools:text="19 Open"/>
-    
-            <TextView
-                android:id="@+id/closed_field"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="32dp"
-                android:padding="16dp"
-                android:gravity="center"
-                android:background="?attr/selectableItemBackground"
-                android:focusable="true"
-                android:clickable="true"
-                style="@style/BodyLarge"
-                android:textSize="19sp"
-                android:drawableStart="@drawable/ic_check"
-                android:drawablePadding="12dp"
-                android:layout_weight="1"
-                tools:text="155 Closed"/>
+                android:orientation="vertical">
+        
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
             
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/open_field"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="16dp"
+                        android:padding="16dp"
+                        android:gravity="center"
+                        android:background="?attr/selectableItemBackground"
+                        android:focusable="true"
+                        android:clickable="true"
+                        style="@style/BodyLarge"
+                        android:textSize="19sp"
+                        android:drawableStart="@drawable/ic_issue"
+                        android:drawablePadding="12dp"
+                        android:layout_weight="1"
+                        tools:text="19 Open"/>
+            
+                    <TextView
+                        android:id="@+id/closed_field"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:padding="16dp"
+                        android:gravity="center"
+                        android:background="?attr/selectableItemBackground"
+                        android:focusable="true"
+                        android:clickable="true"
+                        style="@style/BodyLarge"
+                        android:textSize="19sp"
+                        android:drawableStart="@drawable/ic_check"
+                        android:drawablePadding="12dp"
+                        android:layout_weight="1"
+                        tools:text="155 Closed"/>
         
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorWhiteDark"/>
+                </LinearLayout>
         
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/item_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorWhiteDark"/>
+        
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/item_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+    
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
     
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     
