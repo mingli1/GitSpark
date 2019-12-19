@@ -55,6 +55,7 @@ class IssuesListViewModel @Inject constructor(
             updateAdapter = false
         )
         if (reset) page = 1
+        if (reset || refresh) requestNumbers()
         requestData()
     }
 
@@ -83,6 +84,33 @@ class IssuesListViewModel @Inject constructor(
                     )
                     alert(it.error)
                 }
+            }
+        }
+    }
+
+    private fun requestNumbers() {
+        subscribe(issueRepository.getIssues(filter, "open", 1, 1)) {
+            when (it) {
+                is IssueResult.Success -> {
+                    val total = when (it.value.last) {
+                        -1 -> it.value.value.size
+                        else -> it.value.last
+                    }
+                    viewState.value = viewState.value?.copy(numOpen = total)
+                }
+                is IssueResult.Failure -> alert(it.error)
+            }
+        }
+        subscribe(issueRepository.getIssues(filter, "closed", 1, 1)) {
+            when (it) {
+                is IssueResult.Success -> {
+                    val total = when (it.value.last) {
+                        -1 -> it.value.value.size
+                        else -> it.value.last
+                    }
+                    viewState.value = viewState.value?.copy(numClosed = total)
+                }
+                is IssueResult.Failure -> alert(it.error)
             }
         }
     }

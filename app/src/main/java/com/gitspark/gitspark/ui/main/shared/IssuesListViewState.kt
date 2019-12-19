@@ -8,5 +8,7 @@ data class IssuesListViewState(
     val issues: ArrayList<Issue> = arrayListOf(),
     val isLastPage: Boolean = false,
     val updateAdapter: Boolean = false,
-    val showOpenIssues: Boolean = true
+    val showOpenIssues: Boolean = true,
+    val numOpen: Int = 0,
+    val numClosed: Int = 0
 )

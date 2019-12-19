@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.formatLarge
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setColor
@@ -103,12 +104,15 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
                 resources.getColor(R.color.colorDarkGray, null)
             open_field.compoundDrawablesRelative[0].setColor(col1)
             open_field.setTextColor(col1)
-            open_field.setTypeface(open_field.typeface,
+            open_field.setTypeface(null,
                 if (showOpenIssues) Typeface.BOLD else Typeface.NORMAL)
             closed_field.compoundDrawablesRelative[0].setColor(col2)
             closed_field.setTextColor(col2)
-            closed_field.setTypeface(closed_field.typeface,
+            closed_field.setTypeface(null,
                 if (!showOpenIssues) Typeface.BOLD else Typeface.NORMAL)
+
+            open_field.text = getString(R.string.num_open_issues, numOpen.formatLarge())
+            closed_field.text = getString(R.string.num_closed_issues, numClosed.formatLarge())
 
             if (updateAdapter) {
                 issuesAdapter.setItems(issues, isLastPage)
