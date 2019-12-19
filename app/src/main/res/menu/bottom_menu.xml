@@ -17,13 +17,13 @@
         android:title="@string/nav_search"/>
     
     <item
-        android:id="@+id/pull_requests"
-        android:icon="@drawable/ic_pull_request"
-        android:title="@string/nav_pr"/>
-    
-    <item
         android:id="@+id/issues"
         android:icon="@drawable/ic_issue"
         android:title="@string/nav_issues"/>
+    
+    <item
+        android:id="@+id/pull_requests"
+        android:icon="@drawable/ic_pull_request"
+        android:title="@string/nav_pr"/>
     
 </menu>

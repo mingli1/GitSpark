@@ -40,8 +40,8 @@ class MainActivity : AppCompatActivity() {
                 R.navigation.home_navigation,
                 R.navigation.profile_navigation,
                 R.navigation.search_navigation,
-                R.navigation.pr_navigation,
-                R.navigation.issues_navigation
+                R.navigation.issues_navigation,
+                R.navigation.pr_navigation
             ),
             fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host_container,
