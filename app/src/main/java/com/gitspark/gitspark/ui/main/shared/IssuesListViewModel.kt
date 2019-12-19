@@ -9,9 +9,14 @@ import com.gitspark.gitspark.repository.SearchResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
-const val CREATED_Q = "type:issue+state:%s+author:%s"
-const val ASSIGNED_Q = "type:issue+state:%s+assignee:%s"
-const val MENTIONED_Q = "type:issue+state:%s+mentions:%s"
+const val CREATED_ISSUE_Q = "type:issue+state:%s+author:%s"
+const val ASSIGNED_ISSUE_Q = "type:issue+state:%s+assignee:%s"
+const val MENTIONED_ISSUE_Q = "type:issue+state:%s+mentions:%s"
+
+const val CREATED_PR_Q = "type:pr+state:%s+author:%s"
+const val ASSIGNED_PR_Q = "type:pr+state:%s+assignee:%s"
+const val MENTIONED_PR_Q = "type:pr+state:%s+mentions:%s"
+const val REVIEW_REQUESTED_PR_Q = "type:pr+state:%s+review-requested:%s"
 
 class IssuesListViewModel @Inject constructor(
     private val searchRepository: SearchRepository,

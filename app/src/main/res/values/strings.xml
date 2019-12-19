@@ -214,6 +214,7 @@
     <string name="created">Created</string>
     <string name="assigned">Assigned</string>
     <string name="mentioned">Mentioned</string>
+    <string name="review_requests">Review Requests</string>
     <string name="pushevent_commit_count">%1$d new commits:</string>
     <string name="pushevent_commit_single">1 new commit:</string>
     <string name="issues_fullname">#%1$d %2$s</string>

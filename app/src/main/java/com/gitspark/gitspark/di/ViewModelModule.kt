@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.gitspark.gitspark.ui.base.ViewModelFactory
 import com.gitspark.gitspark.ui.login.LoginViewModel
 import com.gitspark.gitspark.ui.main.home.HomeViewModel
-import com.gitspark.gitspark.ui.main.pr.PullRequestsViewModel
 import com.gitspark.gitspark.ui.main.profile.*
 import com.gitspark.gitspark.ui.main.repo.RepoContentViewModel
 import com.gitspark.gitspark.ui.main.repo.RepoDetailSharedViewModel
@@ -33,10 +32,6 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(SearchViewModel::class)
     internal abstract fun bindSearchViewModel(searchViewModel: SearchViewModel): ViewModel
-
-    @Binds @IntoMap
-    @ViewModelKey(PullRequestsViewModel::class)
-    internal abstract fun bindPullRequestsViewModel(pullRequestsViewModel: PullRequestsViewModel): ViewModel
 
     @Binds @IntoMap
     @ViewModelKey(OverviewViewModel::class)

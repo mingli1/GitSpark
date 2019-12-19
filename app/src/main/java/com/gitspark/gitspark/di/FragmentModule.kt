@@ -26,9 +26,6 @@ internal abstract class FragmentModule {
     internal abstract fun contributesSearchFragment(): SearchFragment
 
     @ContributesAndroidInjector
-    internal abstract fun contributesPullRequestsFragment(): PullRequestsFragment
-
-    @ContributesAndroidInjector
     internal abstract fun contributesOverviewFragment(): OverviewFragment
 
     @ContributesAndroidInjector
