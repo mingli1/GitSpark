@@ -1,19 +1,21 @@
 package com.gitspark.gitspark.ui.main.shared
 
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.isFirstPage
 import com.gitspark.gitspark.model.isLastPage
-import com.gitspark.gitspark.repository.IssueRepository
-import com.gitspark.gitspark.repository.IssueResult
+import com.gitspark.gitspark.repository.SearchRepository
+import com.gitspark.gitspark.repository.SearchResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import javax.inject.Inject
 
-const val ISSUE_TYPE_CREATED = "created"
-const val ISSUE_TYPE_ASSIGNED = "assigned"
-const val ISSUE_TYPE_MENTIONED = "mentioned"
+const val CREATED_Q = "type:issue+state:%s+author:%s"
+const val ASSIGNED_Q = "type:issue+state:%s+assignee:%s"
+const val MENTIONED_Q = "type:issue+state:%s+mentions:%s"
 
 class IssuesListViewModel @Inject constructor(
-    private val issueRepository: IssueRepository
+    private val searchRepository: SearchRepository,
+    private val prefsHelper: PreferencesHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<IssuesListViewState>()
@@ -55,15 +57,18 @@ class IssuesListViewModel @Inject constructor(
             updateAdapter = false
         )
         if (reset) page = 1
-        if (reset || refresh) requestNumbers()
-        requestData()
+        requestData(reset)
     }
 
-    private fun requestData() {
+    private fun requestData(reset: Boolean) {
         val state = viewState.value?.showOpenIssues ?: true
-        subscribe(issueRepository.getIssues(filter, if (state) "open" else "closed", page)) {
+        subscribe(searchRepository.searchIssues(
+            query = String.format(filter, if (state) "open" else "closed", prefsHelper.getAuthUsername()),
+            page = page,
+            sort = "created"
+        )) {
             when (it) {
-                is IssueResult.Success -> {
+                is SearchResult.Success -> {
                     val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.issues ?: arrayListOf()
                     updatedList.addAll(it.value.value)
 
@@ -72,11 +77,13 @@ class IssuesListViewModel @Inject constructor(
                         loading = false,
                         refreshing = false,
                         isLastPage = page.isLastPage(it.value.last),
-                        updateAdapter = true
+                        updateAdapter = true,
+                        numOpen = if (reset && state) it.value.totalCount else viewState.value?.numOpen ?: 0,
+                        numClosed = if (reset && !state) it.value.totalCount else viewState.value?.numClosed ?: 0
                     )
                     if (page < it.value.last) page++
                 }
-                is IssueResult.Failure -> {
+                is SearchResult.Failure -> {
                     viewState.value = viewState.value?.copy(
                         loading = false,
                         refreshing = false,
@@ -86,31 +93,21 @@ class IssuesListViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun requestNumbers() {
-        subscribe(issueRepository.getIssues(filter, "open", 1, 1)) {
-            when (it) {
-                is IssueResult.Success -> {
-                    val total = when (it.value.last) {
-                        -1 -> it.value.value.size
-                        else -> it.value.last
+        if (reset) {
+            subscribe(searchRepository.searchIssues(
+                query = String.format(filter, if (state) "closed" else "open", prefsHelper.getAuthUsername()),
+                page = page,
+                sort = "created"
+            )) {
+                when (it) {
+                    is SearchResult.Success -> {
+                        viewState.value = viewState.value?.copy(
+                            numOpen = if (!state) it.value.totalCount else viewState.value?.numOpen ?: 0,
+                            numClosed = if (state) it.value.totalCount else viewState.value?.numClosed ?: 0
+                        )
                     }
-                    viewState.value = viewState.value?.copy(numOpen = total)
+                    is SearchResult.Failure -> alert(it.error)
                 }
-                is IssueResult.Failure -> alert(it.error)
-            }
-        }
-        subscribe(issueRepository.getIssues(filter, "closed", 1, 1)) {
-            when (it) {
-                is IssueResult.Success -> {
-                    val total = when (it.value.last) {
-                        -1 -> it.value.value.size
-                        else -> it.value.last
-                    }
-                    viewState.value = viewState.value?.copy(numClosed = total)
-                }
-                is IssueResult.Failure -> alert(it.error)
             }
         }
     }

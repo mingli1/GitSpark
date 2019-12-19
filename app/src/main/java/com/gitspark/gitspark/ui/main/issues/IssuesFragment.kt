@@ -29,13 +29,13 @@ class IssuesFragment : Fragment() {
         })
 
         val created = IssuesListFragment().apply {
-            arguments = Bundle().apply { putString(BUNDLE_ISSUE_TYPE, ISSUE_TYPE_CREATED) }
+            arguments = Bundle().apply { putString(BUNDLE_ISSUE_TYPE, CREATED_Q) }
         }
         val assigned = IssuesListFragment().apply {
-            arguments = Bundle().apply { putString(BUNDLE_ISSUE_TYPE, ISSUE_TYPE_ASSIGNED) }
+            arguments = Bundle().apply { putString(BUNDLE_ISSUE_TYPE, ASSIGNED_Q) }
         }
         val mentioned = IssuesListFragment().apply {
-            arguments = Bundle().apply { putString(BUNDLE_ISSUE_TYPE, ISSUE_TYPE_MENTIONED) }
+            arguments = Bundle().apply { putString(BUNDLE_ISSUE_TYPE, MENTIONED_Q) }
         }
 
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
