@@ -7,6 +7,7 @@ data class Issue(
     val id: Long = 0,
     val url: String = "",
     val htmlUrl: String = "",
+    val repoUrl: String = "",
     val number: Int = 0,
     val state: String = "",
     val title: String = "",

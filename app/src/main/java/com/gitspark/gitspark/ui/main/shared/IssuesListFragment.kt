@@ -66,7 +66,7 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
         item_list.layoutManager = layoutManager
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 
-        issuesAdapter = IssuesAdapter(timeHelper, colorHelper)
+        issuesAdapter = IssuesAdapter(timeHelper, colorHelper, true)
         if (item_list.adapter == null) item_list.adapter = issuesAdapter
 
         arguments?.let {

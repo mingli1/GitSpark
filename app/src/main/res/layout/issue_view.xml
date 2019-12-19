@@ -65,7 +65,7 @@
         app:layout_constraintEnd_toStartOf="@id/comments_field"
         app:layout_constraintTop_toBottomOf="@id/labels_container"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="#22 opened 6 hours ago by mingli1"/>
+        tools:text="mingli/GitSpark #22 opened 6 hours ago by mingli1"/>
 
     <TextView
         android:id="@+id/comments_field"

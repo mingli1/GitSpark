@@ -16,7 +16,8 @@ import org.threeten.bp.Instant
 
 class IssuesAdapter(
     private val timeHelper: TimeHelper,
-    private val colorHelper: ColorHelper
+    private val colorHelper: ColorHelper,
+    private val includeRepoName: Boolean = false
 ) : PaginationAdapter() {
 
     override fun getViewHolderId() = R.layout.issue_view
@@ -33,12 +34,26 @@ class IssuesAdapter(
                 val date = Instant.parse(if (item.state == "open") item.createdAt else item.closedAt)
                 val formatted = timeHelper.getRelativeTimeFormat(date)
 
-                content_field.text = context.getString(R.string.issue_desc,
-                    item.number,
-                    if (item.state == "open") "opened" else "closed",
-                    formatted,
-                    item.user.login
-                )
+                if (includeRepoName) {
+                    val split = item.repoUrl.split("/")
+                    content_field.text = context.getString(
+                        R.string.issue_desc_repo,
+                        "${split[split.size - 2]}/${split.last()}",
+                        item.number,
+                        if (item.state == "open") "opened" else "closed",
+                        formatted,
+                        item.user.login
+                    )
+                }
+                else {
+                    content_field.text = context.getString(
+                        R.string.issue_desc,
+                        item.number,
+                        if (item.state == "open") "opened" else "closed",
+                        formatted,
+                        item.user.login
+                    )
+                }
                 comments_field.isVisible = item.numComments > 0
                 comments_field.text = item.numComments.toString()
 
