@@ -29,6 +29,8 @@ class RepoOverviewViewModel @Inject constructor(
     val navigateToUserListAction = SingleLiveEvent<Triple<String, UserListType, String>>()
     val navigateToRepoListAction = SingleLiveEvent<Triple<String, RepoListType, String>>()
     val navigateToEventListAction = SingleLiveEvent<Triple<String, EventListType, String>>()
+    val navigateToIssuesAction = SingleLiveEvent<Pair<String, String>>()
+    val navigateToPrAction = SingleLiveEvent<Pair<String, String>>()
 
     private lateinit var repo: Repo
     @VisibleForTesting var userWatching = false
@@ -177,6 +179,14 @@ class RepoOverviewViewModel @Inject constructor(
 
     fun onActivityButtonClicked(title: String) {
         navigateToEventListAction.value = Triple(title, EventListType.RepoEvents, repo.fullName)
+    }
+
+    fun onIssuesClicked() {
+        navigateToIssuesAction.value = Pair("Issues of ${repo.fullName}", repo.fullName)
+    }
+
+    fun onPullRequestsClicked() {
+        navigateToPrAction.value = Pair("Pull requests of ${repo.fullName}", repo.fullName)
     }
 
     private fun requestRepoReadme(owner: String, repoName: String) {

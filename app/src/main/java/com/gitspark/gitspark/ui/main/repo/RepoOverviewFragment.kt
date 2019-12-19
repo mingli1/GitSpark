@@ -73,6 +73,8 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         viewModel.navigateToUserListAction.observe(viewLifecycleOwner) { navigateToUserListFragment(it) }
         viewModel.navigateToRepoListAction.observe(viewLifecycleOwner) { navigateToRepoListFragment(it) }
         viewModel.navigateToEventListAction.observe(viewLifecycleOwner) { navigateToEventListFragment(it) }
+        viewModel.navigateToIssuesAction.observe(viewLifecycleOwner) { navigateToIssuesListFragment(it, true) }
+        viewModel.navigateToPrAction.observe(viewLifecycleOwner) { navigateToIssuesListFragment(it, false) }
     }
 
     override fun onPositiveClicked() = viewModel.onForkConfirmClicked()
@@ -193,6 +195,8 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             viewModel.onActivityButtonClicked(getString(R.string.repo_events_title))
         }
         language_button.setOnClickListener { viewModel.onLanguageButtonClicked() }
+        issues_field.setOnClickListener { viewModel.onIssuesClicked() }
+        pull_requests_field.setOnClickListener { viewModel.onPullRequestsClicked() }
     }
 
     private fun showForkConfirmDialog(name: String) {
@@ -234,6 +238,18 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         }
         findNavController().navigate(
             R.id.action_repo_detail_fragment_to_event_list_fragment,
+            data
+        )
+    }
+
+    private fun navigateToIssuesListFragment(pair: Pair<String, String>, issue: Boolean) {
+        val data = Bundle().apply {
+            putString(BUNDLE_ISSUE_LIST_TYPE, "list")
+            putString(BUNDLE_TITLE, pair.first)
+            putString(BUNDLE_ISSUE_TYPE, if (issue) "$REPO_ISSUE_Q${pair.second}" else "$REPO_PR_Q${pair.second}")
+        }
+        findNavController().navigate(
+            R.id.action_repo_detail_fragment_to_issues_list_fragment,
             data
         )
     }

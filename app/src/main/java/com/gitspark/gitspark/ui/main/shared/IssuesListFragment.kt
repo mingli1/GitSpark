@@ -50,7 +50,7 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
             supportActionBar?.run {
                 setDisplayHomeAsUpEnabled(true)
                 setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
-                title = getString(R.string.issues_button_text)
+                title = arguments?.getString(BUNDLE_TITLE) ?: getString(R.string.issues_button_text)
             }
         }
 
@@ -66,7 +66,7 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
         item_list.layoutManager = layoutManager
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 
-        issuesAdapter = IssuesAdapter(timeHelper, colorHelper, true)
+        issuesAdapter = IssuesAdapter(timeHelper, colorHelper, arguments?.getString(BUNDLE_ISSUE_LIST_TYPE) != "list")
         if (item_list.adapter == null) item_list.adapter = issuesAdapter
 
         arguments?.let {

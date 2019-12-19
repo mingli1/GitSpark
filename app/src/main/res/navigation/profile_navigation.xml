@@ -116,6 +116,14 @@
             app:exitAnim="@anim/fragment_close_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit"/>
+    
+        <action
+            android:id="@+id/action_repo_detail_fragment_to_issues_list_fragment"
+            app:destination="@id/issues_list_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
         
     </fragment>
     
@@ -173,5 +181,10 @@
             app:popExitAnim="@anim/fragment_close_exit"/>
 
     </fragment>
+    
+    <fragment
+        android:id="@+id/issues_list_fragment"
+        android:name="com.gitspark.gitspark.ui.main.shared.IssuesListFragment"
+        android:label="IssuesListFragment"/>
 
 </navigation>

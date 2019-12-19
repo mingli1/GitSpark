@@ -18,6 +18,9 @@ const val ASSIGNED_PR_Q = "type:pr+state:%s+assignee:%s"
 const val MENTIONED_PR_Q = "type:pr+state:%s+mentions:%s"
 const val REVIEW_REQUESTED_PR_Q = "type:pr+state:%s+review-requested:%s"
 
+const val REPO_ISSUE_Q = "type:issue+state:%s+repo:"
+const val REPO_PR_Q = "type:pr+state:%s+repo:"
+
 class IssuesListViewModel @Inject constructor(
     private val searchRepository: SearchRepository,
     private val prefsHelper: PreferencesHelper
@@ -67,8 +70,12 @@ class IssuesListViewModel @Inject constructor(
 
     private fun requestData(reset: Boolean) {
         val state = viewState.value?.showOpenIssues ?: true
+        val q = if (filter.contains("repo")) String.format(filter, if (state) "open" else "closed") else
+            String.format(filter, if (state) "open" else "closed", prefsHelper.getAuthUsername())
+        val q2 = if (filter.contains("repo")) String.format(filter, if (state) "closed" else "open") else
+            String.format(filter, if (state) "closed" else "open", prefsHelper.getAuthUsername())
         subscribe(searchRepository.searchIssues(
-            query = String.format(filter, if (state) "open" else "closed", prefsHelper.getAuthUsername()),
+            query = q,
             page = page,
             sort = "created"
         )) {
@@ -100,7 +107,7 @@ class IssuesListViewModel @Inject constructor(
         }
         if (reset) {
             subscribe(searchRepository.searchIssues(
-                query = String.format(filter, if (state) "closed" else "open", prefsHelper.getAuthUsername()),
+                query = q2,
                 page = page,
                 sort = "created"
             )) {
