@@ -11,12 +11,14 @@ import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.helper.ColorHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.ui.nav.IssueDetailNavigator
 import kotlinx.android.synthetic.main.issue_view.view.*
 import org.threeten.bp.Instant
 
 class IssuesAdapter(
     private val timeHelper: TimeHelper,
     private val colorHelper: ColorHelper,
+    private val navigator: IssueDetailNavigator,
     private val includeRepoName: Boolean = false
 ) : PaginationAdapter() {
 
@@ -35,10 +37,9 @@ class IssuesAdapter(
                 val formatted = timeHelper.getRelativeTimeFormat(date)
 
                 if (includeRepoName) {
-                    val split = item.repoUrl.split("/")
                     content_field.text = context.getString(
                         R.string.issue_desc_repo,
-                        "${split[split.size - 2]}/${split.last()}",
+                        item.getRepoFullNameFromUrl(),
                         item.number,
                         if (item.state == "open") "opened" else "closed",
                         formatted,
@@ -73,6 +74,8 @@ class IssuesAdapter(
                     }
                     labels_container.addView(labelView)
                 }
+
+                issue_view.setOnClickListener { navigator.onIssueClicked(item) }
             }
         }
     }

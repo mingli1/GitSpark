@@ -1,8 +1,7 @@
 package com.gitspark.gitspark.di
 
 import com.gitspark.gitspark.ui.main.home.HomeFragment
-import com.gitspark.gitspark.ui.main.issues.IssuesFragment
-import com.gitspark.gitspark.ui.main.pr.PullRequestsFragment
+import com.gitspark.gitspark.ui.main.issues.IssueDetailFragment
 import com.gitspark.gitspark.ui.main.profile.*
 import com.gitspark.gitspark.ui.main.repo.RepoContentFragment
 import com.gitspark.gitspark.ui.main.repo.RepoDetailFragment
@@ -66,4 +65,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesIssuesListFragment(): IssuesListFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesIssueDetailFragment(): IssueDetailFragment
 }

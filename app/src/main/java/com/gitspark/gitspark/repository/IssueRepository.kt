@@ -32,6 +32,17 @@ class IssueRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain issues.") }
     }
 
+    fun getIssue(
+        username: String,
+        repoName: String,
+        issueNum: Int
+    ): Observable<IssueResult<Issue>> {
+        return getIssueService()
+            .getIssue(username, repoName, issueNum)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed to obtain issue.") }
+    }
+
     private fun getIssueService() =
         retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(IssueService::class.java)

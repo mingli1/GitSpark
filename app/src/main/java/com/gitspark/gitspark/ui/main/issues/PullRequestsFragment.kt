@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.main.pr
+package com.gitspark.gitspark.ui.main.issues
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -6,6 +6,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.gitspark.gitspark.BuildConfig
+import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.room.Database
@@ -51,4 +52,8 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideSearchCriteriaJsonAdapter(moshi: Moshi): JsonAdapter<SearchCriteria> = moshi.adapter(SearchCriteria::class.java)
+
+    @Provides
+    @Singleton
+    fun provideIssueJsonAdapter(moshi: Moshi): JsonAdapter<Issue> = moshi.adapter(Issue::class.java)
 }

@@ -8,6 +8,21 @@
     <fragment
         android:id="@+id/issues_fragment"
         android:name="com.gitspark.gitspark.ui.main.issues.IssuesFragment"
-        android:label="IssuesFragment"/>
+        android:label="IssuesFragment">
+    
+        <action
+            android:id="@+id/action_issues_to_issue_detail"
+            app:destination="@id/issue_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+        
+    </fragment>
+    
+    <fragment
+        android:id="@+id/issue_detail_fragment"
+        android:name="com.gitspark.gitspark.ui.main.issues.IssueDetailFragment"
+        android:label="IssueDetailFragment"/>
 
 </navigation>

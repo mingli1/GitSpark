@@ -36,6 +36,14 @@
             app:exitAnim="@anim/fragment_close_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit"/>
+    
+        <action
+            android:id="@+id/action_search_to_issue_detail"
+            app:destination="@id/issue_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
 
     </fragment>
 
@@ -43,5 +51,10 @@
         android:id="@+id/search_filter_fragment"
         android:name="com.gitspark.gitspark.ui.main.search.SearchFilterFragment"
         android:label="SearchFilterFragment"/>
+    
+    <fragment
+        android:id="@+id/issue_detail_fragment"
+        android:name="com.gitspark.gitspark.ui.main.issues.IssueDetailFragment"
+        android:label="IssueDetailFragment"/>
 
 </navigation>

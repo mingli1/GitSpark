@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gitspark.gitspark.R
@@ -15,11 +16,14 @@ import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.helper.ColorHelper
 import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.ui.adapter.IssuesAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
+import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE
 import com.google.android.material.appbar.AppBarLayout
+import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_issue_list.*
 import kotlinx.android.synthetic.main.fragment_issue_list.item_list
 import kotlinx.android.synthetic.main.fragment_issue_list.swipe_refresh
@@ -33,6 +37,7 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
 
     @Inject lateinit var timeHelper: TimeHelper
     @Inject lateinit var colorHelper: ColorHelper
+    @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
 
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: NestedPaginationListener
@@ -66,7 +71,7 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
         item_list.layoutManager = layoutManager
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 
-        issuesAdapter = IssuesAdapter(timeHelper, colorHelper, arguments?.getString(BUNDLE_ISSUE_LIST_TYPE) != "list")
+        issuesAdapter = IssuesAdapter(timeHelper, colorHelper, viewModel, arguments?.getString(BUNDLE_ISSUE_LIST_TYPE) != "list")
         if (item_list.adapter == null) item_list.adapter = issuesAdapter
 
         arguments?.let {
@@ -91,6 +96,7 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.navigateToIssueDetail.observe(viewLifecycleOwner) { navigateToIssueDetailFragment(it) }
     }
 
     private fun updateView(viewState: IssuesListViewState) {
@@ -126,5 +132,13 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
         open_field.setOnClickListener { viewModel.onIssueStateSelected(true) }
         closed_field.setOnClickListener { viewModel.onIssueStateSelected(false) }
+    }
+
+    private fun navigateToIssueDetailFragment(pair: Pair<String, Issue>) {
+        val bundle = Bundle().apply {
+            putString(BUNDLE_TITLE, pair.first)
+            putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(pair.second))
+        }
+        findNavController().navigate(R.id.action_issues_to_issue_detail, bundle)
     }
 }

@@ -9,6 +9,7 @@ import com.gitspark.gitspark.repository.SearchResult
 import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.nav.IssueDetailNavigator
 import com.gitspark.gitspark.ui.nav.RecentSearchNavigator
 import com.gitspark.gitspark.ui.nav.RepoDetailNavigator
 import com.gitspark.gitspark.ui.nav.UserProfileNavigator
@@ -17,13 +18,14 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository,
     private val timeHelper: TimeHelper
-) : BaseViewModel(), RepoDetailNavigator, UserProfileNavigator, RecentSearchNavigator {
+) : BaseViewModel(), RepoDetailNavigator, UserProfileNavigator, RecentSearchNavigator, IssueDetailNavigator {
 
     val viewState = MutableLiveData<SearchViewState>()
     val recentSearchesMediator = MediatorLiveData<List<SearchCriteria>>()
     val navigateToSearchFilter = SingleLiveEvent<SearchCriteria?>()
     val navigateToUserProfile = SingleLiveEvent<String>()
     val navigateToRepoDetail = SingleLiveEvent<Repo>()
+    val navigateToIssueDetail = SingleLiveEvent<Pair<String, Issue>>()
     private var currSearch: SearchCriteria? = null
     private var page = 1
 
@@ -112,6 +114,10 @@ class SearchViewModel @Inject constructor(
             { retrieveRecentSearches() },
             { alert("${it.message}") }
         )
+    }
+
+    override fun onIssueClicked(issue: Issue) {
+        navigateToIssueDetail.value = Pair("${issue.getRepoFullNameFromUrl()} #${issue.number}", issue)
     }
 
     private fun requestSearch() {

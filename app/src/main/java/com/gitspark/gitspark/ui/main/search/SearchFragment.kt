@@ -16,11 +16,14 @@ import com.gitspark.gitspark.helper.ColorHelper
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.ui.adapter.*
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE
 import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
+import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -39,6 +42,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
     @Inject lateinit var preferencesHelper: PreferencesHelper
     @Inject lateinit var scJsonAdapter: JsonAdapter<SearchCriteria>
     @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
+    @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
 
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[SearchSharedViewModel::class.java]
@@ -71,7 +75,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         usersAdapter = UsersAdapter(viewModel, preferencesHelper)
         filesAdapter = FilesAdapter()
         commitsAdapter = CommitsAdapter(timeHelper, true)
-        issuesAdapter = IssuesAdapter(timeHelper, colorHelper)
+        issuesAdapter = IssuesAdapter(timeHelper, colorHelper, viewModel, true)
 
         recent_searches.run {
             setHasFixedSize(true)
@@ -104,6 +108,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
 
         viewModel.navigateToUserProfile.observe(viewLifecycleOwner) { navigateToUserProfile(it) }
         viewModel.navigateToRepoDetail.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
+        viewModel.navigateToIssueDetail.observe(viewLifecycleOwner) { navigateToIssueDetailFragment(it) }
     }
 
     private fun setUpListeners() {
@@ -169,5 +174,13 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
     private fun navigateToRepoDetailFragment(repo: Repo) {
         val data = Bundle().apply { putString(BUNDLE_REPO, repoJsonAdapter.toJson(repo)) }
         findNavController().navigate(R.id.action_search_to_repo_detail, data)
+    }
+
+    private fun navigateToIssueDetailFragment(pair: Pair<String, Issue>) {
+        val bundle = Bundle().apply {
+            putString(BUNDLE_TITLE, pair.first)
+            putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(pair.second))
+        }
+        findNavController().navigate(R.id.action_search_to_issue_detail, bundle)
     }
 }

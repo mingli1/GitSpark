@@ -26,6 +26,12 @@ data class Issue(
 ) : Pageable {
 
     override fun getViewType() = VIEW_TYPE_VIEW
+
+    fun getRepoFullNameFromUrl(): String {
+        if (repoUrl.isEmpty()) return ""
+        val split = repoUrl.split("/")
+        return "${split[split.size - 2]}/${split.last()}"
+    }
 }
 
 data class Label(

@@ -2,11 +2,14 @@ package com.gitspark.gitspark.ui.main.shared
 
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
+import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.isFirstPage
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.SearchRepository
 import com.gitspark.gitspark.repository.SearchResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.nav.IssueDetailNavigator
 import javax.inject.Inject
 
 const val CREATED_ISSUE_Q = "type:issue+state:%s+author:%s"
@@ -24,9 +27,10 @@ const val REPO_PR_Q = "type:pr+state:%s+repo:"
 class IssuesListViewModel @Inject constructor(
     private val searchRepository: SearchRepository,
     private val prefsHelper: PreferencesHelper
-) : BaseViewModel() {
+) : BaseViewModel(), IssueDetailNavigator {
 
     val viewState = MutableLiveData<IssuesListViewState>()
+    val navigateToIssueDetail = SingleLiveEvent<Pair<String, Issue>>()
     private var started = false
     private var page = 1
     private var filter = ""
@@ -52,6 +56,10 @@ class IssuesListViewModel @Inject constructor(
         if (state == open) return
         viewState.value = viewState.value?.copy(showOpenIssues = open)
         updateViewState(reset = true)
+    }
+
+    override fun onIssueClicked(issue: Issue) {
+        navigateToIssueDetail.value = Pair("${issue.getRepoFullNameFromUrl()} #${issue.number}", issue)
     }
 
     private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
