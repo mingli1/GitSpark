@@ -2,9 +2,7 @@ package com.gitspark.gitspark.ui.main.issues
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -27,6 +25,11 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var colorHelper: ColorHelper
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_issue_detail, container, false)
@@ -59,6 +62,21 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.issue_detail_menu, menu)
+
+        if (menu.javaClass.simpleName == "MenuBuilder") {
+            try {
+                menu.javaClass.getDeclaredMethod("setOptionalIconsVisible", Boolean::class.java).run {
+                    isAccessible = true
+                    invoke(menu, true)
+                }
+            } catch (e: NoSuchMethodException) {}
+        }
+
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun updateView(viewState: IssueDetailViewState) {

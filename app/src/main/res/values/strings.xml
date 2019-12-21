@@ -223,4 +223,9 @@
     <string name="num_closed_issues">%1$s Closed</string>
     <string name="assignees_label">Assignees</string>
     <string name="labels_label">Labels</string>
+    <string name="edit">Edit</string>
+    <string name="lock">Lock conversation</string>
+    <string name="unlock">Unlock conversation</string>
+    <string name="reopen">Reopen</string>
+    <string name="close">Close</string>
 </resources>
