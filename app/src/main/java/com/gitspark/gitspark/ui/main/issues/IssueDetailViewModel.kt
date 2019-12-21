@@ -37,6 +37,10 @@ class IssueDetailViewModel @Inject constructor(
         started = false
     }
 
+    fun onMenuCreated() {
+        viewState.value = viewState.value?.copy()
+    }
+
     private fun updateViewState(reset: Boolean = false) {
         viewState.value = viewState.value?.copy(loading = true) ?: IssueDetailViewState(loading = true)
         requestIssue()
@@ -58,6 +62,7 @@ class IssueDetailViewModel @Inject constructor(
                         numComments = issue.numComments,
                         labels = issue.labels,
                         assignees = issue.assignees,
+                        locked = issue.locked,
                         loading = false
                     )
                 }

@@ -26,6 +26,8 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var colorHelper: ColorHelper
 
+    private var menu: Menu? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -65,6 +67,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        this.menu = menu
         inflater.inflate(R.menu.issue_detail_menu, menu)
 
         if (menu.javaClass.simpleName == "MenuBuilder") {
@@ -77,11 +80,22 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         }
 
         super.onCreateOptionsMenu(menu, inflater)
+        viewModel.onMenuCreated()
     }
 
     private fun updateView(viewState: IssueDetailViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
+
+            menu?.let {
+                it.findItem(R.id.lock).run {
+                    title = if (locked) getString(R.string.unlock) else getString(R.string.lock)
+                    icon = if (locked) resources.getDrawable(R.drawable.ic_unlock, null) else
+                        resources.getDrawable(R.drawable.ic_lock, null)
+                }
+
+                it.findItem(R.id.state).title = if (isOpen) getString(R.string.close) else getString(R.string.reopen)
+            }
 
             issue_title_field.text = issueTitle
             issue_desc_field.text = issueDesc
