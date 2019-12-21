@@ -34,11 +34,19 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/colorWhite"
-            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/bottom_divider"/>
+        
+        <View
+            android:id="@+id/bottom_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorWhiteDark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bg1"
+            app:layout_constraintEnd_toEndOf="parent"/>
         
         <TextView
             android:id="@+id/issue_title_field"
@@ -170,6 +178,16 @@
                 android:orientation="horizontal"/>
     
         </HorizontalScrollView>
+        
+        <include
+            android:id="@+id/author_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/issue_comment_view"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bottom_divider"/>
         
     </androidx.constraintlayout.widget.ConstraintLayout>
     

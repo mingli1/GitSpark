@@ -67,6 +67,7 @@ dependencies {
     implementation 'com.github.tiagohm.MarkdownView:library:0.19.0'
     implementation 'com.github.tiagohm:CodeView:0.3.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.8'
 
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
 

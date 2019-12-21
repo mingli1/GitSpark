@@ -17,6 +17,7 @@ import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_issue_detail.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+import kotlinx.android.synthetic.main.issue_comment_view.*
 import javax.inject.Inject
 
 const val BUNDLE_ISSUE = "BUNDLE_ISSUE"
@@ -51,6 +52,8 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        comment_body.isOpenUrlInBrowser = true
 
         issueJsonAdapter.fromJson(arguments?.getString(BUNDLE_ISSUE) ?: "")?.let {
             viewModel.onStart(it)
@@ -98,6 +101,11 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             }
 
             lock_field.isVisible = locked
+
+            if (authorAvatarUrl.isNotEmpty()) profile_icon.loadImage(authorAvatarUrl)
+            author_username.text = authorUsername
+            author_action.text = getString(R.string.comment_action, authorCommentDate)
+            comment_body.setMarkDownText(if (authorComment.isNotEmpty()) authorComment else getString(R.string.empty_comment))
 
             issue_title_field.text = issueTitle
             issue_desc_field.text = issueDesc

@@ -5,5 +5,6 @@ data class IssueComment(
     val user: User = User(),
     val createdAt: String = "",
     val updatedAt: String = "",
-    val commitId: String = ""
+    val commitId: String = "",
+    val association: String = ""
 )

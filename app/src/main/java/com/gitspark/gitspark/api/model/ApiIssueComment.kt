@@ -9,13 +9,15 @@ data class ApiIssueComment(
     @field:Json(name = "user") val user: ApiUser?,
     @field:Json(name = "created_at") val createdAt: String?,
     @field:Json(name = "updated_at") val updatedAt: String?,
-    @field:Json(name = "commit_id") val commitId: String?
+    @field:Json(name = "commit_id") val commitId: String?,
+    @field:Json(name = "author_association") val association: String?
 ) {
     fun toModel() = IssueComment(
         body = body ?: "",
         user = user?.toModel() ?: User(),
         createdAt = createdAt ?: "",
         updatedAt = updatedAt ?: "",
-        commitId = commitId ?: ""
+        commitId = commitId ?: "",
+        association = association ?: ""
     )
 }

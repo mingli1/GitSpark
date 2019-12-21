@@ -63,6 +63,10 @@ class IssueDetailViewModel @Inject constructor(
                         labels = issue.labels,
                         assignees = issue.assignees,
                         locked = issue.locked,
+                        authorAvatarUrl = issue.user.avatarUrl,
+                        authorUsername = issue.user.login,
+                        authorComment = issue.body,
+                        authorCommentDate = formatted,
                         loading = false
                     )
                 }
