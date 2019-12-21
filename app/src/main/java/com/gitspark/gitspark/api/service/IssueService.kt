@@ -19,7 +19,7 @@ interface IssueService {
         @Query("per_page") perPage: Int = ISSUES_PER_PAGE
     ): Observable<ApiPage<ApiIssue>>
 
-    @GET("repos/{owner}/{repo}/issues/{issueNum}")
+    @GET("repos/{owner}/{repo}/issues/{issue_number}")
     fun getIssue(
         @Path("owner") owner: String,
         @Path("repo") repo: String,

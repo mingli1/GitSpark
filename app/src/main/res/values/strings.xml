@@ -221,4 +221,6 @@
     <string name="issues_fullname">#%1$d %2$s</string>
     <string name="num_open_issues">%1$s Open</string>
     <string name="num_closed_issues">%1$s Closed</string>
+    <string name="assignees_label">Assignees</string>
+    <string name="labels_label">Labels</string>
 </resources>

@@ -40,17 +40,25 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="ContributionsView disappears sometimes when navigating between bottom nav"/>
     
-    <LinearLayout
-        android:id="@+id/labels_container"
-        android:layout_width="0dp"
+    <HorizontalScrollView
+        android:id="@+id/labels_container_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="4dp"
+        android:clickable="false"
+        android:focusable="false"
         app:layout_constraintStart_toEndOf="@id/icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_field"/>
+        app:layout_constraintTop_toBottomOf="@id/title_field">
+    
+        <LinearLayout
+            android:id="@+id/labels_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"/>
+        
+    </HorizontalScrollView>
 
     <TextView
         android:id="@+id/content_field"
@@ -64,7 +72,7 @@
         android:layout_marginBottom="12dp"
         app:layout_constraintStart_toEndOf="@id/icon"
         app:layout_constraintEnd_toStartOf="@id/comments_field"
-        app:layout_constraintTop_toBottomOf="@id/labels_container"
+        app:layout_constraintTop_toBottomOf="@id/labels_container_view"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="mingli/GitSpark #22 opened 6 hours ago by mingli1"/>
 
@@ -80,7 +88,7 @@
         android:drawableStart="@drawable/ic_feed"
         android:drawablePadding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/labels_container"
+        app:layout_constraintTop_toBottomOf="@id/labels_container_view"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="37"/>
 
