@@ -97,6 +97,8 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                 it.findItem(R.id.state).title = if (isOpen) getString(R.string.close) else getString(R.string.reopen)
             }
 
+            lock_field.isVisible = locked
+
             issue_title_field.text = issueTitle
             issue_desc_field.text = issueDesc
             issue_desc_field.compoundDrawablesRelative[0].setColor(
