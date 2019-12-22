@@ -7,10 +7,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.ColorHelper
+import com.gitspark.gitspark.helper.IssueEventHelper
+import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.ui.adapter.IssueEventsAdapter
+import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
@@ -26,7 +32,12 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var colorHelper: ColorHelper
+    @Inject lateinit var eventHelper: IssueEventHelper
+    @Inject lateinit var timeHelper: TimeHelper
 
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var paginationListener: NestedPaginationListener
+    private lateinit var issueEventsAdapter: IssueEventsAdapter
     private var menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,11 +64,25 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
+        events_list.setHasFixedSize(true)
+        events_list.layoutManager = layoutManager
+        nested_scroll_view.setOnScrollChangeListener(paginationListener)
+
+        issueEventsAdapter = IssueEventsAdapter(eventHelper, timeHelper)
+        if (events_list.adapter == null) events_list.adapter = issueEventsAdapter
+
         comment_body.isOpenUrlInBrowser = true
 
         issueJsonAdapter.fromJson(arguments?.getString(BUNDLE_ISSUE) ?: "")?.let {
             viewModel.onStart(it)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        events_list.adapter = null
     }
 
     override fun onDestroy() {
@@ -144,6 +169,12 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                         assignees_container.addView(imageView)
                     }
                 }
+            }
+
+            if (updateAdapter && commentsFinishedLoading && eventsFinishedLoading) {
+                issueEventsAdapter.setItems(events, isLastPage)
+                paginationListener.isLastPage = isLastPage
+                paginationListener.loading = false
             }
         }
     }

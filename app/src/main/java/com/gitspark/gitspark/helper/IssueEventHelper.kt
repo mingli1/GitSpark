@@ -42,13 +42,19 @@ class IssueEventHelper @Inject constructor(
 
         when (event.event) {
             ASSIGNED_EVENT -> {
-                builder.append("assigned this issue to ")
-                    .color(context.getColor(R.color.colorBlack)) {
-                        bold { append(
-                            if (event.assignee.login.isNotEmpty()) event.assignee.login
-                            else event.assignees.joinToString()
-                        ) }
-                    }
+                if (event.assignee.login == event.actor.login) {
+                    builder.append("self-assigned this issue")
+                } else {
+                    builder.append("assigned this issue to ")
+                        .color(context.getColor(R.color.colorBlack)) {
+                            bold {
+                                append(
+                                    if (event.assignee.login.isNotEmpty()) event.assignee.login
+                                    else event.assignees.joinToString()
+                                )
+                            }
+                        }
+                }
             }
             CLOSED_EVENT -> {
                 builder.append("closed this issue")
@@ -84,15 +90,22 @@ class IssueEventHelper @Inject constructor(
             }
             REOPENED_EVENT -> builder.append("reopened this issue")
             UNASSIGNED_EVENT -> {
-                builder.append("unassigned ")
-                    .color(context.getColor(R.color.colorBlack)) {
-                        bold { append(
-                            if (event.assignee.login.isNotEmpty()) event.assignee.login
-                            else event.assignees.joinToString()
-                        ) }
-                    }
+                if (event.assignee.login == event.actor.login) {
+                    builder.append("removed their assignment")
+                } else {
+                    builder.append("unassigned ")
+                        .color(context.getColor(R.color.colorBlack)) {
+                            bold {
+                                append(
+                                    if (event.assignee.login.isNotEmpty()) event.assignee.login
+                                    else event.assignees.joinToString()
+                                )
+                            }
+                        }
+                }
             }
             UNLOCKED_EVENT -> builder.append("unlocked this conversation")
+            else -> return SpannableStringBuilder()
         }
 
         val formatted = timeHelper.getRelativeTimeFormat(Instant.parse(event.createdAt))

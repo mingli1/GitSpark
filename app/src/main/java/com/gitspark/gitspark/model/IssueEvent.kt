@@ -1,6 +1,6 @@
 package com.gitspark.gitspark.model
 
-import com.gitspark.gitspark.ui.adapter.Pageable
+import com.gitspark.gitspark.ui.adapter.EventComment
 import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_ISSUE_EVENT
 
 data class IssueEvent(
@@ -15,9 +15,11 @@ data class IssueEvent(
     val dismissedReview: DismissedReview = DismissedReview(),
     val rename: Rename = Rename(),
     val commitId: String = ""
-) : Pageable {
+) : EventComment {
 
     override fun getViewType() = VIEW_TYPE_ISSUE_EVENT
+
+    override fun createdAt() = createdAt
 }
 
 data class DismissedReview(
