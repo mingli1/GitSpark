@@ -50,12 +50,12 @@ class IssueDetailViewModel @Inject constructor(
 
     private fun updateViewState(reset: Boolean = false) {
         viewState.value = viewState.value?.copy(
-            loading = true,
+            loading = reset,
             updateAdapter = false,
             commentsFinishedLoading = commentsFinished,
             eventsFinishedLoading = eventsFinished
         ) ?: IssueDetailViewState(
-            loading = true,
+            loading = reset,
             updateAdapter = false,
             commentsFinishedLoading = commentsFinished,
             eventsFinishedLoading = eventsFinished
