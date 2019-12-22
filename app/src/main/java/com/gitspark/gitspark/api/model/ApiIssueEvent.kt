@@ -16,7 +16,8 @@ data class ApiIssueEvent(
     @field:Json(name = "assigner") val assigner: ApiUser?,
     @field:Json(name = "labels") val labels: List<ApiLabel>?,
     @field:Json(name = "dismissed_review") val dismissedReview: ApiDismissedReview?,
-    @field:Json(name = "rename") val rename: ApiRename?
+    @field:Json(name = "rename") val rename: ApiRename?,
+    @field:Json(name = "commit_id") val commitId: String?
 ) {
     fun toModel() = IssueEvent(
         id = id ?: 0,
@@ -28,7 +29,8 @@ data class ApiIssueEvent(
         assigner = assigner?.toModel() ?: User(),
         labels = labels?.map { it.toModel() } ?: emptyList(),
         dismissedReview = dismissedReview?.toModel() ?: DismissedReview(),
-        rename = rename?.toModel() ?: Rename()
+        rename = rename?.toModel() ?: Rename(),
+        commitId = commitId ?: ""
     )
 }
 
