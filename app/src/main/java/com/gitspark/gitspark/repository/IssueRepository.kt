@@ -1,10 +1,12 @@
 package com.gitspark.gitspark.repository
 
-import com.gitspark.gitspark.api.service.ISSUES_PER_PAGE
+import com.gitspark.gitspark.api.service.ISSUE_EVENTS_PER_PAGE
 import com.gitspark.gitspark.api.service.IssueService
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.model.IssueComment
+import com.gitspark.gitspark.model.IssueEvent
 import com.gitspark.gitspark.model.Page
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -16,22 +18,6 @@ class IssueRepository @Inject constructor(
     private val retrofitHelper: RetrofitHelper
 ) {
 
-    fun getIssues(
-        filter: String,
-        state: String,
-        page: Int,
-        perPage: Int = ISSUES_PER_PAGE
-    ): Observable<IssueResult<Page<Issue>>> {
-        return getIssueService()
-            .getIssues(filter, state, page, perPage)
-            .map {
-                getSuccess(it.toModel<Issue>().apply {
-                    value = it.response.map { issue -> issue.toModel() }
-                })
-            }
-            .onErrorReturn { getFailure("Failed to obtain issues.") }
-    }
-
     fun getIssue(
         username: String,
         repoName: String,
@@ -41,6 +27,40 @@ class IssueRepository @Inject constructor(
             .getIssue(username, repoName, issueNum)
             .map { getSuccess(it.toModel()) }
             .onErrorReturn { getFailure("Failed to obtain issue.") }
+    }
+
+    fun getIssueComments(
+        username: String,
+        repoName: String,
+        issueNum: Int,
+        page: Int,
+        perPage: Int = ISSUE_EVENTS_PER_PAGE
+    ): Observable<IssueResult<Page<IssueComment>>> {
+        return getIssueService()
+            .getIssueComments(username, repoName, issueNum, page, perPage)
+            .map {
+                getSuccess(it.toModel<IssueComment>().apply {
+                    value = it.response.map { comment -> comment.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain issue comments.") }
+    }
+
+    fun getIssueEvents(
+        username: String,
+        repoName: String,
+        issueNum: Int,
+        page: Int,
+        perPage: Int = ISSUE_EVENTS_PER_PAGE
+    ): Observable<IssueResult<Page<IssueEvent>>> {
+        return getIssueService()
+            .getIssueEvents(username, repoName, issueNum, page, perPage)
+            .map {
+                getSuccess(it.toModel<IssueEvent>().apply {
+                    value = it.response.map { event -> event.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain issue events.") }
     }
 
     private fun getIssueService() =
