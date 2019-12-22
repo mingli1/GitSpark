@@ -3,7 +3,6 @@ package com.gitspark.gitspark.ui.main.issues
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Issue
-import com.gitspark.gitspark.model.isFirstPage
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.IssueRepository
 import com.gitspark.gitspark.repository.IssueResult

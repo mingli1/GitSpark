@@ -1,9 +1,6 @@
 package com.gitspark.gitspark.api.model
 
-import com.gitspark.gitspark.model.DismissedReview
-import com.gitspark.gitspark.model.IssueEvent
-import com.gitspark.gitspark.model.Rename
-import com.gitspark.gitspark.model.User
+import com.gitspark.gitspark.model.*
 import com.squareup.moshi.Json
 
 data class ApiIssueEvent(
@@ -14,7 +11,7 @@ data class ApiIssueEvent(
     @field:Json(name = "assignee") val assignee: ApiUser?,
     @field:Json(name = "assignees") val assignees: List<ApiUser>?,
     @field:Json(name = "assigner") val assigner: ApiUser?,
-    @field:Json(name = "labels") val labels: List<ApiLabel>?,
+    @field:Json(name = "label") val label: ApiLabel?,
     @field:Json(name = "dismissed_review") val dismissedReview: ApiDismissedReview?,
     @field:Json(name = "rename") val rename: ApiRename?,
     @field:Json(name = "commit_id") val commitId: String?
@@ -27,7 +24,7 @@ data class ApiIssueEvent(
         assignee = assignee?.toModel() ?: User(),
         assignees = assignees?.map { it.toModel() } ?: emptyList(),
         assigner = assigner?.toModel() ?: User(),
-        labels = labels?.map { it.toModel() } ?: emptyList(),
+        label = label?.toModel() ?: Label(),
         dismissedReview = dismissedReview?.toModel() ?: DismissedReview(),
         rename = rename?.toModel() ?: Rename(),
         commitId = commitId ?: ""

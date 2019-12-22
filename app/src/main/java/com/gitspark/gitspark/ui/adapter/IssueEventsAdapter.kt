@@ -63,6 +63,10 @@ class IssueEventsAdapter(
                 view.isVisible = desc?.isNotEmpty() ?: false
                 if (desc.isNullOrEmpty()) {
                     val lp = view.layoutParams.apply { height = 0 }
+                    (lp as ViewGroup.MarginLayoutParams).run {
+                        topMargin = 0
+                        bottomMargin = 0
+                    }
                     view.layoutParams = lp
                     return
                 } else {

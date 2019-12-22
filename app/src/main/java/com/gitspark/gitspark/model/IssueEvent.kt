@@ -11,7 +11,7 @@ data class IssueEvent(
     val assignee: User = User(),
     val assignees: List<User> = emptyList(),
     val assigner: User = User(),
-    val labels: List<Label> = emptyList(),
+    val label: Label = Label(),
     val dismissedReview: DismissedReview = DismissedReview(),
     val rename: Rename = Rename(),
     val commitId: String = ""

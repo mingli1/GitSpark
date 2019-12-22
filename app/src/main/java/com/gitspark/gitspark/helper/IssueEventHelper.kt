@@ -24,8 +24,9 @@ private const val RENAMED_EVENT = "renamed"
 private const val REOPENED_EVENT = "reopened"
 private const val UNASSIGNED_EVENT = "unassigned"
 private const val UNLOCKED_EVENT = "unlocked"
+private const val UNLABELED_EVENT = "unlabeled"
 
-private const val LABEL_CORNER_RADIUS = 2f
+private const val LABEL_CORNER_RADIUS = 8f
 
 @Singleton
 class IssueEventHelper @Inject constructor(
@@ -66,16 +67,14 @@ class IssueEventHelper @Inject constructor(
             }
             LABELED_EVENT -> {
                 builder.append("added the ")
-                event.labels.forEach { label ->
-                    val tag = " ${label.name} "
-                    builder.append(tag)
-                    builder.setSpan(RoundedBackgroundSpan(
-                        LABEL_CORNER_RADIUS,
-                        Color.parseColor("#${label.color}"),
-                        Color.parseColor(colorHelper.getTextColor(label.color))
-                    ), builder.length - tag.length, builder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                }
-                builder.append(if (event.labels.size <= 1) " label" else " labels")
+                val tag = " ${event.label.name} "
+                builder.append(tag)
+                builder.setSpan(RoundedBackgroundSpan(
+                    LABEL_CORNER_RADIUS,
+                    Color.parseColor("#${event.label.color}"),
+                    Color.parseColor(colorHelper.getTextColor(event.label.color))
+                ), builder.length - tag.length, builder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                builder.append(" label")
             }
             LOCKED_EVENT -> builder.append("locked this conversation")
             RENAMED_EVENT -> {
@@ -104,6 +103,17 @@ class IssueEventHelper @Inject constructor(
                         }
                 }
             }
+            UNLABELED_EVENT -> {
+                builder.append("removed the ")
+                val tag = " ${event.label.name} "
+                builder.append(tag)
+                builder.setSpan(RoundedBackgroundSpan(
+                    LABEL_CORNER_RADIUS,
+                    Color.parseColor("#${event.label.color}"),
+                    Color.parseColor(colorHelper.getTextColor(event.label.color))
+                ), builder.length - tag.length, builder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                builder.append(" label")
+            }
             UNLOCKED_EVENT -> builder.append("unlocked this conversation")
             else -> return SpannableStringBuilder()
         }
@@ -118,7 +128,7 @@ class IssueEventHelper @Inject constructor(
         imageView.setImageResource(when (event.event) {
             ASSIGNED_EVENT, UNASSIGNED_EVENT -> R.drawable.ic_person
             CLOSED_EVENT, REOPENED_EVENT -> R.drawable.ic_issue
-            LABELED_EVENT -> R.drawable.ic_label
+            LABELED_EVENT, UNLABELED_EVENT -> R.drawable.ic_label
             LOCKED_EVENT -> R.drawable.ic_lock
             RENAMED_EVENT -> R.drawable.ic_edit
             UNLOCKED_EVENT -> R.drawable.ic_unlock
