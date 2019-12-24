@@ -3,14 +3,13 @@ package com.gitspark.gitspark.ui.adapter
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.helper.IssueEventHelper
 import com.gitspark.gitspark.helper.TimeHelper
-import com.gitspark.gitspark.model.IssueComment
-import com.gitspark.gitspark.model.IssueEvent
-import com.gitspark.gitspark.model.Loading
+import com.gitspark.gitspark.model.*
 import kotlinx.android.synthetic.main.issue_comment_view.view.*
 import kotlinx.android.synthetic.main.issue_event_view.view.*
 import org.threeten.bp.Instant
@@ -20,6 +19,7 @@ class IssueEventsAdapter(
     private val timeHelper: TimeHelper
 ) : PaginationAdapter() {
 
+    var permissionLevel = PERMISSION_NONE
     private val spannableCache = mutableMapOf<Long, SpannableStringBuilder>()
 
     @Suppress("UNCHECKED_CAST")
@@ -56,6 +56,23 @@ class IssueEventsAdapter(
                     author_action.text = context.getString(R.string.comment_action, formatted)
                     comment_body.isOpenUrlInBrowser = true
                     comment_body.setMarkDownText(item.body)
+
+                    val writePermission = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
+                    val menu = PopupMenu(context, comment_options).apply {
+                        inflate(R.menu.issue_comment_menu)
+                        menu.findItem(R.id.delete).isVisible = writePermission
+                        menu.findItem(R.id.edit).isVisible = writePermission
+                        if (menu.javaClass.simpleName == "MenuBuilder") {
+                            try {
+                                menu.javaClass.getDeclaredMethod("setOptionalIconsVisible", Boolean::class.java).run {
+                                    isAccessible = true
+                                    invoke(menu, true)
+                                }
+                            } catch (e: NoSuchMethodException) {}
+                        }
+                    }
+
+                    comment_options.setOnClickListener { menu.show() }
                 }
             }
             is IssueEvent -> {

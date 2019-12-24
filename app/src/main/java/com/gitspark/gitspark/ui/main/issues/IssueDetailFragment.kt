@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,6 +41,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var issueEventsAdapter: IssueEventsAdapter
+    private lateinit var commentMenu: PopupMenu
     private var menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +68,21 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        commentMenu = PopupMenu(context!!, comment_options).apply {
+            inflate(R.menu.issue_comment_menu)
+            menu.findItem(R.id.edit).isVisible = false
+            menu.findItem(R.id.copy_link).isVisible = false
+            menu.findItem(R.id.delete).isVisible = false
+            if (menu.javaClass.simpleName == "MenuBuilder") {
+                try {
+                    menu.javaClass.getDeclaredMethod("setOptionalIconsVisible", Boolean::class.java).run {
+                        isAccessible = true
+                        invoke(menu, true)
+                    }
+                } catch (e: NoSuchMethodException) {}
+            }
+        }
+
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
         events_list.setHasFixedSize(true)
@@ -80,6 +97,8 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         issueJsonAdapter.fromJson(arguments?.getString(BUNDLE_ISSUE) ?: "")?.let {
             viewModel.onStart(it)
         }
+
+        comment_options.setOnClickListener { commentMenu.show() }
     }
 
     override fun onDestroyView() {
@@ -128,6 +147,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                 it.findItem(R.id.state).title = if (isOpen) getString(R.string.close) else getString(R.string.reopen)
                 it.findItem(R.id.delete).isVisible = permissionLevel == PERMISSION_ADMIN
             }
+            issueEventsAdapter.permissionLevel = permissionLevel
 
             lock_field.isVisible = locked
 
