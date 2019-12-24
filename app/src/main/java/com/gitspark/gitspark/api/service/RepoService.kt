@@ -174,4 +174,11 @@ interface RepoService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = COMMITS_PER_PAGE
     ): Observable<ApiPage<ApiCommit>>
+
+    @GET("repos/{owner}/{repo}/collaborators/{username}/permission")
+    fun getPermissionLevel(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("username") username: String
+    ): Observable<ApiPermission>
 }

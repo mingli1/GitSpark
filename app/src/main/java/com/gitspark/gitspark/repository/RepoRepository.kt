@@ -264,6 +264,17 @@ class RepoRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain commits for $username/$repoName") }
     }
 
+    fun getPermissionLevel(
+        owner: String,
+        repoName: String,
+        username: String
+    ): Observable<RepoResult<Permission>> {
+        return getRepoService()
+            .getPermissionLevel(owner, repoName, username)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed to obtain permission level for $username") }
+    }
+
     private fun getRepoService() =
         retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(RepoService::class.java)
