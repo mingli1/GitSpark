@@ -10,13 +10,15 @@ import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.helper.IssueEventHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.*
+import com.gitspark.gitspark.ui.main.issues.CommentMenuCallback
 import kotlinx.android.synthetic.main.issue_comment_view.view.*
 import kotlinx.android.synthetic.main.issue_event_view.view.*
 import org.threeten.bp.Instant
 
 class IssueEventsAdapter(
     private val eventHelper: IssueEventHelper,
-    private val timeHelper: TimeHelper
+    private val timeHelper: TimeHelper,
+    private val callback: CommentMenuCallback
 ) : PaginationAdapter() {
 
     var permissionLevel = PERMISSION_NONE
@@ -73,6 +75,12 @@ class IssueEventsAdapter(
                     }
 
                     comment_options.setOnClickListener { menu.show() }
+                    menu.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.copy_link -> callback.onCopyLinkSelected(item.htmlUrl)
+                        }
+                        true
+                    }
                 }
             }
             is IssueEvent -> {

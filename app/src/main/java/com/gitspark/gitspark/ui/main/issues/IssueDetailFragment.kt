@@ -89,7 +89,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         events_list.layoutManager = layoutManager
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 
-        issueEventsAdapter = IssueEventsAdapter(eventHelper, timeHelper)
+        issueEventsAdapter = IssueEventsAdapter(eventHelper, timeHelper, viewModel)
         if (events_list.adapter == null) events_list.adapter = issueEventsAdapter
 
         comment_body.isOpenUrlInBrowser = true

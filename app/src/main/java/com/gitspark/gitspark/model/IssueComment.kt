@@ -4,6 +4,7 @@ import com.gitspark.gitspark.ui.adapter.EventComment
 import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 
 data class IssueComment(
+    val htmlUrl: String = "",
     val body: String = "",
     val user: User = User(),
     val createdAt: String = "",

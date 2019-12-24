@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.main.issues
 
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.helper.ClipboardHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Issue
@@ -17,8 +18,9 @@ class IssueDetailViewModel @Inject constructor(
     private val issueRepository: IssueRepository,
     private val repoRepository: RepoRepository,
     private val timeHelper: TimeHelper,
-    private val prefsHelper: PreferencesHelper
-) : BaseViewModel() {
+    private val prefsHelper: PreferencesHelper,
+    private val clipboardHelper: ClipboardHelper
+) : BaseViewModel(), CommentMenuCallback {
 
     val viewState = MutableLiveData<IssueDetailViewState>()
     private var started = false
@@ -53,6 +55,11 @@ class IssueDetailViewModel @Inject constructor(
     }
 
     fun onScrolledToEnd() = updateViewState()
+
+    override fun onCopyLinkSelected(url: String) {
+        alert("Copied comment link to the clipboard.")
+        clipboardHelper.copy(url)
+    }
 
     private fun updateViewState(reset: Boolean = false) {
         viewState.value = viewState.value?.copy(
