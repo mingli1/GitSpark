@@ -1,18 +1,23 @@
 package com.gitspark.gitspark.ui.main.issues
 
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.IssueRepository
 import com.gitspark.gitspark.repository.IssueResult
+import com.gitspark.gitspark.repository.RepoRepository
+import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import org.threeten.bp.Instant
 import javax.inject.Inject
 
 class IssueDetailViewModel @Inject constructor(
     private val issueRepository: IssueRepository,
-    private val timeHelper: TimeHelper
+    private val repoRepository: RepoRepository,
+    private val timeHelper: TimeHelper,
+    private val prefsHelper: PreferencesHelper
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<IssueDetailViewState>()
@@ -33,6 +38,7 @@ class IssueDetailViewModel @Inject constructor(
             repoName = split[1]
             issueNum = simpleIssue.number
 
+            requestPermissionLevel()
             updateViewState(reset = true)
             started = false
         }
@@ -156,6 +162,15 @@ class IssueDetailViewModel @Inject constructor(
                         alert(it.error)
                     }
                 }
+            }
+        }
+    }
+
+    private fun requestPermissionLevel() {
+        subscribe(repoRepository.getPermissionLevel(username, repoName, prefsHelper.getAuthUsername())) {
+            if (it is RepoResult.Success) {
+                viewState.value = viewState.value?.copy(permissionLevel = it.value.permission)
+                    ?: IssueDetailViewState(permissionLevel = it.value.permission)
             }
         }
     }

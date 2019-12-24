@@ -228,6 +228,7 @@
     <string name="unlock">Unlock conversation</string>
     <string name="reopen">Reopen issue</string>
     <string name="close">Close issue</string>
+    <string name="delete_issue">Delete issue</string>
     <string name="locked_text">LOCKED</string>
     <string name="empty_comment">*No description provided.*</string>
     <string name="comment_action">commented %1$s</string>

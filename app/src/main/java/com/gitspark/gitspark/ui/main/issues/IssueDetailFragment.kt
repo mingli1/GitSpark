@@ -15,6 +15,8 @@ import com.gitspark.gitspark.helper.ColorHelper
 import com.gitspark.gitspark.helper.IssueEventHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.model.PERMISSION_ADMIN
+import com.gitspark.gitspark.model.PERMISSION_WRITE
 import com.gitspark.gitspark.ui.adapter.IssueEventsAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
@@ -120,9 +122,11 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                     title = if (locked) getString(R.string.unlock) else getString(R.string.lock)
                     icon = if (locked) resources.getDrawable(R.drawable.ic_unlock, null) else
                         resources.getDrawable(R.drawable.ic_lock, null)
+                    isVisible = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
                 }
 
                 it.findItem(R.id.state).title = if (isOpen) getString(R.string.close) else getString(R.string.reopen)
+                it.findItem(R.id.delete).isVisible = permissionLevel == PERMISSION_ADMIN
             }
 
             lock_field.isVisible = locked
