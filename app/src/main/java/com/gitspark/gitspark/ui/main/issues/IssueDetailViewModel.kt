@@ -13,6 +13,7 @@ import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import org.threeten.bp.Instant
 import javax.inject.Inject
 
@@ -25,6 +26,7 @@ class IssueDetailViewModel @Inject constructor(
 ) : BaseViewModel(), CommentMenuCallback {
 
     val viewState = MutableLiveData<IssueDetailViewState>()
+    val toggleCommentEdit = SingleLiveEvent<Boolean>()
     val deleteCommentRequest = SingleLiveAction()
     private var started = false
 
@@ -86,6 +88,14 @@ class IssueDetailViewModel @Inject constructor(
     override fun onCopyLinkSelected(url: String) {
         alert("Copied comment link to the clipboard.")
         clipboardHelper.copy(url)
+    }
+
+    override fun onEditCommentFocused() {
+        toggleCommentEdit.value = false
+    }
+
+    override fun onEditCommentUnfocused() {
+        toggleCommentEdit.value = true
     }
 
     private fun updateViewState(reset: Boolean = false) {

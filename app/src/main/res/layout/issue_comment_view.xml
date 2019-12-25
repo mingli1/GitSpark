@@ -124,5 +124,57 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+    
+    <com.gitspark.gitspark.ui.custom.KeyboardEditText
+        android:id="@+id/edit_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edittext"
+        android:layout_margin="12dp"
+        android:scrollHorizontally="false"
+        android:hint="@string/comment_edit_hint"
+        android:inputType="textCapSentences|textMultiLine"
+        android:ems="16"
+        android:padding="12dp"
+        android:maxLines="4"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_divider"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <Button
+        android:id="@+id/cancel_edit_button"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        style="@style/AppTheme.RoundedCornerMaterialButton.Secondary"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="12dp"
+        android:textAllCaps="false"
+        android:text="@string/cancel"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/edit_comment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/update_comment_button"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    
+    <Button
+        android:id="@+id/update_comment_button"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        style="@style/AppTheme.RoundedCornerMaterialButton"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        android:textAllCaps="false"
+        android:text="@string/update_comment"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/edit_comment"
+        app:layout_constraintStart_toEndOf="@id/cancel_edit_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

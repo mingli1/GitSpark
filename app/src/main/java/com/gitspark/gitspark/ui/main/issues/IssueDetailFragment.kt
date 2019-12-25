@@ -14,6 +14,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.ColorHelper
 import com.gitspark.gitspark.helper.IssueEventHelper
+import com.gitspark.gitspark.helper.KeyboardHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.PERMISSION_ADMIN
@@ -40,6 +41,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     @Inject lateinit var colorHelper: ColorHelper
     @Inject lateinit var eventHelper: IssueEventHelper
     @Inject lateinit var timeHelper: TimeHelper
+    @Inject lateinit var keyboardHelper: KeyboardHelper
 
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: NestedPaginationListener
@@ -92,7 +94,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         events_list.layoutManager = layoutManager
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 
-        issueEventsAdapter = IssueEventsAdapter(eventHelper, timeHelper, viewModel)
+        issueEventsAdapter = IssueEventsAdapter(eventHelper, timeHelper, keyboardHelper, viewModel)
         if (events_list.adapter == null) events_list.adapter = issueEventsAdapter
 
         comment_body.isOpenUrlInBrowser = true
@@ -117,6 +119,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.deleteCommentRequest.observe(viewLifecycleOwner) { requestDeleteComment() }
+        viewModel.toggleCommentEdit.observe(viewLifecycleOwner) { comment_view.isVisible = it }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

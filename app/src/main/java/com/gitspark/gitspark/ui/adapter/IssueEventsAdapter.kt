@@ -8,6 +8,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.helper.IssueEventHelper
+import com.gitspark.gitspark.helper.KeyboardHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.ui.main.issues.CommentMenuCallback
@@ -18,6 +19,7 @@ import org.threeten.bp.Instant
 class IssueEventsAdapter(
     private val eventHelper: IssueEventHelper,
     private val timeHelper: TimeHelper,
+    private val keyboardHelper: KeyboardHelper,
     private val callback: CommentMenuCallback
 ) : PaginationAdapter() {
 
@@ -77,11 +79,26 @@ class IssueEventsAdapter(
                     comment_options.setOnClickListener { menu.show() }
                     menu.setOnMenuItemClickListener {
                         when (it.itemId) {
+                            R.id.edit -> {
+                                comment_options.isVisible = false
+                                comment_body.isVisible = false
+                                edit_comment.isVisible = true
+                                cancel_edit_button.isVisible = true
+                                update_comment_button.isVisible = true
+
+                                edit_comment.setText(item.body)
+                                edit_comment.requestFocus()
+                                callback.onEditCommentFocused()
+                                keyboardHelper.showKeyboard()
+                            }
                             R.id.delete -> callback.onDeleteSelected(item.id)
                             R.id.copy_link -> callback.onCopyLinkSelected(item.htmlUrl)
                         }
                         true
                     }
+
+                    edit_comment.setOnClickListener { callback.onEditCommentFocused() }
+                    edit_comment.onImeBack { _, _ -> callback.onEditCommentUnfocused() }
                 }
             }
             is IssueEvent -> {

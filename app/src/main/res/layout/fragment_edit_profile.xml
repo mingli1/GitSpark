@@ -185,7 +185,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="16dp"
                 android:background="@color/colorWhite">
     
                 <TextView
@@ -250,26 +249,20 @@
                     android:layout_marginBottom="16dp"/>
                 
             </LinearLayout>
-            
-            <View
+    
+            <Button
+                android:id="@+id/update_profile_button"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginBottom="16dp"/>
+                style="@style/AppTheme.RoundedCornerMaterialButton"
+                android:text="@string/edit_profile_button"
+                android:textSize="20sp"
+                android:layout_margin="16dp"
+                android:textAllCaps="false"/>
             
         </LinearLayout>
         
     </ScrollView>
-    
-    <Button
-        android:id="@+id/update_profile_button"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        style="@style/AppTheme.RoundedCornerMaterialButton"
-        android:text="@string/edit_profile_button"
-        android:textSize="20sp"
-        android:layout_margin="16dp"
-        android:layout_gravity="bottom"
-        android:textAllCaps="false"/>
     
     <include layout="@layout/full_screen_progress_spinner"/>
 

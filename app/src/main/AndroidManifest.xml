@@ -25,7 +25,7 @@
         <activity
             android:name="com.gitspark.gitspark.ui.main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

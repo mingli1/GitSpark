@@ -19,6 +19,12 @@
         <item name="android:textSize">16sp</item>
     </style>
     
+    <style name="AppTheme.RoundedCornerMaterialButton.Secondary" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/rounded_button_bg_s</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    
     <style name="MyOverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">@color/colorWhite</item>
     </style>
