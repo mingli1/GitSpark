@@ -21,6 +21,8 @@ import com.gitspark.gitspark.model.PERMISSION_WRITE
 import com.gitspark.gitspark.ui.adapter.IssueEventsAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.dialog.ConfirmDialog
+import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.squareup.moshi.JsonAdapter
@@ -31,7 +33,8 @@ import javax.inject.Inject
 
 const val BUNDLE_ISSUE = "BUNDLE_ISSUE"
 
-class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewModel::class.java) {
+class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewModel::class.java),
+    ConfirmDialogCallback {
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var colorHelper: ColorHelper
@@ -113,6 +116,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.deleteCommentRequest.observe(viewLifecycleOwner) { requestDeleteComment() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -131,6 +135,10 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         super.onCreateOptionsMenu(menu, inflater)
         viewModel.onMenuCreated()
     }
+
+    override fun onPositiveClicked() = viewModel.onDeleteCommentConfirmed()
+
+    override fun onNegativeClicked() {}
 
     private fun updateView(viewState: IssueDetailViewState) {
         with (viewState) {
@@ -201,5 +209,12 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                 paginationListener.loading = false
             }
         }
+    }
+
+    private fun requestDeleteComment() {
+        ConfirmDialog.newInstance(
+            getString(R.string.delete_comment_title),
+            getString(R.string.delete_comment_message)
+        ).show(childFragmentManager, null)
     }
 }

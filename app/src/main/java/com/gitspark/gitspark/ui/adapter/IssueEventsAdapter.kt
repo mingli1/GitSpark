@@ -77,6 +77,7 @@ class IssueEventsAdapter(
                     comment_options.setOnClickListener { menu.show() }
                     menu.setOnMenuItemClickListener {
                         when (it.itemId) {
+                            R.id.delete -> callback.onDeleteSelected(item.id)
                             R.id.copy_link -> callback.onCopyLinkSelected(item.htmlUrl)
                         }
                         true

@@ -4,7 +4,9 @@ import com.gitspark.gitspark.api.model.ApiIssue
 import com.gitspark.gitspark.api.model.ApiIssueComment
 import com.gitspark.gitspark.api.model.ApiIssueEvent
 import com.gitspark.gitspark.api.model.ApiPage
+import io.reactivex.Completable
 import io.reactivex.Observable
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -37,4 +39,11 @@ interface IssueService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = ISSUE_EVENTS_PER_PAGE
     ): Observable<ApiPage<ApiIssueEvent>>
+
+    @DELETE("repos/{owner}/{repo}/issues/comments/{comment_id}")
+    fun deleteComment(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("comment_id") commentId: Long
+    ): Completable
 }

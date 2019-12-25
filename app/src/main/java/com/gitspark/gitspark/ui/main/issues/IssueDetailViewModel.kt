@@ -5,12 +5,14 @@ import com.gitspark.gitspark.helper.ClipboardHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.model.IssueComment
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.IssueRepository
 import com.gitspark.gitspark.repository.IssueResult
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import org.threeten.bp.Instant
 import javax.inject.Inject
 
@@ -23,6 +25,7 @@ class IssueDetailViewModel @Inject constructor(
 ) : BaseViewModel(), CommentMenuCallback {
 
     val viewState = MutableLiveData<IssueDetailViewState>()
+    val deleteCommentRequest = SingleLiveAction()
     private var started = false
 
     private var username = ""
@@ -32,6 +35,8 @@ class IssueDetailViewModel @Inject constructor(
     private var page = 1
     private var commentsFinished = false
     private var eventsFinished = false
+
+    private var deletedCommentId = 0L
 
     fun onStart(simpleIssue: Issue) {
         if (!started) {
@@ -55,6 +60,28 @@ class IssueDetailViewModel @Inject constructor(
     }
 
     fun onScrolledToEnd() = updateViewState()
+
+    fun onDeleteCommentConfirmed() {
+        subscribe(issueRepository.deleteComment(username, repoName, deletedCommentId),
+            {
+                val events = viewState.value?.events ?: arrayListOf()
+                events.removeAll { it is IssueComment && it.id == deletedCommentId }
+                val numComments = viewState.value?.numComments ?: 0
+
+                viewState.value = viewState.value?.copy(
+                    events = events,
+                    numComments = numComments - 1,
+                    updateAdapter = true
+                )
+            },
+            { alert("Failed to delete comment.") }
+        )
+    }
+
+    override fun onDeleteSelected(id: Long) {
+        deletedCommentId = id
+        deleteCommentRequest.call()
+    }
 
     override fun onCopyLinkSelected(url: String) {
         alert("Copied comment link to the clipboard.")

@@ -8,6 +8,7 @@ import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.IssueComment
 import com.gitspark.gitspark.model.IssueEvent
 import com.gitspark.gitspark.model.Page
+import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -61,6 +62,10 @@ class IssueRepository @Inject constructor(
                 })
             }
             .onErrorReturn { getFailure("Failed to obtain issue events.") }
+    }
+
+    fun deleteComment(username: String, repoName: String, commentId: Long): Completable {
+        return getIssueService().deleteComment(username, repoName, commentId)
     }
 
     private fun getIssueService() =
