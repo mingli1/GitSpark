@@ -102,6 +102,8 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             viewModel.onStart(it)
         }
 
+        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+
         comment_options.setOnClickListener { commentMenu.show() }
         commentMenu.setOnMenuItemClickListener {
             if (it.itemId == R.id.quote_reply) viewModel.onAuthorCommentQuoteReply()
@@ -113,6 +115,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                 keyboardHelper.hideKeyboard(send_comment_edit)
             }
         }
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
     }
 
     override fun onDestroyView() {
@@ -157,7 +160,8 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     private fun updateView(viewState: IssueDetailViewState) {
         with (viewState) {
-            loading_indicator.isVisible = loading
+            loading_indicator.isVisible = loading && !refreshing
+            swipe_refresh.isRefreshing = refreshing
 
             menu?.let {
                 it.findItem(R.id.lock).run {

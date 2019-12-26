@@ -70,6 +70,8 @@ class IssueDetailViewModel @Inject constructor(
 
     fun onScrolledToEnd() = updateViewState()
 
+    fun onRefresh() = updateViewState(reset = true, refresh = true)
+
     fun onDeleteCommentConfirmed() {
         subscribe(issueRepository.deleteComment(username, repoName, deletedCommentId),
             {
@@ -163,14 +165,18 @@ class IssueDetailViewModel @Inject constructor(
         quoteReplyAction.value = quote
     }
 
-    private fun updateViewState(reset: Boolean = false) {
+    private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
         viewState.value = viewState.value?.copy(
+            events = if (reset) arrayListOf() else viewState.value?.events ?: arrayListOf(),
             loading = reset,
+            refreshing = refresh,
             updateAdapter = false,
             commentsFinishedLoading = commentsFinished,
             eventsFinishedLoading = eventsFinished
         ) ?: IssueDetailViewState(
+            events = if (reset) arrayListOf() else viewState.value?.events ?: arrayListOf(),
             loading = reset,
+            refreshing = refresh,
             updateAdapter = false,
             commentsFinishedLoading = commentsFinished,
             eventsFinishedLoading = eventsFinished
@@ -233,14 +239,16 @@ class IssueDetailViewModel @Inject constructor(
                             isLastPage = commentsFinished && eventsFinished,
                             commentsFinishedLoading = true,
                             updateAdapter = true,
-                            loading = false
+                            loading = false,
+                            refreshing = false
                         )
                     }
                     is IssueResult.Failure -> {
                         viewState.value = viewState.value?.copy(
                             commentsFinishedLoading = false,
                             updateAdapter = true,
-                            loading = false
+                            loading = false,
+                            refreshing = false
                         )
                         alert(it.error)
                     }
@@ -262,14 +270,16 @@ class IssueDetailViewModel @Inject constructor(
                             isLastPage = commentsFinished && eventsFinished,
                             eventsFinishedLoading = true,
                             updateAdapter = true,
-                            loading = false
+                            loading = false,
+                            refreshing = false
                         )
                     }
                     is IssueResult.Failure -> {
                         viewState.value = viewState.value?.copy(
                             eventsFinishedLoading = false,
                             updateAdapter = true,
-                            loading = false
+                            loading = false,
+                            refreshing = false
                         )
                         alert(it.error)
                     }

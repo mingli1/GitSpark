@@ -22,6 +22,7 @@ data class IssueDetailViewState(
     val eventsFinishedLoading: Boolean = false,
     val events: ArrayList<EventComment> = arrayListOf(),
     val loading: Boolean = false,
+    val refreshing: Boolean = false,
     val isLastPage: Boolean = false,
     val updateAdapter: Boolean = false
 )
