@@ -206,6 +206,7 @@ class IssueDetailViewModel @Inject constructor(
 
                     viewState.value = viewState.value?.copy(
                         issueTitle = issue.title,
+                        authUserIsAuthor = prefsHelper.getAuthUsername() == issue.user.login,
                         isOpen = issue.state == "open",
                         issueDesc = "${issue.user.login} opened this issue $formatted",
                         numComments = issue.numComments,

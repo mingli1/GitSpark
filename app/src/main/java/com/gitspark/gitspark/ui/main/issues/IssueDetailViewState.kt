@@ -7,6 +7,7 @@ import com.gitspark.gitspark.ui.adapter.EventComment
 
 data class IssueDetailViewState(
     val permissionLevel: String = PERMISSION_NONE,
+    val authUserIsAuthor: Boolean = false,
     val issueTitle: String = "",
     val isOpen: Boolean = true,
     val issueDesc: String = "",

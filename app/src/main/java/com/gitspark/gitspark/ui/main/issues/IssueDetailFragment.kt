@@ -171,7 +171,11 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                     isVisible = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
                 }
 
-                it.findItem(R.id.state).title = if (isOpen) getString(R.string.close) else getString(R.string.reopen)
+                it.findItem(R.id.state).run {
+                    title = if (isOpen) getString(R.string.close) else getString(R.string.reopen)
+                    isVisible = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE || authUserIsAuthor
+                }
+                it.findItem(R.id.edit).isVisible = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE || authUserIsAuthor
                 it.findItem(R.id.delete).isVisible = permissionLevel == PERMISSION_ADMIN
             }
             issueEventsAdapter.permissionLevel = permissionLevel
