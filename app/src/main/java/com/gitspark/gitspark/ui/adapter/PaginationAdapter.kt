@@ -41,7 +41,10 @@ abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHo
         notifyDataSetChanged()
     }
 
+    open fun bindView(item: Pageable, view: View, position: Int, data: Any) {}
+
     inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(item: Pageable, position: Int) = bind(item, view, position)
+        fun bindView(item: Pageable, position: Int, data: Any) = bindView(item, view, position, data)
     }
 }

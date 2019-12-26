@@ -42,6 +42,7 @@ class IssueDetailViewModel @Inject constructor(
     private var commentsFinished = false
     private var eventsFinished = false
     private var last = -1
+    private var issueBody = ""
 
     private var deletedCommentId = 0L
 
@@ -110,6 +111,8 @@ class IssueDetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun onAuthorCommentQuoteReply() = onQuoteReplySelected(issueBody)
 
     override fun onDeleteSelected(id: Long) {
         deletedCommentId = id
@@ -187,6 +190,7 @@ class IssueDetailViewModel @Inject constructor(
                 is IssueResult.Success -> {
                     val issue = it.value
 
+                    issueBody = issue.body
                     val date = Instant.parse(issue.createdAt)
                     val formatted = timeHelper.getRelativeTimeFormat(date)
 

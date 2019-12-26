@@ -4,6 +4,7 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.DiffUtil
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
@@ -29,6 +30,7 @@ class IssueEventsAdapter(
     @Suppress("UNCHECKED_CAST")
     override fun setItems(items: List<Pageable>, isLastPage: Boolean) {
         val sorted = (items as List<EventComment>).sortedBy { it.createdAt() }
+        val result = DiffUtil.calculateDiff(DiffCallback(this.items, sorted))
         with (this.items) {
             clear()
             spannableCache.clear()
@@ -42,7 +44,7 @@ class IssueEventsAdapter(
             addAll(sorted)
             if (!isLastPage) add(Loading)
         }
-        notifyDataSetChanged()
+        result.dispatchUpdatesTo(this)
     }
 
     override fun getViewHolderId() = R.layout.issue_comment_view
@@ -145,6 +147,55 @@ class IssueEventsAdapter(
                 view.event_desc.text = desc
                 eventHelper.setIcon(item, view.event_icon)
             }
+        }
+    }
+
+    override fun bindView(item: Pageable, view: View, position: Int, data: Any) {
+        if (item is IssueComment) {
+            view.comment_body.setMarkDownText(data as String)
+        }
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty()) {
+            holder.bind(items[position], position)
+        } else {
+            payloads.forEach {
+                if (it is String) holder.bindView(items[position], position, it)
+            }
+        }
+    }
+
+    inner class DiffCallback(
+        private val old: List<Pageable>,
+        private val new: List<Pageable>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize() = old.size
+
+        override fun getNewListSize() = new.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val o = old[oldItemPosition]
+            val n = new[newItemPosition]
+            if (o is IssueComment && n is IssueComment && o.id == n.id) return true
+            if (o is IssueEvent && n is IssueEvent && o.id == n.id) return true
+            return false
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val o = old[oldItemPosition]
+            val n = new[newItemPosition]
+            if (o is IssueComment && n is IssueComment && o.body == n.body) return true
+            if (o is IssueEvent && n is IssueEvent && o.event == n.event) return true
+            return false
+        }
+
+        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+            val o = old[oldItemPosition]
+            val n = new[newItemPosition]
+            if (o is IssueComment && n is IssueComment && o.body != n.body) return n.body
+            return null
         }
     }
 }

@@ -90,7 +90,6 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
-        events_list.setHasFixedSize(true)
         events_list.layoutManager = layoutManager
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 
@@ -104,9 +103,14 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         }
 
         comment_options.setOnClickListener { commentMenu.show() }
+        commentMenu.setOnMenuItemClickListener {
+            if (it.itemId == R.id.quote_reply) viewModel.onAuthorCommentQuoteReply()
+            true
+        }
         send_comment_button.setOnClickListener {
             if (send_comment_edit.text.trim().isNotEmpty()) {
                 viewModel.onSendComment(send_comment_edit.text.trim().toString())
+                keyboardHelper.hideKeyboard(send_comment_edit)
             }
         }
     }
