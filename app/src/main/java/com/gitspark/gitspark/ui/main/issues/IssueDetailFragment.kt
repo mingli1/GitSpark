@@ -104,18 +104,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
         swipe_refresh.setColorSchemeResources(R.color.colorAccent)
 
-        comment_options.setOnClickListener { commentMenu.show() }
-        commentMenu.setOnMenuItemClickListener {
-            if (it.itemId == R.id.quote_reply) viewModel.onAuthorCommentQuoteReply()
-            true
-        }
-        send_comment_button.setOnClickListener {
-            if (send_comment_edit.text.trim().isNotEmpty()) {
-                viewModel.onSendComment(send_comment_edit.text.trim().toString())
-                keyboardHelper.hideKeyboard(send_comment_edit)
-            }
-        }
-        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
+        setUpListeners()
     }
 
     override fun onDestroyView() {
@@ -247,5 +236,20 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         } else {
             send_comment_edit.append("\n$quote")
         }
+    }
+
+    private fun setUpListeners() {
+        comment_options.setOnClickListener { commentMenu.show() }
+        commentMenu.setOnMenuItemClickListener {
+            if (it.itemId == R.id.quote_reply) viewModel.onAuthorCommentQuoteReply()
+            true
+        }
+        send_comment_button.setOnClickListener {
+            if (send_comment_edit.text.trim().isNotEmpty()) {
+                viewModel.onSendComment(send_comment_edit.text.trim().toString())
+                keyboardHelper.hideKeyboard(send_comment_edit)
+            }
+        }
+        swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
     }
 }

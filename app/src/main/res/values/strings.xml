@@ -140,6 +140,7 @@
     <string name="file_size_hint">&gt;10, 50..1000, >200</string>
     <string name="commit_message_hint">fixed bug, typo, added change</string>
     <string name="repo">Repository:</string>
+    <string name="repository">Repository</string>
     <string name="repo_hint">mingli1/GitSpark</string>
     <string name="state">State:</string>
     <string name="num_comments">Number of comments:</string>

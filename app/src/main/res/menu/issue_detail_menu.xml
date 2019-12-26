@@ -7,6 +7,11 @@
         android:icon="@drawable/ic_edit"/>
     
     <item
+        android:id="@+id/repo"
+        android:title="@string/repository"
+        android:icon="@drawable/ic_book"/>
+    
+    <item
         android:id="@+id/lock"
         android:title="@string/lock"
         android:icon="@drawable/ic_lock"/>
