@@ -120,6 +120,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.deleteCommentRequest.observe(viewLifecycleOwner) { requestDeleteComment() }
         viewModel.toggleCommentEdit.observe(viewLifecycleOwner) { comment_view.isVisible = it }
+        viewModel.quoteReplyAction.observe(viewLifecycleOwner) { updateCommentEdit(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -219,5 +220,13 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             getString(R.string.delete_comment_title),
             getString(R.string.delete_comment_message)
         ).show(childFragmentManager, null)
+    }
+
+    private fun updateCommentEdit(quote: String) {
+        if (send_comment_edit.text.isEmpty()) {
+            send_comment_edit.setText(quote)
+        } else {
+            send_comment_edit.append("\n$quote")
+        }
     }
 }

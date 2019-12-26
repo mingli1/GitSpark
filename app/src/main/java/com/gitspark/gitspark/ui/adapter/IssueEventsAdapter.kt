@@ -95,6 +95,7 @@ class IssueEventsAdapter(
                             }
                             R.id.delete -> callback.onDeleteSelected(item.id)
                             R.id.copy_link -> callback.onCopyLinkSelected(item.htmlUrl)
+                            R.id.quote_reply -> callback.onQuoteReplySelected(item.body)
                         }
                         true
                     }

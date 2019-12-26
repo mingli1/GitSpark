@@ -11,4 +11,6 @@ interface CommentMenuCallback {
     fun onEditCommentUnfocused()
 
     fun onCommentUpdated(id: Long, body: String)
+
+    fun onQuoteReplySelected(body: String)
 }

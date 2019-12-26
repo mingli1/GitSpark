@@ -29,6 +29,7 @@ class IssueDetailViewModel @Inject constructor(
     val viewState = MutableLiveData<IssueDetailViewState>()
     val toggleCommentEdit = SingleLiveEvent<Boolean>()
     val deleteCommentRequest = SingleLiveAction()
+    val quoteReplyAction = SingleLiveEvent<String>()
     private var started = false
 
     private var username = ""
@@ -118,6 +119,12 @@ class IssueDetailViewModel @Inject constructor(
                 viewState.value = viewState.value?.copy(loading = false)
             }
         )
+    }
+
+    override fun onQuoteReplySelected(body: String) {
+        var quote = ""
+        body.lines().forEach { quote += ">$it\n" }
+        quoteReplyAction.value = quote
     }
 
     private fun updateViewState(reset: Boolean = false) {

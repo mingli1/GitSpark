@@ -139,6 +139,7 @@
         android:maxLines="4"
         android:scrollbars="vertical"
         android:visibility="gone"
+        android:selectAllOnFocus="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_divider"
         app:layout_constraintEnd_toEndOf="parent"/>
