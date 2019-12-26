@@ -65,7 +65,24 @@ class IssueRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain issue events.") }
     }
 
-    fun editComment(username: String, repoName: String, commentId: Long, body: ApiIssueCommentRequest): Completable {
+    fun createComment(
+        username: String,
+        repoName: String,
+        issueNum: Int,
+        body: ApiIssueCommentRequest
+    ): Observable<IssueResult<IssueComment>> {
+        return getIssueService()
+            .createComment(username, repoName, issueNum, body)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed to create comment.") }
+    }
+
+    fun editComment(
+        username: String,
+        repoName: String,
+        commentId: Long,
+        body: ApiIssueCommentRequest
+    ): Completable {
         return getIssueService().editComment(username, repoName, commentId, body)
     }
 

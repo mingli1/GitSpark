@@ -104,6 +104,11 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         }
 
         comment_options.setOnClickListener { commentMenu.show() }
+        send_comment_button.setOnClickListener {
+            if (send_comment_edit.text.trim().isNotEmpty()) {
+                viewModel.onSendComment(send_comment_edit.text.trim().toString())
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -121,6 +126,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         viewModel.deleteCommentRequest.observe(viewLifecycleOwner) { requestDeleteComment() }
         viewModel.toggleCommentEdit.observe(viewLifecycleOwner) { comment_view.isVisible = it }
         viewModel.quoteReplyAction.observe(viewLifecycleOwner) { updateCommentEdit(it) }
+        viewModel.clearCommentEdit.observe(viewLifecycleOwner) { send_comment_edit.clear() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

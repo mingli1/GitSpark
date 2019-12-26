@@ -17,6 +17,7 @@ import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import org.threeten.bp.Instant
 import javax.inject.Inject
+import kotlin.math.max
 
 class IssueDetailViewModel @Inject constructor(
     private val issueRepository: IssueRepository,
@@ -30,6 +31,7 @@ class IssueDetailViewModel @Inject constructor(
     val toggleCommentEdit = SingleLiveEvent<Boolean>()
     val deleteCommentRequest = SingleLiveAction()
     val quoteReplyAction = SingleLiveEvent<String>()
+    val clearCommentEdit = SingleLiveAction()
     private var started = false
 
     private var username = ""
@@ -39,6 +41,7 @@ class IssueDetailViewModel @Inject constructor(
     private var page = 1
     private var commentsFinished = false
     private var eventsFinished = false
+    private var last = -1
 
     private var deletedCommentId = 0L
 
@@ -80,6 +83,32 @@ class IssueDetailViewModel @Inject constructor(
             },
             { alert("Failed to delete comment.") }
         )
+    }
+
+    fun onSendComment(body: String) {
+        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        subscribe(issueRepository.createComment(username, repoName, issueNum, ApiIssueCommentRequest(body))) {
+            when (it) {
+                is IssueResult.Success -> {
+                    if (last == -1 || page == last) {
+                        val events = viewState.value?.events ?: arrayListOf()
+                        events.add(it.value)
+                        viewState.value = viewState.value?.copy(
+                            events = events,
+                            loading = false,
+                            updateAdapter = true
+                        )
+                    } else {
+                        viewState.value = viewState.value?.copy(loading = false)
+                    }
+                    clearCommentEdit.call()
+                }
+                is IssueResult.Failure -> {
+                    alert(it.error)
+                    viewState.value = viewState.value?.copy(loading = false)
+                }
+            }
+        }
     }
 
     override fun onDeleteSelected(id: Long) {
@@ -188,6 +217,7 @@ class IssueDetailViewModel @Inject constructor(
                         val updatedList = viewState.value?.events ?: arrayListOf()
                         updatedList.addAll(it.value.value)
 
+                        last = max(last, it.value.last)
                         commentsFinished = page.isLastPage(it.value.last)
 
                         viewState.value = viewState.value?.copy(
@@ -216,6 +246,7 @@ class IssueDetailViewModel @Inject constructor(
                         val updatedList = viewState.value?.events ?: arrayListOf()
                         updatedList.addAll(it.value.value)
 
+                        last = max(last, it.value.last)
                         eventsFinished = page.isLastPage(it.value.last)
 
                         viewState.value = viewState.value?.copy(

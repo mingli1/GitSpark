@@ -34,6 +34,14 @@ interface IssueService {
         @Query("per_page") perPage: Int = ISSUE_EVENTS_PER_PAGE
     ): Observable<ApiPage<ApiIssueEvent>>
 
+    @POST("repos/{owner}/{repo}/issues/{issue_number}/comments")
+    fun createComment(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("issue_number") issueNum: Int,
+        @Body request: ApiIssueCommentRequest
+    ): Observable<ApiIssueComment>
+
     @PATCH("repos/{owner}/{repo}/issues/comments/{comment_id}")
     fun editComment(
         @Path("owner") owner: String,
