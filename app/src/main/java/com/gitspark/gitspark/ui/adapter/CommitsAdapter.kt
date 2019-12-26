@@ -55,7 +55,7 @@ class CommitsAdapter(
         notifyDataSetChanged()
     }
 
-    override fun bind(item: Pageable, view: View) {
+    override fun bind(item: Pageable, view: View, position: Int) {
         when (item) {
             is DateGroup -> {
                 var formattedDateTime = ""

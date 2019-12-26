@@ -47,7 +47,7 @@ class IssueEventsAdapter(
 
     override fun getViewHolderId() = R.layout.issue_comment_view
 
-    override fun bind(item: Pageable, view: View) {
+    override fun bind(item: Pageable, view: View, position: Int) {
         when (item) {
             is IssueComment -> {
                 with (view) {
@@ -87,9 +87,11 @@ class IssueEventsAdapter(
                                 update_comment_button.isVisible = true
 
                                 edit_comment.setText(item.body)
-                                edit_comment.requestFocus()
+                                edit_comment.postDelayed({
+                                    edit_comment.requestFocus()
+                                    keyboardHelper.showKeyboard(edit_comment)
+                                }, 100)
                                 callback.onEditCommentFocused()
-                                keyboardHelper.showKeyboard()
                             }
                             R.id.delete -> callback.onDeleteSelected(item.id)
                             R.id.copy_link -> callback.onCopyLinkSelected(item.htmlUrl)
@@ -99,6 +101,28 @@ class IssueEventsAdapter(
 
                     edit_comment.setOnClickListener { callback.onEditCommentFocused() }
                     edit_comment.onImeBack { _, _ -> callback.onEditCommentUnfocused() }
+
+                    cancel_edit_button.setOnClickListener {
+                        comment_options.isVisible = true
+                        comment_body.isVisible = true
+                        edit_comment.isVisible = false
+                        cancel_edit_button.isVisible = false
+                        update_comment_button.isVisible = false
+
+                        callback.onEditCommentUnfocused()
+                        keyboardHelper.hideKeyboard(edit_comment)
+                    }
+                    update_comment_button.setOnClickListener {
+                        comment_options.isVisible = true
+                        comment_body.isVisible = true
+                        edit_comment.isVisible = false
+                        cancel_edit_button.isVisible = false
+                        update_comment_button.isVisible = false
+
+                        callback.onEditCommentUnfocused()
+                        keyboardHelper.hideKeyboard(edit_comment)
+                        callback.onCommentUpdated(item.id, edit_comment.text.toString())
+                    }
                 }
             }
             is IssueEvent -> {

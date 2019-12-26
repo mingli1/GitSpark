@@ -1,15 +1,9 @@
 package com.gitspark.gitspark.api.service
 
-import com.gitspark.gitspark.api.model.ApiIssue
-import com.gitspark.gitspark.api.model.ApiIssueComment
-import com.gitspark.gitspark.api.model.ApiIssueEvent
-import com.gitspark.gitspark.api.model.ApiPage
+import com.gitspark.gitspark.api.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 const val ISSUE_EVENTS_PER_PAGE = 50
 
@@ -39,6 +33,14 @@ interface IssueService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = ISSUE_EVENTS_PER_PAGE
     ): Observable<ApiPage<ApiIssueEvent>>
+
+    @PATCH("repos/{owner}/{repo}/issues/comments/{comment_id}")
+    fun editComment(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("comment_id") commentId: Long,
+        @Body body: ApiIssueCommentRequest
+    ): Completable
 
     @DELETE("repos/{owner}/{repo}/issues/comments/{comment_id}")
     fun deleteComment(

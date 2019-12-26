@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.main.issues
 
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.api.model.ApiIssueCommentRequest
 import com.gitspark.gitspark.helper.ClipboardHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
@@ -96,6 +97,27 @@ class IssueDetailViewModel @Inject constructor(
 
     override fun onEditCommentUnfocused() {
         toggleCommentEdit.value = true
+    }
+
+    override fun onCommentUpdated(id: Long, body: String) {
+        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        subscribe(issueRepository.editComment(username, repoName, id, ApiIssueCommentRequest(body = body)),
+            {
+                val events = viewState.value?.events ?: arrayListOf()
+                events.find { it is IssueComment && it.id == id }?.let {
+                    (it as IssueComment).body = body
+                }
+                viewState.value = viewState.value?.copy(
+                    events = events,
+                    loading = false,
+                    updateAdapter = true
+                )
+            },
+            {
+                alert("Failed to update comment")
+                viewState.value = viewState.value?.copy(loading = false)
+            }
+        )
     }
 
     private fun updateViewState(reset: Boolean = false) {

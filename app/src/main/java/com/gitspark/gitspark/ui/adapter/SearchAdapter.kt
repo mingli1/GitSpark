@@ -18,7 +18,7 @@ class SearchAdapter(
 
     override fun getViewHolderId() = R.layout.search_view
 
-    override fun bind(item: Pageable, view: View) {
+    override fun bind(item: Pageable, view: View, position: Int) {
         if (item is SearchCriteria) {
             with (view) {
                 search_type.setImageResource(when (item.type) {

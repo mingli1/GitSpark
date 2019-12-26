@@ -6,7 +6,7 @@ import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 data class IssueComment(
     val id: Long = 0,
     val htmlUrl: String = "",
-    val body: String = "",
+    var body: String = "",
     val user: User = User(),
     val createdAt: String = "",
     val updatedAt: String = "",

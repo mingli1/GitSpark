@@ -9,4 +9,6 @@ interface CommentMenuCallback {
     fun onEditCommentFocused()
 
     fun onEditCommentUnfocused()
+
+    fun onCommentUpdated(id: Long, body: String)
 }

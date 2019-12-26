@@ -13,7 +13,7 @@ class UsersAdapter(
     private val prefsHelper: PreferencesHelper
 ) : PaginationAdapter() {
 
-    override fun bind(item: Pageable, view: View) {
+    override fun bind(item: Pageable, view: View, position: Int) {
         if (item is User) {
             with (view) {
                 avatar_image.loadImage(item.avatarUrl)

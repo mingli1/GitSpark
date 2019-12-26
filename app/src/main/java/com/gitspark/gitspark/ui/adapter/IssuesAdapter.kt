@@ -24,7 +24,7 @@ class IssuesAdapter(
 
     override fun getViewHolderId() = R.layout.issue_view
 
-    override fun bind(item: Pageable, view: View) {
+    override fun bind(item: Pageable, view: View, position: Int) {
         if (item is Issue) {
             with (view) {
                 icon.setImageResource(if (item.htmlUrl.contains("issue")) R.drawable.ic_issue else R.drawable.ic_pull_request)

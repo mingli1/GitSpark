@@ -9,7 +9,7 @@ class FilesAdapter : PaginationAdapter() {
 
     override fun getViewHolderId() = R.layout.file_view
 
-    override fun bind(item: Pageable, view: View) {
+    override fun bind(item: Pageable, view: View, position: Int) {
         if (item is File) {
             with (view) {
                 file_name_field.text = item.name

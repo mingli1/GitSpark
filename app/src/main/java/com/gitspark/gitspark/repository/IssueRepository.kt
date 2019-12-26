@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.repository
 
+import com.gitspark.gitspark.api.model.ApiIssueCommentRequest
 import com.gitspark.gitspark.api.service.ISSUE_EVENTS_PER_PAGE
 import com.gitspark.gitspark.api.service.IssueService
 import com.gitspark.gitspark.helper.PreferencesHelper
@@ -62,6 +63,10 @@ class IssueRepository @Inject constructor(
                 })
             }
             .onErrorReturn { getFailure("Failed to obtain issue events.") }
+    }
+
+    fun editComment(username: String, repoName: String, commentId: Long, body: ApiIssueCommentRequest): Completable {
+        return getIssueService().editComment(username, repoName, commentId, body)
     }
 
     fun deleteComment(username: String, repoName: String, commentId: Long): Completable {

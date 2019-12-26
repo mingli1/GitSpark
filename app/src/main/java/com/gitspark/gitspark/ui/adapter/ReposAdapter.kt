@@ -31,7 +31,7 @@ class ReposAdapter(
     private val simple: Boolean = false
 ) : PaginationAdapter() {
 
-    override fun bind(item: Pageable, view: View) {
+    override fun bind(item: Pageable, view: View, position: Int) {
         if (item is Repo) {
             with (view) {
                 if (simple) {

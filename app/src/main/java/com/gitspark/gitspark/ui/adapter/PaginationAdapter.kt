@@ -26,11 +26,11 @@ abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHo
         ))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(items[position])
+        holder.bind(items[position], position)
 
     abstract fun getViewHolderId(): Int
 
-    abstract fun bind(item: Pageable, view: View)
+    abstract fun bind(item: Pageable, view: View, position: Int)
 
     open fun setItems(items: List<Pageable>, isLastPage: Boolean) {
         with (this.items) {
@@ -42,6 +42,6 @@ abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHo
     }
 
     inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(item: Pageable) = bind(item, view)
+        fun bind(item: Pageable, position: Int) = bind(item, view, position)
     }
 }

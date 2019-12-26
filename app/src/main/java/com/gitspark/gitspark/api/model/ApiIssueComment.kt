@@ -25,3 +25,7 @@ data class ApiIssueComment(
         association = association ?: ""
     )
 }
+
+data class ApiIssueCommentRequest(
+    @field:Json(name = "body") val body: String
+)

@@ -47,7 +47,7 @@ class HomeFeedAdapter(
 
     override fun getViewHolderId() = if (recent) R.layout.profile_feed_view else R.layout.received_feed_view
 
-    override fun bind(item: Pageable, view: View) {
+    override fun bind(item: Pageable, view: View, position: Int) {
         if (item is Event) {
             with (view) {
                 val title = spannableCache[item.id]
