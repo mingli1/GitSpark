@@ -131,6 +131,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         viewModel.toggleCommentEdit.observe(viewLifecycleOwner) { comment_view.isVisible = it }
         viewModel.quoteReplyAction.observe(viewLifecycleOwner) { updateCommentEdit(it) }
         viewModel.clearCommentEdit.observe(viewLifecycleOwner) { send_comment_edit.clear() }
+        viewModel.updateCommentRequest.observe(viewLifecycleOwner) { issueEventsAdapter.updateComment(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

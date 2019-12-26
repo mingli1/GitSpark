@@ -5,7 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import retrofit2.http.*
 
-const val ISSUE_EVENTS_PER_PAGE = 8
+const val ISSUE_EVENTS_PER_PAGE = 50
 
 interface IssueService {
 

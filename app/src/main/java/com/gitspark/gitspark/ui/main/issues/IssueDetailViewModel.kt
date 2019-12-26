@@ -32,6 +32,7 @@ class IssueDetailViewModel @Inject constructor(
     val deleteCommentRequest = SingleLiveAction()
     val quoteReplyAction = SingleLiveEvent<String>()
     val clearCommentEdit = SingleLiveAction()
+    val updateCommentRequest = SingleLiveEvent<IssueComment>()
     private var started = false
 
     private var username = ""
@@ -137,13 +138,14 @@ class IssueDetailViewModel @Inject constructor(
         subscribe(issueRepository.editComment(username, repoName, id, ApiIssueCommentRequest(body = body)),
             {
                 val events = viewState.value?.events ?: arrayListOf()
-                events.find { it is IssueComment && it.id == id }?.let {
+                val updatedComment = events.find { it is IssueComment && it.id == id }
+                updatedComment?.let {
                     (it as IssueComment).body = body
+                    updateCommentRequest.value = it
                 }
                 viewState.value = viewState.value?.copy(
                     events = events,
-                    loading = false,
-                    updateAdapter = true
+                    loading = false
                 )
             },
             {

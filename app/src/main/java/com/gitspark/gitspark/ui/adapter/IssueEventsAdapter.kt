@@ -47,6 +47,12 @@ class IssueEventsAdapter(
         result.dispatchUpdatesTo(this)
     }
 
+    fun updateComment(comment: IssueComment) {
+        val pos = items.indexOfFirst { it is IssueComment && it.id == comment.id }
+        items[pos] = comment
+        notifyItemChanged(pos)
+    }
+
     override fun getViewHolderId() = R.layout.issue_comment_view
 
     override fun bind(item: Pageable, view: View, position: Int) {
@@ -146,22 +152,6 @@ class IssueEventsAdapter(
 
                 view.event_desc.text = desc
                 eventHelper.setIcon(item, view.event_icon)
-            }
-        }
-    }
-
-    override fun bindView(item: Pageable, view: View, position: Int, data: Any) {
-        if (item is IssueComment) {
-            view.comment_body.setMarkDownText(data as String)
-        }
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-        if (payloads.isEmpty()) {
-            holder.bind(items[position], position)
-        } else {
-            payloads.forEach {
-                if (it is String) holder.bindView(items[position], position, it)
             }
         }
     }
