@@ -92,16 +92,18 @@ class IssueDetailViewModel @Inject constructor(
         subscribe(issueRepository.createComment(username, repoName, issueNum, ApiIssueCommentRequest(body))) {
             when (it) {
                 is IssueResult.Success -> {
+                    val numComments = viewState.value?.numComments ?: 0
                     if (last == -1 || page == last) {
                         val events = viewState.value?.events ?: arrayListOf()
                         events.add(it.value)
                         viewState.value = viewState.value?.copy(
                             events = events,
                             loading = false,
-                            updateAdapter = true
+                            updateAdapter = true,
+                            numComments = numComments + 1
                         )
                     } else {
-                        viewState.value = viewState.value?.copy(loading = false)
+                        viewState.value = viewState.value?.copy(loading = false, numComments = numComments + 1)
                     }
                     clearCommentEdit.call()
                 }
