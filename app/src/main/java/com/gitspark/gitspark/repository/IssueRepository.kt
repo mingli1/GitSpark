@@ -65,6 +65,23 @@ class IssueRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain issue events.") }
     }
 
+    fun lockIssue(
+        username: String,
+        repoName: String,
+        issueNum: Int,
+        reason: String
+    ): Completable {
+        return getIssueService().lockIssue(username, repoName, issueNum, reason)
+    }
+
+    fun unlockIssue(
+        username: String,
+        repoName: String,
+        issueNum: Int
+    ): Completable {
+        return getIssueService().unlockIssue(username, repoName, issueNum)
+    }
+
     fun createComment(
         username: String,
         repoName: String,

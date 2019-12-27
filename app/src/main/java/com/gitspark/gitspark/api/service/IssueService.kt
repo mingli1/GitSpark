@@ -34,6 +34,21 @@ interface IssueService {
         @Query("per_page") perPage: Int = ISSUE_EVENTS_PER_PAGE
     ): Observable<ApiPage<ApiIssueEvent>>
 
+    @PUT("repos/{owner}/{repo}/issues/{issue_number}/lock")
+    fun lockIssue(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("issue_number") issueNum: Int,
+        @Query("lock_reason") reason: String
+    ): Completable
+
+    @DELETE("repos/{owner}/{repo}/issues/{issue_number}/lock")
+    fun unlockIssue(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("issue_number") issueNum: Int
+    ): Completable
+
     @POST("repos/{owner}/{repo}/issues/{issue_number}/comments")
     fun createComment(
         @Path("owner") owner: String,

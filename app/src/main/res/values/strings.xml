@@ -241,4 +241,11 @@
     <string name="comment_edit_hint">Leave a comment</string>
     <string name="cancel">Cancel</string>
     <string name="update_comment">Update comment</string>
+    <string-array name="lock_reasons">
+        <item>off-topic</item>
+        <item>too heated</item>
+        <item>resolved</item>
+        <item>spam</item>
+    </string-array>
+    <string name="lock_title">Lock conversation</string>
 </resources>

@@ -24,6 +24,8 @@ import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
+import com.gitspark.gitspark.ui.dialog.SelectDialog
+import com.gitspark.gitspark.ui.dialog.SelectDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.squareup.moshi.JsonAdapter
@@ -35,7 +37,7 @@ import javax.inject.Inject
 const val BUNDLE_ISSUE = "BUNDLE_ISSUE"
 
 class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewModel::class.java),
-    ConfirmDialogCallback {
+    ConfirmDialogCallback, SelectDialogCallback {
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var colorHelper: ColorHelper
@@ -143,14 +145,36 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         viewModel.onMenuCreated()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.lock -> {
+                if (item.title == getString(R.string.lock)) {
+                    SelectDialog.newInstance(
+                        getString(R.string.lock_title),
+                        resources.getStringArray(R.array.lock_reasons)
+                    ).show(childFragmentManager, null)
+                } else {
+                    viewModel.onIssueUnlockRequest()
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onPositiveClicked() = viewModel.onDeleteCommentConfirmed()
 
     override fun onNegativeClicked() {}
+
+    override fun onSelected(item: String) = viewModel.onIssueLockRequest(item)
 
     private fun updateView(viewState: IssueDetailViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading && !refreshing
             swipe_refresh.isRefreshing = refreshing
+
+            send_comment_edit.isEnabled = permissionLevel == PERMISSION_ADMIN ||
+                    permissionLevel == PERMISSION_WRITE ||
+                    !locked
 
             menu?.let {
                 it.findItem(R.id.lock).run {

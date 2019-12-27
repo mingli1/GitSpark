@@ -119,6 +119,38 @@ class IssueDetailViewModel @Inject constructor(
 
     fun onAuthorCommentQuoteReply() = onQuoteReplySelected(issueBody)
 
+    fun onIssueLockRequest(reason: String) {
+        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        subscribe(issueRepository.lockIssue(username, repoName, issueNum, reason),
+            {
+                viewState.value = viewState.value?.copy(
+                    loading = false,
+                    locked = true
+                )
+            },
+            {
+                alert("Failed to lock issue.")
+                viewState.value = viewState.value?.copy(loading = false)
+            }
+        )
+    }
+
+    fun onIssueUnlockRequest() {
+        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        subscribe(issueRepository.unlockIssue(username, repoName, issueNum),
+            {
+                viewState.value = viewState.value?.copy(
+                    loading = false,
+                    locked = false
+                )
+            },
+            {
+                alert("Failed to unlock issue.")
+                viewState.value = viewState.value?.copy(loading = false)
+            }
+        )
+    }
+
     override fun onDeleteSelected(id: Long) {
         deletedCommentId = id
         deleteCommentRequest.call()
