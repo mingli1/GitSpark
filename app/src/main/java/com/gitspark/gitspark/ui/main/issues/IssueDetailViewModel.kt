@@ -34,6 +34,7 @@ class IssueDetailViewModel @Inject constructor(
     val quoteReplyAction = SingleLiveEvent<String>()
     val clearCommentEdit = SingleLiveAction()
     val updateCommentRequest = SingleLiveEvent<IssueComment>()
+    val navigateToRepoDetail = SingleLiveEvent<String>()
     private var started = false
 
     private var username = ""
@@ -57,7 +58,7 @@ class IssueDetailViewModel @Inject constructor(
 
             requestPermissionLevel()
             updateViewState(reset = true)
-            started = false
+            started = true
         }
     }
 
@@ -173,6 +174,10 @@ class IssueDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onRepoSelected() {
+        navigateToRepoDetail.value = "$username/$repoName"
     }
 
     override fun onDeleteSelected(id: Long) {

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
@@ -28,6 +29,7 @@ import com.gitspark.gitspark.ui.dialog.SelectDialog
 import com.gitspark.gitspark.ui.dialog.SelectDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_issue_detail.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -126,6 +128,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         viewModel.quoteReplyAction.observe(viewLifecycleOwner) { updateCommentEdit(it) }
         viewModel.clearCommentEdit.observe(viewLifecycleOwner) { send_comment_edit.clear() }
         viewModel.updateCommentRequest.observe(viewLifecycleOwner) { issueEventsAdapter.updateComment(it) }
+        viewModel.navigateToRepoDetail.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -147,6 +150,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.repo -> viewModel.onRepoSelected()
             R.id.state -> {
                 viewModel.onIssueStateChange(
                     if (item.title == getString(R.string.reopen)) "open" else "closed"
@@ -279,5 +283,10 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             }
         }
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
+    }
+
+    private fun navigateToRepoDetailFragment(repoFullName: String) {
+        val bundle = Bundle().apply { putString(BUNDLE_REPO_FULLNAME, repoFullName) }
+        findNavController().navigate(R.id.action_issue_detail_to_repo, bundle)
     }
 }
