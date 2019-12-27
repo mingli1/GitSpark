@@ -21,9 +21,4 @@
         android:title="@string/close"
         android:icon="@drawable/ic_issue"/>
     
-    <item
-        android:id="@+id/delete"
-        android:title="@string/delete_issue"
-        android:icon="@drawable/ic_delete"/>
-    
 </menu>

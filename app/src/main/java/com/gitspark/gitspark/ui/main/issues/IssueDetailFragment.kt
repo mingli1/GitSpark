@@ -194,7 +194,6 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                     isVisible = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE || authUserIsAuthor
                 }
                 it.findItem(R.id.edit).isVisible = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE || authUserIsAuthor
-                it.findItem(R.id.delete).isVisible = permissionLevel == PERMISSION_ADMIN
             }
             issueEventsAdapter.permissionLevel = permissionLevel
 
