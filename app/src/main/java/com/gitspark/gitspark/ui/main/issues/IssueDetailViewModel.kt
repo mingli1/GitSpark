@@ -2,6 +2,7 @@ package com.gitspark.gitspark.ui.main.issues
 
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.api.model.ApiIssueCommentRequest
+import com.gitspark.gitspark.api.model.ApiIssueEditRequest
 import com.gitspark.gitspark.helper.ClipboardHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
@@ -43,7 +44,7 @@ class IssueDetailViewModel @Inject constructor(
     private var commentsFinished = false
     private var eventsFinished = false
     private var last = -1
-    private var issueBody = ""
+    private var issue = Issue()
 
     private var deletedCommentId = 0L
 
@@ -117,7 +118,7 @@ class IssueDetailViewModel @Inject constructor(
         }
     }
 
-    fun onAuthorCommentQuoteReply() = onQuoteReplySelected(issueBody)
+    fun onAuthorCommentQuoteReply() = onQuoteReplySelected(issue.body)
 
     fun onIssueLockRequest(reason: String) {
         viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
@@ -149,6 +150,29 @@ class IssueDetailViewModel @Inject constructor(
                 viewState.value = viewState.value?.copy(loading = false)
             }
         )
+    }
+
+    fun onIssueStateChange(state: String) {
+        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        subscribe(issueRepository.editIssue(
+            username,
+            repoName,
+            issueNum,
+            ApiIssueEditRequest.changeState(state, issue)
+        )) {
+            when (it) {
+                is IssueResult.Success -> {
+                    viewState.value = viewState.value?.copy(
+                        loading = false,
+                        isOpen = state == "open"
+                    )
+                }
+                is IssueResult.Failure -> {
+                    alert("Failed to ${if (state == "open") "open" else "close"} this issue.")
+                    viewState.value = viewState.value?.copy(loading = false)
+                }
+            }
+        }
     }
 
     override fun onDeleteSelected(id: Long) {
@@ -231,8 +255,8 @@ class IssueDetailViewModel @Inject constructor(
             when (it) {
                 is IssueResult.Success -> {
                     val issue = it.value
+                    this.issue = issue
 
-                    issueBody = issue.body
                     val date = Instant.parse(issue.createdAt)
                     val formatted = timeHelper.getRelativeTimeFormat(date)
 

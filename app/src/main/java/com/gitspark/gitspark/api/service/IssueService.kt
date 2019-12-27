@@ -49,6 +49,14 @@ interface IssueService {
         @Path("issue_number") issueNum: Int
     ): Completable
 
+    @PATCH("repos/{owner}/{repo}/issues/{issue_number}")
+    fun editIssue(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("issue_number") issueNum: Int,
+        @Body request: ApiIssueEditRequest
+    ): Observable<ApiIssue>
+
     @POST("repos/{owner}/{repo}/issues/{issue_number}/comments")
     fun createComment(
         @Path("owner") owner: String,

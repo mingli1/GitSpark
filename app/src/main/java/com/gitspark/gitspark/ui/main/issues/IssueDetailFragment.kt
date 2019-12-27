@@ -147,6 +147,11 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.state -> {
+                viewModel.onIssueStateChange(
+                    if (item.title == getString(R.string.reopen)) "open" else "closed"
+                )
+            }
             R.id.lock -> {
                 if (item.title == getString(R.string.lock)) {
                     SelectDialog.newInstance(
