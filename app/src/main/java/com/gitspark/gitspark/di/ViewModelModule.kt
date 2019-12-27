@@ -7,6 +7,7 @@ import com.gitspark.gitspark.ui.login.LoginViewModel
 import com.gitspark.gitspark.ui.main.home.HomeViewModel
 import com.gitspark.gitspark.ui.main.issues.IssueDetailFragment
 import com.gitspark.gitspark.ui.main.issues.IssueDetailViewModel
+import com.gitspark.gitspark.ui.main.issues.IssueEditViewModel
 import com.gitspark.gitspark.ui.main.profile.*
 import com.gitspark.gitspark.ui.main.repo.RepoContentViewModel
 import com.gitspark.gitspark.ui.main.repo.RepoDetailSharedViewModel
@@ -110,6 +111,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(IssueDetailViewModel::class)
     internal abstract fun bindIssueDetailViewModel(issueDetailViewModel: IssueDetailViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(IssueEditViewModel::class)
+    internal abstract fun bindIssueEditViewModel(issueEditViewModel: IssueEditViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
