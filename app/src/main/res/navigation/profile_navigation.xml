@@ -200,6 +200,29 @@
     <fragment
         android:id="@+id/issue_detail_fragment"
         android:name="com.gitspark.gitspark.ui.main.issues.IssueDetailFragment"
-        android:label="IssueDetailFragment"/>
+        android:label="IssueDetailFragment">
+    
+        <action
+            android:id="@+id/action_issue_detail_to_repo"
+            app:destination="@id/repo_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+    
+        <action
+            android:id="@+id/action_issue_detail_to_issue_edit"
+            app:destination="@id/issue_edit_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+    </fragment>
+    
+    <fragment
+        android:id="@+id/issue_edit_fragment"
+        android:name="com.gitspark.gitspark.ui.main.issues.IssueEditFragment"
+        android:label="IssueEditFragment"/>
 
 </navigation>

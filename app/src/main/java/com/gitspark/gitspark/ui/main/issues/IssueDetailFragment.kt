@@ -129,6 +129,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         viewModel.clearCommentEdit.observe(viewLifecycleOwner) { send_comment_edit.clear() }
         viewModel.updateCommentRequest.observe(viewLifecycleOwner) { issueEventsAdapter.updateComment(it) }
         viewModel.navigateToRepoDetail.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
+        viewModel.navigateToIssueEdit.observe(viewLifecycleOwner) { navigateToIssueEditFragment(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -150,6 +151,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.edit -> viewModel.onEditSelected()
             R.id.repo -> viewModel.onRepoSelected()
             R.id.state -> {
                 viewModel.onIssueStateChange(
@@ -288,5 +290,13 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     private fun navigateToRepoDetailFragment(repoFullName: String) {
         val bundle = Bundle().apply { putString(BUNDLE_REPO_FULLNAME, repoFullName) }
         findNavController().navigate(R.id.action_issue_detail_to_repo, bundle)
+    }
+
+    private fun navigateToIssueEditFragment(pair: Pair<String, Issue>) {
+        val bundle = Bundle().apply {
+            putString(BUNDLE_TITLE, pair.first)
+            putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(pair.second))
+        }
+        findNavController().navigate(R.id.action_issue_detail_to_issue_edit, bundle)
     }
 }
