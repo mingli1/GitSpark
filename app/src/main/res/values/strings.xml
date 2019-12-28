@@ -253,4 +253,6 @@
         <item>spam</item>
     </string-array>
     <string name="lock_title">Lock conversation</string>
+    <string name="assignees_header">Select up to 10 assignees</string>
+    <string name="assignees_button">Set assignees</string>
 </resources>
