@@ -18,6 +18,8 @@ class IssueEditViewModel @Inject constructor(
     val loadAssigneesAndLabels = SingleLiveEvent<Pair<List<User>, List<Label>>>()
     val showAssigneesDialog = SingleLiveEvent<List<User>>()
 
+    var assignees: List<User>? = null
+    private lateinit var issue: Issue
     private var username = ""
     private var repoName = ""
     private var started = false
@@ -27,18 +29,20 @@ class IssueEditViewModel @Inject constructor(
         username = split[0]
         repoName = split[1]
         if (!started) {
+            this.issue = issue
+            val assignees = if (assignees != null) assignees!! else issue.assignees
             viewState.value = viewState.value?.copy(
                 title = issue.title,
                 body = issue.body,
-                assignees = issue.assignees,
+                assignees = assignees,
                 labels = issue.labels
             ) ?: IssueEditViewState(
                 title = issue.title,
                 body = issue.body,
-                assignees = issue.assignees,
+                assignees = assignees,
                 labels = issue.labels
             )
-            loadAssigneesAndLabels.value = Pair(issue.assignees, issue.labels)
+            loadAssigneesAndLabels.value = Pair(assignees, issue.labels)
             started = true
         }
     }
@@ -68,5 +72,12 @@ class IssueEditViewModel @Inject constructor(
             }
             viewState.value = viewState.value?.copy(loading = false)
         }
+    }
+
+    fun onAssigneesSet(assignees: List<User>) {
+        this.assignees = assignees
+        loadAssigneesAndLabels.value = loadAssigneesAndLabels.value?.copy(
+            first = assignees
+        )
     }
 }

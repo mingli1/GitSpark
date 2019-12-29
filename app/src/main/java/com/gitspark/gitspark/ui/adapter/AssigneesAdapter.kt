@@ -26,10 +26,10 @@ class AssigneesAdapter(
 
                 assignee_view.setOnClickListener {
                     if (check_mark.isVisible) {
-                        callback.removeUser(item.login)
+                        callback.removeUser(item)
                         check_mark.visibility = View.INVISIBLE
                     } else {
-                        callback.addUser(item.login)
+                        callback.addUser(item)
                         check_mark.visibility = View.VISIBLE
                     }
                 }

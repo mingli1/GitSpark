@@ -17,6 +17,7 @@ import com.gitspark.gitspark.model.Label
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.dialog.AssigneesDialog
+import com.gitspark.gitspark.ui.dialog.AssigneesDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
@@ -24,7 +25,8 @@ import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_issue_edit.*
 import javax.inject.Inject
 
-class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::class.java) {
+class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::class.java),
+    AssigneesDialogCallback {
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var colorHelper: ColorHelper
@@ -66,6 +68,8 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         viewModel.showAssigneesDialog.observe(viewLifecycleOwner) { showAssigneesDialog(it) }
         viewModel.loadAssigneesAndLabels.observe(viewLifecycleOwner) { loadAssigneesAndLabels(it) }
     }
+
+    override fun onAssigneesSet(assignees: List<User>) = viewModel.onAssigneesSet(assignees)
 
     private fun updateView(viewState: IssueEditViewState) {
         with (viewState) {
@@ -120,10 +124,12 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
     }
 
     private fun showAssigneesDialog(users: List<User>) {
+        val assignees = if (viewModel.assignees == null) issue?.assignees else viewModel.assignees
         AssigneesDialog.newInstance(
             users = users.map { it.login }.toTypedArray(),
-            assignees = issue?.assignees?.map { it.login }?.toTypedArray() ?: emptyArray(),
-            avatars = users.map { it.avatarUrl }.toTypedArray()
+            userAvatars = users.map { it.avatarUrl }.toTypedArray(),
+            assignees = assignees?.map { it.login }?.toTypedArray() ?: emptyArray(),
+            assigneeAvatars = assignees?.map { it.avatarUrl }?.toTypedArray() ?: emptyArray()
         ).show(childFragmentManager, null)
     }
 }

@@ -8,12 +8,15 @@ import javax.inject.Inject
 class AssigneesViewModel @Inject constructor() : BaseViewModel(), AssigneesAdapterCallback {
 
     val initializeDialog = SingleLiveEvent<ArrayList<User>>()
-    var assignees = arrayListOf<String>()
+    val setAssigneesAction = SingleLiveEvent<List<User>>()
+    var assignees = arrayListOf<User>()
     private var init = false
 
-    fun initAssignees(assigneesList: Array<String>) {
+    fun initAssignees(assigneesList: Array<String>, assigneeAvatarList: Array<String>) {
         if (!init) {
-            assignees.addAll(assigneesList)
+            for (i in assigneesList.indices) {
+                assignees.add(User(login = assigneesList[i], avatarUrl = assigneeAvatarList[i]))
+            }
             init = true
         }
     }
@@ -26,16 +29,20 @@ class AssigneesViewModel @Inject constructor() : BaseViewModel(), AssigneesAdapt
         initializeDialog.value = itemsList
     }
 
+    fun onSetAssigneesClicked() {
+        setAssigneesAction.value = assignees
+    }
+
     fun onCancel() {
         init = false
         assignees.clear()
     }
 
-    override fun addUser(username: String) {
-        if (!assignees.contains(username)) assignees.add(username)
+    override fun addUser(user: User) {
+        if (!assignees.contains(user)) assignees.add(user)
     }
 
-    override fun removeUser(username: String) {
-        assignees.remove(username)
+    override fun removeUser(user: User) {
+        assignees.removeAll { it.login == user.login }
     }
 }

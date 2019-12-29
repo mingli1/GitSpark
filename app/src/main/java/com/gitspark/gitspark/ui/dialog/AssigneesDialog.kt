@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.adapter.AssigneesAdapter
 import com.gitspark.gitspark.ui.base.ViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -19,12 +20,17 @@ import kotlinx.android.synthetic.main.dialog_assignees.*
 import javax.inject.Inject
 
 const val BUNDLE_ASSIGNEES_LIST = "BUNDLE_ASSIGNEES_LIST"
-const val BUNDLE_AVATAR_URL_LIST = "BUNDLE_AVATAR_URL_LIST"
+const val BUNDLE_ASSIGNEE_AVATAR_LIST = "BUNDLE_ASSIGNEE_URL_LIST"
+const val BUNDLE_USER_AVATAR_LIST = "BUNDLE_AVATAR_URL_LIST"
 const val BUNDLE_USER_LIST = "BUNDLE_USER_LIST"
 
 interface AssigneesAdapterCallback {
-    fun addUser(username: String)
-    fun removeUser(username: String)
+    fun addUser(user: User)
+    fun removeUser(user: User)
+}
+
+interface AssigneesDialogCallback {
+    fun onAssigneesSet(assignees: List<User>)
 }
 
 class AssigneesDialog : BottomSheetDialogFragment() {
@@ -51,19 +57,25 @@ class AssigneesDialog : BottomSheetDialogFragment() {
 
         val userList = arguments?.getStringArray(BUNDLE_USER_LIST)
         val assigneesList = arguments?.getStringArray(BUNDLE_ASSIGNEES_LIST)
-        val avatarsList = arguments?.getStringArray(BUNDLE_AVATAR_URL_LIST)
+        val userAvatarList = arguments?.getStringArray(BUNDLE_USER_AVATAR_LIST)
+        val assigneeAvatarList = arguments?.getStringArray(BUNDLE_ASSIGNEE_AVATAR_LIST)
 
-        viewModel.initAssignees(assigneesList!!)
+        viewModel.initAssignees(assigneesList!!, assigneeAvatarList!!)
 
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         assignees_list.layoutManager = layoutManager
         assignees_list.setHasFixedSize(true)
-        assigneesAdapter = AssigneesAdapter(viewModel.assignees.toTypedArray(), viewModel)
+        assigneesAdapter = AssigneesAdapter(viewModel.assignees.map { it.login }.toTypedArray(), viewModel)
         assignees_list.adapter = assigneesAdapter
 
-        viewModel.initialize(userList!!, avatarsList!!)
+        viewModel.initialize(userList!!, userAvatarList!!)
 
         observeViewModel()
+
+        set_assignees_button.setOnClickListener {
+            viewModel.onSetAssigneesClicked()
+            dismiss()
+        }
     }
 
     override fun onDestroyView() {
@@ -78,18 +90,23 @@ class AssigneesDialog : BottomSheetDialogFragment() {
 
     private fun observeViewModel() {
         viewModel.initializeDialog.observe(viewLifecycleOwner) { assigneesAdapter.setItems(it, true) }
+        viewModel.setAssigneesAction.observe(viewLifecycleOwner) {
+            (parentFragment as AssigneesDialogCallback).onAssigneesSet(it)
+        }
     }
 
     companion object {
         fun newInstance(
             users: Array<String>,
+            userAvatars: Array<String>,
             assignees: Array<String>,
-            avatars: Array<String>
+            assigneeAvatars: Array<String>
         ) = AssigneesDialog().apply {
             arguments = Bundle().apply {
                 putStringArray(BUNDLE_USER_LIST, users)
                 putStringArray(BUNDLE_ASSIGNEES_LIST, assignees)
-                putStringArray(BUNDLE_AVATAR_URL_LIST, avatars)
+                putStringArray(BUNDLE_USER_AVATAR_LIST, userAvatars)
+                putStringArray(BUNDLE_ASSIGNEE_AVATAR_LIST, assigneeAvatars)
             }
         }
     }
