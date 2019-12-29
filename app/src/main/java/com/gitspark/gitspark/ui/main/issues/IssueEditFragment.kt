@@ -13,9 +13,12 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.ColorHelper
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.dialog.AssigneesDialog
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_issue_edit.*
 import javax.inject.Inject
@@ -47,7 +50,7 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         super.onActivityCreated(savedInstanceState)
 
         arguments?.let { issue = issueJsonAdapter.fromJson(it.getString(BUNDLE_ISSUE) ?: "") }
-        issue?.let { viewModel.setInitialState(it) }
+        issue?.let { viewModel.setInitialState(it, arguments?.getString(BUNDLE_REPO_FULLNAME) ?: "") }
 
         setUpListeners()
     }
@@ -59,6 +62,7 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.showAssigneesDialog.observe(viewLifecycleOwner) { showAssigneesDialog(it) }
     }
 
     private fun updateView(viewState: IssueEditViewState) {
@@ -110,5 +114,14 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
     private fun setUpListeners() {
         edit_title.afterTextChanged { viewModel.onTitleChanged(edit_title.getStringTrimmed()) }
         edit_desc.afterTextChanged { viewModel.onBodyChanged(edit_desc.getStringTrimmed()) }
+        assignees_button.setOnClickListener { viewModel.onAssigneesButtonClicked() }
+    }
+
+    private fun showAssigneesDialog(users: List<User>) {
+        AssigneesDialog.newInstance(
+            users = users.map { it.login }.toTypedArray(),
+            assignees = issue?.assignees?.map { it.login }?.toTypedArray() ?: emptyArray(),
+            avatars = users.map { it.avatarUrl }.toTypedArray()
+        ).show(childFragmentManager, null)
     }
 }

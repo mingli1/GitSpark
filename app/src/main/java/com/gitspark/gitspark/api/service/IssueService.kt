@@ -6,6 +6,7 @@ import io.reactivex.Observable
 import retrofit2.http.*
 
 const val ISSUE_EVENTS_PER_PAGE = 50
+const val ASSIGNEES_PER_PAGE = 100
 
 interface IssueService {
 
@@ -79,4 +80,12 @@ interface IssueService {
         @Path("repo") repo: String,
         @Path("comment_id") commentId: Long
     ): Completable
+
+    @GET("repos/{owner}/{repo}/assignees")
+    fun getAvailableAssignees(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = ASSIGNEES_PER_PAGE
+    ): Observable<ApiPage<ApiUser>>
 }

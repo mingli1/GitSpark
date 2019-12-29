@@ -292,10 +292,11 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         findNavController().navigate(R.id.action_issue_detail_to_repo, bundle)
     }
 
-    private fun navigateToIssueEditFragment(pair: Pair<String, Issue>) {
+    private fun navigateToIssueEditFragment(triple: Triple<String, Issue, String>) {
         val bundle = Bundle().apply {
-            putString(BUNDLE_TITLE, pair.first)
-            putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(pair.second))
+            putString(BUNDLE_TITLE, triple.first)
+            putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(triple.second))
+            putString(BUNDLE_REPO_FULLNAME, triple.third)
         }
         findNavController().navigate(R.id.action_issue_detail_to_issue_edit, bundle)
     }

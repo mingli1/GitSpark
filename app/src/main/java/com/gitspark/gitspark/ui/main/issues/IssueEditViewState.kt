@@ -8,5 +8,6 @@ data class IssueEditViewState(
     val body: String = "",
     val assignees: List<User> = emptyList(),
     val labels: List<Label> = emptyList(),
-    val updateContainers: Boolean = false
+    val updateContainers: Boolean = false,
+    val loading: Boolean = false
 )

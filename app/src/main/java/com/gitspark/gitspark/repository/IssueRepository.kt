@@ -6,10 +6,7 @@ import com.gitspark.gitspark.api.service.ISSUE_EVENTS_PER_PAGE
 import com.gitspark.gitspark.api.service.IssueService
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
-import com.gitspark.gitspark.model.Issue
-import com.gitspark.gitspark.model.IssueComment
-import com.gitspark.gitspark.model.IssueEvent
-import com.gitspark.gitspark.model.Page
+import com.gitspark.gitspark.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -118,6 +115,17 @@ class IssueRepository @Inject constructor(
 
     fun deleteComment(username: String, repoName: String, commentId: Long): Completable {
         return getIssueService().deleteComment(username, repoName, commentId)
+    }
+
+    fun getAvailableAssignees(username: String, repoName: String): Observable<IssueResult<Page<User>>> {
+        return getIssueService()
+            .getAvailableAssignees(username, repoName)
+            .map {
+                getSuccess(it.toModel<User>().apply {
+                    value = it.response.map { user -> user.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain available assignees.") }
     }
 
     private fun getIssueService() =

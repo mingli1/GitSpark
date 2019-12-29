@@ -11,15 +11,15 @@
     
     <ImageView
         android:id="@+id/check_mark"
-        android:layout_width="24dp"
+        android:layout_width="16dp"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_check"
         android:tint="#7F7F7F"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="20dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -28,9 +28,7 @@
         android:id="@+id/avatar_card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:layout_marginStart="20dp"
-        android:layout_marginBottom="12dp"
         app:cardElevation="0dp"
         app:cardCornerRadius="4dp"
         app:strokeWidth="1dp"
@@ -41,8 +39,8 @@
         
         <ImageView
             android:id="@+id/avatar"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_person"/>
     
