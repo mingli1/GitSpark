@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.gitspark.gitspark.ui.base.ViewModelFactory
 import com.gitspark.gitspark.ui.dialog.AssigneesViewModel
+import com.gitspark.gitspark.ui.dialog.LabelsViewModel
 import com.gitspark.gitspark.ui.login.LoginViewModel
 import com.gitspark.gitspark.ui.main.home.HomeViewModel
 import com.gitspark.gitspark.ui.main.issues.IssueDetailFragment
@@ -120,6 +121,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(AssigneesViewModel::class)
     internal abstract fun bindAssigneesViewModel(assigneesViewModel: AssigneesViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(LabelsViewModel::class)
+    internal abstract fun bindLabelsViewModel(labelsViewModel: LabelsViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory

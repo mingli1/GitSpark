@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.edit_profile_fragment -> false
                     R.id.search_filter_fragment -> false
                     R.id.issue_detail_fragment -> false
+                    R.id.issue_edit_fragment -> false
                     else -> true
                 }
             }

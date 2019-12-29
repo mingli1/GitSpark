@@ -19,6 +19,8 @@ import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.dialog.AssigneesDialog
 import com.gitspark.gitspark.ui.dialog.AssigneesDialogCallback
+import com.gitspark.gitspark.ui.dialog.LabelsDialog
+import com.gitspark.gitspark.ui.dialog.LabelsDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
@@ -27,7 +29,7 @@ import kotlinx.android.synthetic.main.fragment_issue_edit.*
 import javax.inject.Inject
 
 class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::class.java),
-    AssigneesDialogCallback {
+    AssigneesDialogCallback, LabelsDialogCallback {
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var colorHelper: ColorHelper
@@ -68,9 +70,12 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.showAssigneesDialog.observe(viewLifecycleOwner) { showAssigneesDialog(it) }
         viewModel.loadAssigneesAndLabels.observe(viewLifecycleOwner) { loadAssigneesAndLabels(it) }
+        viewModel.showLabelsDialog.observe(viewLifecycleOwner) { showLabelsDialog(it) }
     }
 
     override fun onAssigneesSet(assignees: List<User>) = viewModel.onAssigneesSet(assignees)
+
+    override fun onLabelsSet(labels: List<Label>) = viewModel.onLabelsSet(labels)
 
     private fun updateView(viewState: IssueEditViewState) {
         with (viewState) {
@@ -123,6 +128,7 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         edit_title.afterTextChanged { viewModel.onTitleChanged(edit_title.getStringTrimmed()) }
         edit_desc.afterTextChanged { viewModel.onBodyChanged(edit_desc.getStringTrimmed()) }
         assignees_button.setOnClickListener { viewModel.onAssigneesButtonClicked() }
+        labels_button.setOnClickListener { viewModel.onLabelsButtonClicked() }
     }
 
     private fun showAssigneesDialog(users: List<User>) {
@@ -132,6 +138,18 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
             userAvatars = users.map { it.avatarUrl }.toTypedArray(),
             assignees = assignees?.map { it.login }?.toTypedArray() ?: emptyArray(),
             assigneeAvatars = assignees?.map { it.avatarUrl }?.toTypedArray() ?: emptyArray()
+        ).show(childFragmentManager, null)
+    }
+
+    private fun showLabelsDialog(labels: List<Label>) {
+        val selectedLabels = if (viewModel.labels == null) issue?.labels else viewModel.labels
+        LabelsDialog.newInstance(
+            names = labels.map { it.name }.toTypedArray(),
+            descs = labels.map { it.description }.toTypedArray(),
+            colors = labels.map { it.color }.toTypedArray(),
+            sNames = selectedLabels?.map { it.name }?.toTypedArray() ?: emptyArray(),
+            sDescs = selectedLabels?.map { it.description }?.toTypedArray() ?: emptyArray(),
+            sColors = selectedLabels?.map { it.color }?.toTypedArray() ?: emptyArray()
         ).show(childFragmentManager, null)
     }
 }

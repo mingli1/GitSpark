@@ -255,4 +255,6 @@
     <string name="lock_title">Lock conversation</string>
     <string name="assignees_header">Select up to 10 assignees</string>
     <string name="assignees_button">Set assignees</string>
+    <string name="labels_header">Apply labels to this issue</string>
+    <string name="labels_button">Set labels</string>
 </resources>

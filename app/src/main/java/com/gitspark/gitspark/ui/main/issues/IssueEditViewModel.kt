@@ -17,8 +17,10 @@ class IssueEditViewModel @Inject constructor(
     val viewState = MutableLiveData<IssueEditViewState>()
     val loadAssigneesAndLabels = SingleLiveEvent<Pair<List<User>, List<Label>>>()
     val showAssigneesDialog = SingleLiveEvent<List<User>>()
+    val showLabelsDialog = SingleLiveEvent<List<Label>>()
 
     var assignees: List<User>? = null
+    var labels: List<Label>? = null
     private lateinit var issue: Issue
     private var username = ""
     private var repoName = ""
@@ -31,18 +33,19 @@ class IssueEditViewModel @Inject constructor(
         if (!started) {
             this.issue = issue
             val assignees = if (assignees != null) assignees!! else issue.assignees
+            val labels = if (labels != null) labels!! else issue.labels
             viewState.value = viewState.value?.copy(
                 title = issue.title,
                 body = issue.body,
                 assignees = assignees,
-                labels = issue.labels
+                labels = labels
             ) ?: IssueEditViewState(
                 title = issue.title,
                 body = issue.body,
                 assignees = assignees,
-                labels = issue.labels
+                labels = labels
             )
-            loadAssigneesAndLabels.value = Pair(assignees, issue.labels)
+            loadAssigneesAndLabels.value = Pair(assignees, labels)
             started = true
         }
     }
@@ -78,6 +81,26 @@ class IssueEditViewModel @Inject constructor(
         this.assignees = assignees
         loadAssigneesAndLabels.value = loadAssigneesAndLabels.value?.copy(
             first = assignees
+        )
+    }
+
+    fun onLabelsButtonClicked() {
+        viewState.value = viewState.value?.copy(loading = true)
+        subscribe(issueRepository.getAvailableLabels(username, repoName)) {
+            when (it) {
+                is IssueResult.Success -> {
+                    showLabelsDialog.value = it.value.value
+                }
+                is IssueResult.Failure -> alert(it.error)
+            }
+            viewState.value = viewState.value?.copy(loading = false)
+        }
+    }
+
+    fun onLabelsSet(labels: List<Label>) {
+        this.labels = labels
+        loadAssigneesAndLabels.value = loadAssigneesAndLabels.value?.copy(
+            second = labels
         )
     }
 }

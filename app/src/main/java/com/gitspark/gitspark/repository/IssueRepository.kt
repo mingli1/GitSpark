@@ -128,6 +128,17 @@ class IssueRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain available assignees.") }
     }
 
+    fun getAvailableLabels(username: String, repoName: String): Observable<IssueResult<Page<Label>>> {
+        return getIssueService()
+            .getAvailableLabels(username, repoName)
+            .map {
+                getSuccess(it.toModel<Label>().apply {
+                    value = it.response.map { label -> label.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain available labels.") }
+    }
+
     private fun getIssueService() =
         retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(IssueService::class.java)

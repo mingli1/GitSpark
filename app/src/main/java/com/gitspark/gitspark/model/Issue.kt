@@ -39,4 +39,6 @@ data class Label(
     val description: String = "",
     val color: String = "",
     val default: Boolean = false
-)
+) : Pageable {
+    override fun getViewType() = VIEW_TYPE_VIEW
+}

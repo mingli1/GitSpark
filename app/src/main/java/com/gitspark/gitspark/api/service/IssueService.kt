@@ -88,4 +88,12 @@ interface IssueService {
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = ASSIGNEES_PER_PAGE
     ): Observable<ApiPage<ApiUser>>
+
+    @GET("repos/{owner}/{repo}/labels")
+    fun getAvailableLabels(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = ASSIGNEES_PER_PAGE
+    ): Observable<ApiPage<ApiLabel>>
 }
