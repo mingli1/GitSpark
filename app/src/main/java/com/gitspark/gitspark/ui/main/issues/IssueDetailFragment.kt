@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
@@ -240,12 +241,13 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             if (assignees.isNotEmpty()) {
                 assignees_container.removeAllViews()
                 assignees.forEach {
-                    val imageView = LayoutInflater.from(context)
+                    val view = LayoutInflater.from(context)
                         .inflate(R.layout.user_icon_view, assignees_container, false)
                     if (it.avatarUrl.isNotEmpty()) {
-                        ((imageView as CardView).getChildAt(0) as ImageView).loadImage(it.avatarUrl)
-                        assignees_container.addView(imageView)
+                        (((view as LinearLayout).getChildAt(0) as CardView).getChildAt(0) as ImageView).loadImage(it.avatarUrl)
                     }
+                    ((view as LinearLayout).getChildAt(1) as TextView).text = it.login
+                    assignees_container.addView(view)
                 }
             }
 

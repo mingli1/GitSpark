@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
@@ -91,12 +92,13 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         if (pair.first.isNotEmpty()) {
             assignees_container.removeAllViews()
             pair.first.forEach { user ->
-                val imageView = LayoutInflater.from(context)
+                val view = LayoutInflater.from(context)
                     .inflate(R.layout.user_icon_view, assignees_container, false)
                 if (user.avatarUrl.isNotEmpty()) {
-                    ((imageView as CardView).getChildAt(0) as ImageView).loadImage(user.avatarUrl)
-                    assignees_container.addView(imageView)
+                    (((view as LinearLayout).getChildAt(0) as CardView).getChildAt(0) as ImageView).loadImage(user.avatarUrl)
                 }
+                ((view as LinearLayout).getChildAt(1) as TextView).text = user.login
+                assignees_container.addView(view)
             }
         }
 
