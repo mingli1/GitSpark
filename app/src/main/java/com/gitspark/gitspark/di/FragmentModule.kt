@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.di
 
+import com.gitspark.gitspark.ui.dialog.AssigneesDialog
 import com.gitspark.gitspark.ui.main.home.HomeFragment
 import com.gitspark.gitspark.ui.main.issues.IssueDetailFragment
 import com.gitspark.gitspark.ui.main.issues.IssueEditFragment
@@ -72,4 +73,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesIssueEditFragment(): IssueEditFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesAssigneesDialog(): AssigneesDialog
 }

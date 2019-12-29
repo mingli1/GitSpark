@@ -2,6 +2,7 @@ package com.gitspark.gitspark.ui.main.issues
 
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.model.Label
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.repository.IssueRepository
 import com.gitspark.gitspark.repository.IssueResult
@@ -14,6 +15,7 @@ class IssueEditViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<IssueEditViewState>()
+    val loadAssigneesAndLabels = SingleLiveEvent<Pair<List<User>, List<Label>>>()
     val showAssigneesDialog = SingleLiveEvent<List<User>>()
 
     private var username = ""
@@ -29,27 +31,26 @@ class IssueEditViewModel @Inject constructor(
                 title = issue.title,
                 body = issue.body,
                 assignees = issue.assignees,
-                labels = issue.labels,
-                updateContainers = true
+                labels = issue.labels
             ) ?: IssueEditViewState(
                 title = issue.title,
                 body = issue.body,
                 assignees = issue.assignees,
-                labels = issue.labels,
-                updateContainers = true
+                labels = issue.labels
             )
+            loadAssigneesAndLabels.value = Pair(issue.assignees, issue.labels)
             started = true
         }
     }
 
     fun onTitleChanged(title: String) {
-        viewState.value = viewState.value?.copy(title = title, updateContainers = false)
-            ?: IssueEditViewState(title = title, updateContainers = false)
+        viewState.value = viewState.value?.copy(title = title)
+            ?: IssueEditViewState(title = title)
     }
 
     fun onBodyChanged(body: String) {
-        viewState.value = viewState.value?.copy(body = body, updateContainers = false) ?:
-                IssueEditViewState(body = body, updateContainers = false)
+        viewState.value = viewState.value?.copy(body = body)
+            ?: IssueEditViewState(body = body)
     }
 
     fun onDestroy() {
@@ -57,7 +58,7 @@ class IssueEditViewModel @Inject constructor(
     }
 
     fun onAssigneesButtonClicked() {
-        viewState.value = viewState.value?.copy(loading = true, updateContainers = false)
+        viewState.value = viewState.value?.copy(loading = true)
         subscribe(issueRepository.getAvailableAssignees(username, repoName)) {
             when (it) {
                 is IssueResult.Success -> {

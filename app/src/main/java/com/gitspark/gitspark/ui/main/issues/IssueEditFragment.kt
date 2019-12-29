@@ -13,6 +13,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.ColorHelper
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.model.Label
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.dialog.AssigneesDialog
@@ -63,6 +64,7 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.showAssigneesDialog.observe(viewLifecycleOwner) { showAssigneesDialog(it) }
+        viewModel.loadAssigneesAndLabels.observe(viewLifecycleOwner) { loadAssigneesAndLabels(it) }
     }
 
     private fun updateView(viewState: IssueEditViewState) {
@@ -70,43 +72,43 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
             if (edit_title.getStringTrimmed() != title) edit_title.setText(title)
             if (edit_desc.getStringTrimmed() != body) edit_desc.setText(body)
 
-            if (updateContainers) {
-                no_assignees_text.isVisible = assignees.isEmpty()
-                assignees_container.isVisible = assignees.isNotEmpty()
-                if (assignees.isNotEmpty()) {
-                    assignees_container.removeAllViews()
-                    assignees.forEach { user ->
-                        val imageView = LayoutInflater.from(context)
-                            .inflate(R.layout.user_icon_view, assignees_container, false)
-                        if (user.avatarUrl.isNotEmpty()) {
-                            ((imageView as CardView).getChildAt(0) as ImageView).loadImage(user.avatarUrl)
-                            assignees_container.addView(imageView)
-                        }
-                    }
-                }
-
-                no_labels_text.isVisible = labels.isEmpty()
-                labels_container.isVisible = labels.isNotEmpty()
-                if (labels.isNotEmpty()) {
-                    labels_container.removeAllViews()
-                    labels.forEach { label ->
-                        val labelView = LayoutInflater.from(context)
-                            .inflate(R.layout.label_view, labels_container, false)
-                        ((labelView as CardView).getChildAt(0) as TextView).apply {
-                            text = label.name
-                            setBackgroundColor(Color.parseColor("#${label.color}"))
-                            setTextColor(Color.parseColor(colorHelper.getTextColor(label.color)))
-                        }
-                        labels_container.addView(labelView)
-                    }
-                }
-            }
-
             issue?.let {
                 edit_issue_button.isEnabled = it.title != title ||
                         it.body != body ||
                         it.assignees != assignees ||
                         it.labels != labels
+            }
+        }
+    }
+
+    private fun loadAssigneesAndLabels(pair: Pair<List<User>, List<Label>>) {
+        no_assignees_text.isVisible = pair.first.isEmpty()
+        assignees_container.isVisible = pair.first.isNotEmpty()
+        if (pair.first.isNotEmpty()) {
+            assignees_container.removeAllViews()
+            pair.first.forEach { user ->
+                val imageView = LayoutInflater.from(context)
+                    .inflate(R.layout.user_icon_view, assignees_container, false)
+                if (user.avatarUrl.isNotEmpty()) {
+                    ((imageView as CardView).getChildAt(0) as ImageView).loadImage(user.avatarUrl)
+                    assignees_container.addView(imageView)
+                }
+            }
+        }
+
+        no_labels_text.isVisible = pair.second.isEmpty()
+        labels_container.isVisible = pair.second.isNotEmpty()
+        if (pair.second.isNotEmpty()) {
+            labels_container.removeAllViews()
+            pair.second.forEach { label ->
+                val labelView = LayoutInflater.from(context)
+                    .inflate(R.layout.label_view, labels_container, false)
+                ((labelView as CardView).getChildAt(0) as TextView).apply {
+                    text = label.name
+                    setBackgroundColor(Color.parseColor("#${label.color}"))
+                    setTextColor(Color.parseColor(colorHelper.getTextColor(label.color)))
+                }
+                labels_container.addView(labelView)
             }
         }
     }

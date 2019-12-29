@@ -3,6 +3,7 @@ package com.gitspark.gitspark.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.gitspark.gitspark.ui.base.ViewModelFactory
+import com.gitspark.gitspark.ui.dialog.AssigneesViewModel
 import com.gitspark.gitspark.ui.login.LoginViewModel
 import com.gitspark.gitspark.ui.main.home.HomeViewModel
 import com.gitspark.gitspark.ui.main.issues.IssueDetailFragment
@@ -115,6 +116,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(IssueEditViewModel::class)
     internal abstract fun bindIssueEditViewModel(issueEditViewModel: IssueEditViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(AssigneesViewModel::class)
+    internal abstract fun bindAssigneesViewModel(assigneesViewModel: AssigneesViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
