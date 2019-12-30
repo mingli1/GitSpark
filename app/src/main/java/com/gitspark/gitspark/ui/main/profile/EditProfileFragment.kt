@@ -2,8 +2,10 @@ package com.gitspark.gitspark.ui.main.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -14,11 +16,14 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.model.AuthUser
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.dialog.ConfirmDialog
+import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
-class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewModel::class.java) {
+class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewModel::class.java),
+    ConfirmDialogCallback {
 
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[ProfileSharedViewModel::class.java]
@@ -41,6 +46,7 @@ class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewMo
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
 
         arguments?.let {
             viewModel.fillInitialData(ApiEditProfileRequest(
@@ -55,7 +61,25 @@ class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewMo
         }
 
         setUpListeners()
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            showConfirmDialog()
+        }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            showConfirmDialog()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPositiveClicked() {
+        findNavController().popBackStack()
+    }
+
+    override fun onNegativeClicked() {}
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
@@ -102,5 +126,12 @@ class EditProfileFragment : BaseFragment<EditProfileViewModel>(EditProfileViewMo
     private fun finishFragment(user: AuthUser) {
         sharedViewModel.userData.value = user
         findNavController().navigateUp()
+    }
+
+    private fun showConfirmDialog() {
+        ConfirmDialog.newInstance(
+            getString(R.string.discard_changes_title),
+            getString(R.string.discard_changes_message)
+        ).show(childFragmentManager, null)
     }
 }

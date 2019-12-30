@@ -3,11 +3,13 @@ package com.gitspark.gitspark.ui.main.issues
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProviders
@@ -19,10 +21,7 @@ import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.Label
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.base.BaseFragment
-import com.gitspark.gitspark.ui.dialog.AssigneesDialog
-import com.gitspark.gitspark.ui.dialog.AssigneesDialogCallback
-import com.gitspark.gitspark.ui.dialog.LabelsDialog
-import com.gitspark.gitspark.ui.dialog.LabelsDialogCallback
+import com.gitspark.gitspark.ui.dialog.*
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
@@ -32,7 +31,7 @@ import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
 class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::class.java),
-    AssigneesDialogCallback, LabelsDialogCallback {
+    AssigneesDialogCallback, LabelsDialogCallback, ConfirmDialogCallback {
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var colorHelper: ColorHelper
@@ -60,11 +59,16 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
 
         arguments?.let { issue = issueJsonAdapter.fromJson(it.getString(BUNDLE_ISSUE) ?: "") }
         issue?.let { viewModel.setInitialState(it, arguments?.getString(BUNDLE_REPO_FULLNAME) ?: "") }
 
         setUpListeners()
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            showConfirmDialog()
+        }
     }
 
     override fun onDestroy() {
@@ -83,9 +87,23 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            showConfirmDialog()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onAssigneesSet(assignees: List<User>) = viewModel.onAssigneesSet(assignees)
 
     override fun onLabelsSet(labels: List<Label>) = viewModel.onLabelsSet(labels)
+
+    override fun onPositiveClicked() {
+        findNavController().popBackStack()
+    }
+
+    override fun onNegativeClicked() {}
 
     private fun updateView(viewState: IssueEditViewState) {
         with (viewState) {
@@ -163,6 +181,13 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
             sNames = selectedLabels?.map { it.name }?.toTypedArray() ?: emptyArray(),
             sDescs = selectedLabels?.map { it.description }?.toTypedArray() ?: emptyArray(),
             sColors = selectedLabels?.map { it.color }?.toTypedArray() ?: emptyArray()
+        ).show(childFragmentManager, null)
+    }
+
+    private fun showConfirmDialog() {
+        ConfirmDialog.newInstance(
+            getString(R.string.discard_changes_title),
+            getString(R.string.discard_changes_message)
         ).show(childFragmentManager, null)
     }
 }
