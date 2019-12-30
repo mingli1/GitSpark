@@ -37,13 +37,13 @@ class IssueEditViewModel @Inject constructor(
             viewState.value = viewState.value?.copy(
                 title = issue.title,
                 body = issue.body,
-                assignees = assignees,
-                labels = labels
+                assignees = assignees.map { it.login },
+                labels = labels.map { it.name }
             ) ?: IssueEditViewState(
                 title = issue.title,
                 body = issue.body,
-                assignees = assignees,
-                labels = labels
+                assignees = assignees.map { it.login },
+                labels = labels.map { it.name }
             )
             loadAssigneesAndLabels.value = Pair(assignees, labels)
             started = true
@@ -79,6 +79,7 @@ class IssueEditViewModel @Inject constructor(
 
     fun onAssigneesSet(assignees: List<User>) {
         this.assignees = assignees
+        viewState.value = viewState.value?.copy(assignees = assignees.map { it.login })
         loadAssigneesAndLabels.value = loadAssigneesAndLabels.value?.copy(
             first = assignees
         )
@@ -99,6 +100,7 @@ class IssueEditViewModel @Inject constructor(
 
     fun onLabelsSet(labels: List<Label>) {
         this.labels = labels
+        viewState.value = viewState.value?.copy(labels = labels.map { it.name })
         loadAssigneesAndLabels.value = loadAssigneesAndLabels.value?.copy(
             second = labels
         )

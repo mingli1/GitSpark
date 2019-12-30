@@ -79,14 +79,15 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
 
     private fun updateView(viewState: IssueEditViewState) {
         with (viewState) {
-            if (edit_title.getStringTrimmed() != title) edit_title.setText(title)
-            if (edit_desc.getStringTrimmed() != body) edit_desc.setText(body)
+            if (edit_title.getString() != title) edit_title.setText(title)
+            if (edit_desc.getString() != body) edit_desc.setText(body)
 
-            issue?.let {
-                edit_issue_button.isEnabled = it.title != title ||
-                        it.body != body ||
-                        it.assignees != assignees ||
-                        it.labels != labels
+            issue?.let { i ->
+                println("1. ${i.assignees.map{it.login}} 2. ${assignees}")
+                edit_issue_button.isEnabled = i.title != title ||
+                        i.body != body ||
+                        i.assignees.map { it.login } != assignees ||
+                        i.labels.map { it.name } != labels
             }
         }
     }
@@ -125,8 +126,8 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
     }
 
     private fun setUpListeners() {
-        edit_title.afterTextChanged { viewModel.onTitleChanged(edit_title.getStringTrimmed()) }
-        edit_desc.afterTextChanged { viewModel.onBodyChanged(edit_desc.getStringTrimmed()) }
+        edit_title.afterTextChanged { viewModel.onTitleChanged(edit_title.getString()) }
+        edit_desc.afterTextChanged { viewModel.onBodyChanged(edit_desc.getString()) }
         assignees_button.setOnClickListener { viewModel.onAssigneesButtonClicked() }
         labels_button.setOnClickListener { viewModel.onLabelsButtonClicked() }
     }
