@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.main.issues
 
 import androidx.lifecycle.MutableLiveData
+import com.gitspark.gitspark.api.model.ApiIssueEditRequest
 import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.Label
 import com.gitspark.gitspark.model.User
@@ -18,6 +19,7 @@ class IssueEditViewModel @Inject constructor(
     val loadAssigneesAndLabels = SingleLiveEvent<Pair<List<User>, List<Label>>>()
     val showAssigneesDialog = SingleLiveEvent<List<User>>()
     val showLabelsDialog = SingleLiveEvent<List<Label>>()
+    val updateIssueAction = SingleLiveEvent<Issue>()
 
     var assignees: List<User>? = null
     var labels: List<Label>? = null
@@ -104,5 +106,24 @@ class IssueEditViewModel @Inject constructor(
         loadAssigneesAndLabels.value = loadAssigneesAndLabels.value?.copy(
             second = labels
         )
+    }
+
+    fun onEditIssueClicked() {
+        viewState.value = viewState.value?.copy(loading = true)
+        subscribe(issueRepository.editIssue(username, repoName, issue.number, ApiIssueEditRequest(
+            title = viewState.value?.title ?: issue.title,
+            body = viewState.value?.body ?: issue.body,
+            state = issue.state,
+            labels = viewState.value?.labels ?: issue.labels.map { it.name },
+            assignees = viewState.value?.assignees ?: issue.assignees.map { it.login }
+        ))) {
+            when (it) {
+                is IssueResult.Success -> {
+                    updateIssueAction.value = it.value
+                }
+                is IssueResult.Failure -> alert(it.error)
+            }
+            viewState.value = viewState.value?.copy(loading = false)
+        }
     }
 }

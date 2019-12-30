@@ -10,6 +10,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.ColorHelper
@@ -26,6 +28,7 @@ import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_issue_edit.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
 class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::class.java),
@@ -34,6 +37,9 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var colorHelper: ColorHelper
 
+    private val sharedViewModel by lazy {
+        ViewModelProviders.of(activity!!, viewModelFactory)[IssueSharedViewModel::class.java]
+    }
     private var issue: Issue? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -71,6 +77,10 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         viewModel.showAssigneesDialog.observe(viewLifecycleOwner) { showAssigneesDialog(it) }
         viewModel.loadAssigneesAndLabels.observe(viewLifecycleOwner) { loadAssigneesAndLabels(it) }
         viewModel.showLabelsDialog.observe(viewLifecycleOwner) { showLabelsDialog(it) }
+        viewModel.updateIssueAction.observe(viewLifecycleOwner) {
+            sharedViewModel.editedIssue.value = it
+            findNavController().navigateUp()
+        }
     }
 
     override fun onAssigneesSet(assignees: List<User>) = viewModel.onAssigneesSet(assignees)
@@ -79,11 +89,12 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
 
     private fun updateView(viewState: IssueEditViewState) {
         with (viewState) {
+            loading_indicator.isVisible = loading
+
             if (edit_title.getString() != title) edit_title.setText(title)
             if (edit_desc.getString() != body) edit_desc.setText(body)
 
             issue?.let { i ->
-                println("1. ${i.assignees.map{it.login}} 2. ${assignees}")
                 edit_issue_button.isEnabled = i.title != title ||
                         i.body != body ||
                         i.assignees.map { it.login } != assignees ||
@@ -130,6 +141,7 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         edit_desc.afterTextChanged { viewModel.onBodyChanged(edit_desc.getString()) }
         assignees_button.setOnClickListener { viewModel.onAssigneesButtonClicked() }
         labels_button.setOnClickListener { viewModel.onLabelsButtonClicked() }
+        edit_issue_button.setOnClickListener { viewModel.onEditIssueClicked() }
     }
 
     private fun showAssigneesDialog(users: List<User>) {

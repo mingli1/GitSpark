@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
@@ -53,6 +54,10 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     private lateinit var issueEventsAdapter: IssueEventsAdapter
     private lateinit var commentMenu: PopupMenu
     private var menu: Menu? = null
+
+    private val sharedViewModel by lazy {
+        ViewModelProviders.of(activity!!, viewModelFactory)[IssueSharedViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,6 +136,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         viewModel.updateCommentRequest.observe(viewLifecycleOwner) { issueEventsAdapter.updateComment(it) }
         viewModel.navigateToRepoDetail.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
         viewModel.navigateToIssueEdit.observe(viewLifecycleOwner) { navigateToIssueEditFragment(it) }
+        sharedViewModel.editedIssue.observe(viewLifecycleOwner) { viewModel.onRefresh() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
