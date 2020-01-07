@@ -80,6 +80,17 @@ class IssueRepository @Inject constructor(
         return getIssueService().unlockIssue(username, repoName, issueNum)
     }
 
+    fun createIssue(
+        username: String,
+        repoName: String,
+        request: ApiIssueEditRequest
+    ): Observable<IssueResult<Issue>> {
+        return getIssueService()
+            .createIssue(username, repoName, request)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed to create issue.") }
+    }
+
     fun editIssue(
         username: String,
         repoName: String,

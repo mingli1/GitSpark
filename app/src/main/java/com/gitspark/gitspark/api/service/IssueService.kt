@@ -50,6 +50,13 @@ interface IssueService {
         @Path("issue_number") issueNum: Int
     ): Completable
 
+    @POST("repos/{owner}/{repo}/issues")
+    fun createIssue(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Body request: ApiIssueEditRequest
+    ): Observable<ApiIssue>
+
     @PATCH("repos/{owner}/{repo}/issues/{issue_number}")
     fun editIssue(
         @Path("owner") owner: String,
