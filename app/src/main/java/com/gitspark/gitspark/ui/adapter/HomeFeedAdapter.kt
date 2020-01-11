@@ -69,7 +69,7 @@ class HomeFeedAdapter(
 
                 if (item.actor.avatarUrl.isNotEmpty()) profile_icon.loadImage(item.actor.avatarUrl)
                 val createdDate = Instant.parse(item.createdAt)
-                val formatted = timeHelper.getRelativeTimeFormat(createdDate)
+                val formatted = timeHelper.getRelativeAndExactTimeFormat(createdDate)
                 date_field.text = formatted
 
                 if (recent) username_field.text = item.actor.login

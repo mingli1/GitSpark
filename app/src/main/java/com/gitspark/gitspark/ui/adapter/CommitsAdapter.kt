@@ -62,7 +62,7 @@ class CommitsAdapter(
                 if (item.date.isNotEmpty()) {
                     val createdDate = Instant.parse(item.date)
                     val dateTime = LocalDateTime.ofInstant(createdDate, ZoneOffset.UTC)
-                    formattedDateTime = DateTimeFormatter.ofPattern("MMM dd, yyyy").format(dateTime)
+                    formattedDateTime = DateTimeFormatter.ofPattern("MMM d, yyyy").format(dateTime)
                 }
                 view.date_group.text = view.context.getString(R.string.commits_date_group, formattedDateTime)
             }
@@ -77,7 +77,7 @@ class CommitsAdapter(
                     } else {
                         try {
                             val commitDate = Instant.parse(item.getDate())
-                            val formatted = timeHelper.getRelativeTimeFormat(commitDate)
+                            val formatted = timeHelper.getRelativeAndExactTimeFormat(commitDate)
                             commit_date.text = context.getString(R.string.committed_date, formatted)
                         } catch (e: DateTimeParseException) {}
                     }

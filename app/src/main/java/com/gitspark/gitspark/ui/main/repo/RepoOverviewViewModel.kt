@@ -42,7 +42,7 @@ class RepoOverviewViewModel @Inject constructor(
             var updatedText = ""
             if (repoPushedAt.isNotEmpty()) {
                 val updatedDate = Instant.parse(repoPushedAt)
-                updatedText = timeHelper.getRelativeTimeFormat(updatedDate)
+                updatedText = timeHelper.getRelativeAndExactTimeFormat(updatedDate)
             }
 
             viewState.value = viewState.value?.copy(

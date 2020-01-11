@@ -1,7 +1,10 @@
 package com.gitspark.gitspark.helper
 
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -30,6 +33,7 @@ class TimeHelper @Inject constructor() {
         val days = TimeUnit.MILLISECONDS.toDays(elapsed)
 
         return when {
+            seconds < 10 -> "now"
             seconds < 60 -> formatAgo(seconds, "second")
             minutes < 60 -> formatAgo(minutes, "minute")
             hours < 24 -> formatAgo(hours, "hour")
@@ -38,6 +42,23 @@ class TimeHelper @Inject constructor() {
             days < 365 -> formatAgo(days / 30, "month")
             else -> formatAgo(days / 365, "year")
         }
+    }
+
+    fun getRelativeAndExactTimeFormat(instant: Instant): String {
+        val now = Instant.now().toEpochMilli()
+        val time = instant.toEpochMilli()
+        val elapsed = now - time
+
+        val days = TimeUnit.MILLISECONDS.toDays(elapsed)
+        return when {
+            days < 31 -> getRelativeTimeFormat(instant)
+            else -> getExactTimeFormat(instant)
+        }
+    }
+
+    fun getExactTimeFormat(instant: Instant): String {
+        val dateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC)
+        return "on ${DateTimeFormatter.ofPattern("MMMM d, yyyy").format(dateTime)}"
     }
 
     private fun formatAgo(value: Long, time: String): String {

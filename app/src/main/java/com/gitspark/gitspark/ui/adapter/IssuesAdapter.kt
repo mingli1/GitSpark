@@ -34,7 +34,7 @@ class IssuesAdapter(
                 title_field.text = item.title
 
                 val date = Instant.parse(if (item.state == "open") item.createdAt else item.closedAt)
-                val formatted = timeHelper.getRelativeTimeFormat(date)
+                val formatted = timeHelper.getRelativeAndExactTimeFormat(date)
 
                 if (includeRepoName) {
                     content_field.text = context.getString(

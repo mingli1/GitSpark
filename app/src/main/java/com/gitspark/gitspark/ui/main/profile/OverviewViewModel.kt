@@ -158,7 +158,7 @@ class OverviewViewModel @Inject constructor(
             if (createdAt.isNotEmpty()) {
                 val createdDate = Instant.parse(createdAt)
                 val dateTime = LocalDateTime.ofInstant(createdDate, ZoneOffset.UTC)
-                formattedDateTime = DateTimeFormatter.ofPattern("MMM dd, yyyy").format(dateTime)
+                formattedDateTime = DateTimeFormatter.ofPattern("MMMM d, yyyy").format(dateTime)
             }
 
             viewState.value = viewState.value?.copy(

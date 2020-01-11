@@ -57,7 +57,7 @@ class ReposAdapter(
 
                 if (item.repoPushedAt.isNotEmpty()) {
                     val updatedDate = Instant.parse(item.repoPushedAt)
-                    val formatted = timeHelper.getRelativeTimeFormat(updatedDate)
+                    val formatted = timeHelper.getRelativeAndExactTimeFormat(updatedDate)
                     updated_field.isVisible = true
                     updated_field.text = context.getString(R.string.updated_repo, formatted)
                 } else updated_field.isVisible = false

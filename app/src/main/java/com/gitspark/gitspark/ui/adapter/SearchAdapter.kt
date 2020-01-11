@@ -37,7 +37,7 @@ class SearchAdapter(
                 }
 
                 val searchDate = timeHelper.parse(item.timestamp).toInstant()
-                val formatted = timeHelper.getRelativeTimeFormat(searchDate)
+                val formatted = timeHelper.getRelativeAndExactTimeFormat(searchDate)
                 search_date_field.text = context.getString(R.string.search_date, formatted)
 
                 search_view.setOnClickListener { navigator.onRecentSearchClicked(item) }

@@ -61,7 +61,7 @@ class ProfileFeedAdapter(
                 if (item.date.isNotEmpty()) {
                     val createdDate = Instant.parse(item.date)
                     val dateTime = LocalDateTime.ofInstant(createdDate, ZoneOffset.UTC)
-                    formattedDateTime = DateTimeFormatter.ofPattern("MMM dd, yyyy").format(dateTime)
+                    formattedDateTime = DateTimeFormatter.ofPattern("MMM d, yyyy").format(dateTime)
                 }
                 view.date_group.text = view.context.getString(R.string.feed_date_group, formattedDateTime)
             }
@@ -88,7 +88,7 @@ class ProfileFeedAdapter(
                     username_field.text = item.actor.login
 
                     val createdDate = Instant.parse(item.createdAt)
-                    val formatted = timeHelper.getRelativeTimeFormat(createdDate)
+                    val formatted = timeHelper.getRelativeAndExactTimeFormat(createdDate)
                     date_field.text = formatted
                 }
             }
