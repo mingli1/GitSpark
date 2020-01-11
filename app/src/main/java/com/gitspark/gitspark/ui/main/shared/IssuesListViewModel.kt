@@ -8,6 +8,7 @@ import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.SearchRepository
 import com.gitspark.gitspark.repository.SearchResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.nav.IssueDetailNavigator
 import javax.inject.Inject
@@ -31,6 +32,7 @@ class IssuesListViewModel @Inject constructor(
 
     val viewState = MutableLiveData<IssuesListViewState>()
     val navigateToIssueDetail = SingleLiveEvent<Pair<String, Issue>>()
+    val createNewIssueAction = SingleLiveAction()
     private var started = false
     private var page = 1
     private var filter = ""
@@ -50,6 +52,21 @@ class IssuesListViewModel @Inject constructor(
     fun onScrolledToEnd() = updateViewState()
 
     fun onRefresh() = updateViewState(reset = true, refresh = true)
+
+    fun onAddIssueClicked() = createNewIssueAction.call()
+
+    fun onNewIssueCreated(issue: Issue) {
+        if (viewState.value?.showOpenIssues == false) return
+
+        val updatedList = viewState.value?.issues ?: arrayListOf()
+        val numOpen = viewState.value?.numOpen ?: 0
+        updatedList.add(0, issue)
+        viewState.value = viewState.value?.copy(
+            issues = updatedList,
+            updateAdapter = true,
+            numOpen = numOpen + 1
+        )
+    }
 
     fun onIssueStateSelected(open: Boolean) {
         val state = viewState.value?.showOpenIssues ?: true

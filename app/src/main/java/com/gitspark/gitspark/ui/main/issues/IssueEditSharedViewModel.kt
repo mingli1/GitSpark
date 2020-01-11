@@ -5,7 +5,8 @@ import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
-class IssueSharedViewModel @Inject constructor() : ViewModel() {
+class IssueEditSharedViewModel @Inject constructor() : ViewModel() {
 
     val editedIssue = SingleLiveEvent<Issue>()
+    val createdIssue = SingleLiveEvent<Issue>()
 }

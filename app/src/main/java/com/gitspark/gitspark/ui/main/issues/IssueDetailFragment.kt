@@ -55,7 +55,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     private var menu: Menu? = null
 
     private val sharedViewModel by lazy {
-        ViewModelProviders.of(activity!!, viewModelFactory)[IssueSharedViewModel::class.java]
+        ViewModelProviders.of(activity!!, viewModelFactory)[IssueEditSharedViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

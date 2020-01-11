@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +23,8 @@ import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE
+import com.gitspark.gitspark.ui.main.issues.IssueEditSharedViewModel
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
 import com.google.android.material.appbar.AppBarLayout
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_issue_list.*
@@ -41,6 +44,10 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
 
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var issuesAdapter: IssuesAdapter
+
+    private val sharedViewModel by lazy {
+        ViewModelProviders.of(activity!!, viewModelFactory)[IssueEditSharedViewModel::class.java]
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_issue_list, container, false)
@@ -93,6 +100,8 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.navigateToIssueDetail.observe(viewLifecycleOwner) { navigateToIssueDetailFragment(it) }
+        viewModel.createNewIssueAction.observe(viewLifecycleOwner) { navigateToIssueEditFragment() }
+        sharedViewModel.createdIssue.observe(viewLifecycleOwner) { viewModel.onNewIssueCreated(it) }
     }
 
     private fun updateView(viewState: IssuesListViewState) {
@@ -128,6 +137,7 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
         open_field.setOnClickListener { viewModel.onIssueStateSelected(true) }
         closed_field.setOnClickListener { viewModel.onIssueStateSelected(false) }
+        add_issue_button.setOnClickListener { viewModel.onAddIssueClicked() }
     }
 
     private fun navigateToIssueDetailFragment(pair: Pair<String, Issue>) {
@@ -136,5 +146,14 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
             putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(pair.second))
         }
         findNavController().navigate(R.id.action_issues_to_issue_detail, bundle)
+    }
+
+    private fun navigateToIssueEditFragment() {
+        val rfn = arguments?.getString(BUNDLE_REPO_FULLNAME)
+        val bundle = Bundle().apply {
+            putString(BUNDLE_TITLE, getString(R.string.create_issue_title, rfn))
+            putString(BUNDLE_REPO_FULLNAME, rfn)
+        }
+        findNavController().navigate(R.id.action_issues_to_issue_edit, bundle)
     }
 }

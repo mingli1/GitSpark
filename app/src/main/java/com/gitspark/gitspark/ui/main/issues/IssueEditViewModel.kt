@@ -20,6 +20,7 @@ class IssueEditViewModel @Inject constructor(
     val showAssigneesDialog = SingleLiveEvent<List<User>>()
     val showLabelsDialog = SingleLiveEvent<List<Label>>()
     val updateIssueAction = SingleLiveEvent<Issue>()
+    val createIssueAction = SingleLiveEvent<Issue>()
 
     var assignees: List<User>? = null
     var labels: List<Label>? = null
@@ -27,6 +28,7 @@ class IssueEditViewModel @Inject constructor(
     private var username = ""
     private var repoName = ""
     private var started = false
+    private var creating = false
 
     fun setInitialState(issue: Issue, repoFullName: String) {
         val split = repoFullName.split("/")
@@ -48,6 +50,17 @@ class IssueEditViewModel @Inject constructor(
                 labels = labels.map { it.name }
             )
             loadAssigneesAndLabels.value = Pair(assignees, labels)
+            started = true
+        }
+    }
+
+    fun setCreatingState(repoFullName: String) {
+        val split = repoFullName.split("/")
+        username = split[0]
+        repoName = split[1]
+        if (!started) {
+            creating = true
+            viewState.value = viewState.value?.copy(creating = true) ?: IssueEditViewState(creating = true)
             started = true
         }
     }
@@ -84,7 +97,7 @@ class IssueEditViewModel @Inject constructor(
         viewState.value = viewState.value?.copy(assignees = assignees.map { it.login })
         loadAssigneesAndLabels.value = loadAssigneesAndLabels.value?.copy(
             first = assignees
-        )
+        ) ?: Pair(first = assignees, second = emptyList())
     }
 
     fun onLabelsButtonClicked() {
@@ -105,25 +118,47 @@ class IssueEditViewModel @Inject constructor(
         viewState.value = viewState.value?.copy(labels = labels.map { it.name })
         loadAssigneesAndLabels.value = loadAssigneesAndLabels.value?.copy(
             second = labels
-        )
+        ) ?: Pair(first = emptyList(), second = labels)
     }
 
     fun onEditIssueClicked() {
         viewState.value = viewState.value?.copy(loading = true)
-        subscribe(issueRepository.editIssue(username, repoName, issue.number, ApiIssueEditRequest(
-            title = viewState.value?.title ?: issue.title,
-            body = viewState.value?.body ?: issue.body,
-            state = issue.state,
-            labels = viewState.value?.labels ?: issue.labels.map { it.name },
-            assignees = viewState.value?.assignees ?: issue.assignees.map { it.login }
-        ))) {
-            when (it) {
-                is IssueResult.Success -> {
-                    updateIssueAction.value = it.value
+
+        if (creating) {
+            subscribe(issueRepository.createIssue(username, repoName,
+                ApiIssueEditRequest(
+                    title = viewState.value?.title ?: "",
+                    body = viewState.value?.body ?: "",
+                    state = "open",
+                    labels = viewState.value?.labels ?: emptyList(),
+                    assignees = viewState.value?.assignees ?: emptyList()
+                ))) {
+                when (it) {
+                    is IssueResult.Success -> {
+                        createIssueAction.value = it.value
+                    }
+                    is IssueResult.Failure -> alert(it.error)
                 }
-                is IssueResult.Failure -> alert(it.error)
+                viewState.value = viewState.value?.copy(loading = false)
             }
-            viewState.value = viewState.value?.copy(loading = false)
+        }
+        else {
+            subscribe(issueRepository.editIssue(username, repoName, issue.number,
+                ApiIssueEditRequest(
+                    title = viewState.value?.title ?: issue.title,
+                    body = viewState.value?.body ?: issue.body,
+                    state = issue.state,
+                    labels = viewState.value?.labels ?: issue.labels.map { it.name },
+                    assignees = viewState.value?.assignees ?: issue.assignees.map { it.login }
+                ))) {
+                when (it) {
+                    is IssueResult.Success -> {
+                        updateIssueAction.value = it.value
+                    }
+                    is IssueResult.Failure -> alert(it.error)
+                }
+                viewState.value = viewState.value?.copy(loading = false)
+            }
         }
     }
 }

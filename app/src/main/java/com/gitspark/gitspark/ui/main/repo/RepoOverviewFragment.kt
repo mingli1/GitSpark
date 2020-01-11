@@ -23,6 +23,7 @@ import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.main.shared.*
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
 import kotlinx.android.synthetic.main.fragment_repo_overview.*
 import kotlinx.android.synthetic.main.fragment_repo_overview.archived_label
 import kotlinx.android.synthetic.main.fragment_repo_overview.forked_label
@@ -245,6 +246,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
             putString(BUNDLE_ISSUE_LIST_TYPE, "list")
             putString(BUNDLE_TITLE, pair.first)
             putString(BUNDLE_ISSUE_TYPE, if (issue) "$REPO_ISSUE_Q${pair.second}" else "$REPO_PR_Q${pair.second}")
+            putString(BUNDLE_REPO_FULLNAME, pair.second)
         }
         findNavController().navigate(
             R.id.action_repo_detail_fragment_to_issues_list_fragment,

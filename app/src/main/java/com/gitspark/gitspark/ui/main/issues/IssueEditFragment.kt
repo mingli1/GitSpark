@@ -37,7 +37,7 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
     @Inject lateinit var colorHelper: ColorHelper
 
     private val sharedViewModel by lazy {
-        ViewModelProviders.of(activity!!, viewModelFactory)[IssueSharedViewModel::class.java]
+        ViewModelProviders.of(activity!!, viewModelFactory)[IssueEditSharedViewModel::class.java]
     }
     private var issue: Issue? = null
 
@@ -61,8 +61,14 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
 
-        arguments?.let { issue = issueJsonAdapter.fromJson(it.getString(BUNDLE_ISSUE) ?: "") }
-        issue?.let { viewModel.setInitialState(it, arguments?.getString(BUNDLE_REPO_FULLNAME) ?: "") }
+        arguments?.getString(BUNDLE_ISSUE)?.let {
+            issue = issueJsonAdapter.fromJson(it)
+        }
+
+        val repoFullName = checkNotNull(arguments?.getString(BUNDLE_REPO_FULLNAME))
+        issue?.let {
+            viewModel.setInitialState(it, repoFullName)
+        } ?: viewModel.setCreatingState(repoFullName)
 
         setUpListeners()
 
@@ -83,6 +89,10 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         viewModel.showLabelsDialog.observe(viewLifecycleOwner) { showLabelsDialog(it) }
         viewModel.updateIssueAction.observe(viewLifecycleOwner) {
             sharedViewModel.editedIssue.value = it
+            findNavController().navigateUp()
+        }
+        viewModel.createIssueAction.observe(viewLifecycleOwner) {
+            sharedViewModel.createdIssue.value = it
             findNavController().navigateUp()
         }
     }
@@ -108,6 +118,8 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
     private fun updateView(viewState: IssueEditViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
+            edit_issue_button.text = if (creating) getString(R.string.create_issue_button) else
+                getString(R.string.edit_issue_button)
 
             if (edit_title.getString() != title) edit_title.setText(title)
             if (edit_desc.getString() != body) edit_desc.setText(body)
@@ -117,6 +129,9 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
                         i.body != body ||
                         i.assignees.map { it.login } != assignees ||
                         i.labels.map { it.name } != labels
+            }
+            if (creating) {
+                edit_issue_button.isEnabled = title.isNotEmpty()
             }
         }
     }

@@ -5,6 +5,8 @@ const val BUNDLE_FILE_NAME = "BUNDLE_FILE_NAME"
 const val BUNDLE_FILE_EXTENSION = "BUNDLE_FILE_EXTENSION"
 
 interface RepoContentNavigator {
+
     fun onDirectorySelected(path: String)
+
     fun onFileSelected(url: String, fileName: String, extension: String)
 }
