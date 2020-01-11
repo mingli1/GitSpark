@@ -148,6 +148,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:scrollbars="none"
                     app:layout_constraintStart_toEndOf="@id/assignees_label"
                     app:layout_constraintTop_toTopOf="@id/assignees_label"
                     app:layout_constraintBottom_toBottomOf="@id/assignees_label">
@@ -179,6 +180,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:scrollbars="none"
                     app:layout_constraintStart_toEndOf="@id/labels_label"
                     app:layout_constraintTop_toTopOf="@id/labels_label"
                     app:layout_constraintBottom_toBottomOf="@id/labels_label">
