@@ -1,13 +1,10 @@
 package com.gitspark.gitspark.ui.dialog
 
-import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
@@ -17,9 +14,6 @@ import com.gitspark.gitspark.helper.ColorHelper
 import com.gitspark.gitspark.model.Label
 import com.gitspark.gitspark.ui.adapter.LabelsAdapter
 import com.gitspark.gitspark.ui.base.ViewModelFactory
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.dialog_labels.*
 import javax.inject.Inject
 
@@ -39,7 +33,7 @@ interface LabelsDialogCallback {
     fun onLabelsSet(labels: List<Label>)
 }
 
-class LabelsDialog : BottomSheetDialogFragment() {
+class LabelsDialog : FullBottomSheetDialog() {
 
     @Inject lateinit var viewModelFactory: ViewModelFactory
     @Inject lateinit var colorHelper: ColorHelper
@@ -47,26 +41,7 @@ class LabelsDialog : BottomSheetDialogFragment() {
         ViewModelProviders.of(this, viewModelFactory)[LabelsViewModel::class.java]
     }
 
-    private lateinit var layoutManager: LinearLayoutManager
     private lateinit var labelsAdapter: LabelsAdapter
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setOnShowListener {
-            val bottomSheet = dialog.findViewById<View>(
-                com.google.android.material.R.id.design_bottom_sheet
-            ) as? FrameLayout
-            BottomSheetBehavior.from(bottomSheet).apply {
-                state = BottomSheetBehavior.STATE_EXPANDED
-            }
-        }
-        return dialog
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.dialog_labels, container, false)
@@ -84,8 +59,7 @@ class LabelsDialog : BottomSheetDialogFragment() {
 
         viewModel.initLabels(snames!!, sdescs!!, scolors!!)
 
-        layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        labels_list.layoutManager = layoutManager
+        labels_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         labels_list.setHasFixedSize(true)
         labelsAdapter = LabelsAdapter(viewModel.labels.map { it.name }.toTypedArray(), colorHelper, viewModel)
         labels_list.adapter = labelsAdapter

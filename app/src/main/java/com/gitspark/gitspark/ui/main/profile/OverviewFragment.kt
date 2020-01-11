@@ -47,7 +47,6 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
     @Inject lateinit var colorHelper: LanguageColorHelper
     @Inject lateinit var timeHelper: TimeHelper
     private lateinit var reposAdapter: ReposAdapter
-    private lateinit var layoutManager: LinearLayoutManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_overview, container, false)
@@ -58,9 +57,8 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
 
         reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel, simple = true)
 
-        layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         pinned_repos.setHasFixedSize(true)
-        pinned_repos.layoutManager = layoutManager
+        pinned_repos.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         if (pinned_repos.adapter == null) pinned_repos.adapter = reposAdapter
 
         setUpListeners()

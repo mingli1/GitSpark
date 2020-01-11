@@ -41,8 +41,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
     @Inject lateinit var eventHelper: EventHelper
     @Inject lateinit var prefsHelper: PreferencesHelper
 
-    private lateinit var raLayoutManager: LinearLayoutManager
-    private lateinit var aaLayoutManager: LinearLayoutManager
     private lateinit var raAdapter: HomeFeedAdapter
     private lateinit var aaAdapter: HomeFeedAdapter
     private lateinit var paginationListener: NestedPaginationListener
@@ -80,8 +78,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         drawer_layout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
 
-        raLayoutManager = LinearLayoutManager(context, VERTICAL, false)
-        aaLayoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
 
         raAdapter = HomeFeedAdapter(timeHelper, eventHelper, viewModel, prefsHelper, recent = true)
@@ -89,12 +85,12 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
 
         recent_events.run {
             setHasFixedSize(true)
-            layoutManager = raLayoutManager
+            layoutManager = LinearLayoutManager(context, VERTICAL, false)
             if (adapter == null) adapter = raAdapter
         }
         all_events.run {
             setHasFixedSize(true)
-            layoutManager = aaLayoutManager
+            layoutManager = LinearLayoutManager(context, VERTICAL, false)
             if (adapter == null) adapter = aaAdapter
         }
 

@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ClipboardHelper @Inject constructor(private val context: Context) {
+class ClipboardHelper @Inject constructor(context: Context) {
 
     private val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 

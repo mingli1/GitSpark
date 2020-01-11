@@ -31,7 +31,6 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
     @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
     @Inject lateinit var timeHelper: TimeHelper
     private lateinit var reposAdapter: ReposAdapter
-    private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: PaginationListener
 
     private val sharedViewModel by lazy {
@@ -45,7 +44,7 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        val layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = PaginationListener(layoutManager, REPO_PER_PAGE, swipe_refresh) {
             viewModel.onScrolledToEnd()
         }

@@ -49,7 +49,6 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     @Inject lateinit var timeHelper: TimeHelper
     @Inject lateinit var keyboardHelper: KeyboardHelper
 
-    private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var issueEventsAdapter: IssueEventsAdapter
     private lateinit var commentMenu: PopupMenu
@@ -98,9 +97,8 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             }
         }
 
-        layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
-        events_list.layoutManager = layoutManager
+        events_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 
         issueEventsAdapter = IssueEventsAdapter(eventHelper, timeHelper, keyboardHelper, viewModel)

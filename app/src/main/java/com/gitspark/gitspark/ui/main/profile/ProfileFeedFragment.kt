@@ -24,7 +24,6 @@ class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewMod
     @Inject lateinit var eventHelper: EventHelper
 
     private lateinit var profileFeedAdapter: ProfileFeedAdapter
-    private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: PaginationListener
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,7 +33,7 @@ class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewMod
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        val layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = PaginationListener(layoutManager, 30, swipe_refresh) {
             viewModel.onScrolledToEnd()
         }

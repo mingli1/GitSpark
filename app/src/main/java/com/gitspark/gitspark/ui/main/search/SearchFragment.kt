@@ -48,10 +48,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         ViewModelProviders.of(activity!!, viewModelFactory)[SearchSharedViewModel::class.java]
     }
 
-    private lateinit var recentLayoutManager: LinearLayoutManager
     private lateinit var searchesAdapter: SearchAdapter
 
-    private lateinit var resultsLayoutManager: LinearLayoutManager
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var reposAdapter: ReposAdapter
     private lateinit var usersAdapter: UsersAdapter
@@ -66,10 +64,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        recentLayoutManager = LinearLayoutManager(context, VERTICAL, false)
         searchesAdapter = SearchAdapter(timeHelper, viewModel)
 
-        resultsLayoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
         reposAdapter = ReposAdapter(langColorHelper, timeHelper, viewModel)
         usersAdapter = UsersAdapter(viewModel, preferencesHelper)
@@ -79,13 +75,13 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
 
         recent_searches.run {
             setHasFixedSize(true)
-            layoutManager = recentLayoutManager
+            layoutManager = LinearLayoutManager(context, VERTICAL, false)
             if (adapter == null) adapter = searchesAdapter
         }
 
         search_results.run {
             setHasFixedSize(true)
-            layoutManager = resultsLayoutManager
+            layoutManager = LinearLayoutManager(context, VERTICAL, false)
         }
 
         viewModel.retrieveRecentSearches()

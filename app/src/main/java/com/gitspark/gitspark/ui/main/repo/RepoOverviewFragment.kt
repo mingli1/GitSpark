@@ -41,7 +41,6 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
 
     @Inject lateinit var colorHelper: LanguageColorHelper
     private lateinit var languageAdapter: LanguageAdapter
-    private lateinit var layoutManager: LinearLayoutManager
     private var rmUrl = ""
 
     private val sharedViewModel by lazy {
@@ -57,9 +56,8 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         viewModel.loadRepo((parentFragment as RepoDataCallback).getData())
         readme_view.addStyleSheet(Github())
 
-        layoutManager = LinearLayoutManager(context, VERTICAL, false)
         language_breakdown.setHasFixedSize(true)
-        language_breakdown.layoutManager = layoutManager
+        language_breakdown.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         languageAdapter = LanguageAdapter(colorHelper)
         if (language_breakdown.adapter == null) language_breakdown.adapter = languageAdapter
 

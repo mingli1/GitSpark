@@ -32,7 +32,6 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
     @Inject lateinit var colorHelper: LanguageColorHelper
     @Inject lateinit var repoJsonAdapter: JsonAdapter<Repo>
     @Inject lateinit var timeHelper: TimeHelper
-    private lateinit var layoutManager: LinearLayoutManager
     private lateinit var reposAdapter: ReposAdapter
     private lateinit var paginationListener: PaginationListener
 
@@ -47,7 +46,7 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        val layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = PaginationListener(layoutManager, REPO_PER_PAGE, swipe_refresh) {
             viewModel.onScrolledToEnd()
         }

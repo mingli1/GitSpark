@@ -39,7 +39,6 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
     @Inject lateinit var colorHelper: ColorHelper
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
 
-    private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var issuesAdapter: IssuesAdapter
 
@@ -65,10 +64,9 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
         item_list.setHasFixedSize(true)
-        item_list.layoutManager = layoutManager
+        item_list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 
         issuesAdapter = IssuesAdapter(timeHelper, colorHelper, viewModel, arguments?.getString(BUNDLE_ISSUE_LIST_TYPE) != "list")

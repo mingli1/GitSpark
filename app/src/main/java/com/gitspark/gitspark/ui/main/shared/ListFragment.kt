@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 
 abstract class ListFragment<T, S : ListViewModel<T>>(clazz: Class<S>, private val pageSize: Int) : BaseFragment<S>(clazz) {
 
-    private lateinit var layoutManager: LinearLayoutManager
     private lateinit var paginationListener: PaginationListener
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -39,7 +38,7 @@ abstract class ListFragment<T, S : ListViewModel<T>>(clazz: Class<S>, private va
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        val layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = PaginationListener(layoutManager, pageSize, swipe_refresh) {
             viewModel.onScrolledToEnd()
         }
