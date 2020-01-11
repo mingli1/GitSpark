@@ -44,8 +44,6 @@ class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewMod
         profileFeedAdapter = ProfileFeedAdapter(timeHelper, eventHelper)
         if (feed_list.adapter == null) feed_list.adapter = profileFeedAdapter
 
-        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
-
         setupListeners()
     }
 

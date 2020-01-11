@@ -63,8 +63,6 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
         pinned_repos.layoutManager = layoutManager
         if (pinned_repos.adapter == null) pinned_repos.adapter = reposAdapter
 
-        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
-
         setUpListeners()
     }
 

@@ -22,7 +22,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <com.gitspark.gitspark.ui.custom.ColorSwipeRefresh
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,7 +36,7 @@
             android:paddingTop="4dp"
             android:paddingBottom="4dp"/>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </com.gitspark.gitspark.ui.custom.ColorSwipeRefresh>
 
     <TextView
         android:id="@+id/empty_text"

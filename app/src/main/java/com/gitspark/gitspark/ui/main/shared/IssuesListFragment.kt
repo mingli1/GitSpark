@@ -79,8 +79,6 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
             viewModel.onStart(filter)
         }
 
-        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
-
         setupListeners()
     }
 

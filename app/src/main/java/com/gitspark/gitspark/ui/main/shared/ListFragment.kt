@@ -47,7 +47,6 @@ abstract class ListFragment<T, S : ListViewModel<T>>(clazz: Class<S>, private va
         item_list.layoutManager = layoutManager
         item_list.addOnScrollListener(paginationListener)
 
-        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
     }
 

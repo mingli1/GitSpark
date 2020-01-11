@@ -112,8 +112,6 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             viewModel.onStart(it)
         }
 
-        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
-
         setUpListeners()
     }
 

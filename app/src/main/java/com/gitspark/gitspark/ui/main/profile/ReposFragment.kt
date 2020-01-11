@@ -55,8 +55,6 @@ class ReposFragment : TabFragment<ReposViewModel>(ReposViewModel::class.java) {
         reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel)
         if (repos_list.adapter == null) repos_list.adapter = reposAdapter
 
-        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
-
         setupListeners()
     }
 

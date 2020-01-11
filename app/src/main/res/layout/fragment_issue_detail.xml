@@ -24,7 +24,7 @@
     
     </com.google.android.material.appbar.AppBarLayout>
     
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <com.gitspark.gitspark.ui.custom.ColorSwipeRefresh
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -216,7 +216,7 @@
     
         </androidx.core.widget.NestedScrollView>
         
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </com.gitspark.gitspark.ui.custom.ColorSwipeRefresh>
     
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/comment_view"

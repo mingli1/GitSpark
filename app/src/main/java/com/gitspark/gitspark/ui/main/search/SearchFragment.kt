@@ -88,8 +88,6 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
             layoutManager = resultsLayoutManager
         }
 
-        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
-
         viewModel.retrieveRecentSearches()
         setUpListeners()
     }

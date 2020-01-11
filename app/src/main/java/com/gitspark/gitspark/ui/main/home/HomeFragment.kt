@@ -98,8 +98,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
             if (adapter == null) adapter = aaAdapter
         }
 
-        swipe_refresh.setColorSchemeResources(R.color.colorAccent)
-
         viewModel.onStart()
         setupListeners()
     }
