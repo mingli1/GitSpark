@@ -20,14 +20,12 @@
     
     </com.google.android.material.appbar.AppBarLayout>
     
-    <br.tiagohm.codeview.CodeView
+    <io.github.kbiakov.codeview.CodeView
         android:id="@+id/code_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:cv_font_size="14"
-        app:cv_zoom_enable="true"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
     
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/image_view"

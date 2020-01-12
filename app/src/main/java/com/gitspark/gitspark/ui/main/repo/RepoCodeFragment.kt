@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import br.tiagohm.codeview.Language
-import br.tiagohm.codeview.Theme
 import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
@@ -53,12 +51,7 @@ class RepoCodeFragment : Fragment() {
             }
             else -> {
                 code_view.isVisible = true
-                code_view.run {
-                    theme = Theme.GITHUB
-                    code = content
-                    language = Language.AUTO
-                    apply()
-                }
+                code_view.setCode(content)
             }
         }
     }
