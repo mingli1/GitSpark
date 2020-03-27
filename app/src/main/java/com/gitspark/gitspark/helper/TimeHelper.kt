@@ -44,7 +44,7 @@ class TimeHelper @Inject constructor() {
         }
     }
 
-    fun getRelativeAndExactTimeFormat(instant: Instant): String {
+    fun getRelativeAndExactTimeFormat(instant: Instant, short: Boolean = false): String {
         val now = Instant.now().toEpochMilli()
         val time = instant.toEpochMilli()
         val elapsed = now - time
@@ -52,13 +52,14 @@ class TimeHelper @Inject constructor() {
         val days = TimeUnit.MILLISECONDS.toDays(elapsed)
         return when {
             days < 31 -> getRelativeTimeFormat(instant)
-            else -> getExactTimeFormat(instant)
+            else -> getExactTimeFormat(instant, short)
         }
     }
 
-    fun getExactTimeFormat(instant: Instant): String {
+    fun getExactTimeFormat(instant: Instant, short: Boolean = false): String {
         val dateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC)
-        return "on ${DateTimeFormatter.ofPattern("MMMM d, yyyy").format(dateTime)}"
+        val format = if (short) DateTimeFormatter.ofPattern("MMM d, yyyy") else DateTimeFormatter.ofPattern("MMMM d, yyyy")
+        return "on ${format.format(dateTime)}"
     }
 
     private fun formatAgo(value: Long, time: String): String {

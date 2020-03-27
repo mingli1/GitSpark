@@ -63,7 +63,7 @@ class IssueEventsAdapter(
                     author_username.text = item.user.login
 
                     val date = Instant.parse(item.createdAt)
-                    val formatted = timeHelper.getRelativeAndExactTimeFormat(date)
+                    val formatted = timeHelper.getRelativeAndExactTimeFormat(date, short = true)
 
                     author_action.text = context.getString(R.string.comment_action, formatted)
                     comment_body.isOpenUrlInBrowser = true

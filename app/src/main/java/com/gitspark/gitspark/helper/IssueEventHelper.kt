@@ -118,7 +118,7 @@ class IssueEventHelper @Inject constructor(
             else -> return SpannableStringBuilder()
         }
 
-        val formatted = timeHelper.getRelativeAndExactTimeFormat(Instant.parse(event.createdAt))
+        val formatted = timeHelper.getRelativeAndExactTimeFormat(Instant.parse(event.createdAt), short = true)
         builder.append(" $formatted")
 
         return builder

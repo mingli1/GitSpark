@@ -116,7 +116,7 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    override fun onIssueClicked(issue: Issue) {
+    override fun onIssueClicked(issue: Issue, isPullRequest: Boolean) {
         navigateToIssueDetail.value = Pair("${issue.getRepoFullNameFromUrl()} #${issue.number}", issue)
     }
 

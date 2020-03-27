@@ -268,7 +268,7 @@ class IssueDetailViewModel @Inject constructor(
                     this.issue = issue
 
                     val date = Instant.parse(issue.createdAt)
-                    val formatted = timeHelper.getRelativeAndExactTimeFormat(date)
+                    val formatted = timeHelper.getRelativeAndExactTimeFormat(date, short = true)
 
                     viewState.value = viewState.value?.copy(
                         issueTitle = issue.title,

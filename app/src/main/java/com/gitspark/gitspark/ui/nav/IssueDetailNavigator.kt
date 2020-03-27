@@ -4,5 +4,5 @@ import com.gitspark.gitspark.model.Issue
 
 interface IssueDetailNavigator {
 
-    fun onIssueClicked(issue: Issue)
+    fun onIssueClicked(issue: Issue, isPullRequest: Boolean = false)
 }

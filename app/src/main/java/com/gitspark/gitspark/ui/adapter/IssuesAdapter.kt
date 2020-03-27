@@ -27,14 +27,15 @@ class IssuesAdapter(
     override fun bind(item: Pageable, view: View, position: Int) {
         if (item is Issue) {
             with (view) {
-                icon.setImageResource(if (item.htmlUrl.contains("issue")) R.drawable.ic_issue else R.drawable.ic_pull_request)
+                val isIssue = item.htmlUrl.contains("issue")
+                icon.setImageResource(if (isIssue) R.drawable.ic_issue else R.drawable.ic_pull_request)
                 icon.drawable.setColor(if (item.state == "open")
                     context.getColor(R.color.colorSuccess) else context.getColor(R.color.colorError))
 
                 title_field.text = item.title
 
                 val date = Instant.parse(if (item.state == "open") item.createdAt else item.closedAt)
-                val formatted = timeHelper.getRelativeAndExactTimeFormat(date)
+                val formatted = timeHelper.getRelativeAndExactTimeFormat(date, short = true)
 
                 if (includeRepoName) {
                     content_field.text = context.getString(
@@ -75,7 +76,7 @@ class IssuesAdapter(
                     labels_container.addView(labelView)
                 }
 
-                issue_view.setOnClickListener { navigator.onIssueClicked(item) }
+                issue_view.setOnClickListener { navigator.onIssueClicked(item, isPullRequest = !isIssue) }
             }
         }
     }
