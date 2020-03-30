@@ -7,6 +7,7 @@ import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.repository.UserRepository
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
@@ -66,8 +67,7 @@ class ReposViewModelTest {
         viewModel.onResume()
         assertThat(viewState()).isEqualTo(ReposViewState(
             loading = true,
-            refreshing = false,
-            updateAdapter = false
+            refreshing = false
         ))
         verify { repoRepository.getAuthRepos(any(), any()) }
     }
@@ -93,8 +93,7 @@ class ReposViewModelTest {
         viewModel.onRefresh()
         assertThat(viewState()).isEqualTo(ReposViewState(
             loading = true,
-            refreshing = true,
-            updateAdapter = false
+            refreshing = true
         ))
         verify { repoRepository.getAuthRepos(any(), any()) }
     }
@@ -104,8 +103,7 @@ class ReposViewModelTest {
         viewModel.onScrolledToEnd()
         assertThat(viewState()).isEqualTo(ReposViewState(
             loading = false,
-            refreshing = false,
-            updateAdapter = false
+            refreshing = false
         ))
         verify { repoRepository.getAuthRepos(any(), any()) }
     }
@@ -125,12 +123,10 @@ class ReposViewModelTest {
 
         val updatedList = arrayListOf<Repo>().apply { addAll(reposSuccess.value.value) }
         assertThat(viewState()).isEqualTo(ReposViewState(
-            repos = updatedList,
             loading = false,
-            refreshing = false,
-            isLastPage = false,
-            updateAdapter = true
+            refreshing = false
         ))
+        assertThat(pageViewState()).isEqualTo(PaginatedViewState(items = updatedList))
     }
 
     @Test
@@ -143,8 +139,7 @@ class ReposViewModelTest {
         assertThat(viewModel.alertAction.value).isEqualTo("failure")
         assertThat(viewState()).isEqualTo(ReposViewState(
             loading = false,
-            refreshing = false,
-            updateAdapter = false
+            refreshing = false
         ))
     }
 
@@ -156,4 +151,6 @@ class ReposViewModelTest {
     }
 
     private fun viewState() = viewModel.viewState.value!!
+
+    private fun pageViewState() = viewModel.pageViewState.value!!
 }

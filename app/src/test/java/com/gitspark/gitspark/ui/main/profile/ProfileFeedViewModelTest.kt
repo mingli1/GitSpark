@@ -47,11 +47,8 @@ class ProfileFeedViewModelTest {
                 Observable.just(EventResult.Success(Page()))
         viewModel.onRefresh()
         assertThat(viewState()).isEqualTo(ProfileFeedViewState(
-            events = arrayListOf(),
             loading = true,
-            refreshing = true,
-            updateAdapter = false,
-            isLastPage = false
+            refreshing = true
         ))
     }
 
@@ -62,8 +59,7 @@ class ProfileFeedViewModelTest {
         viewModel.onRefresh()
         assertThat(viewState()).isEqualTo(ProfileFeedViewState(
             loading = true,
-            refreshing = true,
-            updateAdapter = false
+            refreshing = true
         ))
     }
 
