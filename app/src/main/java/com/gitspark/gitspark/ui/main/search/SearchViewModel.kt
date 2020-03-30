@@ -8,6 +8,7 @@ import com.gitspark.gitspark.repository.SearchRepository
 import com.gitspark.gitspark.repository.SearchResult
 import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.nav.IssueDetailNavigator
 import com.gitspark.gitspark.ui.nav.RecentSearchNavigator
@@ -21,6 +22,7 @@ class SearchViewModel @Inject constructor(
 ) : BaseViewModel(), RepoDetailNavigator, UserProfileNavigator, RecentSearchNavigator, IssueDetailNavigator {
 
     val viewState = MutableLiveData<SearchViewState>()
+    val pageViewState = MutableLiveData<PaginatedViewState<Pageable>>()
     val recentSearchesMediator = MediatorLiveData<List<SearchCriteria>>()
     val navigateToSearchFilter = SingleLiveEvent<SearchCriteria?>()
     val navigateToUserProfile = SingleLiveEvent<String>()
@@ -35,7 +37,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onRecentSearchesRetrieved(rs: List<SearchCriteria>) {
-        viewState.value = viewState.value?.copy(recentSearches = rs, updateAdapter = true)
+        viewState.value = viewState.value?.copy(recentSearches = rs)
             ?: SearchViewState(recentSearches = rs)
     }
 
@@ -54,16 +56,17 @@ class SearchViewModel @Inject constructor(
 
         viewState.value = viewState.value?.copy(
             currSearch = data.first,
-            searchResults = data.second.value as ArrayList<Pageable>,
-            resultsCount = data.second.totalCount,
-            isLastPage = data.second.last == -1,
-            updateAdapter = true
+            resultsCount = data.second.totalCount
         ) ?: SearchViewState(
             currSearch = data.first,
-            searchResults = data.second.value as ArrayList<Pageable>,
-            resultsCount = data.second.totalCount,
-            isLastPage = data.second.last == -1,
-            updateAdapter = true
+            resultsCount = data.second.totalCount
+        )
+        pageViewState.value = pageViewState.value?.copy(
+            items = data.second.value as MutableList<Pageable>,
+            isLastPage = data.second.last == -1
+        ) ?: PaginatedViewState(
+            items = data.second.value as MutableList<Pageable>,
+            isLastPage = data.second.last == -1
         )
     }
 
@@ -74,10 +77,9 @@ class SearchViewModel @Inject constructor(
         page = 1
         viewState.value = viewState.value?.copy(
             currSearch = null,
-            searchResults = arrayListOf(),
-            resultsCount = 0,
-            updateAdapter = true
+            resultsCount = 0
         )
+        pageViewState.value = pageViewState.value?.copy(items = mutableListOf()) ?: PaginatedViewState()
     }
 
     fun onRefresh() {
@@ -136,23 +138,24 @@ class SearchViewModel @Inject constructor(
     private fun <T> onSearchResult(result: SearchResult<T>) {
         when (result) {
             is SearchResult.Success -> {
-                val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.searchResults ?: arrayListOf()
+                val updatedList = if (page.isFirstPage()) mutableListOf() else pageViewState.value?.items ?: mutableListOf()
                 updatedList.addAll((result.value as Page<Pageable>).value)
 
                 viewState.value = viewState.value?.copy(
                     currSearch = currSearch,
-                    searchResults = updatedList,
-                    isLastPage = page.isLastPage(result.value.last),
-                    updateAdapter = true,
                     resultsCount = result.value.totalCount,
                     loading = false,
                     refreshing = false
+                )
+                pageViewState.value = pageViewState.value?.copy(
+                    items = updatedList,
+                    isLastPage = page.isLastPage(result.value.last)
                 )
                 if (page < result.value.last) page++
             }
             is SearchResult.Failure -> {
                 alert(result.error)
-                viewState.value = viewState.value?.copy(updateAdapter = false, loading = false, refreshing = false)
+                viewState.value = viewState.value?.copy(loading = false, refreshing = false)
             }
         }
     }

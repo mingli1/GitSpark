@@ -125,6 +125,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.recyclerViewState.observe(viewLifecycleOwner) { updateRecyclerView(it) }
         viewModel.deleteCommentRequest.observe(viewLifecycleOwner) { requestDeleteComment() }
         viewModel.toggleCommentEdit.observe(viewLifecycleOwner) { comment_view.isVisible = it }
         viewModel.quoteReplyAction.observe(viewLifecycleOwner) { updateCommentEdit(it) }
@@ -252,8 +253,12 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                     assignees_container.addView(view)
                 }
             }
+        }
+    }
 
-            if (updateAdapter && commentsFinishedLoading && eventsFinishedLoading) {
+    private fun updateRecyclerView(recyclerViewState: IssueRecyclerViewState) {
+        with (recyclerViewState) {
+            if (commentsFinishedLoading && eventsFinishedLoading) {
                 issueEventsAdapter.setItems(events, isLastPage)
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false

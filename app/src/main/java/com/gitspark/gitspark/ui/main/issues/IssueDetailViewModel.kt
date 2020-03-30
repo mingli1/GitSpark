@@ -29,6 +29,7 @@ class IssueDetailViewModel @Inject constructor(
 ) : BaseViewModel(), CommentMenuCallback {
 
     val viewState = MutableLiveData<IssueDetailViewState>()
+    val recyclerViewState = MutableLiveData<IssueRecyclerViewState>()
     val toggleCommentEdit = SingleLiveEvent<Boolean>()
     val deleteCommentRequest = SingleLiveAction()
     val quoteReplyAction = SingleLiveEvent<String>()
@@ -78,35 +79,31 @@ class IssueDetailViewModel @Inject constructor(
     fun onDeleteCommentConfirmed() {
         subscribe(issueRepository.deleteComment(username, repoName, deletedCommentId),
             {
-                val events = viewState.value?.events ?: arrayListOf()
+                val events = recyclerViewState.value?.events ?: mutableListOf()
                 events.removeAll { it is IssueComment && it.id == deletedCommentId }
                 val numComments = viewState.value?.numComments ?: 0
 
-                viewState.value = viewState.value?.copy(
-                    events = events,
-                    numComments = numComments - 1,
-                    updateAdapter = true
-                )
+                viewState.value = viewState.value?.copy(numComments = numComments - 1)
+                recyclerViewState.value = recyclerViewState.value?.copy(events = events)
             },
             { alert("Failed to delete comment.") }
         )
     }
 
     fun onSendComment(body: String) {
-        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        viewState.value = viewState.value?.copy(loading = true)
         subscribe(issueRepository.createComment(username, repoName, issueNum, ApiIssueCommentRequest(body))) {
             when (it) {
                 is IssueResult.Success -> {
                     val numComments = viewState.value?.numComments ?: 0
                     if (last == -1 || page == last) {
-                        val events = viewState.value?.events ?: arrayListOf()
+                        val events = recyclerViewState.value?.events ?: mutableListOf()
                         events.add(it.value)
                         viewState.value = viewState.value?.copy(
-                            events = events,
                             loading = false,
-                            updateAdapter = true,
                             numComments = numComments + 1
                         )
+                        recyclerViewState.value = recyclerViewState.value?.copy(events = events)
                     } else {
                         viewState.value = viewState.value?.copy(loading = false, numComments = numComments + 1)
                     }
@@ -123,7 +120,7 @@ class IssueDetailViewModel @Inject constructor(
     fun onAuthorCommentQuoteReply() = onQuoteReplySelected(issue.body)
 
     fun onIssueLockRequest(reason: String) {
-        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        viewState.value = viewState.value?.copy(loading = true)
         subscribe(issueRepository.lockIssue(username, repoName, issueNum, reason),
             {
                 viewState.value = viewState.value?.copy(
@@ -139,7 +136,7 @@ class IssueDetailViewModel @Inject constructor(
     }
 
     fun onIssueUnlockRequest() {
-        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        viewState.value = viewState.value?.copy(loading = true)
         subscribe(issueRepository.unlockIssue(username, repoName, issueNum),
             {
                 viewState.value = viewState.value?.copy(
@@ -155,7 +152,7 @@ class IssueDetailViewModel @Inject constructor(
     }
 
     fun onIssueStateChange(state: String) {
-        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        viewState.value = viewState.value?.copy(loading = true)
         subscribe(issueRepository.editIssue(
             username,
             repoName,
@@ -204,19 +201,17 @@ class IssueDetailViewModel @Inject constructor(
     }
 
     override fun onCommentUpdated(id: Long, body: String) {
-        viewState.value = viewState.value?.copy(loading = true, updateAdapter = false)
+        viewState.value = viewState.value?.copy(loading = true)
         subscribe(issueRepository.editComment(username, repoName, id, ApiIssueCommentRequest(body = body)),
             {
-                val events = viewState.value?.events ?: arrayListOf()
+                val events = recyclerViewState.value?.events ?: mutableListOf()
                 val updatedComment = events.find { it is IssueComment && it.id == id }
                 updatedComment?.let {
                     (it as IssueComment).body = body
                     updateCommentRequest.value = it
                 }
-                viewState.value = viewState.value?.copy(
-                    events = events,
-                    loading = false
-                )
+                viewState.value = viewState.value?.copy(loading = false)
+                recyclerViewState.value = recyclerViewState.value?.copy(events = events)
             },
             {
                 alert("Failed to update comment")
@@ -233,17 +228,19 @@ class IssueDetailViewModel @Inject constructor(
 
     private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
         viewState.value = viewState.value?.copy(
-            events = if (reset) arrayListOf() else viewState.value?.events ?: arrayListOf(),
             loading = reset,
-            refreshing = refresh,
-            updateAdapter = false,
+            refreshing = refresh
+        ) ?: IssueDetailViewState(
+            loading = reset,
+            refreshing = refresh
+        )
+
+        recyclerViewState.value = recyclerViewState.value?.copy(
+            events = if (reset) mutableListOf() else recyclerViewState.value?.events ?: mutableListOf(),
             commentsFinishedLoading = commentsFinished,
             eventsFinishedLoading = eventsFinished
-        ) ?: IssueDetailViewState(
-            events = if (reset) arrayListOf() else viewState.value?.events ?: arrayListOf(),
-            loading = reset,
-            refreshing = refresh,
-            updateAdapter = false,
+        ) ?: IssueRecyclerViewState(
+            events = if (reset) mutableListOf() else recyclerViewState.value?.events ?: mutableListOf(),
             commentsFinishedLoading = commentsFinished,
             eventsFinishedLoading = eventsFinished
         )
@@ -295,28 +292,28 @@ class IssueDetailViewModel @Inject constructor(
             subscribe(issueRepository.getIssueComments(username, repoName, issueNum, page)) {
                 when (it) {
                     is IssueResult.Success -> {
-                        val updatedList = viewState.value?.events ?: arrayListOf()
+                        val updatedList = recyclerViewState.value?.events ?: mutableListOf()
                         updatedList.addAll(it.value.value)
 
                         last = max(last, it.value.last)
                         commentsFinished = page.isLastPage(it.value.last)
 
                         viewState.value = viewState.value?.copy(
-                            events = updatedList,
-                            isLastPage = commentsFinished && eventsFinished,
-                            commentsFinishedLoading = true,
-                            updateAdapter = true,
                             loading = false,
                             refreshing = false
+                        )
+                        recyclerViewState.value = recyclerViewState.value?.copy(
+                            isLastPage = commentsFinished && eventsFinished,
+                            events = updatedList,
+                            commentsFinishedLoading = true
                         )
                     }
                     is IssueResult.Failure -> {
                         viewState.value = viewState.value?.copy(
-                            commentsFinishedLoading = false,
-                            updateAdapter = true,
                             loading = false,
                             refreshing = false
                         )
+                        recyclerViewState.value = recyclerViewState.value?.copy(commentsFinishedLoading = false)
                         alert(it.error)
                     }
                 }
@@ -326,28 +323,28 @@ class IssueDetailViewModel @Inject constructor(
             subscribe(issueRepository.getIssueEvents(username, repoName, issueNum, page)) {
                 when (it) {
                     is IssueResult.Success -> {
-                        val updatedList = viewState.value?.events ?: arrayListOf()
+                        val updatedList = recyclerViewState.value?.events ?: mutableListOf()
                         updatedList.addAll(it.value.value)
 
                         last = max(last, it.value.last)
                         eventsFinished = page.isLastPage(it.value.last)
 
                         viewState.value = viewState.value?.copy(
-                            events = updatedList,
-                            isLastPage = commentsFinished && eventsFinished,
-                            eventsFinishedLoading = true,
-                            updateAdapter = true,
                             loading = false,
                             refreshing = false
+                        )
+                        recyclerViewState.value = recyclerViewState.value?.copy(
+                            isLastPage = commentsFinished && eventsFinished,
+                            events = updatedList,
+                            eventsFinishedLoading = true
                         )
                     }
                     is IssueResult.Failure -> {
                         viewState.value = viewState.value?.copy(
-                            eventsFinishedLoading = false,
-                            updateAdapter = true,
                             loading = false,
                             refreshing = false
                         )
+                        recyclerViewState.value = recyclerViewState.value?.copy(eventsFinishedLoading = false)
                         alert(it.error)
                     }
                 }

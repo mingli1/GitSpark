@@ -10,6 +10,7 @@ import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.nav.RepoDetailNavigator
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
@@ -18,6 +19,7 @@ class StarsViewModel @Inject constructor(
 ) : BaseViewModel(), RepoDetailNavigator {
 
     val viewState = MutableLiveData<StarsViewState>()
+    val pageViewState = MutableLiveData<PaginatedViewState<Repo>>()
     val navigateToRepoDetailAction = SingleLiveEvent<Repo>()
 
     private var resumed = false
@@ -41,15 +43,12 @@ class StarsViewModel @Inject constructor(
     fun onScrolledToEnd() = updateViewState()
 
     fun onUpdatedRepoData(newData: Repo) {
-        val repos = viewState.value?.repos ?: return
+        val repos = pageViewState.value?.items ?: return
         val index = repos.indexOfFirst { it.fullName == newData.fullName }
         if (index < 0) return
         repos[index] = newData
 
-        viewState.value = viewState.value?.copy(
-            repos = repos,
-            updateAdapter = true
-        )
+        pageViewState.value = pageViewState.value?.copy(items = repos) ?: PaginatedViewState(items = repos)
     }
 
     override fun onRepoSelected(repo: Repo) {
@@ -63,12 +62,10 @@ class StarsViewModel @Inject constructor(
     ) {
         viewState.value = viewState.value?.copy(
             loading = reset,
-            refreshing = refresh,
-            updateAdapter = false
+            refreshing = refresh
         ) ?: StarsViewState(
             loading = reset,
-            refreshing = refresh,
-            updateAdapter = false
+            refreshing = refresh
         )
         if (reset) page = 1
         if (fetchTotal) {
@@ -108,15 +105,19 @@ class StarsViewModel @Inject constructor(
     }
 
     private fun onGetStarredReposSuccess(reposToAdd: List<Repo>, last: Int) {
-        val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.repos ?: arrayListOf()
+        val updatedList = if (page.isFirstPage()) mutableListOf() else pageViewState.value?.items ?: mutableListOf()
         updatedList.addAll(reposToAdd)
 
         viewState.value = viewState.value?.copy(
-            repos = updatedList,
             loading = false,
-            refreshing = false,
-            isLastPage = page.isLastPage(last),
-            updateAdapter = true
+            refreshing = false
+        )
+        pageViewState.value = pageViewState.value?.copy(
+            items = updatedList,
+            isLastPage = page.isLastPage(last)
+        ) ?: PaginatedViewState(
+            items = updatedList,
+            isLastPage = page.isLastPage(last)
         )
         if (page < last) page++
     }
@@ -129,8 +130,7 @@ class StarsViewModel @Inject constructor(
         viewState.value = viewState.value?.copy(
             totalStarred = total,
             loading = false,
-            refreshing = false,
-            updateAdapter = false
+            refreshing = false
         )
     }
 
@@ -138,8 +138,7 @@ class StarsViewModel @Inject constructor(
         alert(error)
         viewState.value = viewState.value?.copy(
             loading = false,
-            refreshing = false,
-            updateAdapter = false
+            refreshing = false
         )
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.model.isFirstPage
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 
 interface ScrollingViewModel {
     fun onScrolledToEnd()
@@ -13,7 +14,8 @@ interface ScrollingViewModel {
 
 abstract class ListViewModel<S> : BaseViewModel(), ScrollingViewModel {
 
-    val viewState = MutableLiveData<ListViewState<S>>()
+    val viewState = MutableLiveData<ListViewState>()
+    val pageViewState = MutableLiveData<PaginatedViewState<S>>()
     private var started = false
     protected var page = 1
 
@@ -30,12 +32,10 @@ abstract class ListViewModel<S> : BaseViewModel(), ScrollingViewModel {
     private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
         viewState.value = viewState.value?.copy(
             loading = reset,
-            refreshing = refresh,
-            updateAdapter = false
+            refreshing = refresh
         ) ?: ListViewState(
             loading = reset,
-            refreshing = refresh,
-            updateAdapter = false
+            refreshing = refresh
         )
         if (reset) page = 1
         requestData()
@@ -51,28 +51,29 @@ abstract class ListViewModel<S> : BaseViewModel(), ScrollingViewModel {
     protected abstract fun requestData()
 
     protected fun onDataSuccess(toAdd: List<S>, last: Int) {
-        val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.list ?: arrayListOf()
+        val updatedList = if (page.isFirstPage()) mutableListOf() else pageViewState.value?.items ?: mutableListOf()
         updatedList.addAll(toAdd)
 
         viewState.value = viewState.value?.copy(
-            list = updatedList,
-            isLastPage = page.isLastPage(last),
-            updateAdapter = true,
             loading = false,
             refreshing = false
         ) ?: ListViewState(
-            list = updatedList,
-            isLastPage = page.isLastPage(last),
-            updateAdapter = true,
             loading = false,
             refreshing = false
+        )
+        pageViewState.value = pageViewState.value?.copy(
+            items = updatedList,
+            isLastPage = page.isLastPage(last)
+        ) ?: PaginatedViewState(
+            items = updatedList,
+            isLastPage = page.isLastPage(last)
         )
         if (page < last) page++
     }
 
     protected fun onDataFailure(error: String) {
         alert(error)
-        viewState.value = viewState.value?.copy(updateAdapter = false, loading = false, refreshing = false)
-            ?: ListViewState(updateAdapter = false, loading = false, refreshing = false)
+        viewState.value = viewState.value?.copy(loading = false, refreshing = false)
+            ?: ListViewState(loading = false, refreshing = false)
     }
 }

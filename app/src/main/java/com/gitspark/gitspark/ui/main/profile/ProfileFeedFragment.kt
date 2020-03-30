@@ -11,8 +11,10 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.EventHelper
 import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.model.Event
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.ProfileFeedAdapter
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import kotlinx.android.synthetic.main.fragment_profile_feed.*
 import kotlinx.android.synthetic.main.fragment_profile_feed.swipe_refresh
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -60,22 +62,24 @@ class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewMod
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.pageViewState.observe(viewLifecycleOwner) { updateRecycler(it) }
     }
 
     private fun updateView(viewState: ProfileFeedViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading && !refreshing
             swipe_refresh.isRefreshing = refreshing
-
-            empty_text.isVisible = events.isEmpty()
             empty_text.text = getString(R.string.profile_feed_empty_text)
+        }
+    }
 
-            if (updateAdapter) {
-                profileFeedAdapter.setItems(events, isLastPage)
+    private fun updateRecycler(viewState: PaginatedViewState<Event>) {
+        with (viewState) {
+            empty_text.isVisible = items.isEmpty()
+            profileFeedAdapter.setItems(items, isLastPage)
 
-                paginationListener.isLastPage = isLastPage
-                paginationListener.loading = false
-            }
+            paginationListener.isLastPage = isLastPage
+            paginationListener.loading = false
         }
     }
 

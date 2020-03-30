@@ -19,6 +19,7 @@ import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.adapter.ReposAdapter
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.main.repo.RepoDetailSharedViewModel
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_repos.*
@@ -63,6 +64,7 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.pageViewState.observe(viewLifecycleOwner) { updateRecycler(it) }
         viewModel.navigateToRepoDetailAction.observe(viewLifecycleOwner) {
             navigateToRepoDetailFragment(it)
         }
@@ -85,15 +87,17 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
             swipe_refresh.isRefreshing = refreshing
             num_repos_field.text = getString(R.string.num_repos_text, LABEL, totalStarred.formatLarge())
 
-            empty_text.isVisible = repos.isEmpty()
             empty_text.text = getString(R.string.repos_empty_text)
+        }
+    }
 
-            if (updateAdapter) {
-                reposAdapter.setItems(repos, isLastPage)
+    private fun updateRecycler(viewState: PaginatedViewState<Repo>) {
+        with (viewState) {
+            empty_text.isVisible = items.isEmpty()
+            reposAdapter.setItems(items, isLastPage)
 
-                paginationListener.isLastPage = isLastPage
-                paginationListener.loading = false
-            }
+            paginationListener.isLastPage = isLastPage
+            paginationListener.loading = false
         }
     }
 

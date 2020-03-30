@@ -6,6 +6,7 @@ import com.gitspark.gitspark.api.service.COMMITS_PER_PAGE
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Commit
 import com.gitspark.gitspark.ui.adapter.CommitsAdapter
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import kotlinx.android.synthetic.main.fragment_list.*
 import javax.inject.Inject
 
@@ -24,11 +25,13 @@ class CommitListFragment : ListFragment<Commit, CommitListViewModel>(CommitListV
         viewModel.onStart(args)
     }
 
-    override fun updateView(viewState: ListViewState<Commit>) {
+    override fun updateView(viewState: ListViewState) {
         super.updateView(viewState)
-        with (viewState) {
-            empty_text.text = getString(R.string.commit_empty_text)
-            if (updateAdapter) commitsAdapter.setItems(list, isLastPage)
-        }
+        empty_text.text = getString(R.string.commit_empty_text)
+    }
+
+    override fun updateRecycler(viewState: PaginatedViewState<Commit>) {
+        super.updateRecycler(viewState)
+        commitsAdapter.setItems(viewState.items, viewState.isLastPage)
     }
 }

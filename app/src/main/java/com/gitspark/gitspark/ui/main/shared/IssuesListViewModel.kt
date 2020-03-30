@@ -8,6 +8,7 @@ import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.SearchRepository
 import com.gitspark.gitspark.repository.SearchResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.nav.IssueDetailNavigator
@@ -31,6 +32,7 @@ class IssuesListViewModel @Inject constructor(
 ) : BaseViewModel(), IssueDetailNavigator {
 
     val viewState = MutableLiveData<IssuesListViewState>()
+    val pageViewState = MutableLiveData<PaginatedViewState<Issue>>()
     val navigateToIssueDetail = SingleLiveEvent<Pair<String, Issue>>()
     val createNewIssueAction = SingleLiveAction()
     private var started = false
@@ -58,14 +60,11 @@ class IssuesListViewModel @Inject constructor(
     fun onNewIssueCreated(issue: Issue) {
         if (viewState.value?.showOpenIssues == false) return
 
-        val updatedList = viewState.value?.issues ?: arrayListOf()
+        val updatedList = pageViewState.value?.items ?: mutableListOf()
         val numOpen = viewState.value?.numOpen ?: 0
         updatedList.add(0, issue)
-        viewState.value = viewState.value?.copy(
-            issues = updatedList,
-            updateAdapter = true,
-            numOpen = numOpen + 1
-        )
+        viewState.value = viewState.value?.copy(numOpen = numOpen + 1)
+        pageViewState.value = pageViewState.value?.copy(items = updatedList) ?: PaginatedViewState(items = updatedList)
     }
 
     fun onIssueStateSelected(open: Boolean) {
@@ -82,12 +81,10 @@ class IssuesListViewModel @Inject constructor(
     private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
         viewState.value = viewState.value?.copy(
             loading = reset,
-            refreshing = refresh,
-            updateAdapter = false
+            refreshing = refresh
         ) ?: IssuesListViewState(
             loading = reset,
-            refreshing = refresh,
-            updateAdapter = false
+            refreshing = refresh
         )
         if (reset) page = 1
         requestData(reset)
@@ -106,25 +103,28 @@ class IssuesListViewModel @Inject constructor(
         )) {
             when (it) {
                 is SearchResult.Success -> {
-                    val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.issues ?: arrayListOf()
+                    val updatedList = if (page.isFirstPage()) mutableListOf() else pageViewState.value?.items ?: mutableListOf()
                     updatedList.addAll(it.value.value)
 
                     viewState.value = viewState.value?.copy(
-                        issues = updatedList,
                         loading = false,
                         refreshing = false,
-                        isLastPage = page.isLastPage(it.value.last),
-                        updateAdapter = true,
                         numOpen = if (reset && state) it.value.totalCount else viewState.value?.numOpen ?: 0,
                         numClosed = if (reset && !state) it.value.totalCount else viewState.value?.numClosed ?: 0
+                    )
+                    pageViewState.value = pageViewState.value?.copy(
+                        items = updatedList,
+                        isLastPage = page.isLastPage(it.value.last)
+                    ) ?: PaginatedViewState(
+                        items = updatedList,
+                        isLastPage = page.isLastPage(it.value.last)
                     )
                     if (page < it.value.last) page++
                 }
                 is SearchResult.Failure -> {
                     viewState.value = viewState.value?.copy(
                         loading = false,
-                        refreshing = false,
-                        updateAdapter = false
+                        refreshing = false
                     )
                     alert(it.error)
                 }

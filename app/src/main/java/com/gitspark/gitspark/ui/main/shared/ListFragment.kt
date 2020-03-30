@@ -12,6 +12,7 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -61,17 +62,21 @@ abstract class ListFragment<T, S : ListViewModel<T>>(clazz: Class<S>, private va
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.pageViewState.observe(viewLifecycleOwner) { updateRecycler(it) }
     }
 
-    protected open fun updateView(viewState: ListViewState<T>) {
+    protected open fun updateView(viewState: ListViewState) {
         with (viewState) {
-            if (updateAdapter) {
-                paginationListener.isLastPage = isLastPage
-                paginationListener.loading = false
-            }
-            empty_text.isVisible = list.isEmpty()
             loading_indicator.isVisible = loading && !refreshing
             swipe_refresh.isRefreshing = refreshing
+        }
+    }
+
+    protected open fun updateRecycler(viewState: PaginatedViewState<T>) {
+        with (viewState) {
+            paginationListener.isLastPage = isLastPage
+            paginationListener.loading = false
+            empty_text.isVisible = items.isEmpty()
         }
     }
 }

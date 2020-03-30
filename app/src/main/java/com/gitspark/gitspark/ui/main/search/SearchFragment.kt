@@ -21,6 +21,7 @@ import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.model.SearchCriteria
 import com.gitspark.gitspark.ui.adapter.*
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE
 import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
@@ -50,6 +51,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
 
     private lateinit var searchesAdapter: SearchAdapter
 
+    private var currAdapter: PaginationAdapter? = null
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var reposAdapter: ReposAdapter
     private lateinit var usersAdapter: UsersAdapter
@@ -96,6 +98,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.pageViewState.observe(viewLifecycleOwner) { updateRecycler(it) }
         viewModel.navigateToSearchFilter.observe(viewLifecycleOwner) { navigateToSearchFilterFragment(it) }
         viewModel.recentSearchesMediator.observe(viewLifecycleOwner) { viewModel.onRecentSearchesRetrieved(it) }
         sharedViewModel.searchResults.observe(viewLifecycleOwner) { viewModel.onSearchResultsObtained(it) }
@@ -143,16 +146,21 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
             recent_searches_message.isVisible = currSearch == null && recentSearches.isEmpty()
             search_results_clear_button.isVisible = currSearch != null
 
-            if (updateAdapter) {
-                val adapter = when (currSearch?.type) {
-                    REPOS -> reposAdapter
-                    USERS -> usersAdapter
-                    CODE -> filesAdapter
-                    COMMITS -> commitsAdapter
-                    else -> issuesAdapter
-                }
-                search_results.adapter = adapter
-                adapter.setItems(searchResults, isLastPage)
+            currAdapter = when (currSearch?.type) {
+                REPOS -> reposAdapter
+                USERS -> usersAdapter
+                CODE -> filesAdapter
+                COMMITS -> commitsAdapter
+                else -> issuesAdapter
+            }
+        }
+    }
+
+    private fun updateRecycler(viewState: PaginatedViewState<Pageable>) {
+        with (viewState) {
+            currAdapter?.let {
+                search_results.adapter = it
+                it.setItems(items, isLastPage)
 
                 paginationListener.isLastPage = isLastPage
                 paginationListener.loading = false

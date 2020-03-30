@@ -4,12 +4,14 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.AuthUser
+import com.gitspark.gitspark.model.Event
 import com.gitspark.gitspark.model.isFirstPage
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.EventRepository
 import com.gitspark.gitspark.repository.EventResult
 import com.gitspark.gitspark.repository.UserRepository
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.main.shared.EventListType
@@ -25,6 +27,7 @@ class HomeViewModel @Inject constructor(
 ) : BaseViewModel(), UserProfileNavigator {
 
     val viewState = MutableLiveData<HomeViewState>()
+    val pageViewState = MutableLiveData<PaginatedViewState<Event>>()
     val userMediator = MediatorLiveData<AuthUser>()
     val logoutConfirmationAction = SingleLiveAction()
     val navigateToLoginAction = SingleLiveAction()
@@ -84,14 +87,12 @@ class HomeViewModel @Inject constructor(
         viewState.value = viewState.value?.copy(
             loading = reset,
             refreshing = refresh,
-            updateAdapter = false,
             fullName = user?.name ?: "",
             username = user?.login ?: "",
             avatarUrl = user?.avatarUrl ?: ""
         ) ?: HomeViewState(
             loading = reset,
             refreshing = refresh,
-            updateAdapter = false,
             fullName = user?.name ?: "",
             username = user?.login ?: "",
             avatarUrl = user?.avatarUrl ?: ""
@@ -114,15 +115,19 @@ class HomeViewModel @Inject constructor(
         subscribe(eventRepository.getReceivedEvents(prefsHelper.getAuthUsername(), page)) {
             when (it) {
                 is EventResult.Success -> {
-                    val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.allEvents ?: arrayListOf()
+                    val updatedList = if (page.isFirstPage()) mutableListOf() else pageViewState.value?.items ?: mutableListOf()
                     updatedList.addAll(it.value.value)
 
                     viewState.value = viewState.value?.copy(
-                        allEvents = updatedList,
                         loading = false,
-                        refreshing = false,
-                        isLastPage = page.isLastPage(it.value.last),
-                        updateAdapter = true
+                        refreshing = false
+                    )
+                    pageViewState.value = pageViewState.value?.copy(
+                        items = updatedList,
+                        isLastPage = page.isLastPage(it.value.last)
+                    ) ?: PaginatedViewState(
+                        items = updatedList,
+                        isLastPage = page.isLastPage(it.value.last)
                     )
                     if (page < it.value.last) page++
                 }
@@ -130,8 +135,7 @@ class HomeViewModel @Inject constructor(
                     alert(it.error)
                     viewState.value = viewState.value?.copy(
                         loading = false,
-                        refreshing = false,
-                        updateAdapter = false
+                        refreshing = false
                     )
                 }
             }

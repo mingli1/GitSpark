@@ -9,6 +9,7 @@ import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Event
 import com.gitspark.gitspark.ui.adapter.HomeFeedAdapter
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
 import kotlinx.android.synthetic.main.fragment_list.*
 import javax.inject.Inject
@@ -38,12 +39,14 @@ class EventListFragment : ListFragment<Event, EventListViewModel>(EventListViewM
         viewModel.navigateToProfileAction.observe(viewLifecycleOwner) { navigateToProfileFragment(it) }
     }
 
-    override fun updateView(viewState: ListViewState<Event>) {
+    override fun updateView(viewState: ListViewState) {
         super.updateView(viewState)
-        with (viewState) {
-            empty_text.text = getString(R.string.event_empty_text)
-            if (updateAdapter) homeFeedAdapter.setItems(list, isLastPage)
-        }
+        empty_text.text = getString(R.string.event_empty_text)
+    }
+
+    override fun updateRecycler(viewState: PaginatedViewState<Event>) {
+        super.updateRecycler(viewState)
+        homeFeedAdapter.setItems(viewState.items, viewState.isLastPage)
     }
 
     private fun navigateToProfileFragment(username: String) {

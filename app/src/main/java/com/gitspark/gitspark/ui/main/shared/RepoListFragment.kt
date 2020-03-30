@@ -9,6 +9,7 @@ import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Repo
 import com.gitspark.gitspark.ui.adapter.ReposAdapter
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -39,12 +40,14 @@ class RepoListFragment : ListFragment<Repo, RepoListViewModel>(RepoListViewModel
         viewModel.navigateToRepoDetailAction.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
     }
 
-    override fun updateView(viewState: ListViewState<Repo>) {
+    override fun updateView(viewState: ListViewState) {
         super.updateView(viewState)
-        with (viewState) {
-            empty_text.text = getString(R.string.repo_empty_text)
-            if (updateAdapter) reposAdapter.setItems(list, isLastPage)
-        }
+        empty_text.text = getString(R.string.repo_empty_text)
+    }
+
+    override fun updateRecycler(viewState: PaginatedViewState<Repo>) {
+        super.updateRecycler(viewState)
+        reposAdapter.setItems(viewState.items, viewState.isLastPage)
     }
 
     private fun navigateToRepoDetailFragment(repo: Repo) {

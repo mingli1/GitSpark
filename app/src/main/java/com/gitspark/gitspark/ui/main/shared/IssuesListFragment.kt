@@ -21,6 +21,7 @@ import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.ui.adapter.IssuesAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE
 import com.gitspark.gitspark.ui.main.issues.IssueEditSharedViewModel
@@ -99,6 +100,7 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.pageViewState.observe(viewLifecycleOwner) { updateRecycler(it) }
         viewModel.navigateToIssueDetail.observe(viewLifecycleOwner) { navigateToIssueDetailFragment(it) }
         viewModel.createNewIssueAction.observe(viewLifecycleOwner) { navigateToIssueEditFragment() }
         sharedViewModel.createdIssue.observe(viewLifecycleOwner) { viewModel.onNewIssueCreated(it) }
@@ -124,12 +126,14 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
 
             open_field.text = getString(R.string.num_open_issues, numOpen.formatLarge())
             closed_field.text = getString(R.string.num_closed_issues, numClosed.formatLarge())
+        }
+    }
 
-            if (updateAdapter) {
-                issuesAdapter.setItems(issues, isLastPage)
-                paginationListener.isLastPage = isLastPage
-                paginationListener.loading = false
-            }
+    private fun updateRecycler(viewState: PaginatedViewState<Issue>) {
+        with (viewState) {
+            issuesAdapter.setItems(items, isLastPage)
+            paginationListener.isLastPage = isLastPage
+            paginationListener.loading = false
         }
     }
 

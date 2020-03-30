@@ -2,11 +2,13 @@ package com.gitspark.gitspark.ui.main.profile
 
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
+import com.gitspark.gitspark.model.Event
 import com.gitspark.gitspark.model.isFirstPage
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.EventRepository
 import com.gitspark.gitspark.repository.EventResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import javax.inject.Inject
 
 class ProfileFeedViewModel @Inject constructor(
@@ -15,6 +17,7 @@ class ProfileFeedViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<ProfileFeedViewState>()
+    val pageViewState = MutableLiveData<PaginatedViewState<Event>>()
 
     private var resumed = false
     private var page = 1
@@ -46,12 +49,10 @@ class ProfileFeedViewModel @Inject constructor(
     ) {
         viewState.value = viewState.value?.copy(
             loading = reset,
-            refreshing = refresh,
-            updateAdapter = false
+            refreshing = refresh
         ) ?: ProfileFeedViewState(
             loading = reset,
-            refreshing = refresh,
-            updateAdapter = false
+            refreshing = refresh
         )
         if (reset) page = 1
         username?.let { requestEvents(it) }
@@ -61,15 +62,19 @@ class ProfileFeedViewModel @Inject constructor(
         subscribe(eventRepository.getEvents(username, page)) {
             when (it) {
                 is EventResult.Success -> {
-                    val updatedList = if (page.isFirstPage()) arrayListOf() else viewState.value?.events ?: arrayListOf()
+                    val updatedList = if (page.isFirstPage()) mutableListOf() else pageViewState.value?.items ?: mutableListOf()
                     updatedList.addAll(it.value.value)
 
                     viewState.value = viewState.value?.copy(
-                        events = updatedList,
                         loading = false,
-                        refreshing = false,
-                        isLastPage = page.isLastPage(it.value.last),
-                        updateAdapter = true
+                        refreshing = false
+                    )
+                    pageViewState.value = pageViewState.value?.copy(
+                        items = updatedList,
+                        isLastPage = page.isLastPage(it.value.last)
+                    ) ?: PaginatedViewState(
+                        items = updatedList,
+                        isLastPage = page.isLastPage(it.value.last)
                     )
                     if (page < it.value.last) page++
                 }
@@ -77,8 +82,7 @@ class ProfileFeedViewModel @Inject constructor(
                     alert(it.error)
                     viewState.value = viewState.value?.copy(
                         loading = false,
-                        refreshing = false,
-                        updateAdapter = false
+                        refreshing = false
                     )
                 }
             }

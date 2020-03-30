@@ -19,11 +19,6 @@ data class IssueDetailViewState(
     val authorUsername: String = "",
     val authorComment: String = "",
     val authorCommentDate: String = "",
-    val commentsFinishedLoading: Boolean = false,
-    val eventsFinishedLoading: Boolean = false,
-    val events: ArrayList<EventComment> = arrayListOf(),
     val loading: Boolean = false,
-    val refreshing: Boolean = false,
-    val isLastPage: Boolean = false,
-    val updateAdapter: Boolean = false
+    val refreshing: Boolean = false
 )

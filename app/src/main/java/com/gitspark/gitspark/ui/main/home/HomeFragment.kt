@@ -18,9 +18,11 @@ import com.gitspark.gitspark.extension.observeOnce
 import com.gitspark.gitspark.helper.EventHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.model.Event
 import com.gitspark.gitspark.ui.adapter.HomeFeedAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.login.LoginActivity
@@ -116,6 +118,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
 
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
+        viewModel.pageViewState.observe(viewLifecycleOwner) { updateRecycler(it) }
         viewModel.userMediator.observeOnce(viewLifecycleOwner) { viewModel.onUserDataLoaded(it) }
         viewModel.logoutConfirmationAction.observe(viewLifecycleOwner) { showLogoutConfirmationDialog() }
         viewModel.navigateToLoginAction.observe(viewLifecycleOwner) { navigateToLoginActivity() }
@@ -154,15 +157,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
             see_more_divider.isVisible = recentEvents.size > NUM_RECENT_EVENTS
             raAdapter.setItems(recentEvents.take(NUM_RECENT_EVENTS), true)
 
-            aa_empty_text.isVisible = allEvents.isEmpty()
-            all_events.isVisible = allEvents.isNotEmpty()
-            if (updateAdapter) {
-                aaAdapter.setItems(allEvents, isLastPage)
-
-                paginationListener.isLastPage = isLastPage
-                paginationListener.loading = false
-            }
-
             if (nav_view.headerCount > 0) {
                 nav_view.getHeaderView(0).run {
                     full_name_field.text = fullName
@@ -172,6 +166,18 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
             }
 
             version_label.text = getString(R.string.version_label, BuildConfig.BUILD_TYPE, BuildConfig.VERSION_NAME)
+        }
+    }
+
+    private fun updateRecycler(viewState: PaginatedViewState<Event>) {
+        with (viewState) {
+            aa_empty_text.isVisible = items.isEmpty()
+            all_events.isVisible = items.isNotEmpty()
+
+            aaAdapter.setItems(items, isLastPage)
+
+            paginationListener.isLastPage = isLastPage
+            paginationListener.loading = false
         }
     }
 

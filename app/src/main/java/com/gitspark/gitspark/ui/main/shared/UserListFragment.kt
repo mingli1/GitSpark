@@ -8,6 +8,7 @@ import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.adapter.UsersAdapter
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
 import kotlinx.android.synthetic.main.fragment_list.*
 import javax.inject.Inject
@@ -37,12 +38,14 @@ class UserListFragment : ListFragment<User, UserListViewModel>(UserListViewModel
         viewModel.navigateToProfileAction.observe(viewLifecycleOwner) { navigateToProfileFragment(it) }
     }
 
-    override fun updateView(viewState: ListViewState<User>) {
+    override fun updateView(viewState: ListViewState) {
         super.updateView(viewState)
-        with (viewState) {
-            empty_text.text = getString(R.string.user_empty_text)
-            if (updateAdapter) usersAdapter.setItems(list, isLastPage)
-        }
+        empty_text.text = getString(R.string.user_empty_text)
+    }
+
+    override fun updateRecycler(viewState: PaginatedViewState<User>) {
+        super.updateRecycler(viewState)
+        usersAdapter.setItems(viewState.items, viewState.isLastPage)
     }
 
     private fun navigateToProfileFragment(username: String) {
