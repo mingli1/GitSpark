@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
             app:title="@string/edit_profile_title"
             app:titleTextColor="@color/colorWhite"/>
         
@@ -46,7 +45,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/name_label"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryDarkCopy"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -80,7 +79,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/bio_label"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryDarkCopy"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -116,7 +115,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/email_label"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryDarkCopy"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -150,7 +149,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/url_label"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryDarkCopy"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -193,7 +192,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/location_label"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryDarkCopy"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -218,7 +217,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/company_label"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryDarkCopy"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>

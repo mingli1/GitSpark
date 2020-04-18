@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
             app:layout_scrollFlags="enterAlways|scroll">
 
             <Button
@@ -88,7 +87,7 @@
                         style="@style/BodyBold"
                         android:text="@string/clear"
                         android:visibility="gone"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/colorPrimaryCopy"
                         android:layout_marginEnd="16dp"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"

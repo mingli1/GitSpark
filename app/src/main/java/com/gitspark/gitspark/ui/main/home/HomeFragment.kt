@@ -74,7 +74,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
             R.string.drawer_close
         ).apply {
             isDrawerIndicatorEnabled = true
-            drawerArrowDrawable.color = context!!.getColor(R.color.colorWhite)
+            drawerArrowDrawable.color = context!!.getColor(R.color.colorToolbarText)
         }
 
         drawer_layout.addDrawerListener(actionBarDrawerToggle)

@@ -39,6 +39,7 @@
                 android:id="@+id/nested_scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorWhiteBackground"
                 android:scrollbars="vertical">
 
                 <LinearLayout
@@ -82,7 +83,7 @@
                         android:focusable="true"
                         android:clickable="true"
                         android:text="@string/see_more_button_text"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/colorPrimaryCopy"
                         style="@style/Body"/>
 
                     <View
@@ -137,6 +138,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/colorWhiteBackground"
         app:menu="@menu/home_menu"
         app:headerLayout="@layout/home_drawer_header"
         tools:visibility="gone">
@@ -146,6 +148,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="bottom"
+            android:background="@color/colorWhiteBackground"
             android:padding="16dp">
 
             <TextView

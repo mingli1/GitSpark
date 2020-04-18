@@ -73,7 +73,7 @@ class ContributionsView(context: Context, attrs: AttributeSet) : View(context, a
             contributions.forEach { month ->
                 val numRows = ceil(month.value.size / 7f)
 
-                monthPaint.color = if (darkMode) Color.WHITE else Color.BLACK
+                monthPaint.color = if (darkMode) Color.parseColor("#F9F9F9") else Color.BLACK
                 val textWidth = monthPaint.measureText(month.key)
                 val textX = viewWidth - PADDING_TEXT - textWidth
                 val textY = startY + (SQUARE_SIZE + PADDING_SQUARE) * numRows

@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#5C6BC0</color>
+    <color name="colorPrimary">@color/colorWhite</color>
     <color name="colorPrimaryLight">#8E99F3</color>
-    <color name="colorPrimaryDark">#26418F</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimaryCopy">#5C6BC0</color>
+    <color name="colorPrimaryDarkCopy">#4467CF</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorAccentDark">#B21750</color>
     <color name="colorProgressBackground">#00000000</color>
     <color name="colorBottomNav">#DDDDDD</color>
     <color name="colorWhite">#171717</color>
-    <color name="colorBlack">#FFFFFF</color>
+    <color name="colorBlack">#F9F9F9</color>
     <color name="colorWhiteDark">#2E2E2E</color>
     <color name="colorWhiteBackground">#000000</color>
     <color name="colorAlmostWhite">#1C1C1C</color>
     <color name="colorLightGray">#B5B5B5</color>
     <color name="colorDarkGray">#878787</color>
-    <color name="colorDarkerGray">#545454</color>
+    <color name="colorDarkerGray">#C4C4C4</color>
     <color name="colorTopicsBackground">#BFEEFF</color>
     <color name="colorLightBlue">#DEF6FF</color>
     <color name="colorTopicsText">#212FFF</color>
@@ -24,4 +26,7 @@
     <color name="colorError">#FF2121</color>
     <color name="colorToolbar">@color/colorWhite</color>
     <color name="colorToolbarText">@color/colorBlack</color>
+    <color name="colorHomeDrawerHeader">@color/colorPrimary</color>
+    <color name="colorHomeDrawerText">#B0B0B0</color>
+    <color name="colorBottomNavUnselected">#363636</color>
 </resources>

@@ -32,10 +32,10 @@ class EventHelper @Inject constructor(private val context: Context) {
         }
         return when (event.type) {
             COMMIT_COMMENT_EVENT -> builder.append(if (received) "commented on commit " else "Commented on commit ")
-                .color(context.getColor(R.color.colorPrimaryDark)) {
+                .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                     bold { append(event.payload.comment.commitId.take(7)) }
                 }.append(" of ")
-                .color(context.getColor(R.color.colorPrimaryDark)) {
+                .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                     bold { append(event.repo.repoName) }
                 }
 
@@ -43,30 +43,30 @@ class EventHelper @Inject constructor(private val context: Context) {
                 when  {
                     event.payload.ref.isEmpty() && event.payload.refType == "repository" ->
                         builder.append(if (received) "created a repository " else "Created a repository ")
-                            .color(context.getColor(R.color.colorPrimaryDark)) {
+                            .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                                 bold { append(event.repo.repoName) }
                             }
                     event.payload.refType == "branch" && event.payload.ref != event.payload.masterBranch ->
                         builder.append(if (received) "created branch " else "Created branch ")
-                            .color(context.getColor(R.color.colorPrimaryDark)) {
+                            .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                                 bold { append(event.payload.ref) }
                             }.append(" in ")
-                            .color(context.getColor(R.color.colorPrimaryDark)) {
+                            .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                                 bold { append(event.repo.repoName) }
                             }
                     else -> builder
                 }
             }
             FORK_EVENT -> builder.append(if (received) "forked " else "Forked ")
-                .color(context.getColor(R.color.colorPrimaryDark)) {
+                .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                     bold { append(event.payload.forkee.fullName) }
                 }.append(" from ")
-                .color(context.getColor(R.color.colorPrimaryDark)) {
+                .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                     bold { append(event.repo.repoName) }
                 }
             ISSUES_EVENT -> builder.append(if (received) event.payload.action else event.payload.action.capitalize())
                 .append(" an issue in ")
-                .color(context.getColor(R.color.colorPrimaryDark)) {
+                .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                     bold { append(event.repo.repoName) }
                 }
             ISSUE_COMMENT_EVENT ->
@@ -74,18 +74,18 @@ class EventHelper @Inject constructor(private val context: Context) {
                     event.payload.action == "created" ->
                         builder.append(if (received) "commented on Issue #" else "Commented on Issue #")
                         .append(event.payload.issue.number.toString())
-                        .append(" of ").color(context.getColor(R.color.colorPrimaryDark)) {
+                        .append(" of ").color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                             bold { append(event.repo.repoName) }
                         }
                     else -> builder.append(if (received) event.payload.action else event.payload.action.capitalize())
                         .append(" comment in Issue #").append(event.payload.issue.number.toString())
-                        .append(" of ").color(context.getColor(R.color.colorPrimaryDark)) {
+                        .append(" of ").color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                             bold { append(event.repo.repoName) }
                         }
                 }
             PULL_REQUEST_EVENT -> builder.append(if (received) event.payload.action else event.payload.action.capitalize())
                 .append(" a pull request in ")
-                .color(context.getColor(R.color.colorPrimaryDark)) {
+                .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                     bold { append(event.repo.repoName) }
                 }
             PULL_REQUEST_REVIEW_COMMENT_EVENT -> {
@@ -93,7 +93,7 @@ class EventHelper @Inject constructor(private val context: Context) {
                     event.payload.action == "created" || event.payload.action == "edited" ->
                         builder.append(if (received) "reviewed Pull Request #" else "Reviewed Pull Request #")
                             .append(event.payload.pullRequest.number.toString())
-                            .append(" in ").color(context.getColor(R.color.colorPrimaryDark)) {
+                            .append(" in ").color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                                 bold { append(event.repo.repoName) }
                             }
                     else -> builder
@@ -101,15 +101,15 @@ class EventHelper @Inject constructor(private val context: Context) {
             }
             PUSH_EVENT -> builder.append(if (received) "pushed changes to " else "Pushed changes to ")
                 .append(getBranchFromRef(event)).append(" of ")
-                .color(context.getColor(R.color.colorPrimaryDark)) {
+                .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                     bold { append(event.repo.repoName) }
                 }
             PUBLIC_EVENT -> builder.append(if (received) "made " else "Made ")
-                .color(context.getColor(R.color.colorPrimaryDark)) {
+                .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                     bold { append(event.payload.repo.fullName) }
                 }.append(" public")
             WATCH_EVENT -> builder.append(if (received) "starred " else "Starred ")
-                .color(context.getColor(R.color.colorPrimaryDark)) {
+                .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
                     bold { append(event.repo.repoName) }
                 }
             else -> builder

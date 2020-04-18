@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
             app:titleTextColor="@color/colorWhite"/>
     
     </com.google.android.material.appbar.AppBarLayout>
@@ -46,7 +45,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/title_label"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryDarkCopy"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -73,7 +72,7 @@
                     android:layout_height="wrap_content"
                     style="@style/BodyLight.Bold"
                     android:text="@string/desc_label"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryDarkCopy"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"/>
@@ -115,7 +114,7 @@
                         android:layout_height="wrap_content"
                         style="@style/BodyLight.Bold"
                         android:text="@string/assignees_label"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryDarkCopy"
                         android:layout_marginTop="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"/>
@@ -170,7 +169,7 @@
                         android:layout_height="wrap_content"
                         style="@style/BodyLight.Bold"
                         android:text="@string/labels_label"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryDarkCopy"
                         android:layout_marginTop="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"/>

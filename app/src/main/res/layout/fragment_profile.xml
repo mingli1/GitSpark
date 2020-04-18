@@ -16,8 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:titleTextColor="@color/colorWhite"
+            app:titleTextColor="@color/colorToolbarText"
             app:layout_scrollFlags="enterAlways|scroll"/>
         
         <com.google.android.material.tabs.TabLayout
@@ -26,7 +25,7 @@
             android:layout_height="wrap_content"
             app:tabMode="fixed"
             app:tabGravity="fill"
-            app:tabTextColor="@color/colorWhite"
+            app:tabTextColor="@color/colorToolbarText"
             app:layout_scrollFlags="enterAlways|scroll"/>
         
     </com.google.android.material.appbar.AppBarLayout>

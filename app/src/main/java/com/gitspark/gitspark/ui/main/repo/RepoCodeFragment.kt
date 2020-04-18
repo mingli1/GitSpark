@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.main.repo
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +11,24 @@ import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
+import com.gitspark.gitspark.helper.DarkModeHelper
 import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_CONTENT
 import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_EXTENSION
 import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_NAME
 import com.gitspark.gitspark.ui.main.MainActivity
+import dagger.android.support.AndroidSupportInjection
+import io.github.kbiakov.codeview.highlight.ColorTheme
 import kotlinx.android.synthetic.main.fragment_repo_code.*
+import javax.inject.Inject
 
 class RepoCodeFragment : Fragment() {
+
+    @Inject lateinit var darkModeHelper: DarkModeHelper
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_repo_code, container, false)
@@ -50,8 +62,11 @@ class RepoCodeFragment : Fragment() {
                 markdown_view.loadMarkdownFromUrl(content)
             }
             else -> {
-                code_view.isVisible = true
-                code_view.setCode(content)
+                with (code_view) {
+                    isVisible = true
+                    setCode(content)
+                    getOptions()?.setTheme(if (darkModeHelper.isDarkMode()) ColorTheme.MONOKAI else ColorTheme.DEFAULT)
+                }
             }
         }
     }
