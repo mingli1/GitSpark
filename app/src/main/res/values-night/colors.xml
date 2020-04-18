@@ -5,7 +5,7 @@
     <color name="colorPrimaryDark">#26418F</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorAccentDark">#B21750</color>
-    <color name="colorProgressBackground">#64FFFFFF</color>
+    <color name="colorProgressBackground">#00000000</color>
     <color name="colorBottomNav">#DDDDDD</color>
     <color name="colorWhite">#171717</color>
     <color name="colorBlack">#FFFFFF</color>
@@ -22,4 +22,6 @@
     <color name="colorDrawableDefault">#7F7F7F</color>
     <color name="colorSuccess">#43BD17</color>
     <color name="colorError">#FF2121</color>
+    <color name="colorToolbar">@color/colorWhite</color>
+    <color name="colorToolbarText">@color/colorBlack</color>
 </resources>
