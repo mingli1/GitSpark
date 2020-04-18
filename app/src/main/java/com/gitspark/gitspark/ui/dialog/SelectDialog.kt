@@ -11,14 +11,16 @@ interface SelectDialogCallback {
 
 private const val BUNDLE_TITLE = "BUNDLE_TITLE"
 private const val BUNDLE_ITEMS = "BUNDLE_ITEMS"
+private const val BUNDLE_CHECKED_ITEM = "BUNDLE_CHECKED_ITEM"
 
 class SelectDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val items = arguments?.getStringArray(BUNDLE_ITEMS)
         return AlertDialog.Builder(context!!)
             .setTitle(arguments?.getString(BUNDLE_TITLE))
             .setCancelable(true)
-            .setSingleChoiceItems(arguments?.getStringArray(BUNDLE_ITEMS), 0) { _, _ -> }
+            .setSingleChoiceItems(items, items?.indexOf(arguments?.getString(BUNDLE_CHECKED_ITEM)) ?: 0) { _, _ -> }
             .setPositiveButton("Lock") { _, _ ->
                 val lv = (dialog as AlertDialog).listView
                 val selectedItem = lv.adapter.getItem(lv.checkedItemPosition)
@@ -30,11 +32,12 @@ class SelectDialog : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(title: String, items: Array<String>) =
+        fun newInstance(title: String, items: Array<String>, checkedItem: String = "") =
             SelectDialog().apply {
                 arguments = Bundle().apply {
                     putString(BUNDLE_TITLE, title)
                     putStringArray(BUNDLE_ITEMS, items)
+                    putString(BUNDLE_CHECKED_ITEM, checkedItem)
                 }
             }
     }

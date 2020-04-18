@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <data>
+        <variable
+            name="viewModel"
+            type="com.gitspark.gitspark.ui.main.settings.SettingsViewModel"/>
+    </data>
+    
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhiteBackground">
+    
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/tab_layout_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme">
+    
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                app:titleTextColor="@color/colorToolbarText"
+                app:title="@string/settings_title"/>
+            
+        </com.google.android.material.appbar.AppBarLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:onClick="@{() -> viewModel.onThemeSelectClicked()}"
+            android:background="@color/colorWhite"
+            android:foreground="?attr/selectableItemBackground"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+    
+            <TextView
+                style="@style/Body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="Theme"/>
+    
+            <TextView
+                style="@style/BodyLight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:text="@{viewModel.currentTheme}"/>
+            
+        </LinearLayout>
+        
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    
+</layout>

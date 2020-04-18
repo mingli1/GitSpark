@@ -16,15 +16,15 @@ class DarkModeHelper @Inject constructor(private val context: Context) {
 
     fun setDarkMode(config: DarkModeConfig) {
         when (config) {
-            DarkModeConfig.Yes -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            DarkModeConfig.No -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            DarkModeConfig.FollowSystem -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            DarkModeConfig.Dark -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            DarkModeConfig.Light -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            DarkModeConfig.System -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
     }
 }
 
 enum class DarkModeConfig {
-    Yes,
-    No,
-    FollowSystem
+    Light,
+    Dark,
+    System
 }

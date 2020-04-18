@@ -18,6 +18,7 @@ import com.gitspark.gitspark.ui.main.repo.RepoOverviewViewModel
 import com.gitspark.gitspark.ui.main.search.SearchFilterViewModel
 import com.gitspark.gitspark.ui.main.search.SearchSharedViewModel
 import com.gitspark.gitspark.ui.main.search.SearchViewModel
+import com.gitspark.gitspark.ui.main.settings.SettingsViewModel
 import com.gitspark.gitspark.ui.main.shared.*
 import dagger.Binds
 import dagger.Module
@@ -129,6 +130,10 @@ internal abstract class ViewModelModule {
     @Binds @IntoMap
     @ViewModelKey(IssueEditSharedViewModel::class)
     internal abstract fun bindIssueEditSharedViewModel(issueEditSharedViewModel: IssueEditSharedViewModel): ViewModel
+
+    @Binds @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    internal abstract fun bindSettingsViewModel(settingsViewModel: SettingsViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory

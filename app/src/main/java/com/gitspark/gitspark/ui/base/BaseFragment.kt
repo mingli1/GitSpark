@@ -30,7 +30,7 @@ abstract class BaseFragment<T : BaseViewModel>(private val clazz: Class<T>) : Fr
         observeBaseViewModel()
     }
 
-    abstract fun observeViewModel()
+    open fun observeViewModel() {}
 
     private fun observeBaseViewModel() {
         viewModel.alertAction.observe(viewLifecycleOwner) { showAlert(it) }

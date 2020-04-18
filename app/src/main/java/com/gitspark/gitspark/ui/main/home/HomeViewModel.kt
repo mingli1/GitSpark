@@ -33,6 +33,7 @@ class HomeViewModel @Inject constructor(
     val navigateToLoginAction = SingleLiveAction()
     val navigateToUserProfile = SingleLiveEvent<String>()
     val navigateToEventList = SingleLiveEvent<EventListType>()
+    val navigateToSettings = SingleLiveAction()
 
     private var started = false
     private var page = 1
@@ -74,6 +75,8 @@ class HomeViewModel @Inject constructor(
     fun onPublicEventsClicked() {
         navigateToEventList.value = EventListType.PublicEvents
     }
+
+    fun onSettingsClicked() = navigateToSettings.call()
 
     override fun onUserSelected(username: String) {
         navigateToUserProfile.value = username

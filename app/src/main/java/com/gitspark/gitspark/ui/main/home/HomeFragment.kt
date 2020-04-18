@@ -122,6 +122,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         viewModel.navigateToLoginAction.observe(viewLifecycleOwner) { navigateToLoginActivity() }
         viewModel.navigateToUserProfile.observe(viewLifecycleOwner) { navigateToUserProfile(it) }
         viewModel.navigateToEventList.observe(viewLifecycleOwner) { navigateToEventList(it) }
+        viewModel.navigateToSettings.observe(viewLifecycleOwner) { navigateToSettings() }
     }
 
     override fun onPositiveClicked() = viewModel.onLogoutConfirmed()
@@ -185,6 +186,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         when (item.itemId) {
             R.id.logout -> viewModel.onLogoutClicked()
             R.id.public_events -> viewModel.onPublicEventsClicked()
+            R.id.settings -> viewModel.onSettingsClicked()
         }
     }
 
@@ -212,5 +214,9 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
             putSerializable(BUNDLE_EVENT_LIST_TYPE, type)
         }
         findNavController().navigate(R.id.action_home_fragment_to_event_list, data)
+    }
+
+    private fun navigateToSettings() {
+        findNavController().navigate(R.id.action_home_fragment_to_settings)
     }
 }

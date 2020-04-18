@@ -261,4 +261,5 @@
     <string name="discard_changes_title">Discard changes</string>
     <string name="discard_changes_message">Are you sure you want to discard changes?</string>
     <string name="create_issue_title">Creating issue in %1$s</string>
+    <string name="settings_title">Settings</string>
 </resources>
