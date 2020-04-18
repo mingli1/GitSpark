@@ -1,9 +1,11 @@
 package com.gitspark.gitspark.ui.custom
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import com.gitspark.gitspark.R
 import com.gitspark.gitspark.model.Contribution
 import java.util.*
 import kotlin.math.ceil
@@ -18,10 +20,7 @@ private const val PADDING_BETWEEN_MONTHS = 64f
 class ContributionsView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val monthPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.BLACK
-        textSize = MONTH_TEXT_SIZE
-    }
+    private val monthPaint: Paint
     private val bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var bitmap: Bitmap? = null
     private val bitmapMatrix = Matrix()
@@ -29,8 +28,26 @@ class ContributionsView(context: Context, attrs: AttributeSet) : View(context, a
     private var viewWidth = 1
     private var viewHeight = 1
 
+    private val monthTextColor: Int
+    private val bgColor: Int
+
+    init {
+        context.theme.obtainStyledAttributes(attrs, R.styleable.ContributionsView, 0, 0).apply {
+            try {
+                monthTextColor = getInteger(R.styleable.ContributionsView_monthTextColor, 0)
+                bgColor = getInteger(R.styleable.ContributionsView_bgColor, 0)
+            } finally {
+                recycle()
+            }
+        }
+        monthPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = monthTextColor
+            textSize = MONTH_TEXT_SIZE
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
-        canvas.drawColor(Color.WHITE)
+        canvas.drawColor(bgColor)
         bitmap?.let { canvas.drawBitmap(it, bitmapMatrix, bitmapPaint) }
     }
 
@@ -63,7 +80,12 @@ class ContributionsView(context: Context, attrs: AttributeSet) : View(context, a
                 canvas.drawText(month.key, textX, textY, monthPaint)
 
                 month.value.forEachIndexed { index, contribution ->
-                    paint.color = Color.parseColor(contribution.fillColor)
+                    val mode = context.resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
+                    paint.color = if (mode == Configuration.UI_MODE_NIGHT_YES && (contribution.fillColor == "#eeeeee" || contribution.fillColor == "#ebedf0")) {
+                        Color.parseColor("#363636")
+                    } else {
+                        Color.parseColor(contribution.fillColor)
+                    }
 
                     val left = START_POS + ((index % 7) * (SQUARE_SIZE + PADDING_SQUARE))
                     val top = startY + PADDING_SQUARE + ((numRows - 1 - (index / 7)) * (SQUARE_SIZE + PADDING_SQUARE))
