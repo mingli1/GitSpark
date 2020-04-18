@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.helper.DarkModeHelper
+import com.gitspark.gitspark.ui.custom.DarkMarkdownStyle
+import com.gitspark.gitspark.ui.custom.LightMarkdownStyle
 import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_CONTENT
 import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_EXTENSION
 import com.gitspark.gitspark.ui.nav.BUNDLE_FILE_NAME
@@ -48,7 +49,6 @@ class RepoCodeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        markdown_view.addStyleSheet(Github())
 
         val content = arguments?.getString(BUNDLE_FILE_CONTENT) ?: ""
 
@@ -58,8 +58,11 @@ class RepoCodeFragment : Fragment() {
                 image_view.loadImage(content)
             }
             "md" -> {
-                markdown_view.isVisible = true
-                markdown_view.loadMarkdownFromUrl(content)
+                with (markdown_view) {
+                    isVisible = true
+                    addStyleSheet(if (darkModeHelper.isDarkMode()) DarkMarkdownStyle() else LightMarkdownStyle())
+                    loadMarkdownFromUrl(content)
+                }
             }
             else -> {
                 with (code_view) {

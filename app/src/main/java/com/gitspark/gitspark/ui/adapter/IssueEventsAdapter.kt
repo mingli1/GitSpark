@@ -12,6 +12,8 @@ import com.gitspark.gitspark.helper.IssueEventHelper
 import com.gitspark.gitspark.helper.KeyboardHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.*
+import com.gitspark.gitspark.ui.custom.DarkMarkdownStyle
+import com.gitspark.gitspark.ui.custom.LightMarkdownStyle
 import com.gitspark.gitspark.ui.main.issues.CommentMenuCallback
 import kotlinx.android.synthetic.main.issue_comment_view.view.*
 import kotlinx.android.synthetic.main.issue_event_view.view.*
@@ -21,7 +23,8 @@ class IssueEventsAdapter(
     private val eventHelper: IssueEventHelper,
     private val timeHelper: TimeHelper,
     private val keyboardHelper: KeyboardHelper,
-    private val callback: CommentMenuCallback
+    private val callback: CommentMenuCallback,
+    private val darkMode: Boolean
 ) : PaginationAdapter() {
 
     var permissionLevel = PERMISSION_NONE
@@ -66,8 +69,8 @@ class IssueEventsAdapter(
                     val formatted = timeHelper.getRelativeAndExactTimeFormat(date, short = true)
 
                     author_action.text = context.getString(R.string.comment_action, formatted)
-                    comment_body.isOpenUrlInBrowser = true
-                    comment_body.setMarkDownText(item.body)
+                    comment_body.addStyleSheet(if (darkMode) DarkMarkdownStyle() else LightMarkdownStyle())
+                    comment_body.loadMarkdown(item.body)
 
                     val writePermission = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
                     val menu = PopupMenu(context, comment_options).apply {

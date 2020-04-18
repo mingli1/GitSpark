@@ -10,16 +10,18 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
-import br.tiagohm.markdownview.css.styles.Github
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.api.model.ApiSubscribed
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.extension.withSuffix
+import com.gitspark.gitspark.helper.DarkModeHelper
 import com.gitspark.gitspark.helper.LanguageColorHelper
 import com.gitspark.gitspark.ui.adapter.LanguageAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.custom.DarkMarkdownStyle
+import com.gitspark.gitspark.ui.custom.LightMarkdownStyle
 import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.main.shared.*
@@ -41,6 +43,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
     ConfirmDialogCallback {
 
     @Inject lateinit var colorHelper: LanguageColorHelper
+    @Inject lateinit var darkModeHelper: DarkModeHelper
     private lateinit var languageAdapter: LanguageAdapter
     private var rmUrl = ""
 
@@ -55,7 +58,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.loadRepo((parentFragment as RepoDataCallback).getData())
-        readme_view.addStyleSheet(Github())
+        readme_view.addStyleSheet(if (darkModeHelper.isDarkMode()) DarkMarkdownStyle() else LightMarkdownStyle())
 
         language_breakdown.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         languageAdapter = LanguageAdapter(colorHelper)

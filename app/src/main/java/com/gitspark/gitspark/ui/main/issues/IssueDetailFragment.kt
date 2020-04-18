@@ -15,16 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
-import com.gitspark.gitspark.helper.ColorHelper
-import com.gitspark.gitspark.helper.IssueEventHelper
-import com.gitspark.gitspark.helper.KeyboardHelper
-import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.helper.*
 import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.PERMISSION_ADMIN
 import com.gitspark.gitspark.model.PERMISSION_WRITE
 import com.gitspark.gitspark.ui.adapter.IssueEventsAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.custom.DarkMarkdownStyle
+import com.gitspark.gitspark.ui.custom.LightMarkdownStyle
 import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.dialog.SelectDialog
@@ -48,6 +47,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     @Inject lateinit var eventHelper: IssueEventHelper
     @Inject lateinit var timeHelper: TimeHelper
     @Inject lateinit var keyboardHelper: KeyboardHelper
+    @Inject lateinit var darkModeHelper: DarkModeHelper
 
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var issueEventsAdapter: IssueEventsAdapter
@@ -101,10 +101,10 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         events_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 
-        issueEventsAdapter = IssueEventsAdapter(eventHelper, timeHelper, keyboardHelper, viewModel)
+        issueEventsAdapter = IssueEventsAdapter(eventHelper, timeHelper, keyboardHelper, viewModel, darkModeHelper.isDarkMode())
         if (events_list.adapter == null) events_list.adapter = issueEventsAdapter
 
-        comment_body.isOpenUrlInBrowser = true
+        comment_body.addStyleSheet(if (darkModeHelper.isDarkMode()) DarkMarkdownStyle() else LightMarkdownStyle())
 
         issueJsonAdapter.fromJson(arguments?.getString(BUNDLE_ISSUE) ?: "")?.let {
             viewModel.onStart(it)
@@ -212,7 +212,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             if (authorAvatarUrl.isNotEmpty()) profile_icon.loadImage(authorAvatarUrl)
             author_username.text = authorUsername
             author_action.text = getString(R.string.comment_action, authorCommentDate)
-            comment_body.setMarkDownText(if (authorComment.isNotEmpty()) authorComment else getString(R.string.empty_comment))
+            comment_body.loadMarkdown(if (authorComment.isNotEmpty()) authorComment else getString(R.string.empty_comment))
 
             issue_title_field.text = issueTitle
             issue_desc_field.text = issueDesc

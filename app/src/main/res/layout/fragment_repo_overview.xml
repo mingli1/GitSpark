@@ -402,8 +402,7 @@
             android:background="@color/colorWhiteBackground"
             app:layout_constraintTop_toBottomOf="@id/activity_field"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/readme_label"
