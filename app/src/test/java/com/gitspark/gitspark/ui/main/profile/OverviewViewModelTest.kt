@@ -116,7 +116,7 @@ class OverviewViewModelTest {
         assertThat(viewState().numFollowers).isEqualTo(999)
         assertThat(viewState().numFollowing).isEqualTo(999)
         assertThat(viewState().planName).isEqualTo("plan")
-        assertThat(viewState().createdDate).isEqualTo("Jan 14, 2008")
+        assertThat(viewState().createdDate).isEqualTo("January 14, 2008")
     }
 
     @Test
