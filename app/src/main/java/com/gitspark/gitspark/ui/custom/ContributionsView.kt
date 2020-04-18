@@ -20,7 +20,9 @@ private const val PADDING_BETWEEN_MONTHS = 64f
 class ContributionsView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val monthPaint: Paint
+    private val monthPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textSize = MONTH_TEXT_SIZE
+    }
     private val bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var bitmap: Bitmap? = null
     private val bitmapMatrix = Matrix()
@@ -28,21 +30,15 @@ class ContributionsView(context: Context, attrs: AttributeSet) : View(context, a
     private var viewWidth = 1
     private var viewHeight = 1
 
-    private val monthTextColor: Int
     private val bgColor: Int
 
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.ContributionsView, 0, 0).apply {
             try {
-                monthTextColor = getInteger(R.styleable.ContributionsView_monthTextColor, 0)
                 bgColor = getInteger(R.styleable.ContributionsView_bgColor, 0)
             } finally {
                 recycle()
             }
-        }
-        monthPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = monthTextColor
-            textSize = MONTH_TEXT_SIZE
         }
     }
 
@@ -59,6 +55,9 @@ class ContributionsView(context: Context, attrs: AttributeSet) : View(context, a
     fun createBitmap(contributions: SortedMap<String, List<Contribution>>) {
         if (contributions.isEmpty()) return
 
+        val mode = context.resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
+        val darkMode = mode == Configuration.UI_MODE_NIGHT_YES
+
         if (bitmap == null) {
             var viewHeight = 0f
             contributions.forEach { month ->
@@ -74,14 +73,14 @@ class ContributionsView(context: Context, attrs: AttributeSet) : View(context, a
             contributions.forEach { month ->
                 val numRows = ceil(month.value.size / 7f)
 
+                monthPaint.color = if (darkMode) Color.WHITE else Color.BLACK
                 val textWidth = monthPaint.measureText(month.key)
                 val textX = viewWidth - PADDING_TEXT - textWidth
                 val textY = startY + (SQUARE_SIZE + PADDING_SQUARE) * numRows
                 canvas.drawText(month.key, textX, textY, monthPaint)
 
                 month.value.forEachIndexed { index, contribution ->
-                    val mode = context.resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
-                    paint.color = if (mode == Configuration.UI_MODE_NIGHT_YES && (contribution.fillColor == "#eeeeee" || contribution.fillColor == "#ebedf0")) {
+                    paint.color = if (darkMode && (contribution.fillColor == "#eeeeee" || contribution.fillColor == "#ebedf0")) {
                         Color.parseColor("#363636")
                     } else {
                         Color.parseColor(contribution.fillColor)
