@@ -150,6 +150,9 @@ class SearchViewModel @Inject constructor(
                 pageViewState.value = pageViewState.value?.copy(
                     items = updatedList,
                     isLastPage = page.isLastPage(result.value.last)
+                ) ?: PaginatedViewState(
+                    items = updatedList,
+                    isLastPage = page.isLastPage(result.value.last)
                 )
                 if (page < result.value.last) page++
             }

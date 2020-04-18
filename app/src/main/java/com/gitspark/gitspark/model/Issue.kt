@@ -27,6 +27,8 @@ data class Issue(
 
     override fun getViewType() = VIEW_TYPE_VIEW
 
+    override fun areItemsTheSame(other: Pageable) = this == (other as? Issue ?: false)
+
     fun getRepoFullNameFromUrl(): String {
         if (repoUrl.isEmpty()) return ""
         val split = repoUrl.split("/")
@@ -40,5 +42,8 @@ data class Label(
     val color: String = "",
     val default: Boolean = false
 ) : Pageable {
+
     override fun getViewType() = VIEW_TYPE_VIEW
+
+    override fun areItemsTheSame(other: Pageable) = this == (other as? Label ?: false)
 }

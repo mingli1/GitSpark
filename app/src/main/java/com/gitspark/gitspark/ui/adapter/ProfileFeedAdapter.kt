@@ -3,6 +3,7 @@ package com.gitspark.gitspark.ui.adapter
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
@@ -28,6 +29,7 @@ class ProfileFeedAdapter(
     override fun getViewHolderId() = R.layout.profile_feed_view
 
     override fun setItems(items: List<Pageable>, isLastPage: Boolean) {
+        val result = DiffUtil.calculateDiff(DiffCallback(this.items, items))
         with (this.items) {
             clear()
             spannableCache.clear()
@@ -51,7 +53,7 @@ class ProfileFeedAdapter(
             }
             if (!isLastPage) add(Loading)
         }
-        notifyDataSetChanged()
+        result.dispatchUpdatesTo(this)
     }
 
     override fun bind(item: Pageable, view: View, position: Int) {

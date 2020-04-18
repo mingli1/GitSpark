@@ -60,7 +60,6 @@ class LabelsDialog : FullBottomSheetDialog() {
         viewModel.initLabels(snames!!, sdescs!!, scolors!!)
 
         labels_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        labels_list.setHasFixedSize(true)
         labelsAdapter = LabelsAdapter(viewModel.labels.map { it.name }.toTypedArray(), colorHelper, viewModel)
         labels_list.adapter = labelsAdapter
 

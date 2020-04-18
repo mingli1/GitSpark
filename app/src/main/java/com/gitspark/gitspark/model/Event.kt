@@ -12,5 +12,8 @@ data class Event(
     val public: Boolean = false,
     val createdAt: String = ""
 ) : Pageable {
+
     override fun getViewType() = VIEW_TYPE_VIEW
+
+    override fun areItemsTheSame(other: Pageable) = this == (other as? Event)
 }

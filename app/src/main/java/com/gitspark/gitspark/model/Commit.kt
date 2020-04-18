@@ -14,6 +14,8 @@ data class Commit(
 
     override fun getViewType() = VIEW_TYPE_VIEW
 
+    override fun areItemsTheSame(other: Pageable) = this == (other as? Commit ?: false)
+
     fun getDate() = commit.committer.date
 }
 

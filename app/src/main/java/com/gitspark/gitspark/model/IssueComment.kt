@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.model
 
 import com.gitspark.gitspark.ui.adapter.EventComment
+import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 
 data class IssueComment(
@@ -17,4 +18,6 @@ data class IssueComment(
     override fun getViewType() = VIEW_TYPE_VIEW
 
     override fun createdAt() = createdAt
+
+    override fun areItemsTheSame(other: Pageable) = this == (other as? IssueComment ?: false)
 }

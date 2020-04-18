@@ -43,7 +43,6 @@ abstract class ListFragment<T, S : ListViewModel<T>>(clazz: Class<S>, private va
         paginationListener = PaginationListener(layoutManager, pageSize, swipe_refresh) {
             viewModel.onScrolledToEnd()
         }
-        item_list.setHasFixedSize(true)
         item_list.layoutManager = layoutManager
         item_list.addOnScrollListener(paginationListener)
 

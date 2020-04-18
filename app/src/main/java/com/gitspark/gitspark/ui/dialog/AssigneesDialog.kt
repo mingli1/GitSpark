@@ -54,7 +54,6 @@ class AssigneesDialog : FullBottomSheetDialog() {
         viewModel.initAssignees(assigneesList!!, assigneeAvatarList!!)
 
         assignees_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        assignees_list.setHasFixedSize(true)
         assigneesAdapter = AssigneesAdapter(viewModel.assignees.map { it.login }.toTypedArray(), viewModel)
         assignees_list.adapter = assigneesAdapter
 

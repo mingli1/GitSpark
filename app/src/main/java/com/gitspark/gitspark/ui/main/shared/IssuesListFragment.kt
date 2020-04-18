@@ -73,7 +73,6 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
         super.onActivityCreated(savedInstanceState)
 
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
-        item_list.setHasFixedSize(true)
         item_list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 

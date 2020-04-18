@@ -31,4 +31,27 @@ open class User(
 ) : Pageable {
 
     override fun getViewType() = VIEW_TYPE_VIEW
+
+    override fun areItemsTheSame(other: Pageable): Boolean {
+        val user = other as? User ?: return false
+        return login == user.login &&
+                userId == user.userId &&
+                avatarUrl == user.avatarUrl &&
+                type == user.type &&
+                siteAdmin == user.siteAdmin &&
+                name == user.name &&
+                company == user.company &&
+                location == user.location &&
+                email == user.email &&
+                bio == user.bio &&
+                blogUrl == user.blogUrl &&
+                numPublicRepos == user.numPublicRepos &&
+                numPublicGists == user.numPublicGists &&
+                followers == user.followers &&
+                following == user.following &&
+                createdAt == user.createdAt &&
+                updatedAt == user.updatedAt &&
+                hireable == user.hireable &&
+                contributions == user.contributions
+    }
 }

@@ -52,7 +52,6 @@ class StarsFragment : TabFragment<StarsViewModel>(StarsViewModel::class.java) {
             viewModel.onScrolledToEnd()
         }
 
-        repos_list.setHasFixedSize(true)
         repos_list.layoutManager = layoutManager
         reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel)
         if (repos_list.adapter == null) repos_list.adapter = reposAdapter

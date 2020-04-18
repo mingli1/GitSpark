@@ -40,7 +40,6 @@ class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewMod
             viewModel.onScrolledToEnd()
         }
 
-        feed_list.setHasFixedSize(true)
         feed_list.layoutManager = layoutManager
         profileFeedAdapter = ProfileFeedAdapter(timeHelper, eventHelper)
         if (feed_list.adapter == null) feed_list.adapter = profileFeedAdapter

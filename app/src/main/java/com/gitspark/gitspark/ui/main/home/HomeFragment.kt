@@ -86,12 +86,10 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         aaAdapter = HomeFeedAdapter(timeHelper, eventHelper, viewModel, prefsHelper)
 
         recent_events.run {
-            setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, VERTICAL, false)
             if (adapter == null) adapter = raAdapter
         }
         all_events.run {
-            setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, VERTICAL, false)
             if (adapter == null) adapter = aaAdapter
         }

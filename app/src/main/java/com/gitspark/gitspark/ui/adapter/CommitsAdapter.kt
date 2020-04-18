@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.adapter
 
 import android.view.View
+import androidx.recyclerview.widget.DiffUtil
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.loadImage
 import com.gitspark.gitspark.helper.TimeHelper
@@ -27,6 +28,7 @@ class CommitsAdapter(
             super.setItems(items, isLastPage)
             return
         }
+        val result = DiffUtil.calculateDiff(DiffCallback(this.items, items))
         with (this.items) {
             clear()
             if (items.isNotEmpty()) {
@@ -52,7 +54,7 @@ class CommitsAdapter(
             }
             if (!isLastPage) add(Loading)
         }
-        notifyDataSetChanged()
+        result.dispatchUpdatesTo(this)
     }
 
     override fun bind(item: Pageable, view: View, position: Int) {

@@ -57,7 +57,6 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
         viewModel.loadRepo((parentFragment as RepoDataCallback).getData())
         readme_view.addStyleSheet(Github())
 
-        language_breakdown.setHasFixedSize(true)
         language_breakdown.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         languageAdapter = LanguageAdapter(colorHelper)
         if (language_breakdown.adapter == null) language_breakdown.adapter = languageAdapter

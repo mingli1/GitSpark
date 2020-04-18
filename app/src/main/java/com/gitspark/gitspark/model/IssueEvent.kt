@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.model
 
 import com.gitspark.gitspark.ui.adapter.EventComment
+import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_ISSUE_EVENT
 
 data class IssueEvent(
@@ -20,6 +21,8 @@ data class IssueEvent(
     override fun getViewType() = VIEW_TYPE_ISSUE_EVENT
 
     override fun createdAt() = createdAt
+
+    override fun areItemsTheSame(other: Pageable) = this == (other as? IssueEvent ?: false)
 }
 
 data class DismissedReview(

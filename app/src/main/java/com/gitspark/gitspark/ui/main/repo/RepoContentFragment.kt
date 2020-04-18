@@ -36,7 +36,6 @@ class RepoContentFragment : BaseFragment<RepoContentViewModel>(RepoContentViewMo
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        dir_list.setHasFixedSize(true)
         dir_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         repoContentAdapter = RepoContentAdapter(viewModel)
         if (dir_list.adapter == null) dir_list.adapter = repoContentAdapter

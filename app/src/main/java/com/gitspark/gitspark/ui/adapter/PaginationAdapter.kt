@@ -2,6 +2,7 @@ package com.gitspark.gitspark.ui.adapter
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.inflate
@@ -33,15 +34,31 @@ abstract class PaginationAdapter : RecyclerView.Adapter<PaginationAdapter.ViewHo
     abstract fun bind(item: Pageable, view: View, position: Int)
 
     open fun setItems(items: List<Pageable>, isLastPage: Boolean) {
+        val result = DiffUtil.calculateDiff(DiffCallback(this.items, items))
         with (this.items) {
             clear()
             addAll(items)
             if (!isLastPage) add(Loading)
         }
-        notifyDataSetChanged()
+        result.dispatchUpdatesTo(this)
     }
 
     inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(item: Pageable, position: Int) = bind(item, view, position)
+    }
+
+    inner class DiffCallback(
+        private val old: List<Pageable>,
+        private val new: List<Pageable>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize() = old.size
+
+        override fun getNewListSize() = new.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+            old[oldItemPosition].areItemsTheSame(new[newItemPosition])
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = true
     }
 }

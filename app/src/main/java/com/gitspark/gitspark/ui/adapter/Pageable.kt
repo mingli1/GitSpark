@@ -8,4 +8,6 @@ const val VIEW_TYPE_ISSUE_EVENT = 3
 interface Pageable {
 
     fun getViewType(): Int
+
+    fun areItemsTheSame(other: Pageable): Boolean
 }

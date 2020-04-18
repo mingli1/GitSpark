@@ -12,4 +12,6 @@ data class File(
 ) : Pageable {
 
     override fun getViewType() = VIEW_TYPE_VIEW
+
+    override fun areItemsTheSame(other: Pageable) = this == (other as? File ?: false)
 }

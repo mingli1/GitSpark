@@ -57,7 +57,6 @@ class OverviewFragment : TabFragment<OverviewViewModel>(OverviewViewModel::class
 
         reposAdapter = ReposAdapter(colorHelper, timeHelper, viewModel, simple = true)
 
-        pinned_repos.setHasFixedSize(true)
         pinned_repos.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         if (pinned_repos.adapter == null) pinned_repos.adapter = reposAdapter
 

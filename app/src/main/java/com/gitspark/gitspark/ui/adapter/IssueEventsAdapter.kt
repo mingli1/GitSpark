@@ -155,37 +155,4 @@ class IssueEventsAdapter(
             }
         }
     }
-
-    inner class DiffCallback(
-        private val old: List<Pageable>,
-        private val new: List<Pageable>
-    ) : DiffUtil.Callback() {
-
-        override fun getOldListSize() = old.size
-
-        override fun getNewListSize() = new.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val o = old[oldItemPosition]
-            val n = new[newItemPosition]
-            if (o is IssueComment && n is IssueComment && o.id == n.id) return true
-            if (o is IssueEvent && n is IssueEvent && o.id == n.id) return true
-            return false
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val o = old[oldItemPosition]
-            val n = new[newItemPosition]
-            if (o is IssueComment && n is IssueComment && o.body == n.body) return true
-            if (o is IssueEvent && n is IssueEvent && o.event == n.event) return true
-            return false
-        }
-
-        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-            val o = old[oldItemPosition]
-            val n = new[newItemPosition]
-            if (o is IssueComment && n is IssueComment && o.body != n.body) return n.body
-            return null
-        }
-    }
 }

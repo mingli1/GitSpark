@@ -76,15 +76,11 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         issuesAdapter = IssuesAdapter(timeHelper, colorHelper, viewModel, true)
 
         recent_searches.run {
-            setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, VERTICAL, false)
             if (adapter == null) adapter = searchesAdapter
         }
 
-        search_results.run {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        }
+        search_results.layoutManager = LinearLayoutManager(context, VERTICAL, false)
 
         viewModel.retrieveRecentSearches()
         setUpListeners()
