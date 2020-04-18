@@ -3,9 +3,9 @@
     <color name="colorPrimary">@color/colorWhite</color>
     <color name="colorPrimaryLight">#8E99F3</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorPrimaryCopy">#5C6BC0</color>
-    <color name="colorPrimaryDarkCopy">#4467CF</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimaryCopy">@color/colorPrimaryLight</color>
+    <color name="colorPrimaryDarkCopy">@color/colorPrimaryLight</color>
+    <color name="colorAccent">#BF1B57</color>
     <color name="colorAccentDark">#B21750</color>
     <color name="colorProgressBackground">#00000000</color>
     <color name="colorBottomNav">#DDDDDD</color>
@@ -29,4 +29,5 @@
     <color name="colorHomeDrawerHeader">@color/colorPrimary</color>
     <color name="colorHomeDrawerText">#B0B0B0</color>
     <color name="colorBottomNavUnselected">#363636</color>
+    <color name="colorSearchFilterEdit">@color/colorDarkGray</color>
 </resources>

@@ -55,12 +55,14 @@
             android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical">
+            android:scrollbars="vertical"
+            android:background="@color/colorWhiteBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/colorWhiteBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -102,7 +104,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/colorLightGray"/>
+                    android:background="@color/colorWhiteDark"/>
 
                 <TextView
                     android:id="@+id/recent_searches_message"

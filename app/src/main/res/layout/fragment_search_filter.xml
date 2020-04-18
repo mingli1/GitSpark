@@ -31,13 +31,13 @@
                     android:imeOptions="actionNone"
                     android:singleLine="true"
                     android:hint="@string/search_bar_hint"
-                    android:textColorHint="@color/colorPrimaryLight"
-                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorSearchFilterEdit"
+                    android:textColor="#FFFFFF"
                     android:textCursorDrawable="@null"
-                    android:backgroundTint="@color/colorPrimaryLight"
+                    android:backgroundTint="@color/colorSearchFilterEdit"
                     android:drawableStart="@drawable/ic_search"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@color/colorPrimaryLight"/>
+                    android:drawableTint="@color/colorSearchFilterEdit"/>
 
                 <ImageButton
                     android:id="@+id/search_bar_clear_button"

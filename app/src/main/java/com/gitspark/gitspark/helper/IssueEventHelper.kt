@@ -137,7 +137,7 @@ class IssueEventHelper @Inject constructor(
         imageView.drawable.setColor(when (event.event) {
             CLOSED_EVENT -> context.getColor(R.color.colorError)
             REOPENED_EVENT -> context.getColor(R.color.colorSuccess)
-            else -> context.getColor(R.color.colorPrimary)
+            else -> context.getColor(R.color.colorPrimaryCopy)
         })
     }
 }

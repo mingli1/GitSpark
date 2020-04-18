@@ -29,4 +29,5 @@
     <color name="colorHomeDrawerHeader">@color/colorPrimary</color>
     <color name="colorHomeDrawerText">@color/colorWhiteDark</color>
     <color name="colorBottomNavUnselected">@color/colorLightGray</color>
+    <color name="colorSearchFilterEdit">@color/colorPrimaryLight</color>
 </resources>

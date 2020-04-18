@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
             app:title="@string/edit_profile_title"
-            app:titleTextColor="@color/colorWhite"/>
+            app:titleTextColor="@color/colorToolbarText"/>
         
     </com.google.android.material.appbar.AppBarLayout>
     

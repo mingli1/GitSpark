@@ -8,7 +8,8 @@
     android:layout_height="wrap_content"
     android:focusable="true"
     android:clickable="true"
-    android:background="?attr/selectableItemBackground">
+    android:background="@color/colorWhite"
+    android:foreground="?attr/selectableItemBackground">
     
     <ImageView
         android:id="@+id/check_mark"
