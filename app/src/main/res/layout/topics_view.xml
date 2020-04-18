@@ -13,12 +13,13 @@
         android:id="@+id/topic_name_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorTopicsBackground"
-        style="@style/TopicsStyle"
+        android:background="@color/colorPrimaryLight"
+        style="@style/Body.Small.Bold"
+        android:textColor="@color/colorWhite"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         tools:text="android"/>
 
 </androidx.cardview.widget.CardView>

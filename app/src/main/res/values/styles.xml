@@ -110,9 +110,4 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/colorDarkerGray</item>
     </style>
-    
-    <style name="TopicsStyle" parent="LabelStyle">
-        <item name="android:textColor">@color/colorTopicsText</item>
-    </style>
-
 </resources>
