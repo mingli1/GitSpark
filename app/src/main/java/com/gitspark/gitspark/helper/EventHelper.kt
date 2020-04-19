@@ -20,8 +20,7 @@ private const val PULL_REQUEST_REVIEW_COMMENT_EVENT = "PullRequestReviewCommentE
 private const val PUSH_EVENT = "PushEvent"
 private const val WATCH_EVENT = "WatchEvent"
 
-@Singleton
-class EventHelper @Inject constructor(private val context: Context) {
+class EventHelper(private val context: Context) {
 
     fun getTitle(event: Event, received: Boolean = false): SpannableStringBuilder {
         val builder = SpannableStringBuilder()

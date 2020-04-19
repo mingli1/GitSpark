@@ -13,8 +13,6 @@ import com.gitspark.gitspark.extension.setColor
 import com.gitspark.gitspark.model.IssueEvent
 import com.gitspark.gitspark.ui.custom.RoundedBackgroundSpan
 import org.threeten.bp.Instant
-import javax.inject.Inject
-import javax.inject.Singleton
 
 private const val ASSIGNED_EVENT = "assigned"
 private const val CLOSED_EVENT = "closed"
@@ -28,8 +26,7 @@ private const val UNLABELED_EVENT = "unlabeled"
 
 private const val LABEL_CORNER_RADIUS = 8f
 
-@Singleton
-class IssueEventHelper @Inject constructor(
+class IssueEventHelper(
     private val context: Context,
     private val colorHelper: ColorHelper,
     private val timeHelper: TimeHelper

@@ -23,7 +23,7 @@ import javax.inject.Inject
 class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewModel::class.java) {
 
     @Inject lateinit var timeHelper: TimeHelper
-    @Inject lateinit var eventHelper: EventHelper
+    private lateinit var eventHelper: EventHelper
 
     private lateinit var profileFeedAdapter: ProfileFeedAdapter
     private lateinit var paginationListener: PaginationListener
@@ -34,6 +34,7 @@ class ProfileFeedFragment : TabFragment<ProfileFeedViewModel>(ProfileFeedViewMod
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        eventHelper = EventHelper(context!!)
 
         val layoutManager = LinearLayoutManager(context, VERTICAL, false)
         paginationListener = PaginationListener(layoutManager, 30, swipe_refresh) {

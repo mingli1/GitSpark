@@ -40,12 +40,12 @@ import javax.inject.Inject
 class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), ConfirmDialogCallback {
 
     @Inject lateinit var timeHelper: TimeHelper
-    @Inject lateinit var eventHelper: EventHelper
     @Inject lateinit var prefsHelper: PreferencesHelper
 
     private lateinit var raAdapter: HomeFeedAdapter
     private lateinit var aaAdapter: HomeFeedAdapter
     private lateinit var paginationListener: NestedPaginationListener
+    private lateinit var eventHelper: EventHelper
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
@@ -66,6 +66,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        eventHelper = EventHelper(context!!)
 
         actionBarDrawerToggle = ActionBarDrawerToggle(
             activity,

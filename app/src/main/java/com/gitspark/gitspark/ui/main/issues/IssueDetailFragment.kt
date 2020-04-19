@@ -44,7 +44,6 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var colorHelper: ColorHelper
-    @Inject lateinit var eventHelper: IssueEventHelper
     @Inject lateinit var timeHelper: TimeHelper
     @Inject lateinit var keyboardHelper: KeyboardHelper
 
@@ -52,6 +51,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     private lateinit var issueEventsAdapter: IssueEventsAdapter
     private lateinit var commentMenu: PopupMenu
     private var menu: Menu? = null
+    private lateinit var eventHelper: IssueEventHelper
     private lateinit var darkModeHelper: DarkModeHelper
 
     private val sharedViewModel by lazy {
@@ -82,6 +82,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         darkModeHelper = DarkModeHelper(context!!)
+        eventHelper = IssueEventHelper(context!!, colorHelper, timeHelper)
 
         commentMenu = PopupMenu(context!!, comment_options).apply {
             inflate(R.menu.issue_comment_menu)

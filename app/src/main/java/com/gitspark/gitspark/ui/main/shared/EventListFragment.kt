@@ -19,12 +19,13 @@ const val BUNDLE_EVENT_LIST_TYPE = "BUNDLE_EVENT_LIST_TYPE"
 class EventListFragment : ListFragment<Event, EventListViewModel>(EventListViewModel::class.java, 30) {
 
     @Inject lateinit var timeHelper: TimeHelper
-    @Inject lateinit var eventHelper: EventHelper
     @Inject lateinit var prefsHelper: PreferencesHelper
     private lateinit var homeFeedAdapter: HomeFeedAdapter
+    private lateinit var eventHelper: EventHelper
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        eventHelper = EventHelper(context!!)
 
         homeFeedAdapter = HomeFeedAdapter(timeHelper, eventHelper, viewModel, prefsHelper)
         if (item_list.adapter == null) item_list.adapter = homeFeedAdapter
