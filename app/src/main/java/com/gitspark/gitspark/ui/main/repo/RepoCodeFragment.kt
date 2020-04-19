@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class RepoCodeFragment : Fragment() {
 
-    @Inject lateinit var darkModeHelper: DarkModeHelper
+    private lateinit var darkModeHelper: DarkModeHelper
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -49,6 +49,7 @@ class RepoCodeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        darkModeHelper = DarkModeHelper(context!!)
 
         val content = arguments?.getString(BUNDLE_FILE_CONTENT) ?: ""
 

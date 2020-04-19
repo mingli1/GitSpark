@@ -9,12 +9,16 @@ import androidx.databinding.DataBindingUtil
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.databinding.FragmentSettingsBinding
 import com.gitspark.gitspark.extension.observe
+import com.gitspark.gitspark.helper.DarkModeConfig
+import com.gitspark.gitspark.helper.DarkModeHelper
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.dialog.SelectDialog
 import com.gitspark.gitspark.ui.dialog.SelectDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
 
 class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::class.java), SelectDialogCallback {
+
+    private lateinit var darkModeHelper: DarkModeHelper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSettingsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false)
@@ -38,10 +42,13 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.currentTheme.value = "System"
+        darkModeHelper = DarkModeHelper(context!!)
     }
 
-    override fun onSelected(item: String) = viewModel.onThemeSelected(item)
+    override fun onSelected(item: String) {
+        viewModel.onThemeSelected(item)
+        darkModeHelper.setDarkMode(DarkModeConfig.valueOf(item))
+    }
 
     override fun observeViewModel() {
         viewModel.showThemeSelector.observe(viewLifecycleOwner) {

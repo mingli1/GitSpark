@@ -43,7 +43,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
     ConfirmDialogCallback {
 
     @Inject lateinit var colorHelper: LanguageColorHelper
-    @Inject lateinit var darkModeHelper: DarkModeHelper
+    private lateinit var darkModeHelper: DarkModeHelper
     private lateinit var languageAdapter: LanguageAdapter
     private var rmUrl = ""
 
@@ -57,6 +57,7 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        darkModeHelper = DarkModeHelper(context!!)
         viewModel.loadRepo((parentFragment as RepoDataCallback).getData())
         readme_view.addStyleSheet(if (darkModeHelper.isDarkMode()) DarkMarkdownStyle() else LightMarkdownStyle())
 

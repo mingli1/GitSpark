@@ -47,12 +47,12 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     @Inject lateinit var eventHelper: IssueEventHelper
     @Inject lateinit var timeHelper: TimeHelper
     @Inject lateinit var keyboardHelper: KeyboardHelper
-    @Inject lateinit var darkModeHelper: DarkModeHelper
 
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var issueEventsAdapter: IssueEventsAdapter
     private lateinit var commentMenu: PopupMenu
     private var menu: Menu? = null
+    private lateinit var darkModeHelper: DarkModeHelper
 
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[IssueEditSharedViewModel::class.java]
@@ -81,6 +81,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        darkModeHelper = DarkModeHelper(context!!)
 
         commentMenu = PopupMenu(context!!, comment_options).apply {
             inflate(R.menu.issue_comment_menu)
