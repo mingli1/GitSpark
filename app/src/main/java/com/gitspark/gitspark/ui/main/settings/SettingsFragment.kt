@@ -52,8 +52,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
 
     override fun observeViewModel() {
         viewModel.showThemeSelector.observe(viewLifecycleOwner) {
-            SelectDialog.newInstance("Select Theme", arrayOf("Light", "Dark", "System"), "Light")
-                .show(childFragmentManager, null)
+            SelectDialog.newInstance(
+                "Select Theme",
+                arrayOf("Light", "Dark", "System"),
+                "Light",
+                "Set Theme"
+            ).show(childFragmentManager, null)
         }
     }
 }
