@@ -60,10 +60,10 @@
         style="@style/Body.Small.Bold"
         android:textColor="@color/colorDarkerGray"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
         android:singleLine="true"
-        app:layout_constraintTop_toBottomOf="@id/content_field"
+        app:layout_constraintTop_toTopOf="@id/profile_icon"
         app:layout_constraintStart_toEndOf="@id/profile_icon"
+        app:layout_constraintBottom_toBottomOf="@id/profile_icon"
         tools:text="mingli1"/>
     
     <TextView
@@ -72,10 +72,10 @@
         android:layout_height="wrap_content"
         style="@style/Body.Small"
         android:textColor="@color/colorDarkerGray"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/content_field"
+        app:layout_constraintTop_toTopOf="@id/username_field"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/username_field"
         tools:text="3 days ago"/>
     
     <View

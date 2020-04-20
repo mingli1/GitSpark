@@ -41,38 +41,38 @@
     
     <style name="HeaderBold">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/colorBlack</item>
     </style>
     
     <style name="HeaderBold.Large" parent="HeaderBold">
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">28sp</item>
     </style>
     
     <style name="HeaderBold.Small" parent="HeaderBold">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
     
     <style name="HeaderSubtext">
         <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
     </style>
     
     <style name="HeaderBody">
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorBlack</item>
     </style>
     
     <style name="Body">
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorBlack</item>
     </style>
     
     <style name="Body.Small" parent="Body">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
     
     <style name="Body.Small.Bold" parent="Body.Small">
@@ -83,12 +83,16 @@
         <item name="android:textColor">@color/colorDarkerGray</item>
     </style>
     
+    <style name="BodyLight.Large" parent="BodyLight">
+        <item name="android:textSize">16sp</item>
+    </style>
+    
     <style name="BodyLight.Small" parent="BodyLight">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
     
     <style name="BodyLight.ExtraSmall" parent="BodyLight">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">10sp</item>
     </style>
     
     <style name="BodyLight.Bold" parent="BodyLight">
@@ -100,7 +104,7 @@
     </style>
     
     <style name="BodyLarge" parent="Body">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
     
     <style name="Footer">

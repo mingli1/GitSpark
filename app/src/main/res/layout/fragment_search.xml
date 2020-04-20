@@ -27,7 +27,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="start|center_vertical"
-                style="@style/BodyLight"
+                style="@style/BodyLight.Large"
                 android:textAllCaps="false"
                 android:text="@string/search_title_text"
                 android:singleLine="true"
