@@ -11,10 +11,10 @@
     <color name="colorBottomNav">#DDDDDD</color>
     <color name="colorWhite">#171717</color>
     <color name="colorBlack">#F9F9F9</color>
-    <color name="colorWhiteDark">#2E2E2E</color>
+    <color name="colorWhiteDark">#404040</color>
     <color name="colorWhiteBackground">#000000</color>
     <color name="colorAlmostWhite">#1C1C1C</color>
-    <color name="colorLightGray">#B5B5B5</color>
+    <color name="colorLightGray">@color/colorWhiteDark</color>
     <color name="colorDarkGray">#878787</color>
     <color name="colorDarkerGray">@color/colorDarkGray</color>
     <color name="colorTopicsBackground">@color/colorWhiteDark</color>
