@@ -5,6 +5,7 @@ import com.gitspark.gitspark.ui.dialog.LabelsDialog
 import com.gitspark.gitspark.ui.main.home.HomeFragment
 import com.gitspark.gitspark.ui.main.issues.IssueDetailFragment
 import com.gitspark.gitspark.ui.main.issues.IssueEditFragment
+import com.gitspark.gitspark.ui.main.issues.pullrequest.PullRequestDetailFragment
 import com.gitspark.gitspark.ui.main.profile.*
 import com.gitspark.gitspark.ui.main.repo.RepoCodeFragment
 import com.gitspark.gitspark.ui.main.repo.RepoContentFragment
@@ -88,4 +89,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesSettingsFragment(): SettingsFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesPullRequestDetailFragment(): PullRequestDetailFragment
 }

@@ -1,4 +1,4 @@
-package com.gitspark.gitspark.ui.main.issues
+package com.gitspark.gitspark.ui.main.issues.pullrequest
 
 import android.os.Bundle
 import android.view.LayoutInflater

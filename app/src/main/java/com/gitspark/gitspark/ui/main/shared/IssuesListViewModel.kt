@@ -33,7 +33,7 @@ class IssuesListViewModel @Inject constructor(
 
     val viewState = MutableLiveData<IssuesListViewState>()
     val pageViewState = MutableLiveData<PaginatedViewState<Issue>>()
-    val navigateToIssueDetail = SingleLiveEvent<Pair<String, Issue>>()
+    val navigateToIssueDetail = SingleLiveEvent<Triple<String, Issue, Boolean>>()
     val createNewIssueAction = SingleLiveAction()
     private var started = false
     private var page = 1
@@ -75,7 +75,11 @@ class IssuesListViewModel @Inject constructor(
     }
 
     override fun onIssueClicked(issue: Issue, isPullRequest: Boolean) {
-        navigateToIssueDetail.value = Pair("${issue.getRepoFullNameFromUrl()} #${issue.number}", issue)
+        navigateToIssueDetail.value = Triple(
+            "${issue.getRepoFullNameFromUrl()} #${issue.number}",
+            issue,
+            isPullRequest
+        )
     }
 
     private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {

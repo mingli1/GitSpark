@@ -174,11 +174,14 @@ class SearchFragment : BaseFragment<SearchViewModel>(SearchViewModel::class.java
         findNavController().navigate(R.id.action_search_to_repo_detail, data)
     }
 
-    private fun navigateToIssueDetailFragment(pair: Pair<String, Issue>) {
+    private fun navigateToIssueDetailFragment(triple: Triple<String, Issue, Boolean>) {
         val bundle = Bundle().apply {
-            putString(BUNDLE_TITLE, pair.first)
-            putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(pair.second))
+            putString(BUNDLE_TITLE, triple.first)
+            putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(triple.second))
         }
-        findNavController().navigate(R.id.action_search_to_issue_detail, bundle)
+        findNavController().navigate(
+            if (triple.third) R.id.action_search_to_pr_detail else R.id.action_search_to_issue_detail,
+            bundle
+        )
     }
 }

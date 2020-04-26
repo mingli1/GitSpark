@@ -49,5 +49,5 @@
         android:id="@+id/issue_edit_fragment"
         android:name="com.gitspark.gitspark.ui.main.issues.IssueEditFragment"
         android:label="IssueEditFragment"/>
-
+    
 </navigation>

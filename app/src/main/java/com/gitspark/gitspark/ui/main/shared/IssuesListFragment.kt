@@ -143,12 +143,15 @@ class IssuesListFragment : BaseFragment<IssuesListViewModel>(IssuesListViewModel
         add_issue_button.setOnClickListener { viewModel.onAddIssueClicked() }
     }
 
-    private fun navigateToIssueDetailFragment(pair: Pair<String, Issue>) {
+    private fun navigateToIssueDetailFragment(triple: Triple<String, Issue, Boolean>) {
         val bundle = Bundle().apply {
-            putString(BUNDLE_TITLE, pair.first)
-            putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(pair.second))
+            putString(BUNDLE_TITLE, triple.first)
+            putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(triple.second))
         }
-        findNavController().navigate(R.id.action_issues_to_issue_detail, bundle)
+        findNavController().navigate(
+            if (triple.third) R.id.action_issues_to_pr_detail else R.id.action_issues_to_issue_detail,
+            bundle
+        )
     }
 
     private fun navigateToIssueEditFragment() {

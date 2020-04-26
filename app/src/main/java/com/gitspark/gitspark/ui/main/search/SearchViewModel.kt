@@ -27,7 +27,7 @@ class SearchViewModel @Inject constructor(
     val navigateToSearchFilter = SingleLiveEvent<SearchCriteria?>()
     val navigateToUserProfile = SingleLiveEvent<String>()
     val navigateToRepoDetail = SingleLiveEvent<Repo>()
-    val navigateToIssueDetail = SingleLiveEvent<Pair<String, Issue>>()
+    val navigateToIssueDetail = SingleLiveEvent<Triple<String, Issue, Boolean>>()
     private var currSearch: SearchCriteria? = null
     private var page = 1
 
@@ -119,7 +119,11 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun onIssueClicked(issue: Issue, isPullRequest: Boolean) {
-        navigateToIssueDetail.value = Pair("${issue.getRepoFullNameFromUrl()} #${issue.number}", issue)
+        navigateToIssueDetail.value = Triple(
+            "${issue.getRepoFullNameFromUrl()} #${issue.number}",
+            issue,
+            isPullRequest
+        )
     }
 
     private fun requestSearch() {

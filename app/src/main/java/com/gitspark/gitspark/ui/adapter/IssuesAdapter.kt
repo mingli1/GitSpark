@@ -27,7 +27,7 @@ class IssuesAdapter(
     override fun bind(item: Pageable, view: View, position: Int) {
         if (item is Issue) {
             with (view) {
-                val isIssue = item.htmlUrl.contains("issue")
+                val isIssue = item.htmlUrl.contains("/issues")
                 icon.setImageResource(if (isIssue) R.drawable.ic_issue else R.drawable.ic_pull_request)
                 icon.drawable.setColor(if (item.state == "open")
                     context.getColor(R.color.colorSuccess) else context.getColor(R.color.colorError))
