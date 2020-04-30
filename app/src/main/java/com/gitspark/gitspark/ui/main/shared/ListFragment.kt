@@ -14,8 +14,11 @@ import com.gitspark.gitspark.ui.adapter.PaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.main.MainActivity
+import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+
+const val BUNDLE_HIDE_TOOLBAR = "BUNDLE_HIDE_TOOLBAR"
 
 abstract class ListFragment<T, S : ListViewModel<T>>(clazz: Class<S>, private val pageSize: Int) : BaseFragment<S>(clazz) {
 
@@ -24,6 +27,9 @@ abstract class ListFragment<T, S : ListViewModel<T>>(clazz: Class<S>, private va
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        val appBarLayout = view.findViewById<AppBarLayout>(R.id.app_bar_layout)
+
+        appBarLayout.isVisible = !(arguments?.containsKey(BUNDLE_HIDE_TOOLBAR) ?: false)
 
         with (activity as MainActivity) {
             setSupportActionBar(toolbar)

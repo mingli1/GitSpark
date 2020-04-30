@@ -262,4 +262,8 @@
     <string name="discard_changes_message">Are you sure you want to discard changes?</string>
     <string name="create_issue_title">Creating issue in %1$s</string>
     <string name="settings_title">Settings</string>
+    <string name="changes_text">%1$s changes:</string>
+    <string name="additions_text">+ %1$s</string>
+    <string name="deletions_text">- %1$s</string>
+    <string name="pr_file_empty_text">There were no files changed in this pull request.</string>
 </resources>

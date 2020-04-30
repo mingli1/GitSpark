@@ -21,9 +21,12 @@
     <color name="colorLightBlue">#DEF6FF</color>
     <color name="colorTopicsText">#212FFF</color>
     <color name="colorYellow">#FFD700</color>
+    <color name="colorYellowOrange">#F2BA00</color>
     <color name="colorDrawableDefault">#7F7F7F</color>
     <color name="colorSuccess">#43BD17</color>
     <color name="colorError">#FF2121</color>
+    <color name="colorRed">@color/colorError</color>
+    <color name="colorGreen">@color/colorSuccess</color>
     <color name="colorToolbar">@color/colorPrimary</color>
     <color name="colorToolbarText">@color/colorWhite</color>
     <color name="colorHomeDrawerHeader">@color/colorPrimary</color>

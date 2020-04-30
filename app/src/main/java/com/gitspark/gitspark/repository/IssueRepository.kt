@@ -9,6 +9,7 @@ import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -148,6 +149,21 @@ class IssueRepository @Inject constructor(
                 })
             }
             .onErrorReturn { getFailure("Failed to obtain available labels.") }
+    }
+
+    fun getPullRequestFiles(
+        username: String,
+        repoName: String,
+        pullNumber: Int
+    ): Single<IssueResult<Page<PullRequestFile>>> {
+        return getIssueService()
+            .getPullRequestFiles(username, repoName, pullNumber)
+            .map {
+                getSuccess(it.toModel<PullRequestFile>().apply {
+                    value = it.response.map { file -> file.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain pull request files.") }
     }
 
     private fun getIssueService() =

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -35,6 +36,15 @@ abstract class BaseViewModel : ViewModel() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNext)
+        )
+    }
+
+    protected fun <T> subscribe(single: Single<T>, onSuccess: (T) -> Unit) {
+        subscriptions.add(
+            single
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onSuccess)
         )
     }
 

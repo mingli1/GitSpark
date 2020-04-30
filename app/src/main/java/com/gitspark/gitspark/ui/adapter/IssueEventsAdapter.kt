@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
+import com.gitspark.gitspark.extension.showOptionIcons
 import com.gitspark.gitspark.helper.IssueEventHelper
 import com.gitspark.gitspark.helper.KeyboardHelper
 import com.gitspark.gitspark.helper.TimeHelper
@@ -77,14 +78,7 @@ class IssueEventsAdapter(
                         inflate(R.menu.issue_comment_menu)
                         menu.findItem(R.id.delete).isVisible = writePermission
                         menu.findItem(R.id.edit).isVisible = writePermission
-                        if (menu.javaClass.simpleName == "MenuBuilder") {
-                            try {
-                                menu.javaClass.getDeclaredMethod("setOptionalIconsVisible", Boolean::class.java).run {
-                                    isAccessible = true
-                                    invoke(menu, true)
-                                }
-                            } catch (e: NoSuchMethodException) {}
-                        }
+                        menu.showOptionIcons()
                     }
 
                     comment_options.setOnClickListener { menu.show() }

@@ -89,14 +89,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             menu.findItem(R.id.edit).isVisible = false
             menu.findItem(R.id.copy_link).isVisible = false
             menu.findItem(R.id.delete).isVisible = false
-            if (menu.javaClass.simpleName == "MenuBuilder") {
-                try {
-                    menu.javaClass.getDeclaredMethod("setOptionalIconsVisible", Boolean::class.java).run {
-                        isAccessible = true
-                        invoke(menu, true)
-                    }
-                } catch (e: NoSuchMethodException) {}
-            }
+            menu.showOptionIcons()
         }
 
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
@@ -141,15 +134,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
         inflater.inflate(R.menu.issue_detail_menu, menu)
-
-        if (menu.javaClass.simpleName == "MenuBuilder") {
-            try {
-                menu.javaClass.getDeclaredMethod("setOptionalIconsVisible", Boolean::class.java).run {
-                    isAccessible = true
-                    invoke(menu, true)
-                }
-            } catch (e: NoSuchMethodException) {}
-        }
+        menu.showOptionIcons()
 
         super.onCreateOptionsMenu(menu, inflater)
         viewModel.onMenuCreated()
