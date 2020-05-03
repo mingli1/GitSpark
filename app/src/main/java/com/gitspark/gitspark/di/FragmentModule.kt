@@ -92,4 +92,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributesPullRequestDetailFragment(): PullRequestDetailFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributesFileListFragment(): FileListFragment
 }

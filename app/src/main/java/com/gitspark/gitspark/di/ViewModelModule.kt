@@ -140,6 +140,10 @@ internal abstract class ViewModelModule {
     @ViewModelKey(PullRequestDetailViewModel::class)
     internal abstract fun bindPullRequestDetailViewModel(pullRequestDetailViewModel: PullRequestDetailViewModel): ViewModel
 
+    @Binds @IntoMap
+    @ViewModelKey(FileListViewModel::class)
+    internal abstract fun bindFileListViewModel(fileListViewModel: FileListViewModel): ViewModel
+
     @Binds
     internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
 }

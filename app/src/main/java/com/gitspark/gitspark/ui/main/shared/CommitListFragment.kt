@@ -10,6 +10,8 @@ import com.gitspark.gitspark.ui.base.PaginatedViewState
 import kotlinx.android.synthetic.main.fragment_list.*
 import javax.inject.Inject
 
+const val BUNDLE_COMMIT_LIST_TYPE = "BUNDLE_COMMIT_LIST_TYPE"
+
 class CommitListFragment : ListFragment<Commit, CommitListViewModel>(CommitListViewModel::class.java, COMMITS_PER_PAGE) {
 
     @Inject lateinit var timeHelper: TimeHelper
@@ -21,8 +23,9 @@ class CommitListFragment : ListFragment<Commit, CommitListViewModel>(CommitListV
         commitsAdapter = CommitsAdapter(timeHelper)
         if (item_list.adapter == null) item_list.adapter = commitsAdapter
 
+        val type = arguments?.getSerializable(BUNDLE_COMMIT_LIST_TYPE) as CommitListType? ?: CommitListType.Repo
         val args = arguments?.getString(BUNDLE_ARGUMENTS) ?: ""
-        viewModel.onStart(args)
+        viewModel.onStart(type, args)
     }
 
     override fun updateView(viewState: ListViewState) {

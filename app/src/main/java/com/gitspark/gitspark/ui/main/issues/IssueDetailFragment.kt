@@ -31,6 +31,7 @@ import com.gitspark.gitspark.ui.dialog.SelectDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
+import com.google.android.material.appbar.AppBarLayout
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_issue_detail.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -38,6 +39,7 @@ import kotlinx.android.synthetic.main.issue_comment_view.*
 import javax.inject.Inject
 
 const val BUNDLE_ISSUE = "BUNDLE_ISSUE"
+const val BUNDLE_PULL_REQUEST = "BUNDLE_PULL_REQUEST"
 
 class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewModel::class.java),
     ConfirmDialogCallback, SelectDialogCallback {
@@ -66,6 +68,9 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_issue_detail, container, false)
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        val appBarLayout = view.findViewById<AppBarLayout>(R.id.app_bar_layout)
+
+        appBarLayout.isVisible = !(arguments?.containsKey(BUNDLE_PULL_REQUEST) ?: false)
 
         with (activity as MainActivity) {
             setSupportActionBar(toolbar)
@@ -101,9 +106,11 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
         comment_body.addStyleSheet(if (darkModeHelper.isDarkMode()) DarkMarkdownStyle() else LightMarkdownStyle())
 
+        /*
         issueJsonAdapter.fromJson(arguments?.getString(BUNDLE_ISSUE) ?: "")?.let {
             viewModel.onStart(it)
         }
+         */
 
         setUpListeners()
     }

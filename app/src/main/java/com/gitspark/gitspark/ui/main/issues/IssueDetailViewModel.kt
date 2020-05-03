@@ -69,7 +69,7 @@ class IssueDetailViewModel @Inject constructor(
     }
 
     fun onMenuCreated() {
-        viewState.value = viewState.value?.copy()
+        viewState.value = viewState.value?.copy() ?: IssueDetailViewState()
     }
 
     fun onScrolledToEnd() = updateViewState()

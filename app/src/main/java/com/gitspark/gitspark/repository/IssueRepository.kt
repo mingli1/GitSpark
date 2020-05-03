@@ -151,13 +151,41 @@ class IssueRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain available labels.") }
     }
 
-    fun getPullRequestFiles(
+    fun getPullRequest(
         username: String,
         repoName: String,
         pullNumber: Int
+    ): Single<IssueResult<PullRequest>> {
+        return getIssueService()
+            .getPullRequest(username, repoName, pullNumber)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed to obtain pull request.") }
+    }
+
+    fun getPullRequestCommits(
+        username: String,
+        repoName: String,
+        pullNumber: Int,
+        page: Int
+    ): Single<IssueResult<Page<Commit>>> {
+        return getIssueService()
+            .getPullRequestCommits(username, repoName, pullNumber, page)
+            .map {
+                getSuccess(it.toModel<Commit>().apply {
+                    value = it.response.map { commit -> commit.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain pull request files.") }
+    }
+
+    fun getPullRequestFiles(
+        username: String,
+        repoName: String,
+        pullNumber: Int,
+        page: Int
     ): Single<IssueResult<Page<PullRequestFile>>> {
         return getIssueService()
-            .getPullRequestFiles(username, repoName, pullNumber)
+            .getPullRequestFiles(username, repoName, pullNumber, page)
             .map {
                 getSuccess(it.toModel<PullRequestFile>().apply {
                     value = it.response.map { file -> file.toModel() }

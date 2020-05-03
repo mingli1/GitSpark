@@ -8,7 +8,17 @@
     android:focusable="true"
     android:clickable="true"
     android:background="@color/colorWhite"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    android:layout_marginBottom="8dp">
+    
+    <View
+        android:id="@+id/top_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorWhiteDark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
     
     <TextView
         android:id="@+id/file_name"
@@ -20,10 +30,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:singleLine="true"
-        android:ellipsize="end"
+        android:ellipsize="start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_divider"
         tools:text="gitspark/gitspark/ui/PullRequestDetailFragment.kt"/>
     
     <TextView
@@ -63,16 +73,29 @@
         app:layout_constraintTop_toBottomOf="@id/divider"
         tools:text="31 changes:"/>
     
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/additions_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.35"/>
+    
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/deletions_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6"/>
+    
     <TextView
         android:id="@+id/additions_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/BodyLarge"
         android:textColor="@color/colorGreen"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintStart_toEndOf="@id/changes_field"
+        app:layout_constraintStart_toEndOf="@id/additions_guideline"
         app:layout_constraintTop_toBottomOf="@id/divider"
         tools:text="+ 3,074"/>
     
@@ -82,10 +105,9 @@
         android:layout_height="wrap_content"
         style="@style/BodyLarge"
         android:textColor="@color/colorRed"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintStart_toEndOf="@id/additions_field"
+        app:layout_constraintStart_toEndOf="@id/deletions_guideline"
         app:layout_constraintTop_toBottomOf="@id/divider"
         tools:text="- 1,735"/>
     

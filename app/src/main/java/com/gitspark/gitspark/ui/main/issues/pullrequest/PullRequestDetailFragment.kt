@@ -3,20 +3,35 @@ package com.gitspark.gitspark.ui.main.issues.pullrequest
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
+import androidx.navigation.fragment.findNavController
 import com.gitspark.gitspark.R
+import com.gitspark.gitspark.extension.isVisible
+import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.showOptionIcons
+import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.model.PullRequest
+import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
+import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE
+import com.gitspark.gitspark.ui.main.issues.BUNDLE_PULL_REQUEST
 import com.gitspark.gitspark.ui.main.issues.IssueDetailFragment
-import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
-import com.gitspark.gitspark.ui.main.shared.CommitListFragment
-import com.gitspark.gitspark.ui.main.shared.FileListFragment
+import com.gitspark.gitspark.ui.main.shared.*
+import com.squareup.moshi.JsonAdapter
+import kotlinx.android.synthetic.main.fragment_pr_detail.*
+import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
+import javax.inject.Inject
 
 class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullRequestDetailViewModel::class.java) {
+
+    @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
+    @Inject lateinit var prJsonAdapter: JsonAdapter<PullRequest>
 
     private lateinit var issueDetailFragment: IssueDetailFragment
     private lateinit var commitListFragment: CommitListFragment
     private lateinit var fileListFragment: FileListFragment
+
+    private var args = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,5 +58,50 @@ class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullR
         inflater.inflate(R.menu.issue_detail_menu, menu)
         menu.showOptionIcons()
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        issueJsonAdapter.fromJson(arguments?.getString(BUNDLE_ISSUE) ?: "")?.let {
+            val split = it.getRepoFullNameFromUrl().split("/")
+            args = "${split[0]}/${split[1]}/${it.number}"
+            viewModel.fetchPullRequestData(split[0], split[1], it.number)
+        }
+    }
+
+    override fun observeViewModel() {
+        viewModel.loading.observe(viewLifecycleOwner) { loading_indicator.isVisible = it }
+        viewModel.prDataRetrieved.observe(viewLifecycleOwner) { setUpFragments(it) }
+        viewModel.exitFragment.observe(viewLifecycleOwner) { findNavController().navigateUp() }
+    }
+
+    private fun setUpFragments(data: PullRequest) {
+        issueDetailFragment = IssueDetailFragment().apply {
+            arguments = Bundle().apply {
+                putString(BUNDLE_PULL_REQUEST, prJsonAdapter.toJson(data))
+            }
+        }
+        commitListFragment = CommitListFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(BUNDLE_COMMIT_LIST_TYPE, CommitListType.PullRequest)
+                putString(BUNDLE_ARGUMENTS, args)
+                putString(BUNDLE_HIDE_TOOLBAR, "")
+            }
+        }
+        fileListFragment = FileListFragment().apply {
+            arguments = Bundle().apply {
+                putString(BUNDLE_ARGUMENTS, args)
+                putString(BUNDLE_HIDE_TOOLBAR, "")
+            }
+        }
+
+        val adapter = ViewPagerAdapter(childFragmentManager).apply {
+            addFragment(issueDetailFragment, getString(R.string.overview_title))
+            addFragment(commitListFragment, getString(R.string.commits_title))
+            addFragment(fileListFragment, getString(R.string.files_title))
+        }
+        viewpager.adapter = adapter
+        tabs.setupWithViewPager(viewpager)
     }
 }

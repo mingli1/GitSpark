@@ -106,6 +106,22 @@ interface IssueService {
         @Query("per_page") perPage: Int = ASSIGNEES_PER_PAGE
     ): Observable<ApiPage<ApiLabel>>
 
+    @GET("repos/{owner}/{repo}/pulls/{pull_number}")
+    fun getPullRequest(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("pull_number") pullNumber: Int
+    ): Single<ApiPullRequest>
+
+    @GET("repos/{owner}/{repo}/pulls/{pull_number}/commits")
+    fun getPullRequestCommits(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("pull_number") pullNumber: Int,
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = COMMITS_PER_PAGE
+    ): Single<ApiPage<ApiCommit>>
+
     @GET("repos/{owner}/{repo}/pulls/{pull_number}/files")
     fun getPullRequestFiles(
         @Path("owner") owner: String,

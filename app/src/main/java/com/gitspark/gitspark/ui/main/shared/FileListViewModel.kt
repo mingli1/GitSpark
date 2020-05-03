@@ -17,7 +17,7 @@ class FileListViewModel @Inject constructor(
 
     override fun requestData() {
         val args = this.args.split("/")
-        subscribe(issueRepository.getPullRequestFiles(args[0], args[1], args[2].toInt())) {
+        subscribe(issueRepository.getPullRequestFiles(args[0], args[1], args[2].toInt(), page)) {
             when (it) {
                 is IssueResult.Success -> onDataSuccess(it.value.value, it.value.last)
                 is IssueResult.Failure -> onDataFailure(it.error)
