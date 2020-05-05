@@ -14,6 +14,7 @@ import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE
+import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE_ARGS
 import com.gitspark.gitspark.ui.main.issues.BUNDLE_PULL_REQUEST
 import com.gitspark.gitspark.ui.main.issues.IssueDetailFragment
 import com.gitspark.gitspark.ui.main.shared.*
@@ -22,10 +23,13 @@ import kotlinx.android.synthetic.main.fragment_pr_detail.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
+private const val COMMITS_TAB_INDEX = 1
+private const val FILES_TAB_INDEX = 2
+
 class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullRequestDetailViewModel::class.java) {
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
-    @Inject lateinit var prJsonAdapter: JsonAdapter<PullRequest>
+    @Inject lateinit var pullRequestJsonAdapter: JsonAdapter<PullRequest>
 
     private lateinit var issueDetailFragment: IssueDetailFragment
     private lateinit var commitListFragment: CommitListFragment
@@ -79,7 +83,8 @@ class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullR
     private fun setUpFragments(data: PullRequest) {
         issueDetailFragment = IssueDetailFragment().apply {
             arguments = Bundle().apply {
-                putString(BUNDLE_PULL_REQUEST, prJsonAdapter.toJson(data))
+                putString(BUNDLE_PULL_REQUEST, pullRequestJsonAdapter.toJson(data))
+                putString(BUNDLE_ISSUE_ARGS, args)
             }
         }
         commitListFragment = CommitListFragment().apply {
@@ -98,8 +103,8 @@ class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullR
 
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             addFragment(issueDetailFragment, getString(R.string.overview_title))
-            addFragment(commitListFragment, getString(R.string.commits_title))
-            addFragment(fileListFragment, getString(R.string.files_title))
+            addFragment(commitListFragment, getString(R.string.commits_title, data.numCommits))
+            addFragment(fileListFragment, getString(R.string.files_title, data.numFilesChanged))
         }
         viewpager.adapter = adapter
         tabs.setupWithViewPager(viewpager)

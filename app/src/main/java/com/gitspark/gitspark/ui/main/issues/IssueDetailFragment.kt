@@ -19,6 +19,7 @@ import com.gitspark.gitspark.helper.*
 import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.PERMISSION_ADMIN
 import com.gitspark.gitspark.model.PERMISSION_WRITE
+import com.gitspark.gitspark.model.PullRequest
 import com.gitspark.gitspark.ui.adapter.IssueEventsAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
@@ -40,11 +41,13 @@ import javax.inject.Inject
 
 const val BUNDLE_ISSUE = "BUNDLE_ISSUE"
 const val BUNDLE_PULL_REQUEST = "BUNDLE_PULL_REQUEST"
+const val BUNDLE_ISSUE_ARGS = "BUNDLE_ISSUE_ARGS"
 
 class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewModel::class.java),
     ConfirmDialogCallback, SelectDialogCallback {
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
+    @Inject lateinit var prJsonAdapter: JsonAdapter<PullRequest>
     @Inject lateinit var colorHelper: ColorHelper
     @Inject lateinit var timeHelper: TimeHelper
     @Inject lateinit var keyboardHelper: KeyboardHelper
@@ -106,11 +109,17 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
         comment_body.addStyleSheet(if (darkModeHelper.isDarkMode()) DarkMarkdownStyle() else LightMarkdownStyle())
 
-        /*
-        issueJsonAdapter.fromJson(arguments?.getString(BUNDLE_ISSUE) ?: "")?.let {
-            viewModel.onStart(it)
+        arguments?.run {
+            if (containsKey(BUNDLE_PULL_REQUEST)) {
+                prJsonAdapter.fromJson(getString(BUNDLE_PULL_REQUEST) ?: "")?.let {
+                    viewModel.onStart(it, getString(BUNDLE_ISSUE_ARGS) ?: "")
+                }
+            } else {
+                issueJsonAdapter.fromJson(arguments?.getString(BUNDLE_ISSUE) ?: "")?.let {
+                    viewModel.onStart(it)
+                }
+            }
         }
-         */
 
         setUpListeners()
     }
@@ -210,12 +219,40 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
             issue_title_field.text = issueTitle
             issue_desc_field.text = issueDesc
-            issue_desc_field.compoundDrawablesRelative[0].setColor(
-                if (isOpen) resources.getColor(R.color.colorSuccess, null) else
-                    resources.getColor(R.color.colorError, null)
-            )
             num_comments_field.isVisible = numComments > 0
             num_comments_field.text = withSuffix(numComments)
+
+            additions_field.isVisible = isPullRequest
+            deletions_field.isVisible = isPullRequest
+            additions_field.text = getString(R.string.additions_text, numAdditions.formatLarge())
+            deletions_field.text = getString(R.string.deletions_text, numDeletions.formatLarge())
+
+            head_branch_field.isVisible = isPullRequest
+            branch_arrow.isVisible = isPullRequest
+            base_branch_field.isVisible = isPullRequest
+            head_branch_name_field.text = headBranch
+            base_branch_name_field.text = baseBranch
+
+            when {
+                isMerged -> {
+                    status_field_text.setBackgroundColor(resources.getColor(R.color.colorPurple, null))
+                    status_field_text.text = getString(R.string.issue_merged_state)
+                    status_field_text.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        resources.getDrawable(R.drawable.ic_merge, null), null, null, null
+                    )
+                }
+                else -> {
+                    status_field_text.setBackgroundColor(if (isOpen)
+                        resources.getColor(R.color.colorGreen, null)
+                    else
+                        resources.getColor(R.color.colorRed, null)
+                    )
+                    status_field_text.text = if (isOpen) getString(R.string.issue_open_state) else getString(R.string.issue_closed_state)
+                    status_field_text.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        resources.getDrawable(R.drawable.ic_pull_request, null), null, null, null
+                    )
+                }
+            }
 
             labels_label.isVisible = labels.isNotEmpty()
             labels_container.isVisible = labels.isNotEmpty()

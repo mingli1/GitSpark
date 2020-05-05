@@ -8,6 +8,7 @@ import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.IssueComment
+import com.gitspark.gitspark.model.PullRequest
 import com.gitspark.gitspark.model.isLastPage
 import com.gitspark.gitspark.repository.IssueRepository
 import com.gitspark.gitspark.repository.IssueResult
@@ -42,12 +43,14 @@ class IssueDetailViewModel @Inject constructor(
     private var username = ""
     private var repoName = ""
     private var issueNum = 0
+    private var isPullRequest = false
 
     private var page = 1
     private var commentsFinished = false
     private var eventsFinished = false
     private var last = -1
     private var issue = Issue()
+    private var pullRequest = PullRequest()
 
     private var deletedCommentId = 0L
 
@@ -60,6 +63,23 @@ class IssueDetailViewModel @Inject constructor(
 
             requestPermissionLevel()
             updateViewState(reset = true)
+            started = true
+        }
+    }
+
+    fun onStart(pullRequest: PullRequest, args: String) {
+        if (!started) {
+            val split = args.split("/")
+            username = split[0]
+            repoName = split[1]
+            issueNum = split[2].toInt()
+            page = 0
+            isPullRequest = true
+            this.pullRequest = pullRequest
+
+            updateViewStateWithPullRequest(pullRequest)
+            requestPermissionLevel()
+            updateViewState()
             started = true
         }
     }
@@ -117,7 +137,7 @@ class IssueDetailViewModel @Inject constructor(
         }
     }
 
-    fun onAuthorCommentQuoteReply() = onQuoteReplySelected(issue.body)
+    fun onAuthorCommentQuoteReply() = onQuoteReplySelected(if (isPullRequest) pullRequest.body else issue.body)
 
     fun onIssueLockRequest(reason: String) {
         viewState.value = viewState.value?.copy(loading = true)
@@ -252,7 +272,7 @@ class IssueDetailViewModel @Inject constructor(
             commentsFinished = false
             eventsFinished = false
 
-            requestIssue()
+            if (isPullRequest) requestPullRequest() else requestIssue()
         }
         requestEvents()
     }
@@ -281,6 +301,18 @@ class IssueDetailViewModel @Inject constructor(
                         authorComment = issue.body,
                         authorCommentDate = formatted
                     )
+                }
+                is IssueResult.Failure -> alert(it.error)
+            }
+        }
+    }
+
+    private fun requestPullRequest() {
+        subscribe(issueRepository.getPullRequest(username, repoName, issueNum)) {
+            when (it) {
+                is IssueResult.Success -> {
+                    pullRequest = it.value
+                    updateViewStateWithPullRequest(pullRequest)
                 }
                 is IssueResult.Failure -> alert(it.error)
             }
@@ -359,5 +391,50 @@ class IssueDetailViewModel @Inject constructor(
                     ?: IssueDetailViewState(permissionLevel = it.value.permission)
             }
         }
+    }
+
+    private fun updateViewStateWithPullRequest(pr: PullRequest) {
+        val date = Instant.parse(pr.createdAt)
+        val formatted = timeHelper.getRelativeAndExactTimeFormat(date, short = true)
+
+        viewState.value = viewState.value?.copy(
+            issueTitle = pr.title,
+            isPullRequest = true,
+            authUserIsAuthor = prefsHelper.getAuthUsername() == pr.user.login,
+            isOpen = pr.state == "open",
+            issueDesc = "${pr.user.login} opened this pull request $formatted",
+            numComments = pr.numComments,
+            labels = pr.labels,
+            assignees = pr.assignees,
+            locked = pr.locked,
+            authorAvatarUrl = pr.user.avatarUrl,
+            authorUsername = pr.user.login,
+            authorComment = pr.body,
+            authorCommentDate = formatted,
+            isMerged = pr.merged,
+            numAdditions = pr.numAdditions,
+            numDeletions = pr.numDeletions,
+            baseBranch = pr.base.ref,
+            headBranch = pr.head.ref
+        ) ?: IssueDetailViewState(
+            issueTitle = pr.title,
+            isPullRequest = true,
+            authUserIsAuthor = prefsHelper.getAuthUsername() == pr.user.login,
+            isOpen = pr.state == "open",
+            issueDesc = "${pr.user.login} opened this pull request $formatted",
+            numComments = pr.numComments,
+            labels = pr.labels,
+            assignees = pr.assignees,
+            locked = pr.locked,
+            authorAvatarUrl = pr.user.avatarUrl,
+            authorUsername = pr.user.login,
+            authorComment = pr.body,
+            authorCommentDate = formatted,
+            isMerged = pr.merged,
+            numAdditions = pr.numAdditions,
+            numDeletions = pr.numDeletions,
+            baseBranch = pr.base.ref,
+            headBranch = pr.head.ref
+        )
     }
 }

@@ -33,4 +33,5 @@
     <color name="colorHomeDrawerText">@color/colorWhiteDark</color>
     <color name="colorBottomNavUnselected">@color/colorLightGray</color>
     <color name="colorSearchFilterEdit">@color/colorPrimaryLight</color>
+    <color name="colorPurple">#5427DB</color>
 </resources>

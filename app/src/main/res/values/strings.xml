@@ -266,6 +266,9 @@
     <string name="additions_text">+ %1$s</string>
     <string name="deletions_text">- %1$s</string>
     <string name="pr_file_empty_text">There were no files changed in this pull request.</string>
-    <string name="commits_title">Commits</string>
-    <string name="files_title">Files</string>
+    <string name="commits_title">Commits (%1$d)</string>
+    <string name="files_title">Files (%1$d)</string>
+    <string name="issue_open_state">OPEN</string>
+    <string name="issue_closed_state">CLOSED</string>
+    <string name="issue_merged_state">MERGED</string>
 </resources>
