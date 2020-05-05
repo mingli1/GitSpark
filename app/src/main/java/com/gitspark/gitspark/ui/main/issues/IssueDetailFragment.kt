@@ -218,6 +218,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             comment_body.loadMarkdown(if (authorComment.isNotEmpty()) authorComment else getString(R.string.empty_comment))
 
             issue_title_field.text = issueTitle
+            issue_username_field.text = issueUsername
             issue_desc_field.text = issueDesc
             num_comments_field.isVisible = numComments > 0
             num_comments_field.text = withSuffix(numComments)

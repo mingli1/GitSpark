@@ -216,22 +216,31 @@
                     app:layout_constraintBottom_toBottomOf="@id/status_field"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:text="- 1,735"/>
+    
+                <TextView
+                    android:id="@+id/issue_username_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Body.Small.Bold"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toBottomOf="@id/status_field"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="mingli1"/>
                 
                 <TextView
                     android:id="@+id/issue_desc_field"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     style="@style/Body.Small"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="6dp"
                     android:gravity="center_vertical"
                     app:layout_goneMarginBottom="8dp"
-                    app:layout_constraintTop_toBottomOf="@id/status_field"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/num_comments_field"
-                    app:layout_constraintBottom_toTopOf="@id/assignees_label"
-                    tools:text="mingli1 opened this issue 11 days ago"/>
+                    app:layout_constraintTop_toTopOf="@id/issue_username_field"
+                    app:layout_constraintStart_toEndOf="@id/issue_username_field"
+                    app:layout_constraintBottom_toBottomOf="@id/issue_username_field"
+                    tools:text="opened this issue 11 days ago"/>
             
                 <TextView
                     android:id="@+id/num_comments_field"
