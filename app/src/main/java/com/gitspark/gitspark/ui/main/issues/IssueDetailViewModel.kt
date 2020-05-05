@@ -38,6 +38,7 @@ class IssueDetailViewModel @Inject constructor(
     val updateCommentRequest = SingleLiveEvent<IssueComment>()
     val navigateToRepoDetail = SingleLiveEvent<String>()
     val navigateToIssueEdit = SingleLiveEvent<Triple<String, Issue, String>>()
+    val pullRequestRefresh = SingleLiveEvent<PullRequest>()
     private var started = false
 
     private var username = ""
@@ -313,6 +314,7 @@ class IssueDetailViewModel @Inject constructor(
             when (it) {
                 is IssueResult.Success -> {
                     pullRequest = it.value
+                    pullRequestRefresh.value = it.value
                     updateViewStateWithPullRequest(pullRequest)
                 }
                 is IssueResult.Failure -> alert(it.error)

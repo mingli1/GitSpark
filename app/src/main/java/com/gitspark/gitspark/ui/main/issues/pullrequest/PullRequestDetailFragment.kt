@@ -26,7 +26,12 @@ import javax.inject.Inject
 private const val COMMITS_TAB_INDEX = 1
 private const val FILES_TAB_INDEX = 2
 
-class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullRequestDetailViewModel::class.java) {
+interface PullRequestDataCallback {
+    fun onDataRefreshed(pr: PullRequest)
+}
+
+class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullRequestDetailViewModel::class.java),
+    PullRequestDataCallback {
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var pullRequestJsonAdapter: JsonAdapter<PullRequest>
@@ -36,6 +41,11 @@ class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullR
     private lateinit var fileListFragment: FileListFragment
 
     private var args = ""
+
+    override fun onDataRefreshed(pr: PullRequest) {
+        tabs.getTabAt(COMMITS_TAB_INDEX)?.text = getString(R.string.commits_title, pr.numCommits)
+        tabs.getTabAt(FILES_TAB_INDEX)?.text = getString(R.string.files_title, pr.numFilesChanged)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

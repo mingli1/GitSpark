@@ -30,6 +30,7 @@ import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.dialog.SelectDialog
 import com.gitspark.gitspark.ui.dialog.SelectDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
+import com.gitspark.gitspark.ui.main.issues.pullrequest.PullRequestDataCallback
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
 import com.google.android.material.appbar.AppBarLayout
@@ -144,6 +145,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         viewModel.updateCommentRequest.observe(viewLifecycleOwner) { issueEventsAdapter.updateComment(it) }
         viewModel.navigateToRepoDetail.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
         viewModel.navigateToIssueEdit.observe(viewLifecycleOwner) { navigateToIssueEditFragment(it) }
+        viewModel.pullRequestRefresh.observe(viewLifecycleOwner) { refreshPullRequestData(it) }
         sharedViewModel.editedIssue.observe(viewLifecycleOwner) { viewModel.onRefresh() }
     }
 
@@ -340,5 +342,9 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             putString(BUNDLE_REPO_FULLNAME, triple.third)
         }
         findNavController().navigate(R.id.action_issue_detail_to_issue_edit, bundle)
+    }
+
+    private fun refreshPullRequestData(pr: PullRequest) {
+        (parentFragment as PullRequestDataCallback).onDataRefreshed(pr)
     }
 }
