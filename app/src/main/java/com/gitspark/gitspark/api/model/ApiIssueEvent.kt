@@ -5,6 +5,7 @@ import com.squareup.moshi.Json
 
 data class ApiIssueEvent(
     @field:Json(name = "id") val id: Long?,
+    @field:Json(name = "html_url") val htmlUrl: String?,
     @field:Json(name = "actor") val actor: ApiUser?,
     @field:Json(name = "event") val event: String?,
     @field:Json(name = "created_at") val createdAt: String?,
@@ -14,10 +15,16 @@ data class ApiIssueEvent(
     @field:Json(name = "label") val label: ApiLabel?,
     @field:Json(name = "dismissed_review") val dismissedReview: ApiDismissedReview?,
     @field:Json(name = "rename") val rename: ApiRename?,
-    @field:Json(name = "commit_id") val commitId: String?
+    @field:Json(name = "sha") val sha: String?,
+    @field:Json(name = "commit_id") val commitId: String?,
+    @field:Json(name = "committer") val committer: ApiCommitUser?,
+    @field:Json(name = "message") val message: String?,
+    @field:Json(name = "verification") val verification: ApiCommitVerification?,
+    @field:Json(name = "body") val body: String?
 ) {
     fun toModel() = IssueEvent(
         id = id ?: 0,
+        htmlUrl = htmlUrl ?: "",
         actor = actor?.toModel() ?: User(),
         event = event ?: "",
         createdAt = createdAt ?: "",
@@ -27,7 +34,12 @@ data class ApiIssueEvent(
         label = label?.toModel() ?: Label(),
         dismissedReview = dismissedReview?.toModel() ?: DismissedReview(),
         rename = rename?.toModel() ?: Rename(),
-        commitId = commitId ?: ""
+        commitId = commitId ?: "",
+        sha = sha ?: "",
+        committer = committer?.toModel() ?: CommitUser(),
+        message = message ?: "",
+        verification = verification?.toModel() ?: CommitVerification(),
+        body = body ?: ""
     )
 }
 

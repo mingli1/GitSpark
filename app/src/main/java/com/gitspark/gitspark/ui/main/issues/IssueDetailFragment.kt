@@ -16,13 +16,11 @@ import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.*
-import com.gitspark.gitspark.model.Issue
-import com.gitspark.gitspark.model.PERMISSION_ADMIN
-import com.gitspark.gitspark.model.PERMISSION_WRITE
-import com.gitspark.gitspark.model.PullRequest
+import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.ui.adapter.IssueEventsAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.custom.DarkMarkdownStyle
 import com.gitspark.gitspark.ui.custom.LightMarkdownStyle
 import com.gitspark.gitspark.ui.dialog.ConfirmDialog
@@ -290,13 +288,11 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         }
     }
 
-    private fun updateRecyclerView(recyclerViewState: IssueRecyclerViewState) {
+    private fun updateRecyclerView(recyclerViewState: PaginatedViewState<IssueEvent>) {
         with (recyclerViewState) {
-            if (commentsFinishedLoading && eventsFinishedLoading) {
-                issueEventsAdapter.setItems(events, isLastPage)
-                paginationListener.isLastPage = isLastPage
-                paginationListener.loading = false
-            }
+            issueEventsAdapter.setItems(items, isLastPage)
+            paginationListener.isLastPage = isLastPage
+            paginationListener.loading = false
         }
     }
 

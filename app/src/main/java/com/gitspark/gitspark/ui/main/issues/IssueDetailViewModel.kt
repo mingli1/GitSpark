@@ -6,20 +6,17 @@ import com.gitspark.gitspark.api.model.ApiIssueEditRequest
 import com.gitspark.gitspark.helper.ClipboardHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
-import com.gitspark.gitspark.model.Issue
-import com.gitspark.gitspark.model.IssueComment
-import com.gitspark.gitspark.model.PullRequest
-import com.gitspark.gitspark.model.isLastPage
+import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.IssueRepository
 import com.gitspark.gitspark.repository.IssueResult
 import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
+import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import org.threeten.bp.Instant
 import javax.inject.Inject
-import kotlin.math.max
 
 class IssueDetailViewModel @Inject constructor(
     private val issueRepository: IssueRepository,
@@ -30,12 +27,12 @@ class IssueDetailViewModel @Inject constructor(
 ) : BaseViewModel(), CommentMenuCallback {
 
     val viewState = MutableLiveData<IssueDetailViewState>()
-    val recyclerViewState = MutableLiveData<IssueRecyclerViewState>()
+    val recyclerViewState = MutableLiveData<PaginatedViewState<IssueEvent>>()
     val toggleCommentEdit = SingleLiveEvent<Boolean>()
     val deleteCommentRequest = SingleLiveAction()
     val quoteReplyAction = SingleLiveEvent<String>()
     val clearCommentEdit = SingleLiveAction()
-    val updateCommentRequest = SingleLiveEvent<IssueComment>()
+    val updateCommentRequest = SingleLiveEvent<IssueEvent>()
     val navigateToRepoDetail = SingleLiveEvent<String>()
     val navigateToIssueEdit = SingleLiveEvent<Triple<String, Issue, String>>()
     val pullRequestRefresh = SingleLiveEvent<PullRequest>()
@@ -47,8 +44,6 @@ class IssueDetailViewModel @Inject constructor(
     private var isPullRequest = false
 
     private var page = 1
-    private var commentsFinished = false
-    private var eventsFinished = false
     private var last = -1
     private var issue = Issue()
     private var pullRequest = PullRequest()
@@ -74,7 +69,7 @@ class IssueDetailViewModel @Inject constructor(
             username = split[0]
             repoName = split[1]
             issueNum = split[2].toInt()
-            page = 0
+            page = 1
             isPullRequest = true
             this.pullRequest = pullRequest
 
@@ -100,12 +95,13 @@ class IssueDetailViewModel @Inject constructor(
     fun onDeleteCommentConfirmed() {
         subscribe(issueRepository.deleteComment(username, repoName, deletedCommentId),
             {
-                val events = recyclerViewState.value?.events ?: mutableListOf()
-                events.removeAll { it is IssueComment && it.id == deletedCommentId }
+                val events = recyclerViewState.value?.items ?: mutableListOf()
+                events.removeAll { it.id == deletedCommentId }
                 val numComments = viewState.value?.numComments ?: 0
 
                 viewState.value = viewState.value?.copy(numComments = numComments - 1)
-                recyclerViewState.value = recyclerViewState.value?.copy(events = events)
+                recyclerViewState.value = recyclerViewState.value?.copy(items = events)
+                    ?: PaginatedViewState(items = events)
             },
             { alert("Failed to delete comment.") }
         )
@@ -118,13 +114,14 @@ class IssueDetailViewModel @Inject constructor(
                 is IssueResult.Success -> {
                     val numComments = viewState.value?.numComments ?: 0
                     if (last == -1 || page == last) {
-                        val events = recyclerViewState.value?.events ?: mutableListOf()
-                        events.add(it.value)
+                        val events = recyclerViewState.value?.items ?: mutableListOf()
+                        events.add(it.value.toIssueEvent())
                         viewState.value = viewState.value?.copy(
                             loading = false,
                             numComments = numComments + 1
                         )
-                        recyclerViewState.value = recyclerViewState.value?.copy(events = events)
+                        recyclerViewState.value = recyclerViewState.value?.copy(items = events)
+                            ?: PaginatedViewState(items = events)
                     } else {
                         viewState.value = viewState.value?.copy(loading = false, numComments = numComments + 1)
                     }
@@ -178,7 +175,10 @@ class IssueDetailViewModel @Inject constructor(
             username,
             repoName,
             issueNum,
-            ApiIssueEditRequest.changeState(state, issue)
+            if (isPullRequest)
+                ApiIssueEditRequest.changeState(state, pullRequest)
+            else
+                ApiIssueEditRequest.changeState(state, issue)
         )) {
             when (it) {
                 is IssueResult.Success -> {
@@ -225,14 +225,15 @@ class IssueDetailViewModel @Inject constructor(
         viewState.value = viewState.value?.copy(loading = true)
         subscribe(issueRepository.editComment(username, repoName, id, ApiIssueCommentRequest(body = body)),
             {
-                val events = recyclerViewState.value?.events ?: mutableListOf()
-                val updatedComment = events.find { it is IssueComment && it.id == id }
+                val events = recyclerViewState.value?.items ?: mutableListOf()
+                val updatedComment = events.find { it.id == id }
                 updatedComment?.let {
-                    (it as IssueComment).body = body
+                    it.body = body
                     updateCommentRequest.value = it
                 }
                 viewState.value = viewState.value?.copy(loading = false)
-                recyclerViewState.value = recyclerViewState.value?.copy(events = events)
+                recyclerViewState.value = recyclerViewState.value?.copy(items = events)
+                    ?: PaginatedViewState(items = events)
             },
             {
                 alert("Failed to update comment")
@@ -256,22 +257,8 @@ class IssueDetailViewModel @Inject constructor(
             refreshing = refresh
         )
 
-        recyclerViewState.value = recyclerViewState.value?.copy(
-            events = if (reset) mutableListOf() else recyclerViewState.value?.events ?: mutableListOf(),
-            commentsFinishedLoading = commentsFinished,
-            eventsFinishedLoading = eventsFinished
-        ) ?: IssueRecyclerViewState(
-            events = if (reset) mutableListOf() else recyclerViewState.value?.events ?: mutableListOf(),
-            commentsFinishedLoading = commentsFinished,
-            eventsFinishedLoading = eventsFinished
-        )
-
-        if (!commentsFinished || !eventsFinished) page++
-
         if (reset) {
             page = 1
-            commentsFinished = false
-            eventsFinished = false
 
             if (isPullRequest) requestPullRequest() else requestIssue()
         }
@@ -323,67 +310,30 @@ class IssueDetailViewModel @Inject constructor(
     }
 
     private fun requestEvents() {
-        if (!commentsFinished) {
-            subscribe(issueRepository.getIssueComments(username, repoName, issueNum, page)) {
-                when (it) {
-                    is IssueResult.Success -> {
-                        val updatedList = recyclerViewState.value?.events ?: mutableListOf()
-                        updatedList.addAll(it.value.value)
+        subscribe(issueRepository.getIssueTimeline(username, repoName, issueNum, page)) {
+            when (it) {
+                is IssueResult.Success -> {
+                    val updatedList = if (page.isFirstPage()) mutableListOf() else recyclerViewState.value?.items ?: mutableListOf()
+                    updatedList.addAll(it.value.value)
 
-                        last = max(last, it.value.last)
-                        commentsFinished = page.isLastPage(it.value.last)
+                    last = it.value.last
 
-                        viewState.value = viewState.value?.copy(
-                            loading = false,
-                            refreshing = false
-                        )
-                        recyclerViewState.value = recyclerViewState.value?.copy(
-                            isLastPage = commentsFinished && eventsFinished,
-                            events = updatedList,
-                            commentsFinishedLoading = true
-                        )
-                    }
-                    is IssueResult.Failure -> {
-                        viewState.value = viewState.value?.copy(
-                            loading = false,
-                            refreshing = false
-                        )
-                        recyclerViewState.value = recyclerViewState.value?.copy(commentsFinishedLoading = false)
-                        alert(it.error)
-                    }
+                    recyclerViewState.value = recyclerViewState.value?.copy(
+                        isLastPage = page.isLastPage(it.value.last),
+                        items = updatedList
+                    ) ?: PaginatedViewState(
+                        isLastPage = page.isLastPage(it.value.last),
+                        items = updatedList
+                    )
+
+                    if (page < last) page++
                 }
+                is IssueResult.Failure -> alert(it.error)
             }
-        }
-        if (!eventsFinished) {
-            subscribe(issueRepository.getIssueEvents(username, repoName, issueNum, page)) {
-                when (it) {
-                    is IssueResult.Success -> {
-                        val updatedList = recyclerViewState.value?.events ?: mutableListOf()
-                        updatedList.addAll(it.value.value)
-
-                        last = max(last, it.value.last)
-                        eventsFinished = page.isLastPage(it.value.last)
-
-                        viewState.value = viewState.value?.copy(
-                            loading = false,
-                            refreshing = false
-                        )
-                        recyclerViewState.value = recyclerViewState.value?.copy(
-                            isLastPage = commentsFinished && eventsFinished,
-                            events = updatedList,
-                            eventsFinishedLoading = true
-                        )
-                    }
-                    is IssueResult.Failure -> {
-                        viewState.value = viewState.value?.copy(
-                            loading = false,
-                            refreshing = false
-                        )
-                        recyclerViewState.value = recyclerViewState.value?.copy(eventsFinishedLoading = false)
-                        alert(it.error)
-                    }
-                }
-            }
+            viewState.value = viewState.value?.copy(
+                loading = false,
+                refreshing = false
+            )
         }
     }
 

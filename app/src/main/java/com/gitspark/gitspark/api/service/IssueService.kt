@@ -20,6 +20,7 @@ interface IssueService {
     ): Observable<ApiIssue>
 
     @GET("repos/{owner}/{repo}/issues/{issue_number}/comments")
+    @Deprecated("Replaced with timeline events")
     fun getIssueComments(
         @Path("owner") owner: String,
         @Path("repo") repo: String,
@@ -29,6 +30,7 @@ interface IssueService {
     ): Observable<ApiPage<ApiIssueComment>>
 
     @GET("repos/{owner}/{repo}/issues/{issue_number}/events")
+    @Deprecated("Replaced with timeline events")
     fun getIssueEvents(
         @Path("owner") owner: String,
         @Path("repo") repo: String,
@@ -36,6 +38,16 @@ interface IssueService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = ISSUE_EVENTS_PER_PAGE
     ): Observable<ApiPage<ApiIssueEvent>>
+
+    @GET("repos/{owner}/{repo}/issues/{issue_number}/timeline")
+    @Headers("Accept: application/vnd.github.mockingbird-preview")
+    fun getIssueTimeline(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("issue_number") issueNum: Int,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int = ISSUE_EVENTS_PER_PAGE
+    ): Single<ApiPage<ApiIssueEvent>>
 
     @PUT("repos/{owner}/{repo}/issues/{issue_number}/lock")
     fun lockIssue(

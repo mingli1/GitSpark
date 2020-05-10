@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.api.model
 
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.model.PullRequest
 import com.squareup.moshi.Json
 
 data class ApiIssueEditRequest(
@@ -19,6 +20,14 @@ data class ApiIssueEditRequest(
             state = state,
             labels = issue.labels.map { it.name },
             assignees = issue.assignees.map { it.login }
+        )
+
+        fun changeState(state: String, pr: PullRequest) = ApiIssueEditRequest(
+            title = pr.title,
+            body = pr.body,
+            state = state,
+            labels = pr.labels.map { it.name },
+            assignees = pr.assignees.map { it.login }
         )
     }
 }

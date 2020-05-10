@@ -3,7 +3,6 @@ package com.gitspark.gitspark.ui.main.issues
 import com.gitspark.gitspark.model.Label
 import com.gitspark.gitspark.model.PERMISSION_NONE
 import com.gitspark.gitspark.model.User
-import com.gitspark.gitspark.ui.adapter.EventComment
 
 data class IssueDetailViewState(
     val isPullRequest: Boolean = false,

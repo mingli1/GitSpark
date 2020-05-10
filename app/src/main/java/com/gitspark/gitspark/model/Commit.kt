@@ -24,11 +24,19 @@ data class CommitDetail(
     val author: CommitUser = CommitUser(),
     val committer: CommitUser = CommitUser(),
     val message: String = "",
-    val commentCount: Int = 0
+    val commentCount: Int = 0,
+    val verification: CommitVerification = CommitVerification()
 )
 
 data class CommitUser(
     val name: String = "",
     val email: String = "",
     val date: String = ""
+)
+
+data class CommitVerification(
+    val verified: Boolean = false,
+    val reason: String = "",
+    val signature: String = "",
+    val payload: String = ""
 )

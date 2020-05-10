@@ -38,19 +38,278 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-    
-                <View
-                    android:id="@+id/bg1"
+                
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/header"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/colorWhite"
-                    app:layout_constraintBottom_toTopOf="@id/bottom_divider"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
+                    android:paddingBottom="12dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0"
-                    />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+    
+                    <TextView
+                        android:id="@+id/issue_title_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/HeaderBold"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:text="ContributionsView disappears sometimes when navigating between bottom nav"/>
+    
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/head_branch_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginStart="16dp"
+                        app:cardElevation="0dp"
+                        app:cardCornerRadius="4dp"
+                        app:layout_constraintTop_toBottomOf="@id/issue_title_field"
+                        app:layout_constraintStart_toStartOf="parent">
+        
+                        <TextView
+                            android:id="@+id/head_branch_name_field"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorPrimaryLight"
+                            style="@style/BodyBold"
+                            android:textColor="@color/colorWhite"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            tools:text="head-branch"/>
+    
+                    </androidx.cardview.widget.CardView>
+    
+                    <ImageView
+                        android:id="@+id/branch_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_right"
+                        android:layout_marginStart="4dp"
+                        app:layout_constraintStart_toEndOf="@id/head_branch_field"
+                        app:layout_constraintTop_toTopOf="@id/head_branch_field"
+                        app:layout_constraintBottom_toBottomOf="@id/head_branch_field"/>
+    
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/base_branch_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginStart="4dp"
+                        app:cardElevation="0dp"
+                        app:cardCornerRadius="4dp"
+                        app:layout_constraintStart_toEndOf="@id/branch_arrow"
+                        app:layout_constraintTop_toBottomOf="@id/issue_title_field">
+        
+                        <TextView
+                            android:id="@+id/base_branch_name_field"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorPrimaryLight"
+                            style="@style/BodyBold"
+                            android:textColor="@color/colorWhite"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            tools:text="base-branch"/>
+    
+                    </androidx.cardview.widget.CardView>
+    
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/status_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:cardElevation="0dp"
+                        app:cardCornerRadius="4dp"
+                        app:layout_constraintTop_toBottomOf="@id/head_branch_field"
+                        app:layout_constraintStart_toStartOf="parent">
+        
+                        <TextView
+                            android:id="@+id/status_field_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/BodyBold"
+                            android:textColor="#FFFFFF"
+                            android:drawableTint="#FFFFFF"
+                            android:drawablePadding="4dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            android:gravity="center_vertical"
+                            tools:background="@color/colorGreen"
+                            tools:text="OPEN"
+                            tools:drawableStart="@drawable/ic_issue"/>
+    
+                    </androidx.cardview.widget.CardView>
+    
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/lock_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp"
+                        app:cardElevation="0dp"
+                        app:cardCornerRadius="4dp"
+                        app:layout_constraintTop_toBottomOf="@id/head_branch_field"
+                        app:layout_constraintStart_toEndOf="@id/status_field">
+        
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/BodyBold"
+                            android:textColor="#FFFFFF"
+                            android:background="@color/colorAccent"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="@string/locked_text"/>
+    
+                    </androidx.cardview.widget.CardView>
+    
+                    <TextView
+                        android:id="@+id/additions_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Body"
+                        android:textColor="@color/colorGreen"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintTop_toTopOf="@id/status_field"
+                        app:layout_constraintBottom_toBottomOf="@id/status_field"
+                        app:layout_constraintEnd_toStartOf="@id/deletions_field"
+                        tools:text="+ 3,074"/>
+    
+                    <TextView
+                        android:id="@+id/deletions_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Body"
+                        android:textColor="@color/colorRed"
+                        android:layout_marginEnd="16dp"
+                        app:layout_goneMarginBottom="12dp"
+                        app:layout_constraintTop_toTopOf="@id/status_field"
+                        app:layout_constraintBottom_toBottomOf="@id/status_field"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:text="- 1,735"/>
+    
+                    <TextView
+                        android:id="@+id/issue_username_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Body.Small.Bold"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
+                        app:layout_constraintTop_toBottomOf="@id/status_field"
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:text="mingli1"/>
+    
+                    <TextView
+                        android:id="@+id/issue_desc_field"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        style="@style/Body.Small"
+                        android:layout_marginStart="6dp"
+                        android:gravity="center_vertical"
+                        app:layout_goneMarginBottom="8dp"
+                        app:layout_constraintTop_toTopOf="@id/issue_username_field"
+                        app:layout_constraintStart_toEndOf="@id/issue_username_field"
+                        app:layout_constraintBottom_toBottomOf="@id/issue_username_field"
+                        tools:text="opened this issue 11 days ago"/>
+    
+                    <TextView
+                        android:id="@+id/num_comments_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Body.Small"
+                        android:textSize="14sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="16dp"
+                        android:drawableStart="@drawable/ic_feed"
+                        android:drawablePadding="8dp"
+                        app:layout_constraintTop_toTopOf="@id/issue_desc_field"
+                        app:layout_constraintBottom_toBottomOf="@id/issue_desc_field"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:text="45"/>
+    
+                    <TextView
+                        android:id="@+id/assignees_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Body.Small.Bold"
+                        android:textColor="@color/colorDarkerGray"
+                        android:text="@string/assignees_label"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_goneMarginBottom="8dp"
+                        app:layout_constraintTop_toBottomOf="@id/issue_desc_field"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/labels_label"/>
+    
+                    <HorizontalScrollView
+                        android:id="@+id/assignees_scroll_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:scrollbars="none"
+                        app:layout_constraintStart_toEndOf="@id/assignees_label"
+                        app:layout_constraintTop_toTopOf="@id/assignees_label"
+                        app:layout_constraintBottom_toBottomOf="@id/assignees_label">
+        
+                        <LinearLayout
+                            android:id="@+id/assignees_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"/>
+    
+                    </HorizontalScrollView>
+    
+                    <TextView
+                        android:id="@+id/labels_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Body.Small.Bold"
+                        android:textColor="@color/colorDarkerGray"
+                        android:text="@string/labels_label"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintTop_toBottomOf="@id/assignees_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+    
+                    <HorizontalScrollView
+                        android:id="@+id/labels_scroll_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:scrollbars="none"
+                        app:layout_constraintStart_toEndOf="@id/labels_label"
+                        app:layout_constraintTop_toTopOf="@id/labels_label"
+                        app:layout_constraintBottom_toBottomOf="@id/labels_label">
+        
+                        <LinearLayout
+                            android:id="@+id/labels_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"/>
+    
+                    </HorizontalScrollView>
+                    
+                </androidx.constraintlayout.widget.ConstraintLayout>
     
                 <View
                     android:id="@+id/bottom_divider"
@@ -58,269 +317,8 @@
                     android:layout_height="1dp"
                     android:background="@color/colorWhiteDark"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@id/bg1"
+                    app:layout_constraintBottom_toBottomOf="@id/header"
                     app:layout_constraintEnd_toEndOf="parent"/>
-            
-                <TextView
-                    android:id="@+id/issue_title_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/HeaderBold"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintTop_toTopOf="@id/bg1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:text="ContributionsView disappears sometimes when navigating between bottom nav"/>
-    
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/head_branch_field"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginStart="16dp"
-                    app:cardElevation="0dp"
-                    app:cardCornerRadius="4dp"
-                    app:layout_constraintTop_toBottomOf="@id/issue_title_field"
-                    app:layout_constraintStart_toStartOf="parent">
-        
-                    <TextView
-                        android:id="@+id/head_branch_name_field"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorPrimaryLight"
-                        style="@style/BodyBold"
-                        android:textColor="@color/colorWhite"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        tools:text="head-branch"/>
-    
-                </androidx.cardview.widget.CardView>
-                
-                <ImageView
-                    android:id="@+id/branch_arrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_right"
-                    android:layout_marginStart="4dp"
-                    app:layout_constraintStart_toEndOf="@id/head_branch_field"
-                    app:layout_constraintTop_toTopOf="@id/head_branch_field"
-                    app:layout_constraintBottom_toBottomOf="@id/head_branch_field"/>
-    
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/base_branch_field"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginStart="4dp"
-                    app:cardElevation="0dp"
-                    app:cardCornerRadius="4dp"
-                    app:layout_constraintStart_toEndOf="@id/branch_arrow"
-                    app:layout_constraintTop_toBottomOf="@id/issue_title_field">
-        
-                    <TextView
-                        android:id="@+id/base_branch_name_field"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorPrimaryLight"
-                        style="@style/BodyBold"
-                        android:textColor="@color/colorWhite"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        tools:text="base-branch"/>
-    
-                </androidx.cardview.widget.CardView>
-                
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/status_field"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    app:cardElevation="0dp"
-                    app:cardCornerRadius="4dp"
-                    app:layout_constraintTop_toBottomOf="@id/head_branch_field"
-                    app:layout_constraintStart_toStartOf="parent">
-        
-                    <TextView
-                        android:id="@+id/status_field_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/BodyBold"
-                        android:textColor="#FFFFFF"
-                        android:drawableTint="#FFFFFF"
-                        android:drawablePadding="4dp"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:gravity="center_vertical"
-                        tools:background="@color/colorGreen"
-                        tools:text="OPEN"
-                        tools:drawableStart="@drawable/ic_issue"/>
-    
-                </androidx.cardview.widget.CardView>
-                
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/lock_field"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="16dp"
-                    app:cardElevation="0dp"
-                    app:cardCornerRadius="4dp"
-                    app:layout_constraintTop_toBottomOf="@id/head_branch_field"
-                    app:layout_constraintStart_toEndOf="@id/status_field">
-                
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/BodyBold"
-                        android:textColor="#FFFFFF"
-                        android:background="@color/colorAccent"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:text="@string/locked_text"/>
-            
-                </androidx.cardview.widget.CardView>
-    
-                <TextView
-                    android:id="@+id/additions_field"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Body"
-                    android:textColor="@color/colorGreen"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintTop_toTopOf="@id/status_field"
-                    app:layout_constraintBottom_toBottomOf="@id/status_field"
-                    app:layout_constraintEnd_toStartOf="@id/deletions_field"
-                    tools:text="+ 3,074"/>
-    
-                <TextView
-                    android:id="@+id/deletions_field"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Body"
-                    android:textColor="@color/colorRed"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintTop_toTopOf="@id/status_field"
-                    app:layout_constraintBottom_toBottomOf="@id/status_field"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:text="- 1,735"/>
-    
-                <TextView
-                    android:id="@+id/issue_username_field"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Body.Small.Bold"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    app:layout_constraintTop_toBottomOf="@id/status_field"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:text="mingli1"/>
-                
-                <TextView
-                    android:id="@+id/issue_desc_field"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    style="@style/Body.Small"
-                    android:layout_marginStart="6dp"
-                    android:gravity="center_vertical"
-                    app:layout_goneMarginBottom="8dp"
-                    app:layout_constraintTop_toTopOf="@id/issue_username_field"
-                    app:layout_constraintStart_toEndOf="@id/issue_username_field"
-                    app:layout_constraintBottom_toBottomOf="@id/issue_username_field"
-                    tools:text="opened this issue 11 days ago"/>
-            
-                <TextView
-                    android:id="@+id/num_comments_field"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Body.Small"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:drawableStart="@drawable/ic_feed"
-                    android:drawablePadding="8dp"
-                    app:layout_constraintTop_toTopOf="@id/issue_desc_field"
-                    app:layout_constraintBottom_toBottomOf="@id/issue_desc_field"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:text="45"/>
-            
-                <TextView
-                    android:id="@+id/assignees_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Body.Small.Bold"
-                    android:textColor="@color/colorDarkerGray"
-                    android:text="@string/assignees_label"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginStart="16dp"
-                    app:layout_goneMarginBottom="8dp"
-                    app:layout_constraintTop_toBottomOf="@id/issue_desc_field"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/labels_label"/>
-            
-                <HorizontalScrollView
-                    android:id="@+id/assignees_scroll_view"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:scrollbars="none"
-                    app:layout_constraintStart_toEndOf="@id/assignees_label"
-                    app:layout_constraintTop_toTopOf="@id/assignees_label"
-                    app:layout_constraintBottom_toBottomOf="@id/assignees_label">
-                
-                    <LinearLayout
-                        android:id="@+id/assignees_container"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"/>
-            
-                </HorizontalScrollView>
-            
-                <TextView
-                    android:id="@+id/labels_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Body.Small.Bold"
-                    android:textColor="@color/colorDarkerGray"
-                    android:text="@string/labels_label"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginBottom="12dp"
-                    app:layout_constraintTop_toBottomOf="@id/assignees_label"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@id/bg1"/>
-            
-                <HorizontalScrollView
-                    android:id="@+id/labels_scroll_view"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:scrollbars="none"
-                    app:layout_constraintStart_toEndOf="@id/labels_label"
-                    app:layout_constraintTop_toTopOf="@id/labels_label"
-                    app:layout_constraintBottom_toBottomOf="@id/labels_label">
-                
-                    <LinearLayout
-                        android:id="@+id/labels_container"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"/>
-            
-                </HorizontalScrollView>
             
                 <include
                     android:id="@+id/author_comment"

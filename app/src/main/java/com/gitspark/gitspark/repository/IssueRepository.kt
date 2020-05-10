@@ -30,6 +30,7 @@ class IssueRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain issue.") }
     }
 
+    @Deprecated("Replaced with timeline events")
     fun getIssueComments(
         username: String,
         repoName: String,
@@ -47,6 +48,7 @@ class IssueRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain issue comments.") }
     }
 
+    @Deprecated("Replaced with timeline events")
     fun getIssueEvents(
         username: String,
         repoName: String,
@@ -62,6 +64,23 @@ class IssueRepository @Inject constructor(
                 })
             }
             .onErrorReturn { getFailure("Failed to obtain issue events.") }
+    }
+
+    fun getIssueTimeline(
+        username: String,
+        repoName: String,
+        issueNum: Int,
+        page: Int,
+        perPage: Int = ISSUE_EVENTS_PER_PAGE
+    ): Single<IssueResult<Page<IssueEvent>>> {
+        return getIssueService()
+            .getIssueTimeline(username, repoName, issueNum, page, perPage)
+            .map {
+                getSuccess(it.toModel<IssueEvent>().apply {
+                    value = it.response.map { event -> event.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain issue timeline.") }
     }
 
     fun lockIssue(

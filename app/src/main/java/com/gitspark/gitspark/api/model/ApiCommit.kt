@@ -26,14 +26,16 @@ data class ApiCommitDetail(
     @field:Json(name = "author") val author: ApiCommitUser?,
     @field:Json(name = "committer") val committer: ApiCommitUser?,
     @field:Json(name = "message") val message: String?,
-    @field:Json(name = "comment_count") val commentCount: Int?
+    @field:Json(name = "comment_count") val commentCount: Int?,
+    @field:Json(name = "verification") val verification: ApiCommitVerification?
 ) {
     fun toModel() = CommitDetail(
         url = url ?: "",
         author = author?.toModel() ?: CommitUser(),
         committer = committer?.toModel() ?: CommitUser(),
         message = message ?: "",
-        commentCount = commentCount ?: 0
+        commentCount = commentCount ?: 0,
+        verification = verification?.toModel() ?: CommitVerification()
     )
 }
 
@@ -46,5 +48,19 @@ data class ApiCommitUser(
         name = name ?: "",
         email = email ?: "",
         date = date ?: ""
+    )
+}
+
+data class ApiCommitVerification(
+    @field:Json(name = "verified") val verified: Boolean?,
+    @field:Json(name = "reason") val reason: String?,
+    @field:Json(name = "signature") val signature: String?,
+    @field:Json(name = "payload") val payload: String?
+) {
+    fun toModel() = CommitVerification(
+        verified = verified ?: false,
+        reason = reason ?: "",
+        signature = signature ?: "",
+        payload = payload ?: ""
     )
 }

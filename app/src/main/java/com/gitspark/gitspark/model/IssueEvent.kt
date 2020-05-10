@@ -1,11 +1,13 @@
 package com.gitspark.gitspark.model
 
-import com.gitspark.gitspark.ui.adapter.EventComment
+import com.gitspark.gitspark.helper.COMMENTED_EVENT
 import com.gitspark.gitspark.ui.adapter.Pageable
 import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_ISSUE_EVENT
+import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
 
 data class IssueEvent(
     val id: Long = 0,
+    val htmlUrl: String = "",
     val actor: User = User(),
     val event: String = "",
     val createdAt: String = "",
@@ -15,14 +17,19 @@ data class IssueEvent(
     val label: Label = Label(),
     val dismissedReview: DismissedReview = DismissedReview(),
     val rename: Rename = Rename(),
-    val commitId: String = ""
-) : EventComment {
+    val sha: String = "",
+    val commitId: String = "",
+    val committer: CommitUser = CommitUser(),
+    val message: String = "",
+    val verification: CommitVerification = CommitVerification(),
+    var body: String = ""
+) : Pageable {
 
-    override fun getViewType() = VIEW_TYPE_ISSUE_EVENT
-
-    override fun createdAt() = createdAt
+    override fun getViewType() = if (isComment()) VIEW_TYPE_VIEW else VIEW_TYPE_ISSUE_EVENT
 
     override fun areItemsTheSame(other: Pageable) = this == (other as? IssueEvent ?: false)
+
+    fun isComment() = event == COMMENTED_EVENT
 }
 
 data class DismissedReview(

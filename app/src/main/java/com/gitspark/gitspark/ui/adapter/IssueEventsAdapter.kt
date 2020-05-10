@@ -33,14 +33,14 @@ class IssueEventsAdapter(
 
     @Suppress("UNCHECKED_CAST")
     override fun setItems(items: List<Pageable>, isLastPage: Boolean) {
-        val sorted = (items as List<EventComment>).sortedBy { it.createdAt() }
+        val sorted = (items as List<IssueEvent>).sortedBy { it.createdAt }
         val result = DiffUtil.calculateDiff(DiffCallback(this.items, sorted))
         with (this.items) {
             clear()
             spannableCache.clear()
 
             sorted.forEach {
-                if (it is IssueEvent) {
+                if (!it.isComment()) {
                     val desc = eventHelper.getDesc(it)
                     if (desc.isNotEmpty()) spannableCache[it.id] = desc
                 }
@@ -51,8 +51,8 @@ class IssueEventsAdapter(
         result.dispatchUpdatesTo(this)
     }
 
-    fun updateComment(comment: IssueComment) {
-        val pos = items.indexOfFirst { it is IssueComment && it.id == comment.id }
+    fun updateComment(comment: IssueEvent) {
+        val pos = items.indexOfFirst { it is IssueEvent && it.id == comment.id }
         items[pos] = comment
         notifyItemChanged(pos)
     }
@@ -60,11 +60,11 @@ class IssueEventsAdapter(
     override fun getViewHolderId() = R.layout.issue_comment_view
 
     override fun bind(item: Pageable, view: View, position: Int) {
-        when (item) {
-            is IssueComment -> {
+        if (item is IssueEvent) {
+            if (item.isComment()) {
                 with (view) {
-                    if (item.user.avatarUrl.isNotEmpty()) profile_icon.loadImage(item.user.avatarUrl)
-                    author_username.text = item.user.login
+                    if (item.actor.avatarUrl.isNotEmpty()) profile_icon.loadImage(item.actor.avatarUrl)
+                    author_username.text = item.actor.login
 
                     val date = Instant.parse(item.createdAt)
                     val formatted = timeHelper.getRelativeAndExactTimeFormat(date, short = true)
@@ -73,7 +73,8 @@ class IssueEventsAdapter(
                     comment_body.addStyleSheet(if (darkMode) DarkMarkdownStyle() else LightMarkdownStyle())
                     comment_body.loadMarkdown(item.body)
 
-                    val writePermission = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
+                    val writePermission =
+                        permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
                     val menu = PopupMenu(context, comment_options).apply {
                         inflate(R.menu.issue_comment_menu)
                         menu.findItem(R.id.delete).isVisible = writePermission
@@ -131,7 +132,7 @@ class IssueEventsAdapter(
                     }
                 }
             }
-            is IssueEvent -> {
+            else {
                 val desc = spannableCache[item.id]
                 view.isVisible = desc?.isNotEmpty() ?: false
                 if (desc.isNullOrEmpty()) {
