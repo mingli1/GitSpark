@@ -1,5 +1,6 @@
 package com.gitspark.gitspark.ui.main.issues.pullrequest
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
@@ -9,14 +10,13 @@ import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.extension.showOptionIcons
 import com.gitspark.gitspark.model.Issue
+import com.gitspark.gitspark.model.PERMISSION_ADMIN
+import com.gitspark.gitspark.model.PERMISSION_WRITE
 import com.gitspark.gitspark.model.PullRequest
 import com.gitspark.gitspark.ui.adapter.ViewPagerAdapter
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
-import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE
-import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE_ARGS
-import com.gitspark.gitspark.ui.main.issues.BUNDLE_PULL_REQUEST
-import com.gitspark.gitspark.ui.main.issues.IssueDetailFragment
+import com.gitspark.gitspark.ui.main.issues.*
 import com.gitspark.gitspark.ui.main.shared.*
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_pr_detail.*
@@ -41,6 +41,10 @@ class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullR
     private lateinit var fileListFragment: FileListFragment
 
     private var args = ""
+
+    private var lockState: Triple<String, Drawable, Boolean>? = null
+    private var stateState: Pair<String, Boolean>? = null
+    private var editState = false
 
     override fun onDataRefreshed(pr: PullRequest) {
         tabs.getTabAt(COMMITS_TAB_INDEX)?.text = getString(R.string.commits_title, pr.numCommits)
@@ -72,6 +76,50 @@ class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullR
         inflater.inflate(R.menu.issue_detail_menu, menu)
         menu.showOptionIcons()
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return issueDetailFragment.onOptionsItemSelected(item)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+
+        lockState?.let {
+            menu.findItem(R.id.lock).run {
+                title = it.first
+                icon = it.second
+                isVisible = it.third
+            }
+        }
+        stateState?.let {
+            menu.findItem(R.id.state).run {
+                title = it.first
+                isVisible = it.second
+            }
+        }
+        menu.findItem(R.id.edit).run {
+            isVisible = editState
+        }
+    }
+
+    fun updateMenu(viewState: IssueDetailViewState) {
+        with (viewState) {
+            lockState = Triple(
+                if (locked) getString(R.string.unlock) else getString(R.string.lock),
+                if (locked) resources.getDrawable(R.drawable.ic_unlock, null) else
+                    resources.getDrawable(R.drawable.ic_lock, null),
+                permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
+            )
+
+            val type = if (isPullRequest) "pull request" else "issue"
+            stateState = Pair(
+                if (isOpen) getString(R.string.close, type) else getString(R.string.reopen, type),
+                !isMerged && (permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE || authUserIsAuthor)
+            )
+
+            editState = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE || authUserIsAuthor
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

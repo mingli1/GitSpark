@@ -233,9 +233,9 @@
     <string name="edit">Edit</string>
     <string name="lock">Lock conversation</string>
     <string name="unlock">Unlock conversation</string>
-    <string name="reopen">Reopen issue</string>
+    <string name="reopen">Reopen %1$s</string>
     <string name="delete">Delete</string>
-    <string name="close">Close issue</string>
+    <string name="close">Close %1$s</string>
     <string name="copy_link">Copy link</string>
     <string name="quote_reply">Quote reply</string>
     <string name="delete_issue">Delete issue</string>

@@ -29,6 +29,7 @@ import com.gitspark.gitspark.ui.dialog.SelectDialog
 import com.gitspark.gitspark.ui.dialog.SelectDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.issues.pullrequest.PullRequestDataCallback
+import com.gitspark.gitspark.ui.main.issues.pullrequest.PullRequestDetailFragment
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
 import com.google.android.material.appbar.AppBarLayout
@@ -64,7 +65,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(!(arguments?.containsKey(BUNDLE_PULL_REQUEST) ?: false))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -162,7 +163,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             R.id.repo -> viewModel.onRepoSelected()
             R.id.state -> {
                 viewModel.onIssueStateChange(
-                    if (item.title == getString(R.string.reopen)) "open" else "closed"
+                    if (item.title.startsWith("reopen", ignoreCase = true)) "open" else "closed"
                 )
             }
             R.id.lock -> {
@@ -194,19 +195,30 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                     permissionLevel == PERMISSION_WRITE ||
                     !locked
 
-            menu?.let {
-                it.findItem(R.id.lock).run {
-                    title = if (locked) getString(R.string.unlock) else getString(R.string.lock)
-                    icon = if (locked) resources.getDrawable(R.drawable.ic_unlock, null) else
-                        resources.getDrawable(R.drawable.ic_lock, null)
-                    isVisible = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
-                }
+            if (isPullRequest) {
+                (parentFragment as PullRequestDetailFragment).updateMenu(viewState)
+            } else {
+                menu?.let {
+                    it.findItem(R.id.lock).run {
+                        title = if (locked) getString(R.string.unlock) else getString(R.string.lock)
+                        icon = if (locked) resources.getDrawable(R.drawable.ic_unlock, null) else
+                            resources.getDrawable(R.drawable.ic_lock, null)
+                        isVisible =
+                            permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
+                    }
 
-                it.findItem(R.id.state).run {
-                    title = if (isOpen) getString(R.string.close) else getString(R.string.reopen)
-                    isVisible = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE || authUserIsAuthor
+                    it.findItem(R.id.state).run {
+                        val type = if (isPullRequest) "pull request" else "issue"
+                        title = if (isOpen) getString(
+                            R.string.close,
+                            type
+                        ) else getString(R.string.reopen, type)
+                        isVisible =
+                            !isMerged && (permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE || authUserIsAuthor)
+                    }
+                    it.findItem(R.id.edit).isVisible =
+                        permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE || authUserIsAuthor
                 }
-                it.findItem(R.id.edit).isVisible = permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE || authUserIsAuthor
             }
             issueEventsAdapter.permissionLevel = permissionLevel
 
