@@ -338,9 +338,12 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
     }
 
-    private fun navigateToRepoDetailFragment(repoFullName: String) {
-        val bundle = Bundle().apply { putString(BUNDLE_REPO_FULLNAME, repoFullName) }
-        findNavController().navigate(R.id.action_issue_detail_to_repo, bundle)
+    private fun navigateToRepoDetailFragment(pair: Pair<String, Boolean>) {
+        val bundle = Bundle().apply { putString(BUNDLE_REPO_FULLNAME, pair.first) }
+        findNavController().navigate(
+            if (pair.second) R.id.action_pr_detail_to_repo else R.id.action_issue_detail_to_repo,
+            bundle
+        )
     }
 
     private fun navigateToIssueEditFragment(triple: Triple<String, Issue, String>) {

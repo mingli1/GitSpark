@@ -142,9 +142,9 @@ class RepoOverviewFragment : BaseFragment<RepoOverviewViewModel>(RepoOverviewVie
                 else getString(R.string.num_forks_text, withSuffix(numForks))
 
             watch_button.drawable.setColor(context!!.getColor(
-                if (userWatching) R.color.colorPrimaryDark else R.color.colorDrawableDefault))
+                if (userWatching) R.color.colorPrimaryDarkCopy else R.color.colorDrawableDefault))
             star_button.drawable.setColor(context!!.getColor(
-                if (userStarring) R.color.colorPrimaryDark else R.color.colorDrawableDefault))
+                if (userStarring) R.color.colorPrimaryDarkCopy else R.color.colorDrawableDefault))
 
             readme_label.isVisible = readmeUrl.isNotEmpty()
             readme_view.isVisible = readmeUrl.isNotEmpty()

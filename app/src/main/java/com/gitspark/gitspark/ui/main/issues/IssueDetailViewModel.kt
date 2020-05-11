@@ -33,7 +33,7 @@ class IssueDetailViewModel @Inject constructor(
     val quoteReplyAction = SingleLiveEvent<String>()
     val clearCommentEdit = SingleLiveAction()
     val updateCommentRequest = SingleLiveEvent<IssueEvent>()
-    val navigateToRepoDetail = SingleLiveEvent<String>()
+    val navigateToRepoDetail = SingleLiveEvent<Pair<String, Boolean>>()
     val navigateToIssueEdit = SingleLiveEvent<Triple<String, Issue, String>>()
     val pullRequestRefresh = SingleLiveEvent<PullRequest>()
     private var started = false
@@ -196,7 +196,7 @@ class IssueDetailViewModel @Inject constructor(
     }
 
     fun onRepoSelected() {
-        navigateToRepoDetail.value = "$username/$repoName"
+        navigateToRepoDetail.value = Pair("$username/$repoName", isPullRequest)
     }
 
     fun onEditSelected() {
