@@ -56,7 +56,7 @@ data class ApiPullRequest(
         mergeSha = mergeSha ?: "",
         assignee = assignee?.toModel() ?: User(),
         assignees = assignees?.map { it.toModel() } ?: emptyList(),
-        requestReviewers = requestedReviewers?.map { it.toModel() } ?: emptyList(),
+        requestedReviewers = requestedReviewers?.map { it.toModel() } ?: emptyList(),
         head = head?.toModel() ?: PRBranch(),
         base = base?.toModel() ?: PRBranch(),
         draft = draft ?: false,

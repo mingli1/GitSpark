@@ -247,6 +247,38 @@
                         tools:text="45"/>
     
                     <TextView
+                        android:id="@+id/reviewers_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Body.Small.Bold"
+                        android:textColor="@color/colorDarkerGray"
+                        android:text="@string/reviewers_label"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_goneMarginBottom="8dp"
+                        app:layout_constraintTop_toBottomOf="@id/issue_desc_field"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/assignees_label"/>
+    
+                    <HorizontalScrollView
+                        android:id="@+id/reviewers_scroll_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:scrollbars="none"
+                        app:layout_constraintStart_toEndOf="@id/reviewers_label"
+                        app:layout_constraintTop_toTopOf="@id/reviewers_label"
+                        app:layout_constraintBottom_toBottomOf="@id/reviewers_label">
+        
+                        <LinearLayout
+                            android:id="@+id/reviewers_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"/>
+    
+                    </HorizontalScrollView>
+    
+                    <TextView
                         android:id="@+id/assignees_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -256,7 +288,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_marginStart="16dp"
                         app:layout_goneMarginBottom="8dp"
-                        app:layout_constraintTop_toBottomOf="@id/issue_desc_field"
+                        app:layout_constraintTop_toBottomOf="@id/reviewers_label"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toTopOf="@id/labels_label"/>
     

@@ -297,6 +297,21 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                     assignees_container.addView(view)
                 }
             }
+
+            reviewers_label.isVisible = reviewers.isNotEmpty() && isPullRequest
+            reviewers_container.isVisible = reviewers.isNotEmpty() && isPullRequest
+            if (reviewers.isNotEmpty()) {
+                reviewers_container.removeAllViews()
+                reviewers.forEach {
+                    val view = LayoutInflater.from(context)
+                        .inflate(R.layout.user_icon_view, reviewers_container, false)
+                    if (it.avatarUrl.isNotEmpty()) {
+                        (((view as LinearLayout).getChildAt(0) as CardView).getChildAt(0) as ImageView).loadImage(it.avatarUrl)
+                    }
+                    ((view as LinearLayout).getChildAt(1) as TextView).text = it.login
+                    reviewers_container.addView(view)
+                }
+            }
         }
     }
 

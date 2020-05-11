@@ -16,6 +16,7 @@ data class IssueDetailViewState(
     val numComments: Int = 0,
     val labels: List<Label> = emptyList(),
     val assignees: List<User> = emptyList(),
+    val reviewers: List<User> = emptyList(),
     val locked: Boolean = false,
     val authorAvatarUrl: String = "",
     val authorUsername: String = "",

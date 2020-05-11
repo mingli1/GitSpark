@@ -16,7 +16,7 @@ data class PullRequest(
     val mergeSha: String = "",
     val assignee: User = User(),
     val assignees: List<User> = emptyList(),
-    val requestReviewers: List<User> = emptyList(),
+    val requestedReviewers: List<User> = emptyList(),
     val head: PRBranch = PRBranch(),
     val base: PRBranch = PRBranch(),
     val draft: Boolean = false,

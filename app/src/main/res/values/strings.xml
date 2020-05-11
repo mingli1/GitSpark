@@ -228,6 +228,8 @@
     <string name="num_closed_issues">%1$s Closed</string>
     <string name="assignees_label">Assignees</string>
     <string name="no_assignees">No one assigned</string>
+    <string name="reviewers_label">Reviewers</string>
+    <string name="no_reviewers">No reviewers</string>
     <string name="none_yet">None yet</string>
     <string name="labels_label">Labels</string>
     <string name="edit">Edit</string>
