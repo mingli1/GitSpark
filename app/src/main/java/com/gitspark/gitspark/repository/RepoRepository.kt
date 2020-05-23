@@ -2,10 +2,7 @@ package com.gitspark.gitspark.repository
 
 import com.gitspark.gitspark.api.model.ApiAuthRepoRequest
 import com.gitspark.gitspark.api.model.ApiSubscribed
-import com.gitspark.gitspark.api.service.COMMITS_PER_PAGE
-import com.gitspark.gitspark.api.service.REPO_PER_PAGE
-import com.gitspark.gitspark.api.service.RepoService
-import com.gitspark.gitspark.api.service.USER_PER_PAGE
+import com.gitspark.gitspark.api.service.*
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.RetrofitHelper
 import com.gitspark.gitspark.model.*
@@ -228,6 +225,22 @@ class RepoRepository @Inject constructor(
     ): Observable<RepoResult<Page<User>>> {
         return getRepoService()
             .getContributors(username, repoName, page, perPage)
+            .map {
+                getSuccess(it.toModel<User>().apply {
+                    value = it.response.map { user -> user.toModel() }
+                })
+            }
+            .onErrorReturn { getFailure("Failed to obtain contributors for $username/$repoName") }
+    }
+
+    fun getCollaborators(
+        username: String,
+        repoName: String,
+        page: Int = 1,
+        perPage: Int = COLLABORATORS_PER_PAGE
+    ): Observable<RepoResult<Page<User>>> {
+        return getRepoService()
+            .getCollaborators(username, repoName, page, perPage)
             .map {
                 getSuccess(it.toModel<User>().apply {
                     value = it.response.map { user -> user.toModel() }

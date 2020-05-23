@@ -34,7 +34,7 @@ class IssueDetailViewModel @Inject constructor(
     val clearCommentEdit = SingleLiveAction()
     val updateCommentRequest = SingleLiveEvent<IssueEvent>()
     val navigateToRepoDetail = SingleLiveEvent<Pair<String, Boolean>>()
-    val navigateToIssueEdit = SingleLiveEvent<Triple<String, Issue, String>>()
+    val navigateToIssueEdit = SingleLiveEvent<Triple<String, Any, String>>()
     val pullRequestRefresh = SingleLiveEvent<PullRequest>()
     private var started = false
 
@@ -200,7 +200,11 @@ class IssueDetailViewModel @Inject constructor(
     }
 
     fun onEditSelected() {
-        navigateToIssueEdit.value = Triple("Editing $username/$repoName #$issueNum", issue, "$username/$repoName")
+        navigateToIssueEdit.value = Triple(
+            "Editing $username/$repoName #$issueNum",
+            if (isPullRequest) pullRequest else issue,
+            "$username/$repoName"
+        )
     }
 
     override fun onDeleteSelected(id: Long) {

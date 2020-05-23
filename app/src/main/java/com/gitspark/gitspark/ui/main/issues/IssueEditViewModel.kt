@@ -4,19 +4,23 @@ import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.api.model.ApiIssueEditRequest
 import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.Label
+import com.gitspark.gitspark.model.PullRequest
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.repository.IssueRepository
 import com.gitspark.gitspark.repository.IssueResult
+import com.gitspark.gitspark.repository.RepoRepository
+import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
 class IssueEditViewModel @Inject constructor(
-    private val issueRepository: IssueRepository
+    private val issueRepository: IssueRepository,
+    private val repoRepository: RepoRepository
 ) : BaseViewModel() {
 
     val viewState = MutableLiveData<IssueEditViewState>()
-    val loadAssigneesAndLabels = SingleLiveEvent<Pair<List<User>, List<Label>>>()
+    val loadListData = SingleLiveEvent<Triple<List<User>, List<Label>, List<User>>>()
     val showAssigneesDialog = SingleLiveEvent<List<User>>()
     val showLabelsDialog = SingleLiveEvent<List<Label>>()
     val updateIssueAction = SingleLiveEvent<Issue>()
@@ -24,7 +28,11 @@ class IssueEditViewModel @Inject constructor(
 
     var assignees: List<User>? = null
     var labels: List<Label>? = null
+    var reviewers: List<User>? = null
+
     private lateinit var issue: Issue
+    private lateinit var pullRequest: PullRequest
+    private var isPullRequest = false
     private var username = ""
     private var repoName = ""
     private var started = false
@@ -49,7 +57,37 @@ class IssueEditViewModel @Inject constructor(
                 assignees = assignees.map { it.login },
                 labels = labels.map { it.name }
             )
-            loadAssigneesAndLabels.value = Pair(assignees, labels)
+            loadListData.value = Triple(assignees, labels, emptyList())
+            started = true
+        }
+    }
+
+    fun setInitialState(pr: PullRequest, repoFullName: String) {
+        val split = repoFullName.split("/")
+        username = split[0]
+        repoName = split[1]
+        if (!started) {
+            this.pullRequest = pr
+            isPullRequest = true
+            val assignees = if (assignees != null) assignees!! else pr.assignees
+            val labels = if (labels != null) labels!! else pr.labels
+            val reviewers = if (reviewers != null) reviewers!! else pr.requestedReviewers
+
+            viewState.value = viewState.value?.copy(
+                title = pr.title,
+                body = pr.body,
+                reviewers = reviewers.map { it.login },
+                assignees = assignees.map { it.login },
+                labels = labels.map { it.name }
+            ) ?: IssueEditViewState(
+                title = pr.title,
+                body = pr.body,
+                reviewers = reviewers.map { it.login },
+                assignees = assignees.map { it.login },
+                labels = labels.map { it.name }
+            )
+
+            loadListData.value = Triple(assignees, labels, reviewers)
             started = true
         }
     }
@@ -95,9 +133,9 @@ class IssueEditViewModel @Inject constructor(
     fun onAssigneesSet(assignees: List<User>) {
         this.assignees = assignees
         viewState.value = viewState.value?.copy(assignees = assignees.map { it.login })
-        loadAssigneesAndLabels.value = loadAssigneesAndLabels.value?.copy(
+        loadListData.value = loadListData.value?.copy(
             first = assignees
-        ) ?: Pair(first = assignees, second = emptyList())
+        ) ?: Triple(first = assignees, second = emptyList(), third = emptyList())
     }
 
     fun onLabelsButtonClicked() {
@@ -116,9 +154,20 @@ class IssueEditViewModel @Inject constructor(
     fun onLabelsSet(labels: List<Label>) {
         this.labels = labels
         viewState.value = viewState.value?.copy(labels = labels.map { it.name })
-        loadAssigneesAndLabels.value = loadAssigneesAndLabels.value?.copy(
+        loadListData.value = loadListData.value?.copy(
             second = labels
-        ) ?: Pair(first = emptyList(), second = labels)
+        ) ?: Triple(first = emptyList(), second = labels, third = emptyList())
+    }
+
+    fun onReviewersButtonClicked() {
+        viewState.value = viewState.value?.copy(loading = true)
+        subscribe(repoRepository.getCollaborators(username, repoName)) {
+            when (it) {
+                is RepoResult.Success -> {
+
+                }
+            }
+        }
     }
 
     fun onEditIssueClicked() {

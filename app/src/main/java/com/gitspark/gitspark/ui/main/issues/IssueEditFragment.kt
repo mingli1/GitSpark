@@ -19,6 +19,7 @@ import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.ColorHelper
 import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.Label
+import com.gitspark.gitspark.model.PullRequest
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.dialog.*
@@ -34,12 +35,15 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
     AssigneesDialogCallback, LabelsDialogCallback, ConfirmDialogCallback {
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
+    @Inject lateinit var prJsonAdapter: JsonAdapter<PullRequest>
     @Inject lateinit var colorHelper: ColorHelper
 
     private val sharedViewModel by lazy {
         ViewModelProviders.of(activity!!, viewModelFactory)[IssueEditSharedViewModel::class.java]
     }
     private var issue: Issue? = null
+    private var pullRequest: PullRequest? = null
+    private var isPullRequest = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_issue_edit, container, false)
@@ -61,14 +65,23 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
 
-        arguments?.getString(BUNDLE_ISSUE)?.let {
-            issue = issueJsonAdapter.fromJson(it)
-        }
-
         val repoFullName = checkNotNull(arguments?.getString(BUNDLE_REPO_FULLNAME))
-        issue?.let {
-            viewModel.setInitialState(it, repoFullName)
-        } ?: viewModel.setCreatingState(repoFullName)
+        when {
+            arguments?.containsKey(BUNDLE_ISSUE) == true -> {
+                arguments?.getString(BUNDLE_ISSUE)?.let { json ->
+                    issue = issueJsonAdapter.fromJson(json)
+                    issue?.let { viewModel.setInitialState(it, repoFullName) }
+                }
+            }
+            arguments?.containsKey(BUNDLE_PULL_REQUEST) == true -> {
+                arguments?.getString(BUNDLE_PULL_REQUEST)?.let { json ->
+                    pullRequest = prJsonAdapter.fromJson(json)
+                    pullRequest?.let { viewModel.setInitialState(it, repoFullName) }
+                    isPullRequest = true
+                }
+            }
+            else -> viewModel.setCreatingState(repoFullName)
+        }
 
         setUpListeners()
 
@@ -85,7 +98,7 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
     override fun observeViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner) { updateView(it) }
         viewModel.showAssigneesDialog.observe(viewLifecycleOwner) { showAssigneesDialog(it) }
-        viewModel.loadAssigneesAndLabels.observe(viewLifecycleOwner) { loadAssigneesAndLabels(it) }
+        viewModel.loadListData.observe(viewLifecycleOwner) { loadListData(it) }
         viewModel.showLabelsDialog.observe(viewLifecycleOwner) { showLabelsDialog(it) }
         viewModel.updateIssueAction.observe(viewLifecycleOwner) {
             sharedViewModel.editedIssue.value = it
@@ -136,12 +149,12 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         }
     }
 
-    private fun loadAssigneesAndLabels(pair: Pair<List<User>, List<Label>>) {
-        no_assignees_text.isVisible = pair.first.isEmpty()
-        assignees_container.isVisible = pair.first.isNotEmpty()
-        if (pair.first.isNotEmpty()) {
+    private fun loadListData(triple: Triple<List<User>, List<Label>, List<User>>) {
+        no_assignees_text.isVisible = triple.first.isEmpty()
+        assignees_container.isVisible = triple.first.isNotEmpty()
+        if (triple.first.isNotEmpty()) {
             assignees_container.removeAllViews()
-            pair.first.forEach { user ->
+            triple.first.forEach { user ->
                 val view = LayoutInflater.from(context)
                     .inflate(R.layout.user_icon_view, assignees_container, false)
                 if (user.avatarUrl.isNotEmpty()) {
@@ -152,11 +165,11 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
             }
         }
 
-        no_labels_text.isVisible = pair.second.isEmpty()
-        labels_container.isVisible = pair.second.isNotEmpty()
-        if (pair.second.isNotEmpty()) {
+        no_labels_text.isVisible = triple.second.isEmpty()
+        labels_container.isVisible = triple.second.isNotEmpty()
+        if (triple.second.isNotEmpty()) {
             labels_container.removeAllViews()
-            pair.second.forEach { label ->
+            triple.second.forEach { label ->
                 val labelView = LayoutInflater.from(context)
                     .inflate(R.layout.label_view, labels_container, false)
                 ((labelView as CardView).getChildAt(0) as TextView).apply {
@@ -167,6 +180,21 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
                 labels_container.addView(labelView)
             }
         }
+
+        no_reviewers_text.isVisible = triple.third.isEmpty() && isPullRequest
+        reviewers_container.isVisible = triple.third.isNotEmpty() && isPullRequest
+        if (triple.third.isNotEmpty() && isPullRequest) {
+            reviewers_container.removeAllViews()
+            triple.third.forEach { user ->
+                val view = LayoutInflater.from(context)
+                    .inflate(R.layout.user_icon_view, reviewers_container, false)
+                if (user.avatarUrl.isNotEmpty()) {
+                    (((view as LinearLayout).getChildAt(0) as CardView).getChildAt(0) as ImageView).loadImage(user.avatarUrl)
+                }
+                ((view as LinearLayout).getChildAt(1) as TextView).text = user.login
+                reviewers_container.addView(view)
+            }
+        }
     }
 
     private fun setUpListeners() {
@@ -174,6 +202,7 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         edit_desc.afterTextChanged { viewModel.onBodyChanged(edit_desc.getString()) }
         assignees_button.setOnClickListener { viewModel.onAssigneesButtonClicked() }
         labels_button.setOnClickListener { viewModel.onLabelsButtonClicked() }
+        reviewers_button.setOnClickListener {  }
         edit_issue_button.setOnClickListener { viewModel.onEditIssueClicked() }
     }
 
