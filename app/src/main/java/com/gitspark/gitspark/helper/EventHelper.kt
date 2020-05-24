@@ -105,7 +105,7 @@ class EventHelper(private val context: Context) {
                 }
             PUBLIC_EVENT -> builder.append(if (received) "made " else "Made ")
                 .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
-                    bold { append(event.payload.repo.fullName) }
+                    bold { append(event.repo.repoName) }
                 }.append(" public")
             WATCH_EVENT -> builder.append(if (received) "starred " else "Starred ")
                 .color(context.getColor(R.color.colorPrimaryDarkCopy)) {
