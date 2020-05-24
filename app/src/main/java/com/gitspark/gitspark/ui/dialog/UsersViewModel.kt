@@ -5,7 +5,7 @@ import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import javax.inject.Inject
 
-class AssigneesViewModel @Inject constructor() : BaseViewModel(), AssigneesAdapterCallback {
+class UsersViewModel @Inject constructor() : BaseViewModel(), IssueUserAdapterCallback {
 
     val initializeDialog = SingleLiveEvent<ArrayList<User>>()
     val setAssigneesAction = SingleLiveEvent<List<User>>()

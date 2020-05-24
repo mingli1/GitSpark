@@ -23,6 +23,7 @@ class IssueEditViewModel @Inject constructor(
     val loadListData = SingleLiveEvent<Triple<List<User>, List<Label>, List<User>>>()
     val showAssigneesDialog = SingleLiveEvent<List<User>>()
     val showLabelsDialog = SingleLiveEvent<List<Label>>()
+    val showReviewersDialog = SingleLiveEvent<List<User>>()
     val updateIssueAction = SingleLiveEvent<Issue>()
     val createIssueAction = SingleLiveEvent<Issue>()
 
@@ -164,10 +165,20 @@ class IssueEditViewModel @Inject constructor(
         subscribe(repoRepository.getCollaborators(username, repoName)) {
             when (it) {
                 is RepoResult.Success -> {
-
+                    showReviewersDialog.value = it.value.value
                 }
+                is RepoResult.Failure -> alert(it.error)
             }
+            viewState.value = viewState.value?.copy(loading = false)
         }
+    }
+
+    fun onReviewersSet(reviewers: List<User>) {
+        this.reviewers = reviewers
+        viewState.value = viewState.value?.copy(reviewers = reviewers.map { it.login })
+        loadListData.value = loadListData.value?.copy(
+            third = reviewers
+        ) ?: Triple(first = emptyList(), second = emptyList(), third = reviewers)
     }
 
     fun onEditIssueClicked() {

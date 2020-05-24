@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import javax.inject.Inject
 
 class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::class.java),
-    AssigneesDialogCallback, LabelsDialogCallback, ConfirmDialogCallback {
+    UsersDialogCallback, LabelsDialogCallback, ConfirmDialogCallback {
 
     @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
     @Inject lateinit var prJsonAdapter: JsonAdapter<PullRequest>
@@ -100,6 +100,7 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         viewModel.showAssigneesDialog.observe(viewLifecycleOwner) { showAssigneesDialog(it) }
         viewModel.loadListData.observe(viewLifecycleOwner) { loadListData(it) }
         viewModel.showLabelsDialog.observe(viewLifecycleOwner) { showLabelsDialog(it) }
+        viewModel.showReviewersDialog.observe(viewLifecycleOwner) { showReviewersDialog(it) }
         viewModel.updateIssueAction.observe(viewLifecycleOwner) {
             sharedViewModel.editedIssue.value = it
             findNavController().navigateUp()
@@ -118,7 +119,11 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onAssigneesSet(assignees: List<User>) = viewModel.onAssigneesSet(assignees)
+    override fun onUsersSet(users: List<User>, isReviewer: Boolean) = if (isReviewer) {
+        viewModel.onReviewersSet(users)
+    } else {
+        viewModel.onAssigneesSet(users)
+    }
 
     override fun onLabelsSet(labels: List<Label>) = viewModel.onLabelsSet(labels)
 
@@ -202,17 +207,17 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
         edit_desc.afterTextChanged { viewModel.onBodyChanged(edit_desc.getString()) }
         assignees_button.setOnClickListener { viewModel.onAssigneesButtonClicked() }
         labels_button.setOnClickListener { viewModel.onLabelsButtonClicked() }
-        reviewers_button.setOnClickListener {  }
+        reviewers_button.setOnClickListener { viewModel.onReviewersButtonClicked() }
         edit_issue_button.setOnClickListener { viewModel.onEditIssueClicked() }
     }
 
     private fun showAssigneesDialog(users: List<User>) {
         val assignees = if (viewModel.assignees == null) issue?.assignees else viewModel.assignees
-        AssigneesDialog.newInstance(
+        UsersDialog.newInstance(
             users = users.map { it.login }.toTypedArray(),
             userAvatars = users.map { it.avatarUrl }.toTypedArray(),
-            assignees = assignees?.map { it.login }?.toTypedArray() ?: emptyArray(),
-            assigneeAvatars = assignees?.map { it.avatarUrl }?.toTypedArray() ?: emptyArray()
+            existingUsers = assignees?.map { it.login }?.toTypedArray() ?: emptyArray(),
+            existingUserAvatars = assignees?.map { it.avatarUrl }?.toTypedArray() ?: emptyArray()
         ).show(childFragmentManager, null)
     }
 
@@ -225,6 +230,16 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
             sNames = selectedLabels?.map { it.name }?.toTypedArray() ?: emptyArray(),
             sDescs = selectedLabels?.map { it.description }?.toTypedArray() ?: emptyArray(),
             sColors = selectedLabels?.map { it.color }?.toTypedArray() ?: emptyArray()
+        ).show(childFragmentManager, null)
+    }
+
+    private fun showReviewersDialog(reviewers: List<User>) {
+        val existing = if (viewModel.reviewers == null) pullRequest?.requestedReviewers else viewModel.reviewers
+        UsersDialog.newInstance(
+            users = reviewers.map { it.login }.toTypedArray(),
+            userAvatars = reviewers.map { it.avatarUrl }.toTypedArray(),
+            existingUsers = existing?.map { it.login }?.toTypedArray() ?: emptyArray(),
+            existingUserAvatars = existing?.map { it.avatarUrl }?.toTypedArray() ?: emptyArray()
         ).show(childFragmentManager, null)
     }
 
