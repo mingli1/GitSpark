@@ -77,7 +77,15 @@ interface IssueService {
         @Path("repo") repo: String,
         @Path("issue_number") issueNum: Int,
         @Body request: ApiIssueEditRequest
-    ): Observable<ApiIssue>
+    ): Single<ApiIssue>
+
+    @POST("repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers")
+    fun requestReviewers(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("pull_number") pullNum: Int,
+        @Body request: ApiReviewerRequest
+    ): Single<ApiPullRequest>
 
     @POST("repos/{owner}/{repo}/issues/{issue_number}/comments")
     fun createComment(

@@ -101,7 +101,7 @@ class UsersDialog : FullBottomSheetDialog() {
                 putStringArray(BUNDLE_EXISTING_USER_LIST, existingUsers)
                 putStringArray(BUNDLE_USER_AVATAR_LIST, userAvatars)
                 putStringArray(BUNDLE_EXISTING_USER_AVATAR_LIST, existingUserAvatars)
-
+                putBoolean(BUNDLE_IS_REVIEWER, isReviewer)
             }
         }
     }

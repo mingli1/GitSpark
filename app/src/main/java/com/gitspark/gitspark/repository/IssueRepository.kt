@@ -2,6 +2,7 @@ package com.gitspark.gitspark.repository
 
 import com.gitspark.gitspark.api.model.ApiIssueCommentRequest
 import com.gitspark.gitspark.api.model.ApiIssueEditRequest
+import com.gitspark.gitspark.api.model.ApiReviewerRequest
 import com.gitspark.gitspark.api.service.ISSUE_EVENTS_PER_PAGE
 import com.gitspark.gitspark.api.service.IssueService
 import com.gitspark.gitspark.helper.PreferencesHelper
@@ -116,11 +117,23 @@ class IssueRepository @Inject constructor(
         repoName: String,
         issueNum: Int,
         request: ApiIssueEditRequest
-    ): Observable<IssueResult<Issue>> {
+    ): Single<IssueResult<Issue>> {
         return getIssueService()
             .editIssue(username, repoName, issueNum, request)
             .map { getSuccess(it.toModel()) }
             .onErrorReturn { getFailure("Failed to edit this issue.") }
+    }
+
+    fun requestReviewers(
+        username: String,
+        repoName: String,
+        pullNumber: Int,
+        request: ApiReviewerRequest
+    ): Single<IssueResult<PullRequest>> {
+        return getIssueService()
+            .requestReviewers(username, repoName, pullNumber, request)
+            .map { getSuccess(it.toModel()) }
+            .onErrorReturn { getFailure("Failed to request reviewers.") }
     }
 
     fun createComment(

@@ -2,6 +2,7 @@ package com.gitspark.gitspark.ui.main.issues
 
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.api.model.ApiIssueEditRequest
+import com.gitspark.gitspark.api.model.ApiReviewerRequest
 import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.model.Label
 import com.gitspark.gitspark.model.PullRequest
@@ -12,6 +13,7 @@ import com.gitspark.gitspark.repository.RepoRepository
 import com.gitspark.gitspark.repository.RepoResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import io.reactivex.rxkotlin.Singles
 import javax.inject.Inject
 
 class IssueEditViewModel @Inject constructor(
@@ -184,41 +186,86 @@ class IssueEditViewModel @Inject constructor(
     fun onEditIssueClicked() {
         viewState.value = viewState.value?.copy(loading = true)
 
-        if (creating) {
-            subscribe(issueRepository.createIssue(username, repoName,
-                ApiIssueEditRequest(
-                    title = viewState.value?.title ?: "",
-                    body = viewState.value?.body ?: "",
-                    state = "open",
-                    labels = viewState.value?.labels ?: emptyList(),
-                    assignees = viewState.value?.assignees ?: emptyList()
-                ))) {
-                when (it) {
-                    is IssueResult.Success -> {
-                        createIssueAction.value = it.value
+        if (isPullRequest) {
+            postEditPullRequest()
+        } else {
+            if (creating) {
+                subscribe(issueRepository.createIssue(username, repoName,
+                    ApiIssueEditRequest(
+                        title = viewState.value?.title ?: "",
+                        body = viewState.value?.body ?: "",
+                        state = "open",
+                        labels = viewState.value?.labels ?: emptyList(),
+                        assignees = viewState.value?.assignees ?: emptyList()
+                    ))) {
+                    when (it) {
+                        is IssueResult.Success -> {
+                            createIssueAction.value = it.value
+                        }
+                        is IssueResult.Failure -> alert(it.error)
                     }
-                    is IssueResult.Failure -> alert(it.error)
+                    viewState.value = viewState.value?.copy(loading = false)
                 }
-                viewState.value = viewState.value?.copy(loading = false)
             }
-        }
-        else {
-            subscribe(issueRepository.editIssue(username, repoName, issue.number,
-                ApiIssueEditRequest(
-                    title = viewState.value?.title ?: issue.title,
-                    body = viewState.value?.body ?: issue.body,
-                    state = issue.state,
-                    labels = viewState.value?.labels ?: issue.labels.map { it.name },
-                    assignees = viewState.value?.assignees ?: issue.assignees.map { it.login }
-                ))) {
-                when (it) {
-                    is IssueResult.Success -> {
-                        updateIssueAction.value = it.value
-                    }
-                    is IssueResult.Failure -> alert(it.error)
-                }
-                viewState.value = viewState.value?.copy(loading = false)
+            else {
+                postEditIssue()
             }
         }
     }
+
+    private fun postEditIssue() {
+        subscribe(issueRepository.editIssue(username, repoName, issue.number,
+            ApiIssueEditRequest(
+                title = viewState.value?.title ?: issue.title,
+                body = viewState.value?.body ?: issue.body,
+                state = issue.state,
+                labels = viewState.value?.labels ?: issue.labels.map { it.name },
+                assignees = viewState.value?.assignees ?: issue.assignees.map { it.login }
+            ))) {
+            when (it) {
+                is IssueResult.Success -> {
+                    updateIssueAction.value = it.value
+                }
+                is IssueResult.Failure -> alert(it.error)
+            }
+            viewState.value = viewState.value?.copy(loading = false)
+        }
+    }
+
+    private fun postEditPullRequest() {
+        subscribe(getPullRequestEditRequest()) {
+            val editResult = it.first
+            val reviewersResult = it.second
+
+            when {
+                editResult is IssueResult.Failure && reviewersResult is IssueResult.Failure -> {
+                    alert("${editResult.error} and ${reviewersResult.error}")
+                }
+                editResult is IssueResult.Failure -> alert(editResult.error)
+                reviewersResult is IssueResult.Failure -> alert(reviewersResult.error)
+                else -> {
+                    // success
+                }
+            }
+
+            viewState.value = viewState.value?.copy(loading = false)
+        }
+    }
+
+    private fun getPullRequestEditRequest() = Singles.zip(
+        issueRepository.editIssue(username, repoName, pullRequest.number,
+            ApiIssueEditRequest(
+                title = viewState.value?.title ?: pullRequest.title,
+                body = viewState.value?.body ?: pullRequest.body,
+                state = pullRequest.state,
+                labels = viewState.value?.labels ?: pullRequest.labels.map { it.name },
+                assignees = viewState.value?.assignees ?: pullRequest.assignees.map { it.login }
+            )
+        ),
+        issueRepository.requestReviewers(username, repoName, pullRequest.number,
+            ApiReviewerRequest(
+                reviewers = viewState.value?.reviewers ?: pullRequest.requestedReviewers.map { it.login }
+            )
+        )
+    )
 }
