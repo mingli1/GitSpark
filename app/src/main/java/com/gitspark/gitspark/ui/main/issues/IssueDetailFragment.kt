@@ -73,14 +73,19 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         val appBarLayout = view.findViewById<AppBarLayout>(R.id.app_bar_layout)
 
-        appBarLayout.isVisible = !(arguments?.containsKey(BUNDLE_PULL_REQUEST) ?: false)
+        val showToolbar = !(arguments?.containsKey(BUNDLE_PULL_REQUEST) ?: false)
 
-        with (activity as MainActivity) {
-            setSupportActionBar(toolbar)
-            supportActionBar?.run {
-                setDisplayHomeAsUpEnabled(true)
-                setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
-                title = arguments?.getString(BUNDLE_TITLE) ?: getString(R.string.default_issue_title)
+        appBarLayout.isVisible = showToolbar
+
+        if (showToolbar) {
+            with (activity as MainActivity) {
+                setSupportActionBar(toolbar)
+                supportActionBar?.run {
+                    setDisplayHomeAsUpEnabled(true)
+                    setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
+                    title = arguments?.getString(BUNDLE_TITLE)
+                        ?: getString(R.string.default_issue_title)
+                }
             }
         }
 

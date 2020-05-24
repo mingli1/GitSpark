@@ -29,14 +29,18 @@ abstract class ListFragment<T, S : ListViewModel<T>>(clazz: Class<S>, private va
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         val appBarLayout = view.findViewById<AppBarLayout>(R.id.app_bar_layout)
 
-        appBarLayout.isVisible = !(arguments?.containsKey(BUNDLE_HIDE_TOOLBAR) ?: false)
+        val showToolbar = !(arguments?.containsKey(BUNDLE_HIDE_TOOLBAR) ?: false)
 
-        with (activity as MainActivity) {
-            setSupportActionBar(toolbar)
-            supportActionBar?.run {
-                setDisplayHomeAsUpEnabled(true)
-                setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
-                title = arguments?.getString(BUNDLE_TITLE) ?: ""
+        appBarLayout.isVisible = showToolbar
+
+        if (showToolbar) {
+            with(activity as MainActivity) {
+                setSupportActionBar(toolbar)
+                supportActionBar?.run {
+                    setDisplayHomeAsUpEnabled(true)
+                    setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
+                    title = arguments?.getString(BUNDLE_TITLE) ?: ""
+                }
             }
         }
         return view
