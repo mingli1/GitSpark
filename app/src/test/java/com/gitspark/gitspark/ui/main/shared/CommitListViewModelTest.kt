@@ -1,6 +1,7 @@
 package com.gitspark.gitspark.ui.main.shared
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.gitspark.gitspark.repository.IssueRepository
 import com.gitspark.gitspark.repository.RepoRepository
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.RelaxedMockK
@@ -18,6 +19,7 @@ class CommitListViewModelTest {
 
     private lateinit var viewModel: CommitListViewModel
     @RelaxedMockK private lateinit var repoRepository: RepoRepository
+    @RelaxedMockK private lateinit var issueRepository: IssueRepository
 
     @Before
     fun setup() {
@@ -25,12 +27,12 @@ class CommitListViewModelTest {
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        viewModel = CommitListViewModel(repoRepository)
+        viewModel = CommitListViewModel(repoRepository, issueRepository)
     }
 
     @Test
     fun shouldRequestCommits() {
-        viewModel.onStart("arg1/arg2/arg3")
+        viewModel.onStart(CommitListType.Repo, "arg1/arg2/arg3")
         verify { repoRepository.getCommits(any(), any(), any(), any()) }
     }
 }
