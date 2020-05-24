@@ -370,7 +370,10 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                 putString(BUNDLE_PULL_REQUEST, prJsonAdapter.toJson(triple.second as PullRequest))
             putString(BUNDLE_REPO_FULLNAME, triple.third)
         }
-        findNavController().navigate(R.id.action_issue_detail_to_issue_edit, bundle)
+        findNavController().navigate(
+            if (triple.second is Issue) R.id.action_issue_detail_to_issue_edit else R.id.action_pr_detail_to_issue_edit,
+            bundle
+        )
     }
 
     private fun refreshPullRequestData(pr: PullRequest) {

@@ -186,6 +186,7 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
             }
         }
 
+        reviewers_header.isVisible = isPullRequest
         no_reviewers_text.isVisible = triple.third.isEmpty() && isPullRequest
         reviewers_container.isVisible = triple.third.isNotEmpty() && isPullRequest
         if (triple.third.isNotEmpty() && isPullRequest) {
@@ -239,7 +240,8 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
             users = reviewers.map { it.login }.toTypedArray(),
             userAvatars = reviewers.map { it.avatarUrl }.toTypedArray(),
             existingUsers = existing?.map { it.login }?.toTypedArray() ?: emptyArray(),
-            existingUserAvatars = existing?.map { it.avatarUrl }?.toTypedArray() ?: emptyArray()
+            existingUserAvatars = existing?.map { it.avatarUrl }?.toTypedArray() ?: emptyArray(),
+            isReviewer = true
         ).show(childFragmentManager, null)
     }
 

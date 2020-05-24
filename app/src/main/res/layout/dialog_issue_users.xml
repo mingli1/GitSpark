@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             style="@style/BodyLarge"
             android:layout_margin="16dp"
-            android:text="@string/assignees_header"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -46,11 +45,10 @@
             app:layout_constraintEnd_toEndOf="parent"/>
         
         <Button
-            android:id="@+id/set_assignees_button"
+            android:id="@+id/set_button"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             style="@style/AppTheme.RoundedCornerMaterialButton"
-            android:text="@string/assignees_button"
             android:layout_margin="16dp"
             android:textAllCaps="false"
             app:layout_constraintTop_toBottomOf="@id/assignees_list"

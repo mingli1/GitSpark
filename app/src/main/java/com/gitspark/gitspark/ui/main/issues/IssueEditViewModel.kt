@@ -244,7 +244,7 @@ class IssueEditViewModel @Inject constructor(
                 editResult is IssueResult.Failure -> alert(editResult.error)
                 reviewersResult is IssueResult.Failure -> alert(reviewersResult.error)
                 else -> {
-                    // success
+                    updateIssueAction.value = (editResult as IssueResult.Success).value
                 }
             }
 

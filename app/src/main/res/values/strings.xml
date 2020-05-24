@@ -257,7 +257,9 @@
     </string-array>
     <string name="lock_title">Lock conversation</string>
     <string name="assignees_header">Select up to 10 assignees</string>
+    <string name="reviewers_header">Request up to 15 reviewers</string>
     <string name="assignees_button">Set assignees</string>
+    <string name="reviewers_button">Set reviewers</string>
     <string name="labels_header">Apply labels to this issue</string>
     <string name="labels_button">Set labels</string>
     <string name="discard_changes_title">Discard changes</string>

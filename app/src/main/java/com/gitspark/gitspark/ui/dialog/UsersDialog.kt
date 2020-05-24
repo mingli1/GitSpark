@@ -13,7 +13,7 @@ import com.gitspark.gitspark.extension.observe
 import com.gitspark.gitspark.model.User
 import com.gitspark.gitspark.ui.adapter.IssueUsersAdapter
 import com.gitspark.gitspark.ui.base.ViewModelFactory
-import kotlinx.android.synthetic.main.dialog_assignees.*
+import kotlinx.android.synthetic.main.dialog_issue_users.*
 import javax.inject.Inject
 
 private const val BUNDLE_EXISTING_USER_LIST = "BUNDLE_ASSIGNEES_LIST"
@@ -21,7 +21,6 @@ private const val BUNDLE_EXISTING_USER_AVATAR_LIST = "BUNDLE_ASSIGNEE_URL_LIST"
 private const val BUNDLE_USER_AVATAR_LIST = "BUNDLE_AVATAR_URL_LIST"
 private const val BUNDLE_USER_LIST = "BUNDLE_USER_LIST"
 private const val BUNDLE_IS_REVIEWER = "BUNDLE_IS_REVIEWER"
-
 
 interface IssueUserAdapterCallback {
     fun addUser(user: User)
@@ -43,7 +42,7 @@ class UsersDialog : FullBottomSheetDialog() {
     private var isReviewer = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.dialog_assignees, container, false)
+        return inflater.inflate(R.layout.dialog_issue_users, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -55,6 +54,8 @@ class UsersDialog : FullBottomSheetDialog() {
         val assigneeAvatarList = arguments?.getStringArray(BUNDLE_EXISTING_USER_AVATAR_LIST)
         isReviewer = arguments?.getBoolean(BUNDLE_IS_REVIEWER) ?: false
 
+        header.text = getString(if (isReviewer) R.string.reviewers_header else R.string.assignees_header)
+
         viewModel.initAssignees(assigneesList!!, assigneeAvatarList!!)
 
         assignees_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
@@ -65,7 +66,8 @@ class UsersDialog : FullBottomSheetDialog() {
 
         observeViewModel()
 
-        set_assignees_button.setOnClickListener {
+        set_button.text = getString(if (isReviewer) R.string.reviewers_button else R.string.assignees_button)
+        set_button.setOnClickListener {
             viewModel.onSetAssigneesClicked()
             dismiss()
         }
