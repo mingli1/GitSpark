@@ -136,8 +136,11 @@ class IssueEditFragment : BaseFragment<IssueEditViewModel>(IssueEditViewModel::c
     private fun updateView(viewState: IssueEditViewState) {
         with (viewState) {
             loading_indicator.isVisible = loading
-            edit_issue_button.text = if (creating) getString(R.string.create_issue_button) else
-                getString(R.string.edit_issue_button)
+            edit_issue_button.text = getString(when {
+                creating -> R.string.create_issue_button
+                isPullRequest -> R.string.edit_pr_button
+                else -> R.string.edit_issue_button
+            })
 
             if (edit_title.getString() != title) edit_title.setText(title)
             if (edit_desc.getString() != body) edit_desc.setText(body)

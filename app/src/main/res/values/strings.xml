@@ -18,6 +18,7 @@
     <string name="followers_text">Followers (%1$s)</string>
     <string name="edit_profile_button">Edit Profile</string>
     <string name="edit_issue_button">Edit Issue</string>
+    <string name="edit_pr_button">Edit Pull Request</string>
     <string name="create_issue_button">Create Issue</string>
     <string name="total_contribution_single">1 contribution in the past year</string>
     <string name="total_contribution">%1$s contributions in the past year</string>
