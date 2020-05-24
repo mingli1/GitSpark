@@ -167,7 +167,9 @@ class IssueEditViewModel @Inject constructor(
         subscribe(repoRepository.getCollaborators(username, repoName)) {
             when (it) {
                 is RepoResult.Success -> {
-                    showReviewersDialog.value = it.value.value
+                    showReviewersDialog.value = it.value.value.filter { user ->
+                        user.login != pullRequest.user.login
+                    }
                 }
                 is RepoResult.Failure -> alert(it.error)
             }
