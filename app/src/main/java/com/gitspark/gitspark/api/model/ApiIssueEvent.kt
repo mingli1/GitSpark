@@ -20,7 +20,9 @@ data class ApiIssueEvent(
     @field:Json(name = "committer") val committer: ApiCommitUser?,
     @field:Json(name = "message") val message: String?,
     @field:Json(name = "verification") val verification: ApiCommitVerification?,
-    @field:Json(name = "body") val body: String?
+    @field:Json(name = "body") val body: String?,
+    @field:Json(name = "review_requester") val reviewRequester: ApiUser?,
+    @field:Json(name = "requested_reviewer") val requestedReviewer: ApiUser?
 ) {
     fun toModel() = IssueEvent(
         id = id ?: 0,
@@ -39,7 +41,9 @@ data class ApiIssueEvent(
         committer = committer?.toModel() ?: CommitUser(),
         message = message ?: "",
         verification = verification?.toModel() ?: CommitVerification(),
-        body = body ?: ""
+        body = body ?: "",
+        reviewRequester = reviewRequester?.toModel() ?: User(),
+        requestedReviewer = requestedReviewer?.toModel() ?: User()
     )
 }
 

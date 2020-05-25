@@ -23,7 +23,9 @@ data class IssueEvent(
     val committer: CommitUser = CommitUser(),
     val message: String = "",
     val verification: CommitVerification = CommitVerification(),
-    var body: String = ""
+    var body: String = "",
+    val reviewRequester: User = User(),
+    val requestedReviewer: User = User()
 ) : Pageable {
 
     override fun getViewType() = if (isComment()) VIEW_TYPE_VIEW else VIEW_TYPE_ISSUE_EVENT

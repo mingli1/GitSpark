@@ -23,6 +23,7 @@ private const val LABELED_EVENT = "labeled"
 private const val LOCKED_EVENT = "locked"
 private const val RENAMED_EVENT = "renamed"
 private const val REOPENED_EVENT = "reopened"
+private const val REQUEST_REVIEWER_EVENT = "review_requested"
 private const val UNASSIGNED_EVENT = "unassigned"
 private const val UNLOCKED_EVENT = "unlocked"
 private const val UNLABELED_EVENT = "unlabeled"
@@ -88,6 +89,11 @@ class IssueEventHelper(
                     }
             }
             REOPENED_EVENT -> builder.append("reopened this issue")
+            REQUEST_REVIEWER_EVENT ->
+                builder.append("requested a review from ")
+                    .color(context.getColor(R.color.colorBlack)) {
+                        bold { append(event.requestedReviewer.login) }
+                    }
             UNASSIGNED_EVENT -> {
                 if (event.assignee.login == event.actor.login) {
                     builder.append("removed their assignment")
@@ -131,6 +137,7 @@ class IssueEventHelper(
             LABELED_EVENT, UNLABELED_EVENT -> R.drawable.ic_label
             LOCKED_EVENT -> R.drawable.ic_lock
             RENAMED_EVENT -> R.drawable.ic_edit
+            REQUEST_REVIEWER_EVENT -> R.drawable.ic_eye
             UNLOCKED_EVENT -> R.drawable.ic_unlock
             else -> R.drawable.ic_issue
         })
