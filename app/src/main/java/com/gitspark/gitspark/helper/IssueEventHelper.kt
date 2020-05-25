@@ -16,6 +16,7 @@ import org.threeten.bp.Instant
 
 const val COMMENTED_EVENT = "commented"
 const val COMMIT_EVENT = "committed"
+const val REVIEWED_EVENT = "reviewed"
 
 private const val ASSIGNED_EVENT = "assigned"
 private const val CLOSED_EVENT = "closed"
