@@ -89,11 +89,16 @@ class IssueEventHelper(
                     }
             }
             REOPENED_EVENT -> builder.append("reopened this issue")
-            REQUEST_REVIEWER_EVENT ->
-                builder.append("requested a review from ")
-                    .color(context.getColor(R.color.colorBlack)) {
-                        bold { append(event.requestedReviewer.login) }
-                    }
+            REQUEST_REVIEWER_EVENT -> {
+                if (event.requestedReviewer.login == event.reviewRequester.login) {
+                    builder.append("self-requested a review")
+                } else {
+                    builder.append("requested a review from ")
+                        .color(context.getColor(R.color.colorBlack)) {
+                            bold { append(event.requestedReviewer.login) }
+                        }
+                }
+            }
             UNASSIGNED_EVENT -> {
                 if (event.assignee.login == event.actor.login) {
                     builder.append("removed their assignment")
