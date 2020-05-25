@@ -10,7 +10,7 @@
     android:layout_marginBottom="6dp">
     
     <View
-        android:id="@+id/top_divider"
+        android:id="@+id/event_top_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorWhiteDark"
@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
     
     <View
-        android:id="@+id/bottom_divider"
+        android:id="@+id/event_bottom_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorWhiteDark"
@@ -36,9 +36,9 @@
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
         android:tint="@color/colorPrimaryCopy"
-        app:layout_constraintTop_toBottomOf="@id/top_divider"
+        app:layout_constraintTop_toBottomOf="@id/event_top_divider"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_divider"
+        app:layout_constraintBottom_toTopOf="@id/event_bottom_divider"
         tools:src="@drawable/ic_lock"/>
     
     <TextView
@@ -52,8 +52,38 @@
         android:layout_marginBottom="12dp"
         app:layout_constraintStart_toEndOf="@id/event_icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/top_divider"
-        app:layout_constraintBottom_toTopOf="@id/bottom_divider"
+        app:layout_constraintTop_toBottomOf="@id/event_top_divider"
+        app:layout_constraintBottom_toTopOf="@id/event_bottom_divider"
         tools:text="mingli1 changed the title Pop navigation backstack when navigating between graphs Pop navigation backstack when navigating between nav graphs 3 hours ago"/>
+    
+    <TextView
+        android:id="@+id/commit_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/Body"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/event_icon"
+        app:layout_constraintEnd_toStartOf="@id/commit_sha"
+        app:layout_constraintTop_toBottomOf="@id/event_top_divider"
+        app:layout_constraintBottom_toTopOf="@id/event_bottom_divider"
+        tools:text="added some code"/>
+    
+    <TextView
+        android:id="@+id/commit_sha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Body"
+        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/commit_message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_top_divider"
+        app:layout_constraintBottom_toTopOf="@id/event_bottom_divider"
+        tools:text="0d6efe9"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

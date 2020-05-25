@@ -15,6 +15,7 @@ import com.gitspark.gitspark.ui.custom.RoundedBackgroundSpan
 import org.threeten.bp.Instant
 
 const val COMMENTED_EVENT = "commented"
+const val COMMIT_EVENT = "committed"
 
 private const val ASSIGNED_EVENT = "assigned"
 private const val CLOSED_EVENT = "closed"
