@@ -100,12 +100,6 @@ class IssueEventsAdapter(
 
             commit_sha.isVisible = true
             commit_sha.text = item.sha.take(7)
-
-            val lp = (layoutParams as ViewGroup.MarginLayoutParams).apply {
-                topMargin = 0
-                bottomMargin = 0
-            }
-            layoutParams = lp
         }
     }
 
@@ -117,6 +111,7 @@ class IssueEventsAdapter(
         with (view) {
             review_header.isVisible = true
             if (item.body.isEmpty()) {
+                top_divider.isVisible = false
                 header_bg.isVisible = false
                 header_divider.isVisible = false
                 comment_body.isVisible = false
@@ -184,7 +179,7 @@ class IssueEventsAdapter(
             val menu = PopupMenu(context, comment_options).apply {
                 inflate(R.menu.issue_comment_menu)
                 menu.findItem(R.id.delete).isVisible = writePermission && !isReview
-                menu.findItem(R.id.edit).isVisible = writePermission
+                menu.findItem(R.id.edit).isVisible = writePermission && !isReview
                 menu.showOptionIcons()
             }
 
