@@ -63,117 +63,178 @@ class IssueEventsAdapter(
     override fun bind(item: Pageable, view: View, position: Int) {
         if (item is IssueEvent) {
             when {
-                item.isComment() -> {
-                    with (view) {
-                        if (item.actor.avatarUrl.isNotEmpty()) profile_icon.loadImage(item.actor.avatarUrl)
-                        author_username.text = item.actor.login
+                item.isComment() -> handleComment(item, view)
+                item.isCommit() -> handleCommit(item, view)
+                item.isReview() -> handleReview(item, view)
+                else -> handleEvent(item, view)
+            }
+        }
+    }
 
-                        val date = Instant.parse(item.createdAt)
-                        val formatted = timeHelper.getRelativeAndExactTimeFormat(date, short = true)
+    private fun handleComment(item: IssueEvent, view: View) {
+        with (view) {
+            if (item.actor.avatarUrl.isNotEmpty()) profile_icon.loadImage(item.actor.avatarUrl)
+            author_username.text = item.actor.login
 
-                        author_action.text = context.getString(R.string.comment_action, formatted)
-                        comment_body.addStyleSheet(if (darkMode) DarkMarkdownStyle() else LightMarkdownStyle())
-                        comment_body.loadMarkdown(item.body)
+            val date = Instant.parse(item.createdAt)
+            val formatted = timeHelper.getRelativeAndExactTimeFormat(date, short = true)
 
-                        val writePermission =
-                            permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
-                        val menu = PopupMenu(context, comment_options).apply {
-                            inflate(R.menu.issue_comment_menu)
-                            menu.findItem(R.id.delete).isVisible = writePermission
-                            menu.findItem(R.id.edit).isVisible = writePermission
-                            menu.showOptionIcons()
-                        }
+            author_action.text = context.getString(R.string.comment_action, formatted)
+            comment_body.addStyleSheet(if (darkMode) DarkMarkdownStyle() else LightMarkdownStyle())
+            comment_body.loadMarkdown(item.body)
 
-                        comment_options.setOnClickListener { menu.show() }
-                        menu.setOnMenuItemClickListener {
-                            when (it.itemId) {
-                                R.id.edit -> {
-                                    comment_options.isVisible = false
-                                    comment_body.isVisible = false
-                                    edit_comment.isVisible = true
-                                    cancel_edit_button.isVisible = true
-                                    update_comment_button.isVisible = true
+            handleCommentMenu(item, view)
+        }
+    }
 
-                                    edit_comment.setText(item.body)
-                                    edit_comment.postDelayed({
-                                        edit_comment.requestFocus()
-                                        keyboardHelper.showKeyboard(edit_comment)
-                                    }, 100)
-                                    callback.onEditCommentFocused()
-                                }
-                                R.id.delete -> callback.onDeleteSelected(item.id)
-                                R.id.copy_link -> callback.onCopyLinkSelected(item.htmlUrl)
-                                R.id.quote_reply -> callback.onQuoteReplySelected(item.body)
-                            }
-                            true
-                        }
+    private fun handleCommit(item: IssueEvent, view: View) {
+        with (view) {
+            event_top_divider.isVisible = false
+            event_bottom_divider.isVisible = false
+            event_icon.setImageResource(R.drawable.ic_event_commit)
+            event_icon.drawable.setColor(context.getColor(R.color.colorPrimaryCopy))
+            event_desc.isVisible = false
 
-                        edit_comment.setOnClickListener { callback.onEditCommentFocused() }
-                        edit_comment.onImeBack { _, _ -> callback.onEditCommentUnfocused() }
+            commit_message.isVisible = true
+            commit_message.text = item.message
 
-                        cancel_edit_button.setOnClickListener {
-                            comment_options.isVisible = true
-                            comment_body.isVisible = true
-                            edit_comment.isVisible = false
-                            cancel_edit_button.isVisible = false
-                            update_comment_button.isVisible = false
+            commit_sha.isVisible = true
+            commit_sha.text = item.sha.take(7)
 
-                            callback.onEditCommentUnfocused()
-                            keyboardHelper.hideKeyboard(edit_comment)
-                        }
-                        update_comment_button.setOnClickListener {
-                            comment_options.isVisible = true
-                            comment_body.isVisible = true
-                            edit_comment.isVisible = false
-                            cancel_edit_button.isVisible = false
-                            update_comment_button.isVisible = false
+            val lp = (layoutParams as ViewGroup.MarginLayoutParams).apply {
+                topMargin = 0
+                bottomMargin = 0
+            }
+            layoutParams = lp
+        }
+    }
 
-                            callback.onEditCommentUnfocused()
-                            keyboardHelper.hideKeyboard(edit_comment)
-                            callback.onCommentUpdated(item.id, edit_comment.text.toString())
-                        }
+    private fun handleReview(item: IssueEvent, view: View) {
+        if (item.body.isEmpty() && item.state == REVIEW_STATE_COMMENTED) {
+            hideItem(view)
+            return
+        }
+        with (view) {
+            review_header.isVisible = true
+            if (item.body.isEmpty()) {
+                header_bg.isVisible = false
+                header_divider.isVisible = false
+                comment_body.isVisible = false
+            } else {
+                avatar_card_view.isVisible = false
+                author_username.text = item.user.login
+                author_action.text = context.getString(R.string.left_a_comment)
+                comment_body.addStyleSheet(if (darkMode) DarkMarkdownStyle() else LightMarkdownStyle())
+                comment_body.loadMarkdown(item.body)
+
+                handleCommentMenu(item, view, isReview = true)
+            }
+
+            if (item.user.avatarUrl.isNotEmpty()) review_avatar.loadImage(item.user.avatarUrl)
+            review_state.setImageResource(when (item.state) {
+                REVIEW_STATE_APPROVED -> R.drawable.ic_check
+                REVIEW_STATE_REQUEST_CHANGES -> R.drawable.ic_request_changes
+                else -> R.drawable.ic_eye
+            })
+            review_state.drawable.setColor(when (item.state) {
+                REVIEW_STATE_APPROVED -> context.getColor(R.color.colorGreen)
+                REVIEW_STATE_REQUEST_CHANGES -> context.getColor(R.color.colorRed)
+                else -> context.getColor(R.color.colorPrimaryCopy)
+            })
+            reviewer_name.text = item.user.login
+            review_action.text = when (item.state) {
+                REVIEW_STATE_APPROVED -> context.getString(R.string.review_approved)
+                REVIEW_STATE_REQUEST_CHANGES -> context.getString(R.string.review_changes_requested)
+                else -> context.getString(R.string.review_changes_commented)
+            }
+            val date = Instant.parse(item.submittedAt)
+            val formatted = timeHelper.getRelativeAndExactTimeFormat(date, short = true)
+            review_date.text = formatted
+        }
+    }
+
+    private fun handleEvent(item: IssueEvent, view: View) {
+        val desc = spannableCache[item.id]
+        view.isVisible = desc?.isNotEmpty() ?: false
+        if (desc.isNullOrEmpty()) {
+            hideItem(view)
+            return
+        } else {
+            val lp = view.layoutParams.apply { height = ViewGroup.LayoutParams.WRAP_CONTENT }
+            view.layoutParams = lp
+        }
+
+        view.event_desc.text = desc
+        eventHelper.setIcon(item, view.event_icon)
+    }
+
+    private fun hideItem(view: View) {
+        val lp = view.layoutParams.apply { height = 0 }
+        (lp as ViewGroup.MarginLayoutParams).run {
+            topMargin = 0
+            bottomMargin = 0
+        }
+        view.layoutParams = lp
+    }
+
+    private fun handleCommentMenu(item: IssueEvent, view: View, isReview: Boolean = false) {
+        with (view) {
+            val writePermission =
+                permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE
+            val menu = PopupMenu(context, comment_options).apply {
+                inflate(R.menu.issue_comment_menu)
+                menu.findItem(R.id.delete).isVisible = writePermission && !isReview
+                menu.findItem(R.id.edit).isVisible = writePermission
+                menu.showOptionIcons()
+            }
+
+            comment_options.setOnClickListener { menu.show() }
+            menu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.edit -> {
+                        comment_options.isVisible = false
+                        comment_body.isVisible = false
+                        edit_comment.isVisible = true
+                        cancel_edit_button.isVisible = true
+                        update_comment_button.isVisible = true
+
+                        edit_comment.setText(item.body)
+                        edit_comment.postDelayed({
+                            edit_comment.requestFocus()
+                            keyboardHelper.showKeyboard(edit_comment)
+                        }, 100)
+                        callback.onEditCommentFocused()
                     }
+                    R.id.delete -> callback.onDeleteSelected(item.id)
+                    R.id.copy_link -> callback.onCopyLinkSelected(item.htmlUrl)
+                    R.id.quote_reply -> callback.onQuoteReplySelected(item.body)
                 }
-                item.isCommit() -> {
-                    with (view) {
-                        event_top_divider.isVisible = false
-                        event_bottom_divider.isVisible = false
-                        event_icon.setImageResource(R.drawable.ic_event_commit)
-                        event_icon.drawable.setColor(context.getColor(R.color.colorPrimaryCopy))
-                        event_desc.isVisible = false
+                true
+            }
 
-                        commit_message.isVisible = true
-                        commit_message.text = item.message
+            edit_comment.setOnClickListener { callback.onEditCommentFocused() }
+            edit_comment.onImeBack { _, _ -> callback.onEditCommentUnfocused() }
 
-                        commit_sha.isVisible = true
-                        commit_sha.text = item.sha.take(7)
+            cancel_edit_button.setOnClickListener {
+                comment_options.isVisible = true
+                comment_body.isVisible = true
+                edit_comment.isVisible = false
+                cancel_edit_button.isVisible = false
+                update_comment_button.isVisible = false
 
-                        val lp = (layoutParams as ViewGroup.MarginLayoutParams).apply {
-                            topMargin = 0
-                            bottomMargin = 0
-                        }
-                        layoutParams = lp
-                    }
-                }
-                else -> {
-                    val desc = spannableCache[item.id]
-                    view.isVisible = desc?.isNotEmpty() ?: false
-                    if (desc.isNullOrEmpty()) {
-                        val lp = view.layoutParams.apply { height = 0 }
-                        (lp as ViewGroup.MarginLayoutParams).run {
-                            topMargin = 0
-                            bottomMargin = 0
-                        }
-                        view.layoutParams = lp
-                        return
-                    } else {
-                        val lp = view.layoutParams.apply { height = ViewGroup.LayoutParams.WRAP_CONTENT }
-                        view.layoutParams = lp
-                    }
+                callback.onEditCommentUnfocused()
+                keyboardHelper.hideKeyboard(edit_comment)
+            }
+            update_comment_button.setOnClickListener {
+                comment_options.isVisible = true
+                comment_body.isVisible = true
+                edit_comment.isVisible = false
+                cancel_edit_button.isVisible = false
+                update_comment_button.isVisible = false
 
-                    view.event_desc.text = desc
-                    eventHelper.setIcon(item, view.event_icon)
-                }
+                callback.onEditCommentUnfocused()
+                keyboardHelper.hideKeyboard(edit_comment)
+                callback.onCommentUpdated(item.id, edit_comment.text.toString())
             }
         }
     }

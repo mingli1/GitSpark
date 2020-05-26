@@ -22,7 +22,10 @@ data class ApiIssueEvent(
     @field:Json(name = "verification") val verification: ApiCommitVerification?,
     @field:Json(name = "body") val body: String?,
     @field:Json(name = "review_requester") val reviewRequester: ApiUser?,
-    @field:Json(name = "requested_reviewer") val requestedReviewer: ApiUser?
+    @field:Json(name = "requested_reviewer") val requestedReviewer: ApiUser?,
+    @field:Json(name = "state") val state: String?,
+    @field:Json(name = "user") val user: ApiUser?,
+    @field:Json(name = "submitted_at") val submittedAt: String?
 ) {
     fun toModel() = IssueEvent(
         id = id ?: 0,
@@ -43,7 +46,10 @@ data class ApiIssueEvent(
         verification = verification?.toModel() ?: CommitVerification(),
         body = body ?: "",
         reviewRequester = reviewRequester?.toModel() ?: User(),
-        requestedReviewer = requestedReviewer?.toModel() ?: User()
+        requestedReviewer = requestedReviewer?.toModel() ?: User(),
+        state = state ?: "",
+        user = user?.toModel() ?: User(),
+        submittedAt = submittedAt ?: ""
     )
 }
 

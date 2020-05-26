@@ -276,4 +276,8 @@
     <string name="issue_open_state">OPEN</string>
     <string name="issue_closed_state">CLOSED</string>
     <string name="issue_merged_state">MERGED</string>
+    <string name="review_approved">approved these changes</string>
+    <string name="review_changes_requested">requested changes</string>
+    <string name="review_changes_commented">reviewed</string>
+    <string name="left_a_comment">left a comment</string>
 </resources>
