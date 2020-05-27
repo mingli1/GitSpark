@@ -204,7 +204,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             loading_indicator.isVisible = loading && !refreshing
             swipe_refresh.isRefreshing = refreshing
 
-            checks_view.isVisible = isPullRequest && !isMerged
+            checks_view.isVisible = isPullRequest && !isMerged && !isDraft
 
             merge_status_icon.setImageResource(if (mergeableState == MERGABLE_STATE_CLEAN)
                 R.drawable.ic_check_circle else R.drawable.ic_alert)
@@ -351,12 +351,14 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     private fun updateChecksView(checksViewState: ChecksViewState) {
         with (checksViewState) {
-            merge_icon.isVisible = showChecks
-            checks_status_text.isVisible = showChecks
-            checks_progress_text.isVisible = showChecks
-            show_checks_button.isVisible = showChecks
-            second_divider.isVisible = showChecks
-            checks_list.isVisible = showChecks && showChecksList
+            val shouldShowChecks = showChecks && checks.isNotEmpty()
+
+            merge_icon.isVisible = shouldShowChecks
+            checks_status_text.isVisible = shouldShowChecks
+            checks_progress_text.isVisible = shouldShowChecks
+            show_checks_button.isVisible = shouldShowChecks
+            second_divider.isVisible = shouldShowChecks
+            checks_list.isVisible = shouldShowChecks && showChecksList
 
             merge_icon.drawable.setColor(when (state) {
                 STATUS_SUCCESS -> resources.getColor(R.color.colorGreen, null)
@@ -374,7 +376,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
                 else -> getString(R.string.num_failing_checks, numFailed)
             }
 
-            checksAdapter.setItems(checks, true)
+            if (checks.isNotEmpty()) checksAdapter.setItems(checks, true)
         }
     }
 
