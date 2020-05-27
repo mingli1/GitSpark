@@ -288,4 +288,5 @@
     <string name="merge_conflicts">This branch has conflicts that must be resolved</string>
     <string name="merge_conflicts_desc">Use the command line to resolve conflicts.</string>
     <string name="merge_button_text">Merge pull request</string>
+    <string name="details">Details</string>
 </resources>
