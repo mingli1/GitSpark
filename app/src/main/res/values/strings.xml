@@ -280,4 +280,12 @@
     <string name="review_changes_requested">requested changes</string>
     <string name="review_changes_commented">reviewed</string>
     <string name="left_a_comment">left a comment</string>
+    <string name="checks_passed">All checks have passed</string>
+    <string name="checks_pending">Some checks haven\'t completed yet</string>
+    <string name="checks_failed">Some checks have failed</string>
+    <string name="merge_no_conflicts">This branch has no merge conflicts</string>
+    <string name="merge_no_conflicts_desc">Merging can be performed automatically.</string>
+    <string name="merge_conflicts">This branch has conflicts that must be resolved</string>
+    <string name="merge_conflicts_desc">Use the command line to resolve conflicts.</string>
+    <string name="merge_button_text">Merge pull request</string>
 </resources>
