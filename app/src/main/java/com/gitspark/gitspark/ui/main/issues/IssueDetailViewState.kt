@@ -26,6 +26,8 @@ data class IssueDetailViewState(
     val numDeletions: Int = 0,
     val baseBranch: String = "",
     val headBranch: String = "",
+    val mergable: Boolean = false,
+    val mergeableState: String = "",
     val loading: Boolean = false,
     val refreshing: Boolean = false
 )

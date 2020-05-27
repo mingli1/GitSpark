@@ -7,20 +7,19 @@ import com.gitspark.gitspark.helper.ClipboardHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.*
-import com.gitspark.gitspark.repository.IssueRepository
-import com.gitspark.gitspark.repository.IssueResult
-import com.gitspark.gitspark.repository.RepoRepository
-import com.gitspark.gitspark.repository.RepoResult
+import com.gitspark.gitspark.repository.*
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.main.issues.pullrequest.ChecksViewState
 import org.threeten.bp.Instant
 import javax.inject.Inject
 
 class IssueDetailViewModel @Inject constructor(
     private val issueRepository: IssueRepository,
     private val repoRepository: RepoRepository,
+    private val checksRepository: ChecksRepository,
     private val timeHelper: TimeHelper,
     private val prefsHelper: PreferencesHelper,
     private val clipboardHelper: ClipboardHelper
@@ -28,6 +27,7 @@ class IssueDetailViewModel @Inject constructor(
 
     val viewState = MutableLiveData<IssueDetailViewState>()
     val recyclerViewState = MutableLiveData<PaginatedViewState<IssueEvent>>()
+    val checksState = MutableLiveData<ChecksViewState>()
     val toggleCommentEdit = SingleLiveEvent<Boolean>()
     val deleteCommentRequest = SingleLiveAction()
     val quoteReplyAction = SingleLiveEvent<String>()
@@ -75,6 +75,7 @@ class IssueDetailViewModel @Inject constructor(
 
             updateViewStateWithPullRequest(pullRequest)
             requestPermissionLevel()
+            requestCheckStatus(pullRequest)
             updateViewState()
             started = true
         }
@@ -371,6 +372,8 @@ class IssueDetailViewModel @Inject constructor(
             authorComment = pr.body,
             authorCommentDate = formatted,
             isMerged = pr.merged,
+            mergable = pr.mergeable,
+            mergeableState = pr.mergeableState,
             numAdditions = pr.numAdditions,
             numDeletions = pr.numDeletions,
             baseBranch = pr.base.ref,
@@ -392,10 +395,40 @@ class IssueDetailViewModel @Inject constructor(
             authorComment = pr.body,
             authorCommentDate = formatted,
             isMerged = pr.merged,
+            mergable = pr.mergeable,
+            mergeableState = pr.mergeableState,
             numAdditions = pr.numAdditions,
             numDeletions = pr.numDeletions,
             baseBranch = pr.base.ref,
             headBranch = pr.head.ref
         )
+    }
+
+    private fun requestCheckStatus(pr: PullRequest) {
+        subscribe(checksRepository.getCombinedStatus(username, repoName, pr.head.ref)) {
+            when (it) {
+                is ChecksResult.Success -> {
+                    checksState.value = checksState.value?.copy(
+                        state = it.value.state,
+                        checks = it.value.statuses,
+                        showChecks = true,
+                        numPassed = it.value.statuses.count { status -> status.state == STATUS_SUCCESS },
+                        numPending = it.value.statuses.count { status -> status.state == STATUS_PENDING },
+                        numFailed = it.value.statuses.count { status -> status.state == STATUS_FAILED || status.state == STATUS_ERROR }
+                    ) ?: ChecksViewState(
+                        state = it.value.state,
+                        checks = it.value.statuses,
+                        showChecks = true,
+                        numPassed = it.value.statuses.count { status -> status.state == STATUS_SUCCESS },
+                        numPending = it.value.statuses.count { status -> status.state == STATUS_PENDING },
+                        numFailed = it.value.statuses.count { status -> status.state == STATUS_FAILED || status.state == STATUS_ERROR }
+                    )
+                }
+                is ChecksResult.Failure -> {
+                    checksState.value = checksState.value?.copy(showChecks = false) ?: ChecksViewState(showChecks = false)
+                    alert(it.error)
+                }
+            }
+        }
     }
 }

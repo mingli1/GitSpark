@@ -17,6 +17,7 @@ import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.*
 import com.gitspark.gitspark.helper.*
 import com.gitspark.gitspark.model.*
+import com.gitspark.gitspark.ui.adapter.ChecksAdapter
 import com.gitspark.gitspark.ui.adapter.IssueEventsAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
@@ -28,6 +29,7 @@ import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.dialog.SelectDialog
 import com.gitspark.gitspark.ui.dialog.SelectDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
+import com.gitspark.gitspark.ui.main.issues.pullrequest.ChecksViewState
 import com.gitspark.gitspark.ui.main.issues.pullrequest.PullRequestDataCallback
 import com.gitspark.gitspark.ui.main.issues.pullrequest.PullRequestDetailFragment
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
@@ -37,6 +39,7 @@ import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_issue_detail.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
 import kotlinx.android.synthetic.main.issue_comment_view.*
+import kotlinx.android.synthetic.main.pr_checks_view.*
 import javax.inject.Inject
 
 const val BUNDLE_ISSUE = "BUNDLE_ISSUE"
@@ -54,6 +57,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
     private lateinit var paginationListener: NestedPaginationListener
     private lateinit var issueEventsAdapter: IssueEventsAdapter
+    private lateinit var checksAdapter: ChecksAdapter
     private lateinit var commentMenu: PopupMenu
     private var menu: Menu? = null
     private lateinit var eventHelper: IssueEventHelper
@@ -107,10 +111,13 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
 
         paginationListener = NestedPaginationListener { viewModel.onScrolledToEnd() }
         events_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        checks_list.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         nested_scroll_view.setOnScrollChangeListener(paginationListener)
 
         issueEventsAdapter = IssueEventsAdapter(eventHelper, timeHelper, keyboardHelper, viewModel, darkModeHelper.isDarkMode())
         if (events_list.adapter == null) events_list.adapter = issueEventsAdapter
+        checksAdapter = ChecksAdapter()
+        if (checks_list.adapter == null) checks_list.adapter = checksAdapter
 
         comment_body.addStyleSheet(if (darkModeHelper.isDarkMode()) DarkMarkdownStyle() else LightMarkdownStyle())
 
@@ -150,6 +157,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         viewModel.navigateToRepoDetail.observe(viewLifecycleOwner) { navigateToRepoDetailFragment(it) }
         viewModel.navigateToIssueEdit.observe(viewLifecycleOwner) { navigateToIssueEditFragment(it) }
         viewModel.pullRequestRefresh.observe(viewLifecycleOwner) { refreshPullRequestData(it) }
+        viewModel.checksState.observe(viewLifecycleOwner) { updateChecksView(it) }
         sharedViewModel.editedIssue.observe(viewLifecycleOwner) { viewModel.onRefresh() }
     }
 
@@ -195,6 +203,19 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         with (viewState) {
             loading_indicator.isVisible = loading && !refreshing
             swipe_refresh.isRefreshing = refreshing
+
+            checks_view.isVisible = isPullRequest && !isMerged
+
+            merge_status_icon.setImageResource(if (mergeableState == MERGABLE_STATE_CLEAN)
+                R.drawable.ic_check_circle else R.drawable.ic_alert)
+            merge_status_icon.drawable.setColor(if (mergeableState == MERGABLE_STATE_CLEAN)
+                resources.getColor(R.color.colorGreen, null) else resources.getColor(R.color.colorYellowOrange, null))
+
+            merge_status_text.text = if (mergeableState == MERGABLE_STATE_CLEAN) getString(R.string.merge_no_conflicts) else
+                getString(R.string.merge_conflicts)
+            merge_status_desc.text = if (mergeableState == MERGABLE_STATE_CLEAN) getString(R.string.merge_no_conflicts_desc) else
+                getString(R.string.merge_conflicts_desc)
+            merge_button.isEnabled = mergable
 
             send_comment_edit.isEnabled = permissionLevel == PERMISSION_ADMIN ||
                     permissionLevel == PERMISSION_WRITE ||
@@ -325,6 +346,35 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             issueEventsAdapter.setItems(items, isLastPage)
             paginationListener.isLastPage = isLastPage
             paginationListener.loading = false
+        }
+    }
+
+    private fun updateChecksView(checksViewState: ChecksViewState) {
+        with (checksViewState) {
+            merge_icon.isVisible = showChecks
+            checks_status_text.isVisible = showChecks
+            checks_progress_text.isVisible = showChecks
+            show_checks_button.isVisible = showChecks
+            second_divider.isVisible = showChecks
+            checks_list.isVisible = showChecks && showChecksList
+
+            merge_icon.drawable.setColor(when (state) {
+                STATUS_SUCCESS -> resources.getColor(R.color.colorGreen, null)
+                STATUS_PENDING -> resources.getColor(R.color.colorYellowOrange, null)
+                else -> resources.getColor(R.color.colorRed, null)
+            })
+            checks_status_text.text = when (state) {
+                STATUS_SUCCESS -> getString(R.string.checks_passed)
+                STATUS_PENDING -> getString(R.string.checks_pending)
+                else -> getString(R.string.checks_failed)
+            }
+            checks_progress_text.text = when (state) {
+                STATUS_SUCCESS -> getString(R.string.num_successful_checks, numPassed)
+                STATUS_PENDING -> getString(R.string.num_pending_checks, numPending)
+                else -> getString(R.string.num_failing_checks, numFailed)
+            }
+
+            checksAdapter.setItems(checks, true)
         }
     }
 
