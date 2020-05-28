@@ -26,6 +26,7 @@ class ChecksAdapter : PaginationAdapter() {
                 })
                 if (item.app.owner.avatarUrl.isNotEmpty()) check_avatar.loadImage(item.app.owner.avatarUrl)
                 check_name.text = item.app.name
+                check_desc.text = item.app.description
             }
         }
     }
