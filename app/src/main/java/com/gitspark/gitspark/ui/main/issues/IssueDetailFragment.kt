@@ -421,6 +421,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         }
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
         show_checks_button.setOnClickListener { viewModel.onShowChecksButtonClicked() }
+        merge_button.setOnClickListener { viewModel.onMergeButtonClicked() }
     }
 
     private fun navigateToRepoDetailFragment(pair: Pair<String, Boolean>) {

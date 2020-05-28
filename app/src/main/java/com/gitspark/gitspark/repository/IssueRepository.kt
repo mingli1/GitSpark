@@ -226,6 +226,14 @@ class IssueRepository @Inject constructor(
             .onErrorReturn { getFailure("Failed to obtain pull request files.") }
     }
 
+    fun mergePullRequest(
+        username: String,
+        repoName: String,
+        pullNumber: Int
+    ): Completable {
+        return getIssueService().mergePullRequest(username, repoName, pullNumber)
+    }
+
     private fun getIssueService() =
         retrofitHelper.getRetrofit(token = prefsHelper.getCachedToken())
             .create(IssueService::class.java)

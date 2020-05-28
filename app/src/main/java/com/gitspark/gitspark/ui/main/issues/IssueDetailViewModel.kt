@@ -209,6 +209,19 @@ class IssueDetailViewModel @Inject constructor(
         )
     }
 
+    fun onMergeButtonClicked() {
+        // TODO: open merge pr dialog #47
+        subscribe(issueRepository.mergePullRequest(username, repoName, pullRequest.number),
+            {
+                alert("Pull request successfully merged.")
+                onRefresh()
+            },
+            {
+                alert("Failed to merge pull request.")
+            }
+        )
+    }
+
     override fun onDeleteSelected(id: Long) {
         deletedCommentId = id
         deleteCommentRequest.call()
