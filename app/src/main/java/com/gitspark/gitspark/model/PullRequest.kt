@@ -2,6 +2,8 @@ package com.gitspark.gitspark.model
 
 const val MERGABLE_STATE_CLEAN = "clean"
 const val MERGABLE_STATE_DIRTY = "dirty"
+const val MERGABLE_STATE_UNSTABLE = "unstable"
+const val MERGABLE_STATE_BLOCKED = "blocked"
 
 data class PullRequest(
     val number: Int = 0,

@@ -287,6 +287,12 @@
     <string name="merge_no_conflicts_desc">Merging can be performed automatically.</string>
     <string name="merge_conflicts">This branch has conflicts that must be resolved</string>
     <string name="merge_conflicts_desc">Use the command line to resolve conflicts.</string>
+    <string name="merge_unstable">This branch has failing checks</string>
+    <string name="merge_unstable_desc">Merging is possible but build will fail.</string>
+    <string name="merge_blocked">Merging is blocked</string>
+    <string name="merge_blocked_desc">Merging can be performed automatically once reviews are addressed.</string>
+    <string name="merge_other">This branch has issues</string>
+    <string name="merge_other_desc">Merging may be possible but there are issues.</string>
     <string name="merge_button_text">Merge pull request</string>
     <string name="details">Details</string>
     <string name="num_successful_checks">%1$d successful check(s)</string>

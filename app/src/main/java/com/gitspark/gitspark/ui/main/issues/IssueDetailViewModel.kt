@@ -412,25 +412,26 @@ class IssueDetailViewModel @Inject constructor(
         subscribe(checksRepository.getCheckSuites(username, repoName, pr.head.ref)) {
             when (it) {
                 is ChecksResult.Success -> {
+                    val checks = it.value.suites.filter { check -> check.app.slug != "dependabot" && check.app.slug != "github-pages" }
                     val state = when {
-                        it.value.suites.any { check -> check.isPending() } -> CheckState.Pending
-                        it.value.suites.any { check -> check.isFailure() } -> CheckState.Failed
+                        checks.any { check -> check.isPending() } -> CheckState.Pending
+                        checks.any { check -> check.isFailure() } -> CheckState.Failed
                         else -> CheckState.Success
                     }
-                    val numPassed = it.value.suites.count { check -> check.isSuccessful() }
-                    val numPending = it.value.suites.count { check -> check.isPending() }
-                    val numFailed = it.value.suites.count { check -> check.isFailure() }
+                    val numPassed = checks.count { check -> check.isSuccessful() }
+                    val numPending = checks.count { check -> check.isPending() }
+                    val numFailed = checks.count { check -> check.isFailure() }
 
                     checksState.value = checksState.value?.copy(
                         state = state,
-                        checks = it.value.suites,
+                        checks = checks,
                         showChecks = true,
                         numPassed = numPassed,
                         numPending = numPending,
                         numFailed = numFailed
                     ) ?: ChecksViewState(
                         state = state,
-                        checks = it.value.suites,
+                        checks = checks,
                         showChecks = true,
                         numPassed = numPassed,
                         numPending = numPending,

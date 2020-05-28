@@ -212,11 +212,21 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             merge_status_icon.drawable.setColor(if (mergeableState == MERGABLE_STATE_CLEAN)
                 resources.getColor(R.color.colorGreen, null) else resources.getColor(R.color.colorYellowOrange, null))
 
-            merge_status_text.text = if (mergeableState == MERGABLE_STATE_CLEAN) getString(R.string.merge_no_conflicts) else
-                getString(R.string.merge_conflicts)
-            merge_status_desc.text = if (mergeableState == MERGABLE_STATE_CLEAN) getString(R.string.merge_no_conflicts_desc) else
-                getString(R.string.merge_conflicts_desc)
-            merge_button.isEnabled = mergable
+            merge_status_text.text = when (mergeableState) {
+                MERGABLE_STATE_CLEAN -> getString(R.string.merge_no_conflicts)
+                MERGABLE_STATE_UNSTABLE -> getString(R.string.merge_unstable)
+                MERGABLE_STATE_DIRTY -> getString(R.string.merge_conflicts)
+                MERGABLE_STATE_BLOCKED -> getString(R.string.merge_blocked)
+                else -> getString(R.string.merge_other)
+            }
+            merge_status_desc.text = when (mergeableState) {
+                MERGABLE_STATE_CLEAN -> getString(R.string.merge_no_conflicts_desc)
+                MERGABLE_STATE_UNSTABLE -> getString(R.string.merge_unstable_desc)
+                MERGABLE_STATE_DIRTY -> getString(R.string.merge_conflicts_desc)
+                MERGABLE_STATE_BLOCKED -> getString(R.string.merge_blocked_desc)
+                else -> getString(R.string.merge_other_desc)
+            }
+            merge_button.isEnabled = mergable && (permissionLevel == PERMISSION_ADMIN || permissionLevel == PERMISSION_WRITE)
 
             send_comment_edit.isEnabled = permissionLevel == PERMISSION_ADMIN ||
                     permissionLevel == PERMISSION_WRITE ||
