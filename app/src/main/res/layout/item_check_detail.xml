@@ -39,23 +39,8 @@
         app:layout_constraintTop_toTopOf="@id/check_avatar"
         app:layout_constraintStart_toEndOf="@id/check_avatar"
         app:layout_constraintBottom_toBottomOf="@id/check_avatar"
-        app:layout_constraintEnd_toStartOf="@id/check_details"
-        tools:text="Travis CI - Pull Request"/>
-    
-    <TextView
-        android:id="@+id/check_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:background="?attr/selectableItemBackground"
-        style="@style/Body"
-        android:textStyle="bold"
-        android:layout_marginEnd="16dp"
-        android:text="@string/details"
-        android:textColor="@color/colorPrimaryCopy"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        tools:text="Travis CI - Pull Request"/>
     
     <View
         android:id="@+id/bottom_divider"

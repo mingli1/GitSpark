@@ -294,7 +294,6 @@
     <string name="merge_other">This branch has issues</string>
     <string name="merge_other_desc">Merging may be possible but there are issues.</string>
     <string name="merge_button_text">Merge pull request</string>
-    <string name="details">Details</string>
     <string name="num_successful_checks">%1$d successful check(s)</string>
     <string name="num_pending_checks">%1$d pending check(s)</string>
     <string name="num_failing_checks">%1$d failing check(s)</string>

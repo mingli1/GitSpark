@@ -6,5 +6,6 @@ data class App(
     val owner: User = User(),
     val name: String = "",
     val description: String = "",
-    val createdAt: String = ""
+    val createdAt: String = "",
+    val htmlUrl: String = ""
 )
