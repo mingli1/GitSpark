@@ -29,6 +29,7 @@ import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.dialog.SelectDialog
 import com.gitspark.gitspark.ui.dialog.SelectDialogCallback
 import com.gitspark.gitspark.ui.main.MainActivity
+import com.gitspark.gitspark.ui.main.issues.pullrequest.CheckState
 import com.gitspark.gitspark.ui.main.issues.pullrequest.ChecksViewState
 import com.gitspark.gitspark.ui.main.issues.pullrequest.PullRequestDataCallback
 import com.gitspark.gitspark.ui.main.issues.pullrequest.PullRequestDetailFragment
@@ -361,18 +362,18 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             checks_list.isVisible = shouldShowChecks && showChecksList
 
             merge_icon.drawable.setColor(when (state) {
-                STATUS_SUCCESS -> resources.getColor(R.color.colorGreen, null)
-                STATUS_PENDING -> resources.getColor(R.color.colorYellowOrange, null)
+                CheckState.Success -> resources.getColor(R.color.colorGreen, null)
+                CheckState.Pending -> resources.getColor(R.color.colorYellowOrange, null)
                 else -> resources.getColor(R.color.colorRed, null)
             })
             checks_status_text.text = when (state) {
-                STATUS_SUCCESS -> getString(R.string.checks_passed)
-                STATUS_PENDING -> getString(R.string.checks_pending)
+                CheckState.Success -> getString(R.string.checks_passed)
+                CheckState.Pending -> getString(R.string.checks_pending)
                 else -> getString(R.string.checks_failed)
             }
             checks_progress_text.text = when (state) {
-                STATUS_SUCCESS -> getString(R.string.num_successful_checks, numPassed)
-                STATUS_PENDING -> getString(R.string.num_pending_checks, numPending)
+                CheckState.Success -> getString(R.string.num_successful_checks, numPassed)
+                CheckState.Pending -> getString(R.string.num_pending_checks, numPending)
                 else -> getString(R.string.num_failing_checks, numFailed)
             }
 

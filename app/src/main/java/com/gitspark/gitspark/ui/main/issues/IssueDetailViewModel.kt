@@ -12,6 +12,7 @@ import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.main.issues.pullrequest.CheckState
 import com.gitspark.gitspark.ui.main.issues.pullrequest.ChecksViewState
 import org.threeten.bp.Instant
 import javax.inject.Inject
@@ -407,23 +408,33 @@ class IssueDetailViewModel @Inject constructor(
     }
 
     private fun requestCheckStatus(pr: PullRequest) {
-        subscribe(checksRepository.getCombinedStatus(username, repoName, pr.head.ref)) {
+        if (pr.merged || pr.draft) return
+        subscribe(checksRepository.getCheckSuites(username, repoName, pr.head.ref)) {
             when (it) {
                 is ChecksResult.Success -> {
+                    val state = when {
+                        it.value.suites.any { check -> check.isPending() } -> CheckState.Pending
+                        it.value.suites.any { check -> check.isFailure() } -> CheckState.Failed
+                        else -> CheckState.Success
+                    }
+                    val numPassed = it.value.suites.count { check -> check.isSuccessful() }
+                    val numPending = it.value.suites.count { check -> check.isPending() }
+                    val numFailed = it.value.suites.count { check -> check.isFailure() }
+
                     checksState.value = checksState.value?.copy(
-                        state = it.value.state,
-                        checks = it.value.statuses,
+                        state = state,
+                        checks = it.value.suites,
                         showChecks = true,
-                        numPassed = it.value.statuses.count { status -> status.state == STATUS_SUCCESS },
-                        numPending = it.value.statuses.count { status -> status.state == STATUS_PENDING },
-                        numFailed = it.value.statuses.count { status -> status.state == STATUS_FAILED || status.state == STATUS_ERROR }
+                        numPassed = numPassed,
+                        numPending = numPending,
+                        numFailed = numFailed
                     ) ?: ChecksViewState(
-                        state = it.value.state,
-                        checks = it.value.statuses,
+                        state = state,
+                        checks = it.value.suites,
                         showChecks = true,
-                        numPassed = it.value.statuses.count { status -> status.state == STATUS_SUCCESS },
-                        numPending = it.value.statuses.count { status -> status.state == STATUS_PENDING },
-                        numFailed = it.value.statuses.count { status -> status.state == STATUS_FAILED || status.state == STATUS_ERROR }
+                        numPassed = numPassed,
+                        numPending = numPending,
+                        numFailed = numFailed
                     )
                 }
                 is ChecksResult.Failure -> {
