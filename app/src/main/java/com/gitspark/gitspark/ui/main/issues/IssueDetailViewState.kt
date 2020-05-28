@@ -11,6 +11,7 @@ data class IssueDetailViewState(
     val issueTitle: String = "",
     val isOpen: Boolean = true,
     val isMerged: Boolean = false,
+    val isDraft: Boolean = false,
     val issueUsername: String = "",
     val issueDesc: String = "",
     val numComments: Int = 0,
@@ -26,6 +27,8 @@ data class IssueDetailViewState(
     val numDeletions: Int = 0,
     val baseBranch: String = "",
     val headBranch: String = "",
+    val mergable: Boolean = false,
+    val mergeableState: String = "",
     val loading: Boolean = false,
     val refreshing: Boolean = false
 )

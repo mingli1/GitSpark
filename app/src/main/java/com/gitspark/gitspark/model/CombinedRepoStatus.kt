@@ -1,5 +1,13 @@
 package com.gitspark.gitspark.model
 
+import com.gitspark.gitspark.ui.adapter.Pageable
+import com.gitspark.gitspark.ui.adapter.VIEW_TYPE_VIEW
+
+const val STATUS_SUCCESS = "success"
+const val STATUS_PENDING = "pending"
+const val STATUS_FAILED = "failure"
+const val STATUS_ERROR = "error"
+
 data class CombinedRepoStatus(
     val state: String = "",
     val statuses: List<RepoStatus> = emptyList(),
@@ -17,4 +25,9 @@ data class RepoStatus(
     val context: String = "",
     val createdAt: String = "",
     val updatedAt: String = ""
-)
+) : Pageable {
+
+    override fun areItemsTheSame(other: Pageable) = this == (other as? RepoStatus ?: false)
+
+    override fun getViewType() = VIEW_TYPE_VIEW
+}

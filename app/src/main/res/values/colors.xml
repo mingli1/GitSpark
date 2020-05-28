@@ -34,4 +34,5 @@
     <color name="colorBottomNavUnselected">@color/colorLightGray</color>
     <color name="colorSearchFilterEdit">@color/colorPrimaryLight</color>
     <color name="colorPurple">#5427DB</color>
+    <color name="colorPurpleDark">#3F1A9C</color>
 </resources>

@@ -150,4 +150,11 @@ interface IssueService {
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = FILES_PER_PAGE
     ): Single<ApiPage<ApiPullRequestFile>>
+
+    @PUT("repos/{owner}/{repo}/pulls/{pull_number}/merge")
+    fun mergePullRequest(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("pull_number") pullNumber: Int
+    ): Completable
 }

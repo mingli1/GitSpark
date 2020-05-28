@@ -361,6 +361,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/bottom_divider"/>
+                
+                <include
+                    android:id="@+id/checks_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    layout="@layout/pr_checks_view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/author_comment"/>
             
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/events_list"
@@ -371,7 +381,7 @@
                     android:clipToPadding="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/author_comment"/>
+                    app:layout_constraintTop_toBottomOf="@id/checks_view"/>
         
             </androidx.constraintlayout.widget.ConstraintLayout>
     
