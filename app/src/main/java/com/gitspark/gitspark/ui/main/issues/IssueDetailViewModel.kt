@@ -254,6 +254,12 @@ class IssueDetailViewModel @Inject constructor(
         quoteReplyAction.value = quote
     }
 
+    fun onShowChecksButtonClicked() {
+        val showChecksList = checksState.value?.showChecksList ?: false
+        checksState.value = checksState.value?.copy(showChecksList = !showChecksList) ?:
+                ChecksViewState(showChecksList = showChecksList)
+    }
+
     private fun updateViewState(reset: Boolean = false, refresh: Boolean = false) {
         viewState.value = viewState.value?.copy(
             loading = reset,
@@ -266,7 +272,7 @@ class IssueDetailViewModel @Inject constructor(
         if (reset) {
             page = 1
 
-            if (isPullRequest) requestPullRequest() else requestIssue()
+            if (isPullRequest) requestPullRequest(refresh = true) else requestIssue()
         }
         requestEvents()
     }
@@ -302,13 +308,14 @@ class IssueDetailViewModel @Inject constructor(
         }
     }
 
-    private fun requestPullRequest() {
+    private fun requestPullRequest(refresh: Boolean = false) {
         subscribe(issueRepository.getPullRequest(username, repoName, issueNum)) {
             when (it) {
                 is IssueResult.Success -> {
                     pullRequest = it.value
                     pullRequestRefresh.value = it.value
                     updateViewStateWithPullRequest(pullRequest)
+                    if (refresh) requestCheckStatus(it.value)
                 }
                 is IssueResult.Failure -> alert(it.error)
             }

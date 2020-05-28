@@ -363,6 +363,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
     private fun updateChecksView(checksViewState: ChecksViewState) {
         with (checksViewState) {
             val shouldShowChecks = showChecks && checks.isNotEmpty()
+            show_checks_button.setImageResource(if (showChecksList) R.drawable.ic_expand_less else R.drawable.ic_expand_more)
 
             merge_icon.isVisible = shouldShowChecks
             checks_status_text.isVisible = shouldShowChecks
@@ -419,6 +420,7 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
             }
         }
         swipe_refresh.setOnRefreshListener { viewModel.onRefresh() }
+        show_checks_button.setOnClickListener { viewModel.onShowChecksButtonClicked() }
     }
 
     private fun navigateToRepoDetailFragment(pair: Pair<String, Boolean>) {
