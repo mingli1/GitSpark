@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         return navController?.value?.navigateUp() ?: false
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         setUpNavController()
     }

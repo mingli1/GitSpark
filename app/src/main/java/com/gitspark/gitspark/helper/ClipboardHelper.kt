@@ -13,6 +13,6 @@ class ClipboardHelper @Inject constructor(context: Context) {
 
     fun copy(text: String) {
         val clip = ClipData.newPlainText("copied text", text)
-        clipboard.primaryClip = clip
+        clipboard.setPrimaryClip(clip)
     }
 }
