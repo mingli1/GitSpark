@@ -20,7 +20,6 @@ notifications:
 before_script:
 - chmod +x ./gradlew
 - yes | sdkmanager "platforms;android-30"
-- yes | sdkmanager "build-tools;30.0.3"
 
 script:
 - ./gradlew clean
