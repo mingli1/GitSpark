@@ -18,6 +18,7 @@ import com.gitspark.gitspark.ui.base.BaseFragment
 import com.gitspark.gitspark.ui.main.MainActivity
 import com.gitspark.gitspark.ui.main.issues.*
 import com.gitspark.gitspark.ui.main.shared.*
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
 import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_pr_detail.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -79,7 +80,13 @@ class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullR
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return issueDetailFragment.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.edit -> viewModel.onEditSelected()
+            R.id.repo -> viewModel.onRepoSelected()
+            R.id.state -> issueDetailFragment.onIssueStateChange(item)
+            R.id.lock -> issueDetailFragment.onLockStateChange(item)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -136,6 +143,8 @@ class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullR
         viewModel.loading.observe(viewLifecycleOwner) { loading_indicator.isVisible = it }
         viewModel.prDataRetrieved.observe(viewLifecycleOwner) { setUpFragments(it) }
         viewModel.exitFragment.observe(viewLifecycleOwner) { findNavController().navigateUp() }
+        viewModel.navigateToEdit.observe(viewLifecycleOwner) { navigateToEdit(it) }
+        viewModel.navigateToRepo.observe(viewLifecycleOwner) { navigateToRepo(it) }
     }
 
     private fun setUpFragments(data: PullRequest) {
@@ -166,5 +175,19 @@ class PullRequestDetailFragment : BaseFragment<PullRequestDetailViewModel>(PullR
         }
         viewpager.adapter = adapter
         tabs.setupWithViewPager(viewpager)
+    }
+
+    private fun navigateToEdit(triple: Triple<String, PullRequest, String>) {
+        val bundle = Bundle().apply {
+            putString(BUNDLE_TITLE, triple.first)
+            putString(BUNDLE_PULL_REQUEST, pullRequestJsonAdapter.toJson(triple.second))
+            putString(BUNDLE_REPO_FULLNAME, triple.third)
+        }
+        findNavController().navigate(R.id.action_pr_detail_to_issue_edit, bundle)
+    }
+
+    private fun navigateToRepo(fullName: String) {
+        val bundle = Bundle().apply { putString(BUNDLE_REPO_FULLNAME, fullName) }
+        findNavController().navigate(R.id.action_pr_detail_to_repo, bundle)
     }
 }

@@ -175,23 +175,27 @@ class IssueDetailFragment : BaseFragment<IssueDetailViewModel>(IssueDetailViewMo
         when (item.itemId) {
             R.id.edit -> viewModel.onEditSelected()
             R.id.repo -> viewModel.onRepoSelected()
-            R.id.state -> {
-                viewModel.onIssueStateChange(
-                    if (item.title.startsWith("reopen", ignoreCase = true)) "open" else "closed"
-                )
-            }
-            R.id.lock -> {
-                if (item.title == getString(R.string.lock)) {
-                    SelectDialog.newInstance(
-                        getString(R.string.lock_title),
-                        resources.getStringArray(R.array.lock_reasons)
-                    ).show(childFragmentManager, null)
-                } else {
-                    viewModel.onIssueUnlockRequest()
-                }
-            }
+            R.id.state -> onIssueStateChange(item)
+            R.id.lock -> onLockStateChange(item)
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun onIssueStateChange(item: MenuItem) {
+        viewModel.onIssueStateChange(
+            if (item.title.startsWith("reopen", ignoreCase = true)) "open" else "closed"
+        )
+    }
+
+    fun onLockStateChange(item: MenuItem) {
+        if (item.title == getString(R.string.lock)) {
+            SelectDialog.newInstance(
+                getString(R.string.lock_title),
+                resources.getStringArray(R.array.lock_reasons)
+            ).show(childFragmentManager, null)
+        } else {
+            viewModel.onIssueUnlockRequest()
+        }
     }
 
     override fun onPositiveClicked() = viewModel.onDeleteCommentConfirmed()

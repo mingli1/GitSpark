@@ -16,10 +16,21 @@ class PullRequestDetailViewModel @Inject constructor(
     val prDataRetrieved = SingleLiveEvent<PullRequest>()
     val loading = MutableLiveData<Boolean>()
     val exitFragment = SingleLiveAction()
+    val navigateToEdit = SingleLiveEvent<Triple<String, PullRequest, String>>()
+    val navigateToRepo = SingleLiveEvent<String>()
+
     private var prDataLoaded = false
     private var prData: PullRequest? = null
 
+    private var username = ""
+    private var repoName = ""
+    private var pullNumber = 0
+
     fun fetchPullRequestData(username: String, repoName: String, pullNumber: Int) {
+        this.username = username
+        this.repoName = repoName
+        this.pullNumber = pullNumber
+
         if (!prDataLoaded) {
             loading.value = true
 
@@ -39,5 +50,19 @@ class PullRequestDetailViewModel @Inject constructor(
             prDataLoaded = true
         }
         else prDataRetrieved.value = prData
+    }
+
+    fun onEditSelected() {
+        prData?.let {
+            navigateToEdit.value = Triple(
+                "Editing $username/$repoName #$pullNumber",
+                it,
+                "$username/$repoName"
+            )
+        }
+    }
+
+    fun onRepoSelected() {
+        navigateToRepo.value = "$username/$repoName"
     }
 }
