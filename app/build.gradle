@@ -15,7 +15,7 @@ android {
         buildConfigField "String", "GITHUB_CLIENT_ID", System.getenv("GITHUB_CLIENT_ID") == null ? GITHUB_CLIENT_ID : System.getenv("GITHUB_CLIENT_ID")
         buildConfigField "String", "GITHUB_CLIENT_SECRET", System.getenv("GITHUB_CLIENT_SECRET") == null ? GITHUB_CLIENT_SECRET : System.getenv("GITHUB_CLIENT_SECRET")
         buildConfigField "String", "GITHUB_URL", "\"https://api.github.com/\""
-        buildConfigField "String", "CALLBACK_URL", "\"https://github.com/mingli1/GitSpark/Callback/\""
+        buildConfigField "String", "CALLBACK_URL", "\"gitspark://login\""
         buildConfigField "String", "PREFERENCES", "\"PREFERENCES\""
         buildConfigField "String", "DATABASE_NAME", "\"GitSpark.db\""
     }
@@ -27,6 +27,10 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     dataBinding {
         enabled = true
@@ -44,6 +48,7 @@ dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation "androidx.browser:browser:1.2.0"
 
     implementation 'com.google.dagger:dagger:2.23.1'
     implementation 'com.google.dagger:dagger-android:2.23.1'

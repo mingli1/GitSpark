@@ -1,12 +1,13 @@
 package com.gitspark.gitspark.ui.login
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import androidx.browser.customtabs.CustomTabsIntent
+import com.gitspark.gitspark.BuildConfig
 import com.gitspark.gitspark.R
-import com.gitspark.gitspark.extension.getString
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.observe
-import com.gitspark.gitspark.extension.onTextChanged
 import com.gitspark.gitspark.ui.base.BaseActivity
 import com.gitspark.gitspark.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
@@ -17,32 +18,43 @@ class LoginActivity : BaseActivity<LoginViewModel>(LoginViewModel::class.java) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        setUpListeners()
+        sign_in.setOnClickListener { viewModel.onSignIn() }
     }
 
     override fun observeViewModel() {
-        viewModel.viewState.observe(this) { updateView(it) }
+        viewModel.isLoading.observe(this) { loading_indicator.isVisible = it }
+        viewModel.openLoginBrowser.observe(this) { openLoginBrowser(it) }
         viewModel.navigateToMainActivityAction.observe(this) { navigateToMainActivity() }
     }
 
-    private fun updateView(viewState: LoginViewState) {
-        with (viewState) {
-            login_button.isEnabled = loginButtonEnabled
-            loading_indicator.isVisible = loading
-        }
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
     }
 
-    private fun setUpListeners() {
-        with (viewModel) {
-            username_field.onTextChanged {
-                onTextChanged(username_field.getString(), password_field.getString())
+    override fun onResume() {
+        super.onResume()
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        intent?.data?.let {
+            if (it.toString().startsWith(BuildConfig.CALLBACK_URL)) {
+                val code = it.getQueryParameter("code")
+                viewModel.onCodeReceived(code ?: "")
             }
-            password_field.onTextChanged {
-                onTextChanged(username_field.getString(), password_field.getString())
-            }
-            login_button.setOnClickListener { attemptLogin() }
-            not_now_button.setOnClickListener { onNotNowClicked() }
         }
+        setIntent(null)
+    }
+
+    private fun openLoginBrowser(uri: Uri) {
+        val customTabsIntent = CustomTabsIntent.Builder()
+            .setToolbarColor(getColor(R.color.colorPrimary))
+            .setShowTitle(true)
+            .build()
+        customTabsIntent.intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        println(uri.toString())
+        customTabsIntent.launchUrl(this, uri)
     }
 
     private fun navigateToMainActivity() {
