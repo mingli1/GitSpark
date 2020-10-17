@@ -54,7 +54,7 @@ class PreferencesHelperTest {
     fun shouldContainKey() {
         every { sharedPreferences.contains(KEY) } returns true
         val contains = preferencesHelper.contains(KEY)
-        assertThat(contains).isTrue
+        assertThat(contains).isTrue()
     }
 
     @Test
