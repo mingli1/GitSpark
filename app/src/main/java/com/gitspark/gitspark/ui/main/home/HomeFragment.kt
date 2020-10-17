@@ -19,6 +19,7 @@ import com.gitspark.gitspark.helper.EventHelper
 import com.gitspark.gitspark.helper.PreferencesHelper
 import com.gitspark.gitspark.helper.TimeHelper
 import com.gitspark.gitspark.model.Event
+import com.gitspark.gitspark.model.Issue
 import com.gitspark.gitspark.ui.adapter.HomeFeedAdapter
 import com.gitspark.gitspark.ui.adapter.NestedPaginationListener
 import com.gitspark.gitspark.ui.base.BaseFragment
@@ -27,10 +28,13 @@ import com.gitspark.gitspark.ui.dialog.ConfirmDialog
 import com.gitspark.gitspark.ui.dialog.ConfirmDialogCallback
 import com.gitspark.gitspark.ui.login.LoginActivity
 import com.gitspark.gitspark.ui.main.MainActivity
+import com.gitspark.gitspark.ui.main.issues.BUNDLE_ISSUE
 import com.gitspark.gitspark.ui.main.profile.BUNDLE_USERNAME
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_EVENT_LIST_TYPE
 import com.gitspark.gitspark.ui.main.shared.BUNDLE_TITLE
 import com.gitspark.gitspark.ui.main.shared.EventListType
+import com.gitspark.gitspark.ui.nav.BUNDLE_REPO_FULLNAME
+import com.squareup.moshi.JsonAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.full_screen_progress_spinner.*
@@ -41,6 +45,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
 
     @Inject lateinit var timeHelper: TimeHelper
     @Inject lateinit var prefsHelper: PreferencesHelper
+    @Inject lateinit var issueJsonAdapter: JsonAdapter<Issue>
 
     private lateinit var raAdapter: HomeFeedAdapter
     private lateinit var aaAdapter: HomeFeedAdapter
@@ -124,6 +129,8 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
         viewModel.navigateToUserProfile.observe(viewLifecycleOwner) { navigateToUserProfile(it) }
         viewModel.navigateToEventList.observe(viewLifecycleOwner) { navigateToEventList(it) }
         viewModel.navigateToSettings.observe(viewLifecycleOwner) { navigateToSettings() }
+        viewModel.navigateToRepo.observe(viewLifecycleOwner) { navigateToRepo(it) }
+        viewModel.navigateToIssue.observe(viewLifecycleOwner) { navigateToIssue(it) }
     }
 
     override fun onPositiveClicked() = viewModel.onLogoutConfirmed()
@@ -219,5 +226,23 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class.java), Con
 
     private fun navigateToSettings() {
         findNavController().navigate(R.id.action_home_fragment_to_settings)
+    }
+
+    private fun navigateToRepo(fullName: String) {
+        val bundle = Bundle().apply {
+            putString(BUNDLE_REPO_FULLNAME, fullName)
+        }
+        findNavController().navigate(R.id.action_home_to_repo_detail, bundle)
+    }
+
+    private fun navigateToIssue(pair: Pair<Issue, Boolean>) {
+        val bundle = Bundle().apply {
+            putString(BUNDLE_TITLE, "${pair.first.getRepoFullNameFromUrl()} #${pair.first.number}")
+            putString(BUNDLE_ISSUE, issueJsonAdapter.toJson(pair.first))
+        }
+        findNavController().navigate(
+            if (pair.second) R.id.action_home_to_issue_detail else R.id.action_home_to_pr_detail,
+            bundle
+        )
     }
 }

@@ -3,10 +3,7 @@ package com.gitspark.gitspark.ui.main.home
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
-import com.gitspark.gitspark.model.AuthUser
-import com.gitspark.gitspark.model.Event
-import com.gitspark.gitspark.model.isFirstPage
-import com.gitspark.gitspark.model.isLastPage
+import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.EventRepository
 import com.gitspark.gitspark.repository.EventResult
 import com.gitspark.gitspark.repository.UserRepository
@@ -15,7 +12,7 @@ import com.gitspark.gitspark.ui.base.PaginatedViewState
 import com.gitspark.gitspark.ui.livedata.SingleLiveAction
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
 import com.gitspark.gitspark.ui.main.shared.EventListType
-import com.gitspark.gitspark.ui.nav.UserProfileNavigator
+import com.gitspark.gitspark.ui.nav.FeedNavigator
 import javax.inject.Inject
 
 internal const val NUM_RECENT_EVENTS = 2
@@ -24,7 +21,7 @@ class HomeViewModel @Inject constructor(
     private val eventRepository: EventRepository,
     private val userRepository: UserRepository,
     private val prefsHelper: PreferencesHelper
-) : BaseViewModel(), UserProfileNavigator {
+) : BaseViewModel(), FeedNavigator {
 
     val viewState = MutableLiveData<HomeViewState>()
     val pageViewState = MutableLiveData<PaginatedViewState<Event>>()
@@ -34,6 +31,8 @@ class HomeViewModel @Inject constructor(
     val navigateToUserProfile = SingleLiveEvent<String>()
     val navigateToEventList = SingleLiveEvent<EventListType>()
     val navigateToSettings = SingleLiveAction()
+    val navigateToRepo = SingleLiveEvent<String>()
+    val navigateToIssue = SingleLiveEvent<Pair<Issue, Boolean>>()
 
     private var started = false
     private var page = 1
@@ -80,6 +79,18 @@ class HomeViewModel @Inject constructor(
 
     override fun onUserSelected(username: String) {
         navigateToUserProfile.value = username
+    }
+
+    override fun onRepoSelected(fullName: String) {
+        navigateToRepo.value = fullName
+    }
+
+    override fun onIssueSelected(issue: Issue) {
+        navigateToIssue.value = Pair(issue, true)
+    }
+
+    override fun onPullRequestSelected(pullRequest: PullRequest, repoFullName: String) {
+        navigateToIssue.value = Pair(pullRequest.toSimpleIssue(repoFullName), false)
     }
 
     private fun updateViewState(

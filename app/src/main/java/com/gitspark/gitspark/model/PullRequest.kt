@@ -37,7 +37,13 @@ data class PullRequest(
     val numAdditions: Int = 0,
     val numDeletions: Int = 0,
     val numFilesChanged: Int = 0
-)
+) {
+
+    fun toSimpleIssue(repoFullName: String) = Issue(
+        repoUrl = "https://api.github.com/repos/$repoFullName",
+        number = number
+    )
+}
 
 data class PRBranch(
     val label: String = "",

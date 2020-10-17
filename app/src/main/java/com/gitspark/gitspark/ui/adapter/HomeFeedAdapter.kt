@@ -7,12 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
-import com.gitspark.gitspark.helper.EventHelper
-import com.gitspark.gitspark.helper.PreferencesHelper
-import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.helper.*
 import com.gitspark.gitspark.model.Event
 import com.gitspark.gitspark.model.Loading
-import com.gitspark.gitspark.ui.nav.UserProfileNavigator
+import com.gitspark.gitspark.ui.nav.FeedNavigator
 import kotlinx.android.synthetic.main.profile_feed_view.view.*
 import kotlinx.android.synthetic.main.received_feed_view.view.action_description
 import kotlinx.android.synthetic.main.received_feed_view.view.content_field
@@ -23,7 +21,7 @@ import org.threeten.bp.Instant
 class HomeFeedAdapter(
     private val timeHelper: TimeHelper,
     private val eventHelper: EventHelper,
-    private val userNavigator: UserProfileNavigator,
+    private val navigator: FeedNavigator,
     private val prefsHelper: PreferencesHelper,
     private val recent: Boolean = false
 ) : PaginationAdapter() {
@@ -76,8 +74,27 @@ class HomeFeedAdapter(
 
                 if (recent) username_field.text = item.actor.login
                 else profile_icon.setOnClickListener {
-                    if (item.actor.login != prefsHelper.getAuthUsername()) userNavigator.onUserSelected(item.actor.login)
+                    if (item.actor.login != prefsHelper.getAuthUsername()) navigator.onUserSelected(item.actor.login)
                 }
+
+                setOnClickListener { handleFeedOnClick(item) }
+            }
+        }
+    }
+
+    private fun handleFeedOnClick(event: Event) {
+        when (event.type) {
+            COMMIT_COMMENT_EVENT, CREATE_EVENT, PUSH_EVENT, PUBLIC_EVENT, WATCH_EVENT -> {
+                navigator.onRepoSelected(event.repo.repoName)
+            }
+            FORK_EVENT -> {
+                navigator.onRepoSelected(event.payload.forkee.fullName)
+            }
+            ISSUES_EVENT, ISSUE_COMMENT_EVENT -> {
+                navigator.onIssueSelected(event.payload.issue)
+            }
+            PULL_REQUEST_EVENT, PULL_REQUEST_REVIEW_COMMENT_EVENT -> {
+                navigator.onPullRequestSelected(event.payload.pullRequest, event.repo.repoName)
             }
         }
     }

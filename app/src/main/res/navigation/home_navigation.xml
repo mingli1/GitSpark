@@ -6,6 +6,7 @@
     app:startDestination="@id/home_fragment">
 
     <include app:graph="@navigation/profile_navigation"/>
+    <include app:graph="@navigation/repo_navigation"/>
 
     <fragment
         android:id="@+id/home_fragment"
@@ -36,6 +37,30 @@
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit"/>
 
+        <action
+            android:id="@+id/action_home_to_repo_detail"
+            app:destination="@id/repo"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_home_to_issue_detail"
+            app:destination="@id/issue_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_home_to_pr_detail"
+            app:destination="@id/pr_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
     </fragment>
 
     <fragment
@@ -51,11 +76,86 @@
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit"/>
 
+        <action
+            android:id="@+id/action_event_list_to_repo_detail"
+            app:destination="@id/repo"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_event_list_to_issue_detail"
+            app:destination="@id/issue_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_event_list_to_pr_detail"
+            app:destination="@id/pr_detail_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
     </fragment>
     
     <fragment
         android:id="@+id/settings_fragment"
         android:name="com.gitspark.gitspark.ui.main.settings.SettingsFragment"
         android:label="SettingsFragment"/>
+
+    <fragment
+        android:id="@+id/issue_detail_fragment"
+        android:name="com.gitspark.gitspark.ui.main.issues.IssueDetailFragment"
+        android:label="IssueDetailFragment">
+
+        <action
+            android:id="@+id/action_issue_detail_to_repo"
+            app:destination="@id/repo"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_issue_detail_to_issue_edit"
+            app:destination="@id/issue_edit_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/pr_detail_fragment"
+        android:name="com.gitspark.gitspark.ui.main.issues.pullrequest.PullRequestDetailFragment"
+        android:label="PullRequestDetailFragment">
+
+        <action
+            android:id="@+id/action_pr_detail_to_repo"
+            app:destination="@id/repo"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+        <action
+            android:id="@+id/action_pr_detail_to_issue_edit"
+            app:destination="@id/issue_edit_fragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/issue_edit_fragment"
+        android:name="com.gitspark.gitspark.ui.main.issues.IssueEditFragment"
+        android:label="IssueEditFragment"/>
 
 </navigation>

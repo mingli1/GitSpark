@@ -2,22 +2,24 @@ package com.gitspark.gitspark.ui.main.profile
 
 import androidx.lifecycle.MutableLiveData
 import com.gitspark.gitspark.helper.PreferencesHelper
-import com.gitspark.gitspark.model.Event
-import com.gitspark.gitspark.model.isFirstPage
-import com.gitspark.gitspark.model.isLastPage
+import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.EventRepository
 import com.gitspark.gitspark.repository.EventResult
 import com.gitspark.gitspark.ui.base.BaseViewModel
 import com.gitspark.gitspark.ui.base.PaginatedViewState
+import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
+import com.gitspark.gitspark.ui.nav.FeedNavigator
 import javax.inject.Inject
 
 class ProfileFeedViewModel @Inject constructor(
     private val eventRepository: EventRepository,
     private val prefsHelper: PreferencesHelper
-) : BaseViewModel() {
+) : BaseViewModel(), FeedNavigator {
 
     val viewState = MutableLiveData<ProfileFeedViewState>()
     val pageViewState = MutableLiveData<PaginatedViewState<Event>>()
+    val navigateToRepo = SingleLiveEvent<String>()
+    val navigateToIssue = SingleLiveEvent<Pair<Issue, Boolean>>()
 
     private var resumed = false
     private var page = 1
@@ -35,6 +37,20 @@ class ProfileFeedViewModel @Inject constructor(
     fun onRefresh() = updateViewState(reset = true, refresh = true)
 
     fun onScrolledToEnd() = updateViewState()
+
+    override fun onUserSelected(username: String) {}
+
+    override fun onRepoSelected(fullName: String) {
+        navigateToRepo.value = fullName
+    }
+
+    override fun onIssueSelected(issue: Issue) {
+        navigateToIssue.value = Pair(issue, true)
+    }
+
+    override fun onPullRequestSelected(pullRequest: PullRequest, repoFullName: String) {
+        navigateToIssue.value = Pair(pullRequest.toSimpleIssue(repoFullName), false)
+    }
 
     private fun onInitialResume() {
         if (!resumed) {

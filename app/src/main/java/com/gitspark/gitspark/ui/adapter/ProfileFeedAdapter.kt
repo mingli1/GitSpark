@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import com.gitspark.gitspark.R
 import com.gitspark.gitspark.extension.isVisible
 import com.gitspark.gitspark.extension.loadImage
-import com.gitspark.gitspark.helper.EventHelper
-import com.gitspark.gitspark.helper.TimeHelper
+import com.gitspark.gitspark.helper.*
 import com.gitspark.gitspark.model.DateGroup
 import com.gitspark.gitspark.model.Event
 import com.gitspark.gitspark.model.Loading
+import com.gitspark.gitspark.ui.nav.FeedNavigator
 import kotlinx.android.synthetic.main.date_group_view.view.*
 import kotlinx.android.synthetic.main.profile_feed_view.view.*
 import org.threeten.bp.Instant
@@ -21,7 +21,8 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class ProfileFeedAdapter(
     private val timeHelper: TimeHelper,
-    private val eventHelper: EventHelper
+    private val eventHelper: EventHelper,
+    private val navigator: FeedNavigator
 ) : PaginationAdapter() {
 
     private val spannableCache = mutableMapOf<String, SpannableStringBuilder>()
@@ -92,7 +93,26 @@ class ProfileFeedAdapter(
                     val createdDate = Instant.parse(item.createdAt)
                     val formatted = timeHelper.getRelativeAndExactTimeFormat(createdDate)
                     date_field.text = formatted
+
+                    setOnClickListener { handleFeedOnClick(item) }
                 }
+            }
+        }
+    }
+
+    private fun handleFeedOnClick(event: Event) {
+        when (event.type) {
+            COMMIT_COMMENT_EVENT, CREATE_EVENT, PUSH_EVENT, PUBLIC_EVENT, WATCH_EVENT -> {
+                navigator.onRepoSelected(event.repo.repoName)
+            }
+            FORK_EVENT -> {
+                navigator.onRepoSelected(event.payload.forkee.fullName)
+            }
+            ISSUES_EVENT, ISSUE_COMMENT_EVENT -> {
+                navigator.onIssueSelected(event.payload.issue)
+            }
+            PULL_REQUEST_EVENT, PULL_REQUEST_REVIEW_COMMENT_EVENT -> {
+                navigator.onPullRequestSelected(event.payload.pullRequest, event.repo.repoName)
             }
         }
     }

@@ -1,11 +1,10 @@
 package com.gitspark.gitspark.ui.main.shared
 
-import com.gitspark.gitspark.model.Event
-import com.gitspark.gitspark.model.Page
+import com.gitspark.gitspark.model.*
 import com.gitspark.gitspark.repository.EventRepository
 import com.gitspark.gitspark.repository.EventResult
 import com.gitspark.gitspark.ui.livedata.SingleLiveEvent
-import com.gitspark.gitspark.ui.nav.UserProfileNavigator
+import com.gitspark.gitspark.ui.nav.FeedNavigator
 import javax.inject.Inject
 
 enum class EventListType {
@@ -16,9 +15,11 @@ enum class EventListType {
 
 class EventListViewModel @Inject constructor(
     private val eventRepository: EventRepository
-) : ListViewModel<Event>(), UserProfileNavigator {
+) : ListViewModel<Event>(), FeedNavigator {
 
     val navigateToProfileAction = SingleLiveEvent<String>()
+    val navigateToRepo = SingleLiveEvent<String>()
+    val navigateToIssue = SingleLiveEvent<Pair<Issue, Boolean>>()
     private var type = EventListType.None
 
     fun onStart(type: EventListType, args: String) {
@@ -30,6 +31,18 @@ class EventListViewModel @Inject constructor(
 
     override fun onUserSelected(username: String) {
         navigateToProfileAction.value = username
+    }
+
+    override fun onRepoSelected(fullName: String) {
+        navigateToRepo.value = fullName
+    }
+
+    override fun onIssueSelected(issue: Issue) {
+        navigateToIssue.value = Pair(issue, true)
+    }
+
+    override fun onPullRequestSelected(pullRequest: PullRequest, repoFullName: String) {
+        navigateToIssue.value = Pair(pullRequest.toSimpleIssue(repoFullName), false)
     }
 
     override fun requestData() {
