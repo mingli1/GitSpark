@@ -199,7 +199,8 @@ class OverviewViewModel @Inject constructor(
         subscribe(userRepository.getContributionsSvg(user.login)) {
             when (it) {
                 is UserResult.Success -> {
-                    contributionsAction.value = contributionsHelper.parse(it.value)
+                    // GitHub no longer shows the contribution graph at the url
+                    //contributionsAction.value = contributionsHelper.parse(it.value)
                     viewState.value = viewState.value?.copy(
                         totalContributions = contributionsHelper.getTotalContributions(it.value),
                         loading = false
